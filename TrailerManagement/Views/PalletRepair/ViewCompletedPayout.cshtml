@@ -1,0 +1,201 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Completed Payout";
+    int counter = 1;
+    var payout = Model.Payout;
+}
+<br class="no-print">
+<table class="col-xs-12">
+        
+</table>
+<table class="table table-responsive col-xs-12">
+    <thead>
+        <tr >
+            <th class="text-center" colspan="2"><h4><strong>Received From</strong></h4></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="font-md">
+            <td rowspan="6" class="col-xs-8 text-center">
+                <h2 id="header"></h2>
+                <br>
+            </td>
+            <td>
+                <div style="border-bottom-style:solid; margin:-10px; margin-bottom:8px; padding:3px">
+                    <strong class="text-left">Invoice Number:&nbsp;</strong>@payout.InvoiceNumber
+                    <br>
+                </div>
+                <div style="border-bottom-style:solid; margin:-10px; margin-bottom:8px; padding:3px">
+                    <strong class="text-left">Bill Of Lading:&nbsp;</strong>@payout.BillOfLading
+                    <br>
+                </div>
+                <div style="border-bottom-style:solid; margin:-10px; margin-bottom:8px; padding:3px">
+                    <strong class="text-left">Packing List Number:&nbsp;</strong>@payout.PackingListNumber
+                    <br>
+                </div>
+                <div style="border-bottom-style:solid; margin:-10px; margin-bottom:8px; padding:3px">
+                    <strong class="text-left">Purchase Order Number:&nbsp;</strong>@payout.PurchaseOrderNumber
+                    <br>
+                </div>
+                <div style="border-bottom-style:solid; margin:-10px; margin-bottom:8px; padding:3px">
+                    <strong class="text-left">Pallet Order Number:&nbsp;</strong>@payout.OrderNumber
+                    <br>
+                </div>
+                <div style="margin:-10px; padding:3px">
+                    <strong class="text-left">Trailer Number:&nbsp;</strong>@payout.TrailerNumber
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr class="font-md">
+            <th class="text-center">#</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">Part #</th>
+            <th class="text-center">Qty</th>
+            <th class="text-center">Description</th>
+            <th class="text-center">Price</th>
+            <th class="text-center">Total</th>
+        </tr>
+    </thead>
+    <tbody id="palletTypes">
+        @foreach (CompletedSort t in Model.CompletePayout)
+        {
+            <tr class="product-row" id="@t.CompletedSortGUID">
+                <td class="text-right"><strong>@counter</strong></td>
+                <td class="text-center" id="date_@t.CompletedSortGUID"></td>
+                <td class="text-center" id="partNumber_@t.CompletedSortGUID">@t.PartNumber</td>
+                <td class="text-center" id="quantity_@t.CompletedSortGUID">@t.Quantity</td>
+                <td id="description_@t.CompletedSortGUID">@t.Description</td>
+                <td class="text-right" id="price_@t.CompletedSortGUID">@t.Cost</td>
+                <td class="text-right" id="total_@t.CompletedSortGUID"></td>
+            </tr>
+            counter++;
+        }
+        
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="5"></td>
+            <td class="text-right"><strong>Total Due:</strong></td>
+            <td class="text-center"><strong id="grandTotal"></strong></td>
+        </tr>
+    </tfoot>
+</table>
+
+<a class="no-print btn btn-primary" href="javascript:window.print()">Click to Print This Page</a>
+
+<a class="no-print btn btn-primary" href="/PalletRepair/PayoutList">Payouts</a>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            var vendor = '@ViewBag.Vendor';
+            var vendorNumber = '@ViewBag.VendorNumber';
+            if (vendorNumber == "")
+            {
+                $('#header').html(vendor);
+            }
+            else
+            {
+                $('#header').html(vendor + " - " + '@ViewBag.VendorNumber');
+            }
+            
+            var grandTotal = 0;
+            $('#palletTypes tr').each(function ()
+            {
+                var id = this.id;
+                var cost;
+                var price = $('#price_' + id).html();
+                if (price != "")
+                {
+                    cost = parseFloat(price);
+                    $('#price_' + id).html("$" + cost.toFixed(2));
+                }
+                else
+                {
+                    cost = 0;
+                    $('#price_' + id).html("$0.00");
+                }
+
+                $('#date_' + id).html(getCurrentDate());
+
+                var total = 0;
+                
+                var quantity = $('#quantity_' + id).html()
+                total = cost * parseFloat(quantity);
+                
+
+                var partNumber = $('#partNumber_' + id).html();
+                if (partNumber == "DEDUCTION")
+                {
+                    grandTotal = grandTotal - total;
+                    $('#total_' + id).html("- $" + total.toFixed(2));
+                }
+                else
+                {
+                    grandTotal = grandTotal + total;
+                    $('#total_' + id).html("$" + total.toFixed(2));
+                }
+            });
+            $('#grandTotal').html("$" + grandTotal.toFixed(2));
+
+            function getCurrentDate()
+            {
+                var currentDate = new Date().toString();
+                var currentMonth = currentDate.substring(4, 7);
+                var currentDay = currentDate.substring(8, 10);
+                var currentYear = currentDate.substring(11, 15);
+
+                //converts month abreviation to month number
+                switch (currentMonth)
+                {
+                    case "Jan":
+                        currentMonth = "1";
+                        break;
+                    case "Feb":
+                        currentMonth = "2";
+                        break;
+                    case "Mar":
+                        currentMonth = "3";
+                        break;
+                    case "Apr":
+                        currentMonth = "4";
+                        break;
+                    case "May":
+                        currentMonth = "5";
+                        break;
+                    case "Jun":
+                        currentMonth = "6";
+                        break;
+                    case "Jul":
+                        currentMonth = "7";
+                        break;
+                    case "Aug":
+                        currentMonth = "8";
+                        break;
+                    case "Sep":
+                        currentMonth = "9";
+                        break;
+                    case "Oct":
+                        currentMonth = "10";
+                        break;
+                    case "Nov":
+                        currentMonth = "11";
+                        break;
+                    case "Dec":
+                        currentMonth = "12";
+                        break;
+                }
+                
+                currentDate = (currentMonth + "-" + currentDay + "-" + currentYear);
+                return currentDate;
+            }
+        });
+    </script>    
+}

@@ -1,0 +1,75 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Pallet Prices by Vendor";
+}
+
+<h2 class="float-left">Pallet Prices by Vendor</h2>
+<input type="button" class="btn btn-primary float-left no-print" value="Create Price Preset" id="createPrice" style="margin-top:20px;margin-left:10px"  />
+<br>
+<br>
+<p class="float-right no-print" style="font-size:1.1em">
+    <a href="PalletPrices?startsWith=ALL">ALL</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=A">A</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=B">B</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=C">C</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=D">D</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=E">E</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=F">F</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=G">G</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=H">H</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=I">I</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=J">J</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=K">K</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=L">L</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=M">M</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=N">N</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=O">O</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=P">P</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=Q">Q</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=R">R</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=S">S</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=T">T</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=U">U</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=V">V</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=W">W</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=X">X</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=Y">Y</a>&nbsp;|&nbsp;<a href="PalletPrices?startsWith=Z">Z</a></p>
+
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr class="font-md">
+            <th class="text-center">Vendor Number</th>
+            <th class="text-center">Name</th>
+            <th class="text-center">Part Number</th>
+            <th class="text-center">Description</th>
+            <th class="text-center">Price</th>
+        </tr>
+    </thead>
+    <tbody id="prices">
+        @foreach(PalletPrice p in Model)
+        {
+            <tr class="product-row" id="@p.PalletPriceGUID">
+                <td id="vendorNumber_@p.PalletPriceGUID">@p.VendorNumber</td>
+                <td id="vendorName_@p.PalletPriceGUID">@p.VendorName</td>
+                <td id="partNumber_@p.PalletPriceGUID">@p.PartNumber</td>
+                <td id="description_@p.PalletPriceGUID">@p.Description</td>
+                <td id="price_@p.PalletPriceGUID">@p.PurchasePrice</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('#prices').on('click', '.product-row', function ()
+            {
+                var priceID = this.id;
+                location.href = "/PalletRepair/EditPalletPrice/" + priceID;
+            });
+
+            $('#createPrice').on('click', function ()
+            {
+                location.href = "/PalletRepair/CreatePalletPrice";
+            });
+
+            var counter = 0;
+            var oldVendorNumber = "";
+            $('#prices tr').each(function ()
+            {
+                var id = this.id;
+                var price = $('#price_' + id).html();
+                price = parseFloat(price).toFixed(2);
+                $('#price_' + id).html("$" + price);
+                
+                var newVendorNumber = $('#vendorNumber_' + id).html()
+                if (oldVendorNumber != newVendorNumber)
+                {
+                    counter++;
+                }
+                if (counter % 2 != 1)
+                {
+                    $('#' + id).addClass('darken');
+                }
+                oldVendorNumber = newVendorNumber;
+            });
+        });
+    </script>    
+}

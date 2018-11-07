@@ -1,0 +1,317 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Inactive List";
+}
+
+<br />
+<div>
+    <span class="h2 float-left"><strong>@ViewBag.Title</strong></span>
+    <div class="text-right h4 float-right">
+        Order by:
+        <p class="hover">
+            @Html.ActionLink("Trailer Number", "InactiveTrailerList", new { SortOrder = ViewBag.TrailerNumber })&nbsp;|
+            @Html.ActionLink("DOT Date", "InactiveTrailerList", new { SortOrder = ViewBag.DOTDate })&nbsp;|
+            @Html.ActionLink("Plate #", "InactiveTrailerList", new { SortOrder = ViewBag.PlateNumber })&nbsp;|
+            @Html.ActionLink("Trailer Length", "InactiveTrailerList", new { SortOrder = ViewBag.TrailerLength })&nbsp;|
+            @Html.ActionLink("Date Modified", "InactiveTrailerList", new { SortOrder = ViewBag.DateModified })
+        </p>
+    </div>
+</div>
+<br />
+
+<table class="table table-hover table-responsive">
+    @using (Html.BeginForm("InactiveTrailerList", "Home", FormMethod.Get))
+    {
+        <thead>
+            <tr class="font-md">
+                <th class="col-xs-1">Trailer Number</th>
+                <th class="text-center">Plate Number</th>
+                <th>Vin Number</th>
+                <th>Status</th>
+                <th class="text-center col-xs-1">Trailer Length</th>
+                <th class="col-xs-1">Last Modified</th>
+            </tr>
+        </thead>
+    }
+    <tbody id="trailers">
+        @foreach (InactiveTrailerList t in Model)
+        {
+            <tr class="product-row" id="@t.TrailerGUID">
+                <td id="trailerNumber_@t.TrailerGUID">@t.TrailerNumber</td>
+
+                <td id="plateNumber_@t.TrailerGUID" class="text-center">@t.PlateNumber</td>
+                <td id="vinNumber_@t.TrailerGUID">@t.VinNumber</td>
+                <td id="status_@t.TrailerGUID">@t.TrailerStatus</td>
+                <td id="trailerLength_@t.TrailerGUID" class="text-center">@t.TrailerLength</td>
+                <td id="dateModified_@t.TrailerGUID">@t.DateModified</td>
+
+                @*hidden for data purposes*@
+                <td id="dotDate_@t.TrailerGUID" class="hidden">@t.DOTDate</td>
+                <td class="hidden">@t.TrailerGUID</td>
+                <td id="leased_@t.TrailerGUID" class="hidden">@t.Leased</td>
+                <td id="insuranceCard_@t.TrailerGUID" class="hidden">@t.InsuranceCard</td>
+                <td id="insured_@t.TrailerGUID" class="hidden">@t.Insured</td>
+                <td id="title_@t.TrailerGUID" class="hidden">@t.Title</td>
+                <td id="manufacturer_@t.TrailerGUID" class="hidden">@t.Manufacturer</td>
+                <td id="manufactureYear_@t.TrailerGUID" class="hidden">@t.ManufactureYear</td>
+                <td id="issues_@t.TrailerGUID" class="hidden">@t.Issues</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Trailer Info Modal -->
+<div id="trailerModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Trailer Info</h4>
+                <div class="row">
+                    <strong class="col-md-3">Last modified:&nbsp;</strong><div class="col-xs-3" id="DateModified"></div>
+                </div>
+            </div>
+            <div class="modal-body">
+                @*row 1 header*@
+                <div class="row">
+                    <div class="col-xs-3"><strong>Trailer Number</strong></div>
+                    <div class="col-xs-3"><strong>DOT Date</strong></div>
+                    <div class="col-xs-2"><strong>Plate #</strong></div>
+                    <div class="col-xs-4"><strong>Vin Number</strong></div>
+                </div>
+                @*row 1 data*@
+                <div class="row">
+                    <div class="col-xs-3 pad-top" id="TrailerNumber"></div>
+                    <div class="col-xs-3 pad-top" id="DOTDate"></div>
+                    <div class="col-xs-2 pad-top" id="PlateNumber"></div>
+                    <div class="col-xs-4 pad-top" id="VinNumber"></div>
+                </div>
+                <br />
+                <br />
+                @*row 2 header*@
+                <div class="row">
+                    <div class="col-xs-3"><strong>Insurance Card</strong></div>
+                    <div class="col-xs-2 text-center"><strong>Insured</strong></div>
+                    <div class="col-xs-3 text-center"><strong>Title</strong></div>
+                    <div class="col-xs-3"><strong>Leased</strong></div>
+
+                </div>
+                @*row 2 data*@
+                <div class="row">
+                    <div class="col-xs-3 pad-top" id="InsuranceCard"></div>
+                    <div class="col-xs-2 pad-top text-center" id="Insured"></div>
+                    <div class="col-xs-3 pad-top text-center" id="Title"></div>
+                    <div class="col-xs-3 pad-top" id="Lease"></div>
+                </div>
+                <br />
+                <br />
+                @*row 3 header*@
+                <div class="row">
+                    <div class="col-xs-4"><strong>Trailer Manufacturer</strong></div>
+                    <div class="col-xs-4"><strong>Manufacture Year</strong></div>
+                    <div class="col-xs-3 text-center"><strong>Trailer Length</strong></div>
+                </div>
+                @*row 3 data*@
+                <div class="row">
+                    <div class="col-xs-4 pad-top" id="Manufacturer"></div>
+                    <div class="col-xs-4 pad-top" id="ManufactureYear"></div>
+                    <div class="col-xs-3 pad-top text-center" id="TrailerLength"></div>
+                </div>
+                <br />
+                @*row 4 header*@
+                <div class="row">
+                    <div class="col-xs-9"><strong>Notes</strong></div>
+                    <div class="col-xs-3"><strong>Status</strong></div>
+                </div>
+                @*row 4 data*@
+                <div class="row">
+                    <div class="col-xs-9 pad-top" id="Issues"></div>
+                    <div class="col-xs-3 pad-top" id="Status"></div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                @if ((Convert.ToInt32(Session["permission"]) > 3))
+                {
+                    <button type="button" class="btn btn-danger" id="delete">
+                        Delete
+                    </button>
+                }
+                @if ((Convert.ToInt32(Session["permission"]) >= 3))
+                {
+                    <button type="button" class="btn btn-warning" id="edit">
+                        Edit
+                    </button>
+                }
+                <button type="button" class="btn btn-primary" id="close">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Confirmation Modal -->
+<div id="confirmModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                <p><strong>Are you sure you want to delete this trailer? <br /><br />All data will be lost.</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="cancel" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#trailerModal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Error Modal -->
+<div id="errorModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                <p><strong>@Session["error"]</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            function disableBack()
+            {
+                window.history.forward()
+            }
+
+            window.onload = disableBack();
+            window.onpageshow = function (evt)
+            {
+                if (evt.persisted)
+                    disableBack()
+            }
+            
+            @*if ('@Session["error"]' != "")
+            {
+                $('#errorModal').modal();
+            }*@
+            //hides scroll bar when any modals are open
+            $('#trailerModal').on('hide.bs.modal', function ()
+            {
+                showScrollBar();
+            });
+            $('#trailerModal').on('show.bs.modal', function ()
+            {
+                hideScrollBar();
+            });
+            $('#confirmModal').on('show.bs.modal', function ()
+            {
+                hideScrollBar();
+            });
+            $('#confirmModal').on('hide.bs.modal', function ()
+            {
+                hideScrollBar();
+            });
+            $('#errorModal').on('show.bs.modal', function ()
+            {
+                hideScrollBar();
+            });
+
+            var TrailerID;
+            //display modal with all trailer info
+            $('#trailers').on('click', '.product-row', function ()
+            {
+                TrailerID = this.id;
+
+                $('#TrailerNumber').html($('#trailerNumber_' + TrailerID).html());
+                $('#PlateNumber').html($('#plateNumber_' + TrailerID).html());
+                $('#VinNumber').html($('#vinNumber_' + TrailerID).html());
+                $('#InsuranceCard').html($('#insuranceCard_' + TrailerID).html());
+                $('#Insured').html($('#insured_' + TrailerID).html());
+                $('#Title').html($('#title_' + TrailerID).html());
+                $('#Lease').html($('#leased_' + TrailerID).html());
+                $('#TrailerLength').html($('#trailerLength_' + TrailerID).html());
+                $('#Manufacturer').html($('#manufacturer_' + TrailerID).html());
+                $('#ManufactureYear').html($('#manufactureYear_' + TrailerID).html());
+                $('#Status').html($('#status_' + TrailerID).html());
+                $('#Issues').html($('#issues_' + TrailerID).html());
+                $('#DateModified').html($('#dateModified_' + TrailerID).html());
+
+                // display modal
+                $('#trailerModal').modal();
+                hideScrollBar();
+            });
+
+            //delete button click
+            $('#delete').click(function ()
+            {
+                hideScrollBar();
+                $('#trailerModal').modal('toggle');
+                $('#confirmModal').modal();
+            });
+
+            //delete modal confirm button click
+            $('#confirm').on('click', function ()
+            {
+                showScrollBar();
+                location.href = "Delete/" + (TrailerID);
+            });
+
+            //redirect to edit trailer button click
+            $('#edit').on('click', function ()
+            {
+                location.href = "EditInactiveTrailer/" + (TrailerID);
+                @*if ('@Session["error"]' == "")
+                {
+                    location.href = "EditInactiveTrailer/" + (TrailerID);
+                    showScrollBar();
+                }
+                else
+                {
+                    $('#trailerModal').modal('toggle');
+                    $('#errorModal').modal();
+                }*@
+            })
+
+            //modal close button click
+            $('#close').on('click', function ()
+            {
+                showScrollBar();
+                $('#trailerModal').modal('hide');
+            });
+
+            function hideScrollBar()
+            {
+                $('body').css('overflow', 'hidden');
+                $('body').css('overflow-x', 'hidden');
+            }
+
+            function showScrollBar()
+            {
+                $('body').css('overflow', 'scroll');
+                $('body').css('overflow-x', 'hidden');
+            }
+        });
+
+    </script>
+}

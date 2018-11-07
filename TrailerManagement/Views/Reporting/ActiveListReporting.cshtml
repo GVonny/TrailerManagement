@@ -1,0 +1,184 @@
+﻿@using TrailerManagement.Models
+@{
+    ViewBag.Title = "ActiveListReporting";
+}
+<h2 class="float-left">Active List Reporting</h2>
+
+<div class="text-center float-right margin-top no-print max-width">
+    <label for="needEmpty" class="needEmpty">Need Empty</label>
+    <input type="checkbox" id="needEmpty" name="needEmpty" /> &nbsp;|&nbsp;
+
+    <label for="readyToRoll" class="readyToRoll">Ready to Roll</label>
+    <input type="checkbox" id="readyToRoll" name="readyToRoll" /> &nbsp;|&nbsp;
+
+    <label for="loading" class="loading">Loading</label>
+    <input type="checkbox" id="loading" name="loading" /> &nbsp;|&nbsp;
+
+    <label for="empty" class="empty">Empty</label>
+    <input type="checkbox" id="empty" name="empty" /> &nbsp;|&nbsp;
+
+    <label for="needWork" class="needWork">Need Work</label>
+    <input type="checkbox" id="needWork" name="needWork" /> &nbsp;|&nbsp;
+
+    <label for="inTransit" class="shipped">In Transit</label>
+    <input type="checkbox" id="inTransit" name="inTransit" /> &nbsp;|&nbsp;
+
+    <label for="delivered" class="delivered">Delivered</label>
+    <input type="checkbox" id="delivered" name="delivered" />
+
+    <input type="button" id="update" value="Update" class="btn btn-primary"/>
+    
+</div>
+<table class="table table-hover table-responsive">
+    @using (Html.BeginForm("ActiveTrailerList", "Home", FormMethod.Get))
+    {
+        <thead>
+            <tr class="font-md">
+                <th class="col-xs-1">Trailer Number</th>
+                <th class=" text-center">Trailer Status</th>
+                @if ((Convert.ToInt32(Session["permission"]) > 2))
+                {
+                    <th class="text-center col-xs-1">Load Status</th>
+                }
+                <th class="text-center">Customer</th>
+
+                <th class="text-center col-xs-1">Location Status</th>
+                <th class="text-center">Trailer Location</th>
+                @if ((Convert.ToInt32(Session["permission"]) > 2))
+                {
+                    <th class="col-xs-2">Notes</th>
+                    <th class="text-center">Tags</th>
+                    <th class="text-center col-xs-1">Last Modified</th>
+                }
+                <th class="orderDate text-center hidden">Order Date</th>
+                <th class="hidden">Order Number</th>
+            </tr>
+        </thead>
+    }
+    <tbody id="trailers">
+        @foreach (ActiveTrailerList t in Model)
+        {
+            <tr class="product-row" id="@t.TrailerNumber">
+                <td id="trailerNumber_@t.TrailerNumber">@t.TrailerNumber</td>
+                <td id="trailerStatus_@t.TrailerNumber" class="text-center">@t.TrailerStatus</td>
+                @if ((Convert.ToInt32(Session["permission"]) > 2))
+                {
+                    <td id="loadStatus_@t.TrailerNumber" class="text-center">@t.LoadStatus</td>
+                }
+                <td id="customer_@t.TrailerNumber" class="text-center">@t.Customer</td>
+                <td id="loactionStatus_@t.TrailerNumber" class="text-center">@t.LocationStatus</td>
+                <td id="trailerLocation_@t.TrailerNumber" class="text-center">@t.TrailerLocation</td>
+                @if ((Convert.ToInt32(Session["permission"]) > 2))
+                {
+                    <td id="notes_@t.TrailerNumber">@t.Notes</td>
+                    <td id="tags_@t.TrailerNumber" class="text-center">@t.Tags</td>
+                    <td id="dateModified_@t.TrailerNumber" class="text-center">@t.DateModified</td>
+                }
+                @*hidden for data purposes*@
+                <td class="hidden">@t.TrailerGUID</td>
+                <td id="orderNumber_@t.TrailerNumber" class="hidden">@t.OrderNumber</td>
+                <td id="orderDate_@t.TrailerNumber" class="text-center hidden">@t.OrderDate</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('#trailers tr').each(function ()
+            {
+                TrailerNumber = this.id;
+
+                var trailerStatus = $('#trailerStatus_' + TrailerNumber).html();
+                switch (trailerStatus)
+                {
+                    case "1":
+                        $('#trailerStatus_' + TrailerNumber).html("NEED EMPTY").addClass('needEmpty');
+                        break;
+                    case "2":
+                        $('#trailerStatus_' + TrailerNumber).html("READY TO ROLL").addClass('readyToRoll');
+                        break;
+                    case "3":
+                        $('#trailerStatus_' + TrailerNumber).html("LOADING").addClass('loading');
+                        break;
+                    case "4":
+                        $('#trailerStatus_' + TrailerNumber).html("EMPTY").addClass('empty');
+                        break;
+                    case "5":
+                        $('#trailerStatus_' + TrailerNumber).html("NEED WORK").addClass('needWork');;
+                        break;
+                    case "6":
+                        $('#trailerStatus_' + TrailerNumber).html("IN TRANSIT").addClass('shipped');
+                        break;
+                    case "7":
+                        $('#trailerStatus_' + TrailerNumber).html("DELIVERED").addClass('delivered');
+                        break;
+                }
+            });
+            var list = "?";
+
+            $('#update').on('click', function ()
+            {
+                updateList();
+            });
+
+            $('#needEmpty').change(function ()
+            {
+                if ($(this).is(':checked'))
+                {
+                    list += "needEmpty=True&";
+                }
+            });
+            $('#readyToRoll').change(function ()
+            {
+                if ($(this).is(':checked'))
+                {
+                    list += "readyToRoll=True&";
+                }
+            });
+            $('#loading').change(function ()
+            {
+                if ($(this).is(':checked'))
+                {
+                    list += "loading=True&";
+                }
+            });
+            $('#empty').change(function ()
+            {
+                if ($(this).is(':checked'))
+                {
+                    list += "empty=True&";
+                }
+            });
+            $('#needWork').change(function ()
+            {
+                if ($(this).is(':checked'))
+                {
+                    list += "needWork=True&";
+                }
+            });
+            $('#inTransit').change(function ()
+            {
+                if ($(this).is(':checked'))
+                {
+                    list += "inTransit=True&";
+                }
+            });
+            $('#delivered').change(function ()
+            {
+                if ($(this).is(':checked'))
+                {
+                    list += "delivered=True&";
+                }
+            });
+
+            function updateList()
+            {
+                location.href = "/Reporting/ActiveListReporting" + list.substring(0, list.length - 1);
+            }
+        });
+    </script>
+}

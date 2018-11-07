@@ -1,0 +1,413 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Master List";
+}
+<br />
+<div>
+    <div id="colorCode" class="text-center no-print">
+        <span class="green">Green: DOT is valid</span>&nbsp;|
+        <span class="yellow">Yellow: DOT expires within the next 30 days</span>&nbsp;|
+        <span class="red">Red: DOT is expired</span>
+    </div>
+    <span class="h2 float-left"><strong>@ViewBag.Title</strong></span>
+    @if ((Convert.ToInt32(Session["permission"]) > 3))
+    {
+        <input type="button" class="btn btn-primary float-left no-print" value="Create Trailer" id="createTrailer" />
+    }
+    else
+    {
+        <div class="col-md-2"></div>
+    }
+    <div class="text-right h4 float-right no-print">
+        Order by:
+        <p>
+            @Html.ActionLink("Trailer Number", "TrailerList", new { SortOrder = ViewBag.TrailerNumber })&nbsp;|
+            @Html.ActionLink("DOT Date", "TrailerList", new { SortOrder = ViewBag.DOTDate })&nbsp;|
+            @Html.ActionLink("Plate #", "TrailerList", new { SortOrder = ViewBag.PlateNumber })&nbsp;|
+            @Html.ActionLink("Trailer Location", "TrailerList", new { SortOrder = ViewBag.TrailerLocation })&nbsp;|
+            @Html.ActionLink("Trailer Length", "TrailerList", new { SortOrder = ViewBag.TrailerLength })&nbsp;|
+            @Html.ActionLink("Date Modified", "TrailerList", new { SortOrder = ViewBag.DateModified })
+        </p>
+    </div>
+</div>
+<br />
+
+<table class="table table-hover table-responsive">
+    @using (Html.BeginForm("TrailerList", "Trailer", FormMethod.Get))
+    {
+        <thead>
+            <tr class="font-md">
+                <th>Trailer Number</th>
+                <th>Last DOT Date</th>
+                <th class="text-center">Plate Number</th>
+                <th>Status</th>
+                <th>Location</th>
+                <th class="text-center col-xs-1">Length</th>
+                <th class="text-center no-print">Last Modified</th>
+            </tr>
+        </thead>
+    }
+    <tbody id="trailers">
+        @foreach (TrailerList t in Model)
+        {
+            <tr class="product-row" id="@t.TrailerGUID">
+                <td id="trailerNumber_@t.TrailerGUID">@t.TrailerNumber</td>
+                <td id="dotDate_@t.TrailerGUID" class="text-center">@t.DOTDate</td>
+                <td id="plateNumber_@t.TrailerGUID" class="text-center">@t.PlateNumber</td>
+                <td id="status_@t.TrailerGUID">@t.TrailerStatus</td>
+                <td id="trailerLocation_@t.TrailerGUID">@t.TrailerLocation</td>
+                <td id="trailerLength_@t.TrailerGUID" class="text-center">@t.TrailerLength</td>
+                <td id="dateModified_@t.TrailerGUID" class="text-center no-print">@t.DateModified</td>
+
+                @*hidden for data purposes*@
+                <td class="hidden">@t.TrailerGUID</td>
+                <td id="leased_@t.TrailerGUID" class="hidden">@t.Leased</td>
+                <td id="insuranceCard_@t.TrailerGUID" class="hidden">@t.InsuranceCard</td>
+                <td id="insured_@t.TrailerGUID" class="hidden">@t.Insured</td>
+                <td id="title_@t.TrailerGUID" class="hidden">@t.Title</td>
+                <td id="vinNumber_@t.TrailerGUID" class="hidden">@t.VinNumber</td>
+                <td id="manufacturer_@t.TrailerGUID" class="hidden">@t.Manufacturer</td>
+                <td id="manufactureYear_@t.TrailerGUID" class="hidden">@t.ManufactureYear</td>
+                <td id="issues_@t.TrailerGUID" class="hidden">@t.Issues</td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Trailer Info Modal -->
+<div id="trailerModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Trailer Info</h2>
+                <div class="row">
+                    <strong class="col-md-3">Last modified:&nbsp;</strong><div class="col-xs-3" id="DateModified"></div>
+                </div>
+            </div>
+            <div class="modal-body">
+                @*row 1 header*@
+                <div class="row">
+                    <div class="col-xs-3"><strong>Trailer Number</strong></div>
+                    <div class="col-xs-3"><strong>DOT Date</strong></div>
+                    <div class="col-xs-2"><strong>Plate #</strong></div>
+                    <div class="col-xs-4"><strong>Vin Number</strong></div>
+                </div>
+                @*row 1 data*@
+                <div class="row">
+                    <div class="col-xs-3 pad-top" id="TrailerNumber"></div>
+                    <div class="col-xs-3 pad-top" id="DOTDate"></div>
+                    <div class="col-xs-2 pad-top" id="PlateNumber"></div>
+                    <div class="col-xs-4 pad-top" id="VinNumber"></div>
+                </div>
+                <br />
+                <br />
+                @*row 2 header*@
+                <div class="row">
+                    <div class="col-xs-3"><strong>Insurance Card</strong></div>
+                    <div class="col-xs-2 text-center"><strong>Insured</strong></div>
+                    <div class="col-xs-3 text-center"><strong>Title</strong></div>
+                    <div class="col-xs-3"><strong>Leased</strong></div>
+
+                </div>
+                @*row 2 data*@
+                <div class="row">
+                    <div class="col-xs-3 pad-top" id="InsuranceCard"></div>
+                    <div class="col-xs-2 pad-top text-center" id="Insured"></div>
+                    <div class="col-xs-3 pad-top text-center" id="Title"></div>
+                    <div class="col-xs-3 pad-top" id="Lease"></div>
+                </div>
+                <br />
+                <br />
+                @*row 3 header*@
+                <div class="row">
+                    <div class="col-xs-3"><strong>Manufacturer</strong></div>
+                    <div class="col-xs-3"><strong>Manufacture Year</strong></div>
+                    <div class="col-xs-3 text-center"><strong>Trailer Location</strong></div>
+                    <div class="col-xs-3 text-center"><strong>Trailer Length</strong></div>
+                </div>
+                @*row 3 data*@
+                <div class="row">
+                    <div class="col-xs-3 pad-top" id="Manufacturer"></div>
+                    <div class="col-xs-3 pad-top" id="ManufactureYear"></div>
+                    <div class="col-xs-3 pad-top text-center" id="TrailerLocation"></div>
+                    <div class="col-xs-3 pad-top text-center" id="TrailerLength"></div>
+                </div>
+                <br />
+                @*row 4 header*@
+                <div class="row">
+                    <div class="col-xs-7"><strong>Notes</strong></div>
+                    <div class="col-xs-5"><strong>Status</strong></div>
+                </div>
+                @*row 4 data*@
+                <div class="row">
+                    <div class="col-xs-7 pad-top" id="Issues"></div>
+                    <div class="col-xs-5 pad-top" id="Status"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @if (Convert.ToInt32(Session["permission"]) > 3)
+                {
+                    <button type="button" class="btn btn-danger" id="active">
+                        Add to Active
+                    </button>
+                    <button type="button" class="btn btn-danger" id="inactive">
+                        Move to Inactive
+                    </button>
+                }
+                @if (Convert.ToInt32(Session["permission"]) >= 3)
+                {
+                    <button type="button" class="btn btn-warning" id="edit">
+                        Edit
+                    </button>
+                }
+                <button type="button" class="btn btn-primary" id="close" data-dismiss="modal" aria-label="Close">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Inactive Confirmation Modal -->
+<div id="inactiveConfirmModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                <p><strong>Are you sure you want to move trailer <span id="inactiveTrailerNumber"></span> to inactive?</strong></p>
+                <br />
+                <p>You can modify the trailer information after transfering.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="cancel" data-dismiss="modal" data-toggle="modal" data-target="#trailerModal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="inactiveConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Active Confirmation Modal -->
+<div id="activeConfirmModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                <p><strong>Are you sure you want to move this trailer to Active?</strong></p>
+                <br />
+                <p>Trailer information will need updating after transfering. </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="cancel" data-dismiss="modal" data-toggle="modal" data-target="#trailerModal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="activeConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Error Modal -->
+<div id="errorModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                <p><strong>@Session["error"]</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            //hides scrollbar when any modal is showing
+            $('#trailerModal').on('hide.bs.modal', function ()
+            {
+                showScrollBar();
+            });
+            $('#trailerModal').on('show.bs.modal', function ()
+            {
+                hideScrollBar();
+            });
+            $('#inactiveConfirmModal').on('show.bs.modal', function ()
+            {
+                hideScrollBar();
+            });
+            $('#activeConfirmModal').on('show.bs.modal', function ()
+            {
+                hideScrollBar();
+            });
+            $('#errorModal').on('show.bs.modal', function ()
+            {
+                hideScrollBar();
+            });
+
+            //Create Trailer Link
+            $('#createTrailer').on('click', function ()
+            {
+                location.href = "CreateTrailer";
+            });
+
+            //function to color the DOT Date text whether the certification is valid
+            //red if not, green if good, and yellow if certificaiton expires within the month
+            $('#trailers tr').each(function ()
+            {
+                var TrailerID = this.id;
+                validateDOTDate(TrailerID);
+            });
+
+            //function validates whether DOT date is still within 1 year certification
+            function validateDOTDate(TrailerID)
+            {
+                var currentDate = new Date();
+
+                var DotDate = ($('#dotDate_' + TrailerID).html());
+                var DotMonth = DotDate.substring(5, 7);
+                var DotDay = parseInt(DotDate.substring(8, 10));
+                var DotYear = parseInt(DotDate.substring(0, 4));
+
+                DotDate = new Date(DotYear, (DotMonth - 1), DotDay);
+
+                var experationDate = new Date(DotDate);
+                var experationMonth = new Date(DotDate);
+
+                experationMonth.setDate(experationMonth.getDate() + 335);
+                experationDate.setDate(experationDate.getDate() + 365);
+
+                $('#TrailerNumber').html($('#trailerNumber_' + TrailerID).html());
+                var needDOT = "DOT CERTIFIED";
+
+                if (currentDate < experationDate)
+                {
+                    $('#DOTDate').html($('#dotDate_' + TrailerID).html()).removeClass("red green yellow").addClass("green");
+                    $('#dotDate_' + TrailerID).removeClass("red green yellow").addClass("green");
+                    if (currentDate > experationMonth)
+                    {
+                        $('#DOTDate').html($('#dotDate_' + TrailerID).html()).removeClass("red green yellow").addClass("yellow");
+                        $('#dotDate_' + TrailerID).removeClass("red green yellow").addClass("yellow");
+                    }
+                }
+                else
+                {
+                    $('#DOTDate').html($('#dotDate_' + TrailerID).html()).removeClass("red green yellow").addClass("red");
+                    $('#dotDate_' + TrailerID).removeClass("red green yellow").addClass("red");
+                    needDOT = "NEEDS DOT";
+                }
+                return needDOT;
+            }
+
+            var TrailerID;
+            //display modal with all trailer info
+            $('#trailers').on('click', '.product-row', function ()
+            {
+                TrailerID = this.id;
+
+                //string variable to store DOT status
+                var needDOT = validateDOTDate(TrailerID);
+
+                $('#PlateNumber').html($('#plateNumber_' + TrailerID).html());
+                $('#VinNumber').html($('#vinNumber_' + TrailerID).html());
+                $('#InsuranceCard').html($('#insuranceCard_' + TrailerID).html());
+                $('#Insured').html($('#insured_' + TrailerID).html());
+                $('#Title').html($('#title_' + TrailerID).html());
+                $('#Lease').html($('#leased_' + TrailerID).html());
+                $('#TrailerLength').html($('#trailerLength_' + TrailerID).html());
+                $('#Manufacturer').html($('#manufacturer_' + TrailerID).html());
+                $('#ManufactureYear').html($('#manufactureYear_' + TrailerID).html());
+                $('#Status').html($('#status_' + TrailerID).html());
+                if ($('#issues_' + TrailerID).html() == "")
+                {
+                    $('#Issues').html(needDOT);
+                }
+                else
+                {
+                    $('#Issues').html($('#issues_' + TrailerID).html() + "<br>" + needDOT);
+                }
+                $('#DateModified').html($('#dateModified_' + TrailerID).html());
+                $('#TrailerLocation').html($('#trailerLocation_' + TrailerID).html());
+
+                // display modal
+                $('#trailerModal').modal('show');
+                hideScrollBar();
+            });
+
+            //add to active button click
+            $('#active').click(function ()
+            {
+                hideScrollBar();
+                $('#trailerModal').modal('toggle');
+                $('#activeConfirmModal').modal();
+            });
+
+            //add to inactive button click
+            $('#inactive').click(function ()
+            {
+                $('#inactiveTrailerNumber').html($('#TrailerNumber').html());
+                hideScrollBar();
+                $('#trailerModal').modal('toggle');
+                $('#inactiveConfirmModal').modal();
+            });
+
+            //active modal confirm button click
+            $('#activeConfirm').on('click', function ()
+            {
+                showScrollBar();
+                location.href = "CreateActiveTrailer/" + ($('#TrailerNumber').html());
+            });
+
+            //inactive modal confirm button click
+            $('#inactiveConfirm').on('click', function ()
+            {
+                showScrollBar();
+                location.href = "CreateInactiveTrailer/" + ($('#TrailerNumber').html());
+            });
+
+            //edit trailer button click
+            $('#edit').on('click', function ()
+            {                
+                location.href = "EditTrailer/" + ($('#TrailerNumber').html());
+            })
+
+            //close button click
+            $('#close').on('click', function ()
+            {
+                showScrollBar();
+                $('#trailerModal').modal('hide');
+            });
+
+            function hideScrollBar()
+            {
+                $('body').css('overflow', 'hidden');
+                $('body').css('overflow-x', 'hidden');
+            }
+
+            function showScrollBar()
+            {
+                $('body').css('overflow', 'scroll');
+                $('body').css('overflow-x', 'hidden');
+            }
+        });
+    </script>
+}

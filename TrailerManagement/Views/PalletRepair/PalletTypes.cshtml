@@ -1,0 +1,52 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Pallet Types";
+}
+
+<h2 class="float-left">Pallet Types</h2>
+<input type="button" class="btn btn-primary float-left no-print" value="Add New Type" id="createPalletType" style="margin-top:20px;margin-left:10px"  />
+
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr class="font-md">
+            <th class="text-center">Part Number</th>
+            <th class="text-center">Description</th>
+            <th class="text-center">Type</th>
+            <th class="text-center">Tags Required</th>
+            <th class="text-center">Put Away Location</th>
+            <th class="text-center">Status</th>
+        </tr>
+    </thead>
+    <tbody id="palletTypes">
+        @foreach(PalletType p in Model)
+        {
+            <tr class="product-row" id="@p.PalletTypeGUID">
+                <td id="partNumber_@p.PalletTypeGUID">@p.PartNumber</td>
+                <td id="customerNumber_@p.PalletTypeGUID">@p.Description</td>
+                <td id="name_@p.PalletTypeGUID">@p.Type</td>
+                <td id="sortType_@p.PalletTypeGUID">@p.TagsRequired</td>
+                <td id="putAwayLocation_@p.PalletTypeGUID">@p.PutAwayLocation</td>
+                <td id="status_@p.PalletTypeGUID">@p.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('#palletTypes').on('click', '.product-row', function ()
+            {
+                var typeID = this.id;
+                location.href = "/PalletRepair/EditPalletType/" + typeID;
+            });
+
+            $('#createPalletType').on('click', function ()
+            {
+                location.href = "/PalletRepair/CreatePalletType";
+            })
+        });
+    </script>    
+}

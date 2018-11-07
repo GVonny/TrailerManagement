@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = "Trailer Management";
+}
+
+<div class="row">
+    <img src="~/Content/logo.png" class="col-md-4" id="logo" />
+    <h1 id="logoText">Trailer Management</h1>
+</div>
+<br />
+
+<div>
+    @if (Convert.ToInt32(Session["permission"]) > 10)
+    {
+        <fieldset>
+            <legend>Trailers</legend>
+                <div class="col-xs-3">
+                    <h2>Active List</h2>
+                    <p><a href="~/Trailer/ActiveTrailerList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+                </div>
+            @if (Convert.ToInt32(Session["permission"]) > 30)
+            {
+                <div class="col-xs-3">
+                    <h2>Master List</h2>
+                    <p><a href="~/Trailer/TrailerList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+                </div>
+                <div class="col-xs-3">
+                    <h2>Inactive List</h2>
+                    <p><a href="~/Trailer/InactiveTrailerList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+                </div>
+                <div class="col-xs-3">
+                    <h2>Create Trailer</h2>
+                    <p><a href="~/Trailer/CreateTrailer" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+                </div>
+            }
+        </fieldset>
+    }
+</div>
+<div>
+    @if (Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000)
+    {
+        <fieldset>
+            <legend>Pallet Repair</legend>
+            <div class="col-xs-2">
+                <h2>Sort List</h2>
+                <p><a href="~/PalletRepair/SortList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+            </div>
+            @if (Convert.ToInt32(Session["permission"]) > 30)
+            {
+                <div class="col-xs-2">
+                    <h2>Payouts</h2>
+                    <p><a href="~/PalletRepair/PayoutList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+                </div>
+                <div class="col-xs-2">
+                    <h2>Vendors</h2>
+                    <p><a href="~/PalletRepair/CustomersAndVendors" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+                </div>
+                <div class="col-xs-3">
+                    <h2>Pallet Types</h2>
+                    <p><a href="~/PalletRepair/PalletTypes" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+                </div>
+                <div class="col-xs-3">
+                    <h2>Pallet Prices</h2>
+                    <p><a href="~/PalletRepair/PalletPrices?startsWith=ALL" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+                </div>
+            }
+        </fieldset>
+    }
+</div>
+<div>
+    @if (Convert.ToInt32(Session["permission"]) > 30)
+    {
+        <fieldset>
+            <legend>Users</legend>
+            <div class="col-xs-3">
+                <h2>Create User</h2>
+                <p><a href="~/Users/CreateUser" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+            </div>
+            <div class="col-xs-3">
+                <h2>Edit Users</h2>
+                <p><a href="~/Users/UserList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+            </div>
+            <div class="col-xs-3">
+                <h2>My Account</h2>
+                <p><a href="~/Users/EditUser/@Session["userID"]" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+            </div>
+            <div class="col-xs-3">
+                <h2>Sign Out</h2>
+                <p><a href="~/Users/SignOut" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+            </div>
+        </fieldset>
+    }
+</div>
+<br />
+

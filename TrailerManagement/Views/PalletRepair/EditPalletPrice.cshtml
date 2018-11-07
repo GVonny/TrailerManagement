@@ -1,0 +1,102 @@
+﻿@model TrailerManagement.Models.PalletPrice
+@{
+    ViewBag.Title = "Edit Price Preset";
+}
+
+<h2>Edit Price Preset</h2>
+<div class="well">
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.PalletPriceGUID)
+
+        <div class="form-group">
+            <div class="col-md-2 float-left text-right">
+                <strong>Vendor Name</strong>
+            </div>
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.VendorName, new{ htmlAttributes = new { @class = "form-control signin-form", @id="vendor"} })
+                @Html.ValidationMessageFor(model => model.VendorName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2 float-left text-right">
+                <strong>Part Number</strong>
+            </div>
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.PartNumber,new { htmlAttributes = new { @class = "form-control signin-form", @id="partNumber" } } )
+                @Html.ValidationMessageFor(model => model.PartNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2 float-left text-right">
+                <strong>Purchase Price</strong>
+            </div>
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.PurchasePrice, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PurchasePrice, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-4">
+                <input type="submit" value="Save" class="btn btn-primary" id="save"/>
+                <a href="/PalletRepair/PalletPrices?startsWith=ALL" class="btn btn-warning">Cancel</a>
+                <input type="button" value="Delete" class="btn btn-danger float-right" id="delete">
+            </div>
+        </div>
+    </div>
+}
+</div>
+
+<!-- Delete Modal -->
+<div id="deleteModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                <p><strong>Are you sure you want to delete this price preset?</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">No</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete" data-dismiss="modal" data-toggle="modal">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function()
+        {
+            $('#vendor').attr('disabled', 'disabled');
+            $('#partNumber').attr('disabled', 'disabled');
+            $('#delete').on('click', function ()
+            {
+                $('#deleteModal').modal();
+            });
+
+            $('#confirmDelete').on('click', function ()
+            {
+                location.href = "/PalletRepair/DeletePalletPrice/" + '@Model.PalletPriceGUID';
+            });
+
+            $('#save').on('click', function ()
+            {
+                $('#vendor').removeAttr('disabled', 'disabled');
+                $('#partNumber').removeAttr('disabled', 'disabled');
+            });
+        });
+    </script>    
+}

@@ -1,0 +1,207 @@
+﻿@using TrailerManagement.Models
+@{
+    ViewBag.Title = "Active List";
+}
+<br />
+@if ((Convert.ToInt32(Session["permission"]) > 20))
+{
+    <div class="text-center no-print">Date Modified</div>
+    <div id="colorCode" class="text-center no-print">
+        <span class="green">Green: less than 2 weeks old</span>&nbsp;|
+        <span class="yellow">Yellow: 2 weeks old</span>&nbsp;|
+        <span class="red">Red: 3+ weeks old</span>
+    </div>
+}
+
+<div class="sort">
+    <div class="h2 float-left"><strong>@ViewBag.Title</strong></div>
+    @if ((Convert.ToInt32(Session["permission"]) > 20))
+    {
+        <div class="float-left h3 no-print"><input type="text" class="addSearch" placeholder="Trailer #" id="addSearch" /></div>
+        <div class="float-left h3 no-print"><button type="button" class="btn btn-primary" id="add">Add</button></div>
+        <div class="text-right h4 float-right no-print">
+            Filter by:
+            <p class="hover">
+                @Html.DropDownList("SortOrder", new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "ALL", Value = "ALL" },
+                    new SelectListItem { Text = "NEED EMPTY", Value = "NEEDEMPTY" },
+                    new SelectListItem { Text = "READY TO ROLL", Value = "READYTOROLL" },
+                    new SelectListItem { Text = "LOADING", Value = "LOADING" },
+                    new SelectListItem { Text = "EMPTY", Value = "EMPTY" },
+                    new SelectListItem { Text = "NEED WORK", Value = "NEEDWORK" },
+                    new SelectListItem { Text = "IN TRANSIT", Value = "INTRANSIT" },
+                    new SelectListItem { Text = "DELIVERED", Value = "DELIVERED"},
+                    new SelectListItem { Text = "CUSTOMER", Value = "CUSTOMER"},
+                },
+                htmlAttributes: new { @class = "form-control", id = "sortOrder" })
+            </p>
+        </div>
+    }
+</div>
+<br />
+
+<table class="table table-hover table-responsive">
+    @using (Html.BeginForm("ActiveTrailerList", "Trailer", FormMethod.Get))
+    {
+        <thead>
+            <tr class="font-md">
+                <th class="col-xs-1">Trailer Number</th>
+                <th class=" text-center">Trailer Status</th>
+                @if ((Convert.ToInt32(Session["permission"]) > 20))
+                {
+                    <th class="text-center col-xs-1">Load Status</th>
+                }
+                <th class="text-center">Customer</th>
+
+                <th class="text-center col-xs-1">Location Status</th>
+                <th class="text-center">Trailer Location</th>
+                @if ((Convert.ToInt32(Session["permission"]) > 20))
+                {
+                    <th>Notes</th>
+                    <th class="text-center">Tags</th>
+                    <th class="text-center col-xs-1 no-print">Last Modified</th>
+                }
+                <th class="orderDate text-center hidden">Order Date</th>
+                <th class="hidden">Order Number</th>
+            </tr>
+        </thead>
+    }
+    <tbody id="trailers">
+        @foreach (ActiveTrailerList t in Model)
+        {
+            <tr class="product-row" id="@t.TrailerNumber">
+                <td id="trailerNumber_@t.TrailerNumber">@t.TrailerNumber</td>
+                <td id="trailerStatus_@t.TrailerNumber" class="text-center">@t.TrailerStatus</td>
+                @if ((Convert.ToInt32(Session["permission"]) > 20))
+                {
+                    <td id="loadStatus_@t.TrailerNumber" class="text-center">@t.LoadStatus</td>
+                }
+                <td id="customer_@t.TrailerNumber" class="text-center">@t.Customer</td>
+                <td id="loactionStatus_@t.TrailerNumber" class="text-center">@t.LocationStatus</td>
+                <td id="trailerLocation_@t.TrailerNumber" class="text-center">@t.TrailerLocation</td>
+                @if ((Convert.ToInt32(Session["permission"]) > 20))
+                {
+                    <td id="notes_@t.TrailerNumber">@t.Notes</td>
+                    <td id="tags_@t.TrailerNumber" class="text-center">@t.Tags</td>
+                    <td id="dateModified_@t.TrailerNumber" class="text-center no-print">@t.DateModified</td>
+                }
+                @*hidden for data purposes*@
+                <td class="hidden">@t.TrailerGUID</td>
+                <td id="orderNumber_@t.TrailerNumber" class="hidden">@t.OrderNumber</td>
+                <td id="orderDate_@t.TrailerNumber" class="text-center hidden">@t.OrderDate</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+@section scripts
+{
+    <script>
+    $(function ()
+    {
+        var TrailerNumber;
+        var permission = '@Session["permission"]';
+
+        $('#trailers tr').each(function ()
+        {
+            TrailerNumber = this.id;
+            var trailerStatus = $('#trailerStatus_' + TrailerNumber).html();
+            switch (trailerStatus)
+            {
+                case "1":
+                    $('#trailerStatus_' + TrailerNumber).html("NEED EMPTY").addClass('needEmpty');
+                    break;
+                case "2":
+                    $('#trailerStatus_' + TrailerNumber).html("READY TO ROLL").addClass('readyToRoll');
+                    break;
+                case "3":
+                    $('#trailerStatus_' + TrailerNumber).html("LOADING").addClass('loading');
+                    break;
+                case "4":
+                    $('#trailerStatus_' + TrailerNumber).html("EMPTY").addClass('empty');
+                    break;
+                case "5":
+                    $('#trailerStatus_' + TrailerNumber).html("NEED WORK").addClass('needWork');;
+                    break;
+                case "6":
+                    $('#trailerStatus_' + TrailerNumber).html("IN TRANSIT").addClass('shipped');
+                    break;
+                case "7":
+                    $('#trailerStatus_' + TrailerNumber).html("DELIVERED").addClass('delivered');
+                    break;
+            }
+            if (permission > 20)
+            {
+                validateModificationDate(TrailerNumber);
+            }
+        });
+
+        //redirect to edit page on click
+        $('#trailers').on('click', '.product-row', function ()
+        {
+            if (permission >= 2)
+            {
+                TrailerNumber = this.id;
+                location.href = "EditActiveTrailer/" + TrailerNumber;
+            }
+        });
+
+        //button click to add trailers to active
+        $('#add').on('click', function ()
+        {
+            var id = $('#addSearch').val();
+            if (id != "")
+            {
+                location.href = "CreateActiveTrailer/" + id;
+            }
+        });
+
+        $('#sortOrder').on('change', function ()
+        {
+            var sortOrder = $('#sortOrder').val();
+            location.href = "ActiveTrailerList?SortOrder=" + sortOrder;
+        });
+
+        //validates if last date modified is within the 2 and 3 week marker
+        //green if within 2 weeks, yellow if between 2 and 3 weeks, red if over 3 weeks
+        function validateModificationDate(TrailerNumber)
+        {
+            //current date object
+            var currentDate = new Date();
+
+            var dateModified = ($('#dateModified_' + TrailerNumber).html());
+
+            var dateModifiedMonth = dateModified.substring(5, 7);
+            var dateModifiedDay = dateModified.substring(8, 10);
+            var dateModifiedYear = parseInt(dateModified.substring(0, 4));
+
+            //date modified object
+            dateModified = new Date(dateModifiedYear, (dateModifiedMonth - 1), dateModifiedDay);
+            //format yyyy-mm-dd
+
+            //varaibles to store 2 and 3 week dates ahead of date modified
+            var twoWeekLimit = new Date(dateModified);
+            var threeWeekLimit = new Date(dateModified);
+            twoWeekLimit.setDate(twoWeekLimit.getDate() + 14);
+            threeWeekLimit.setDate(threeWeekLimit.getDate() + 21);
+
+            if (currentDate < threeWeekLimit && currentDate > twoWeekLimit)
+            {
+                $('#dateModified_' + TrailerNumber).removeClass('red green yellow').addClass('yellow');
+            }
+            else if (currentDate < twoWeekLimit)
+            {
+                $('#dateModified_' + TrailerNumber).removeClass('red green yellow').addClass('green');
+            }
+            else
+            {
+                $('#dateModified_' + TrailerNumber).removeClass('red green yellow').addClass('red');
+            }
+        }
+    });
+    </script>
+}

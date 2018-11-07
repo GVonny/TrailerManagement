@@ -1,0 +1,594 @@
+﻿@using TrailerManagement.Models;
+@model TrailerManagement.Models.EditActiveTrailer
+
+@{
+    ViewBag.Title = "Edit Active Trailer";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="well">
+    <form method="post" class="form-horizontal">
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-horizontal">
+            <!-- Trailer Number -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.TrailerNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.TrailerNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Trailer Number", id = "trailerNumber" } })
+                    @Html.ValidationMessageFor(model => model.TrailerNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Trailer Status -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.TrailerStatus, "Trailer Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                @if (Convert.ToInt32(Session["permission"]) > 2)
+                {
+                    <div class="col-md-3">
+                        @Html.DropDownList("TrailerStatus", new List<SelectListItem>
+                        {
+                            new SelectListItem { Text = "", Value = "" },
+                            new SelectListItem { Text = "NEED EMPTY", Value = "1" },
+                            new SelectListItem { Text = "READY TO ROLL", Value = "2" },
+                            new SelectListItem { Text = "LOADING", Value = "3" },
+                            new SelectListItem { Text = "EMPTY", Value = "4" },
+                            new SelectListItem { Text = "NEED WORK", Value = "5" },
+                            new SelectListItem { Text = "IN TRANSIT", Value = "6" },
+                            new SelectListItem { Text = "DELIVERED", Value = "7"},
+                        },
+                        htmlAttributes: new { @class = "form-control signin-form", id = "trailerStatus" })
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-3">
+                        @Html.DropDownList("TrailerStatus", new List<SelectListItem>
+                        {
+                            new SelectListItem { Text = "", Value = "" },
+                            new SelectListItem { Text = "NEED EMPTY", Value = "1" },
+                            new SelectListItem { Text = "IN TRANSIT", Value = "6" },
+                            new SelectListItem { Text = "DELIVERED", Value = "7"},
+                        },
+                        htmlAttributes: new { @class = "form-control signin-form", id = "trailerStatus"})
+                    </div>
+                }
+            </div>
+            <!-- Load Status -->
+            <div class="form-group hidden">
+                @Html.LabelFor(model => model.LoadStatus, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.DropDownList("LoadStatus", new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "", Value = "" },
+                        new SelectListItem { Text = "EMPTY", Value = "EMPTY" },
+                        new SelectListItem { Text = "¼ FULL", Value = "¼ FULL" },
+                        new SelectListItem { Text = "½ FULL", Value = "½ FULL" },
+                        new SelectListItem { Text = "¾ FULL", Value = "¾ FULL" },
+                        new SelectListItem { Text = "FULL", Value = "FULL" },
+                    },
+                    htmlAttributes: new { @class = "form-control signin-form", id = "loadStatus"})
+                </div>
+            </div>
+            <!-- Customer -->
+            <div class="form-group hidden">
+                @Html.LabelFor(model => model.Customer, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.Customer, new { htmlAttributes = new { @class = "form-control", placeholder = "Customer", id = "customer" } })
+                    @Html.ValidationMessageFor(model => model.Customer, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Order Date -->
+            <div class="form-group hidden">
+                @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "datepicker", @type = "date", id = "orderDate" } })
+                    @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Order Number -->
+            <div class="form-group hidden">
+                @Html.LabelFor(model => model.OrderNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.OrderNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Order Number", id = "orderNumber" } })
+                    @Html.ValidationMessageFor(model => model.OrderNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Location Status -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.LocationStatus, "Location Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.DropDownList("LocationStatus", new List<SelectListItem>
+                    {
+                       new SelectListItem { Text = "", Value = "" },
+                       new SelectListItem { Text = "ON SITE", Value = "ON SITE" },
+                       new SelectListItem { Text = "OFF SITE", Value = "OFF SITE" },
+                    },
+                    htmlAttributes: new { @class = "form-control signin-form", id = "locationStatus" })
+                </div>
+            </div>
+            <!-- Trailer Location -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.TrailerLocation, "Trailer Location", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3" id="onSiteLocations">
+                    @Html.DropDownList("TrailerLocation", new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "", Value = "" },
+                        new SelectListItem { Text = "HILL", Value = "HILL" },
+                        new SelectListItem { Text = "ROW", Value = "ROW" },
+                        new SelectListItem { Text = "PR", Value = "PR" },
+                        new SelectListItem { Text = "HF", Value = "HF" },
+                        new SelectListItem { Text = "MAINTENANCE", Value = "MAINTENANCE" },
+                    },
+                    htmlAttributes: new { @class = "form-control signin-form", id = "trailerLocation" })
+                </div>
+                <div class="col-md-3" id="offSiteLocation">
+                    @Html.EditorFor(model => model.TrailerLocation, new { htmlAttributes = new { @class = "form-control", placeholder = "Trailer Location", id = "offSiteLocationInput" } })
+                    @Html.ValidationMessageFor(model => model.TrailerLocation, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-xs-offset-2 col-xs-10 hidden" id="locationNotInListCheckBox">
+                <input type="checkbox" id="locationNotInList" />Location not in list?
+            </div>
+            <!-- Notes -->
+            <div class="form-group hidden">
+                @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3" id="notes">
+                    @Html.DropDownList("Notes", new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "", Value = "" },
+                        new SelectListItem { Text = "CORES", Value = "CORES" },
+                        new SelectListItem { Text = "CORES/MIXED", Value = "CORES/MIXED" },
+                        new SelectListItem { Text = "A-GRADE", Value = "A-GRADE" },
+                        new SelectListItem { Text = "B-GRADE", Value = "B-GRADE" },
+                        new SelectListItem { Text = "SCRAP", Value = "SCRAP" },
+                        new SelectListItem { Text = "RIP/SORT", Value = "RIP/SORT" },
+                    },
+                    htmlAttributes: new { @class = "form-control signin-form", id = "notesList" })
+                </div>
+                <div class="col-md-3 hidden" id="specialNotes">
+                    @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", placeholder = "Special Note", id = "specialNotesInput" } })
+                    @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-xs-offset-2 col-xs-10 hidden" id="specialNoteCheckBox">
+                <input type="checkbox" id="specialNote" />Special Note
+            </div>
+            <!-- Tags -->
+            <div class="form-group hidden">
+                @Html.LabelFor(model => model.Tags, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3" id="tags">
+                    @Html.DropDownList("Tags", new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "", Value = "" },
+                        new SelectListItem { Text = "YES", Value = "YES" },
+                        new SelectListItem { Text = "NO", Value = "NO" },
+                    },
+                    htmlAttributes: new { @class = "form-control signin-form", id = "tags" })
+                </div>
+            </div>
+            <!-- Date Modified -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.DateModified, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.DateModified, new { htmlAttributes = new { @class = "form-control", id = "dateModified" } })
+                    @Html.ValidationMessageFor(model => model.DateModified, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Submit -->
+            <div class="form-group">
+                <div class="col-xs-offset-2 col-xs-10">
+                    <input type="submit" id="save" value="Save" class="btn btn-primary" />
+                    <input type="button" id="cancel" class=" btn btn-warning" value="Cancel" />
+                    @if ((Convert.ToInt32(Session["permission"]) > 3))
+                    {
+                        <input type="button" id="remove" class="btn btn-danger" value="Remove from Active" />
+                    }
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Remove Confirmation Modal -->
+<div id="removeConfirmModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                <p>Are you sure you want to remove this trailer from Active?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="cancel" data-dismiss="modal" data-toggle="modal" data-target="#trailerModal">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="removeConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Location Confirmation Modal-->
+<div id="locationConfirmModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                <p>Are you sure you want to input a location not in the list?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="locationCancel" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="locationConfirm" data-dismiss="modal">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('#container').addClass('hidden');
+
+            function disableBack()
+            {
+                window.history.forward()
+            }
+
+            window.onload = disableBack();
+            window.onpageshow = function (evt)
+            {
+                if (evt.persisted)
+                    disableBack()
+            }
+
+            //auto uncheckes checkbox
+            $('#locationNotInList').prop('checked', false);
+            //disables trailer number and date modified as they are not allowed to be changed by the user
+            $('#dateModified').attr('disabled', 'disabled');
+            $('#trailerNumber').attr('disabled', 'disabled');
+            //hides location fields
+            $('#onSiteLocations').addClass('hidden');
+            $('#offSiteLocation').addClass('hidden');
+
+            
+            //determines if location is "ON SITE" or "OFF SITE" or neither
+            determineLocationStatus();
+            //determines if the notes is special or within drop down
+            determineSpecialNote();
+
+            //sets the order date to the current date
+            $('#orderDate').val(getCurrentDate());
+            
+            var permission = '@Session["permission"]';
+            if (permission > 2)
+            {
+                //unhides fields depending on permission level
+                $('.form-group').removeClass('hidden');
+                $('#specialNoteCheckBox').removeClass('hidden');
+            }
+            
+            var trailerNumber = $('#trailerNumber').val();
+            //remove modal confirm button click
+            $('#removeConfirm').on('click', function ()
+            {
+                location.href = '@Url.Action("RemoveFromActive", "Trailer")' + "/" + trailerNumber;
+            });
+            //remove from active button click
+            $('#remove').on('click', function ()
+            {
+                $('#removeConfirmModal').modal();
+            });
+            
+            //checkbox modal cancel button click
+            $('#locationCancel').on('click', function ()
+            {
+                $('#locationNotInList').prop('checked', false);
+            });
+            //checkbox modal confirm button click
+            $('#locationConfirm').on('click', function ()
+            {
+                $('#onSiteLocations').addClass('hidden');
+                $('#offSiteLocation').removeClass('hidden');
+            });
+
+            $('#save').on('click', function ()
+            {
+                if (offsite)
+                {
+                    $('#trailerLocation').val($('#offSiteLocation').val());
+                }
+                if (isSpecial)
+                {
+                    $('#notesList').val($('#specialNotesInput').val());
+                }
+                checkModification();
+                $('#dateModified').removeAttr('disabled', 'disabled');
+                $('#trailerNumber').removeAttr('disabled', 'disabled');
+            });
+
+
+            $('#cancel').on('click', function ()
+            {
+                location.href = "/Trailer/ActiveTrailerList";
+            });
+            
+            var lastModifiedDate = $('#dateModified').val();
+            var modified = 0;
+
+            var trailerStatus = $('#trailerStatus').val();
+            $('#trailerStatus').on('change', function ()
+            {
+                var newTrailerStatus = $('#trailerStatus').val();
+                //changes date modified field if the new value does not equal previous value
+                if (trailerStatus != newTrailerStatus)
+                {
+                    modified++;
+                }
+                else
+                {
+                    modified--;
+                }
+                if (newTrailerStatus == '4')
+                {
+                    $('#customer').val("");
+                    $('#loadStatus').val("");
+                    $('#notesList').val("");
+                    $('#specialNotesInput').val("");
+                }
+                if (newTrailerStatus == '5')
+                {
+                    determineLocationStatus();
+                    $('#locationStatus').val("ON SITE");
+                    $('#trailerLocation').val("MAINTENANCE");
+
+                    $('#onSiteLocations').removeClass('hidden');
+                    $('#offSiteLocation').val("");
+                    $('#offSiteLocation').addClass('hidden');
+                }
+                if (newTrailerStatus == '6')
+                {
+                    $('#locationStatus').val("OFF SITE");
+                    $('#trailerLocation').val("");
+                    $('#offSiteLocation').val("");
+                }
+                
+            });
+            
+            var customer = $('#customer').val();
+            $('#customer').on('change', function ()
+            {
+                var newCustomer = $('#customer').val();
+                $('#offSiteLocationInput').val(newCustomer);
+                //changes date modified field if the new value does not equal previous value
+                if (customer != newCustomer)
+                {
+                    modified++;
+                }
+                else
+                {
+                    modified--;
+                }
+            });
+            
+            var locationStatus = $('#locationStatus').val();
+            $('#locationStatus').on('change', function ()
+            {
+                var newLocationStatus = $('#locationStatus').val();
+                determineLocationStatus();
+                //changes date modified field if the new value does not equal previous value
+                if (locationStatus != newLocationStatus)
+                {
+                    modified++;
+                }
+                else
+                {
+                    modified--;
+                }
+            });
+
+            var trailerLocation = $('#trailerLocation').val();
+            $('#trailerLocation').on('change', function ()
+            {
+                var newTrailerLocation = $('#trailerLocation').val();
+                //changes date modified field if the new value does not equal previous value
+                if (trailerLocation != newTrailerLocation)
+                {
+                    modified++;
+                }
+                else
+                {
+                    modified--;
+                }
+            });
+
+            $('#notesList').on('change', function ()
+            {
+                var note = $('#notesList').val();
+                console.log(note);
+                if (note == "SPECIAL")
+                {
+                    $('#specialNotes').removeClass('hidden');
+                    $('#notesList').addClass('hidden');
+                }
+            });
+
+            var isSpecial;
+            $('#specialNote').change(function ()
+            {
+                if ($(this).is(':checked'))
+                {
+                    $('#notes').addClass('hidden');
+                    $('#specialNotes').removeClass('hidden');
+                    $('#specialNotesInput').val("");
+                    isSpecial = true;
+                }
+                else
+                {
+                    $('#notes').removeClass('hidden');
+                    $('#specialNotes').addClass('hidden');
+                    isSpecial = false;
+                }
+            });
+
+            //if checkbox is checked, changes location field from drop down list to user input field
+            $('#locationNotInList').change(function ()
+            {
+                if ($(this).is(':checked'))
+                {
+                    $('#locationConfirmModal').modal();
+                }
+                else
+                {
+                    $('#onSiteLocations').removeClass('hidden');
+                    $('#offSiteLocation').addClass('hidden');
+                }
+            });
+            
+            //for each change that was made a counter increments, if counter is greater than zero,
+            //calls getCurrentDate which updates the last modified date
+            function checkModification()
+            {
+                if (modified > 0)
+                {
+                    $('#dateModified').val(getCurrentDate());
+                }
+                else
+                {
+                    $('#dateModified').val(lastModifiedDate);
+                }
+            }
+            
+            function determineSpecialNote()
+            {
+                //if($('#specialNotes').val() == null)
+                var note = $('#specialNotesInput').val();
+                console.log(note);
+                if (note == "")
+                {
+                    $('#specialNotesInput').val($('#notesList').val());
+                    $('#notes').removeClass('hidden');
+                }
+                else
+                {
+                    if (note != "CORES" && note != "CORES/MIXED" && note != "A-GRADE" && note != "B-GRADE" && note != "SCRAP" && note != "RIP/SORT")
+                    {
+                        $('#specialNotes').removeClass('hidden');
+                        $('#notes').addClass('hidden');
+                        $('#specialNote').prop('checked', true);
+                        isSpecial = true;
+                    }
+                    else
+                    {
+                        $('#specialNote').prop('checked', false);
+                        isSpecial = false;
+                    }
+                }
+            }
+
+            var offsite;
+            //function to determine which input to show depending if trailer is "ON SITE" or "OFF SITE" or neither
+            function determineLocationStatus()
+            {
+                var locationStatus = $('#locationStatus').val();
+                if (locationStatus == "")
+                {
+                    $('#onSiteLocations').addClass("hidden");
+                    $('#offSiteLocation').addClass("hidden");
+                    $('#offSiteLocationInput').val("");
+                    $('#trailerLocation').val($('#offSiteLocation').val());
+                }
+                else
+                {
+                    if (locationStatus == 'ON SITE')
+                    {
+                        offsite = false;
+                        $('#offSiteLocation').addClass("hidden");
+                        $('#onSiteLocations').removeClass("hidden");
+                        $('#locationNotInListCheckBox').removeClass('hidden');
+                    }
+                    else
+                    {
+                        offsite = true;
+                        $('#onSiteLocations').addClass("hidden");
+                        $('#offSiteLocation').removeClass("hidden");
+                        $('#locationNotInListCheckBox').addClass('hidden');
+                        var location = $('#offSiteLocationInput').val();
+                        if (location == "HILL" || location == "ROW" || location == "PR" || location == "HF" || location == "MAINTENANCE")
+                        {
+                            $('#offSiteLocationInput').val("");
+                        }
+                    }
+                }
+            }
+
+             //sets last modified date to current date
+            function getCurrentDate()
+            {
+                var currentDate = new Date().toString();
+                var currentMonth = currentDate.substring(4, 7);
+                var currentDay = currentDate.substring(8, 10);
+                var currentYear = currentDate.substring(11, 15);
+
+                //converts month abreviation to month number
+                switch (currentMonth)
+                {
+                    case "Jan":
+                        currentMonth = "01";
+                        break;
+                    case "Feb":
+                        currentMonth = "02";
+                        break;
+                    case "Mar":
+                        currentMonth = "03";
+                        break;
+                    case "Apr":
+                        currentMonth = "04";
+                        break;
+                    case "May":
+                        currentMonth = "05";
+                        break;
+                    case "Jun":
+                        currentMonth = "06";
+                        break;
+                    case "Jul":
+                        currentMonth = "07";
+                        break;
+                    case "Aug":
+                        currentMonth = "08";
+                        break;
+                    case "Sep":
+                        currentMonth = "09";
+                        break;
+                    case "Oct":
+                        currentMonth = "10";
+                        break;
+                    case "Nov":
+                        currentMonth = "11";
+                        break;
+                    case "Dec":
+                        currentMonth = "12";
+                        break;
+                }
+
+                currentDate = (currentYear + "-" + currentMonth + "-" + currentDay);
+                return currentDate;
+            }
+
+
+            
+
+
+
+            
+        });
+    </script>
+}

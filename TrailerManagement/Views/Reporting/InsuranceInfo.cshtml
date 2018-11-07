@@ -1,0 +1,31 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Insurance Info";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table class="table table-hover table-responsive">
+    @using (Html.BeginForm("TrailerList", "Home", FormMethod.Get))
+    {
+        <thead>
+            <tr class="font-md">
+                <th>Trailer Number</th>
+                <th>Vin Number</th>
+                <th>Manufacturer</th>
+                <th>Manufacture Year</th>
+            </tr>
+        </thead>
+    }
+    <tbody id="trailers">
+        @foreach (TrailerList t in Model)
+        {
+        <tr class="product-row" id="@t.TrailerGUID">
+            <td id="trailerNumber_@t.TrailerGUID">@t.TrailerNumber</td>
+            <td id="vinNumber_@t.TrailerGUID">@t.VinNumber</td>
+            <td id="manufacturer_@t.TrailerGUID">@t.Manufacturer</td>
+            <td id="manufactureYear_@t.TrailerGUID">@t.ManufactureYear</td>
+        </tr>
+        }
+    </tbody>
+</table>

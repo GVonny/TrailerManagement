@@ -1,0 +1,154 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Payouts";
+}
+
+<h2 class="float-left">Payouts</h2> <a href="SortList" class="btn btn-primary" style="margin-top:20px; margin-left:15px">Sort List</a>
+<div class="float-right">
+    <label for="showClosedPayouts">Show Closed Payouts</label>
+    <input type="checkbox" id="showClosedPayouts" name="showClosedPayouts" style="margin-top:30px">
+</div>
+<br />
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr class="font-md">
+            <th class="col-xs-4">Vendor</th>
+            <th>Trailer Number</th>
+            <th>Order Number</th>
+            <th>Date Arrived</th>
+            <th>Time to Unload</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody id="payouts">
+       @foreach (Payout p in Model)
+        {
+            if(p.Status != "CLOSED")
+            {
+                <tr class="product-row" id="@p.SortGUID">
+                    <td id="customer_@p.SortGUID">@p.Vendor</td>
+                    <td id="trailerNumber_@p.SortGUID">@p.TrailerNumber</td>
+                    <td id="orderNumber_@p.SortGUID">@p.OrderNumber</td>
+                    <td id="dateArrived_@p.SortGUID">@p.DateArrived</td>
+                    <td id="timeToUnload_@p.SortGUID">@p.TimeToSort</td>
+                    <td id="status_@p.SortGUID">@p.Status</td>
+                </tr>
+            }
+            else
+            {
+                <tr class="closed-row hidden" id="@p.SortGUID">
+                    <td id="customer_@p.SortGUID">@p.Vendor</td>
+                    <td id="trailerNumber_@p.SortGUID">@p.TrailerNumber</td>
+                    <td id="orderNumber_@p.SortGUID">@p.OrderNumber</td>
+                    <td id="dateArrived_@p.SortGUID">@p.DateArrived</td>
+                    <td id="timeToUnload_@p.SortGUID">@p.TimeToSort</td>
+                    <td id="status_@p.SortGUID">@p.Status</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<!-- Additional Info Modal -->
+<div id="additionalInfoModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Additional Info</h2>
+            </div>
+            <div class="modal-body">
+                <strong>Invoice Number:</strong>
+                <input type="text" class="form-control" id="invoiceNumber">
+                <br>
+
+                <strong>Bill of Lading:</strong>
+                <input type="text" class="form-control" id="billOfLading">
+                <br>
+
+                <strong>Packing List Number:</strong>
+                <input type="text" class="form-control" id="packingListNumber">
+                <br>
+
+                <strong>Purchase Order Number:</strong>
+                <input type="text" class="form-control" id="purchaseOrderNumber">
+                <br />
+
+                <strong>Pallet Order Number:</strong>
+                <input type="text" class="form-control" id="palletOrderNumber">
+                <br />
+
+                <strong>Vendor Change (if necessary)</strong>
+                @Html.DropDownList("Vendors", null, "- - - Select Vendor - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "vendors", @name = "vendor" })
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="updateAdditionalInfo" data-dismiss="modal" data-toggle="modal">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            var sortID;
+            $('#payouts').on('click', '.product-row', function ()
+            {
+                sortID = this.id;
+                if ($('#status_' + sortID).html() == "NEW")
+                {
+                    $('#additionalInfoModal').modal();
+                }
+                else
+                {
+                    location.href = "/PalletRepair/ViewPayout?sortID=" + sortID;
+                }
+            });
+
+            $('#payouts tr').each(function ()
+            {
+                var payoutID = this.id;
+                var timeToUnload = $('#timeToUnload_' + payoutID).html();
+                timeToUnload = (timeToUnload / 60).toFixed(2) + " minutes";
+                $('#timeToUnload_' + payoutID).html(timeToUnload);
+            })
+
+            $('#payouts').on('click', '.closed-row', function ()
+            {
+                sortID = this.id;
+                location.href = "/PalletRepair/ViewCompletedPayout?sortID=" + sortID;
+            });
+
+            if ($('#showClosedPayouts').is(':checked'))
+            {
+                $('.closed-row').removeClass('hidden');
+            }
+            else
+            {
+                $('.closed-row').addClass('hidden');
+            }
+            
+            $('#showClosedPayouts').change(function ()
+            {
+                if ($(this).is(':checked'))
+                {
+                    $('.closed-row').removeClass('hidden');
+                }
+                else
+                {
+                    $('.closed-row').addClass('hidden');
+                }
+            });
+
+            $('#updateAdditionalInfo').on('click', function ()
+            {
+                location.href = "/PalletRepair/UpdatePayoutInfo?sortID=" + sortID + "&invoiceNumber=" + $('#invoiceNumber').val() + "&billOfLading=" + $('#billOfLading').val() + "&packingListNumber=" + $('#packingListNumber').val() + "&purchaseOrderNumber=" + $('#purchaseOrderNumber').val() + "&palletOrderNumber=" + $('#palletOrderNumber').val() + "&vendor=" + $('#vendors').val();            });
+        });
+    </script>
+}

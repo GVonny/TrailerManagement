@@ -1,0 +1,45 @@
+﻿@model TrailerManagement.Models.EditUser
+@{
+    ViewBag.Title = "My Account";
+}
+
+<h2>MyAccount</h2>
+
+<div class="well">
+    <form method="post" class="form-horizontal">
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary()
+        <!-- Username -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", placeholder = "Username" } })
+                @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <!-- Password -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, "Password", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Password, new { @class = "form-control", placeholder = "Password", id = "password" })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <!-- Submit button -->
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" id="save" value="Save" class="btn btn-primary" />
+                <a href="~/Home/Index" class="btn btn-danger btn-default">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+@section scripts
+{
+    <script>
+        $('.validation-summary-errors').css("display", "none");
+    </script>
+}

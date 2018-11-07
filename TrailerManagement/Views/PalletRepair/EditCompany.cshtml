@@ -1,0 +1,136 @@
+﻿@model TrailerManagement.Models.CustomersAndVendor
+@{
+    ViewBag.Title = "EditCompany";
+}
+
+<h2>Edit Company</h2>
+
+<div class="well">
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.CompanyGUID)
+
+        <div class="form-group">
+            <div class="col-md-2 float-left text-right">
+                <strong>Customer Number</strong>
+            </div>
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.CustomerNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CustomerNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2 float-left text-right">
+                <strong>Vendor Number</strong>
+            </div>
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.VendorNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.VendorNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2 float-left text-right">
+                <strong>Name</strong>
+            </div>
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2 float-left text-right">
+                <strong>Sort Type</strong>
+            </div>
+            <div class="col-md-4">
+                @Html.DropDownList("SortType", new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "- - - Select Type - - -", Value = "" },
+                    new SelectListItem { Text = "PAID", Value = "PAID" },
+                    new SelectListItem { Text = "SCRAP ONLY", Value = "SCRAP ONLY" },
+                    new SelectListItem { Text = "SCRAP AND PAID", Value = "SCRAP AND PAID" },
+                    new SelectListItem { Text = "FIXED LOAD PAID $100", Value = "FIXED LOAD PAID $100" },
+                    new SelectListItem { Text = "FIXED LOAD PAID $200", Value = "FIXED LOAD PAID $200" },
+                    new SelectListItem { Text = "FIXED LOAD PAID $250", Value = "FIXED LOAD PAID $250" },
+                },
+                htmlAttributes: new { @class = "form-control signin-form", id = "sortType" })
+                @Html.ValidationMessageFor(model => model.SortType, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2 float-left text-right">
+                <strong>Email Addresses</strong>
+            </div>
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.EmailAddresses, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EmailAddresses, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2 float-left text-right">
+                <strong>Sort Type Description</strong>
+            </div>
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.SortTypeDescription, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SortTypeDescription, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-4">
+
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a href="/PalletRepair/CustomersAndVendors" class="btn btn-warning">Cancel</a>
+                <input type="button" value="Delete" class="btn btn-danger float-right" id="delete">
+            </div>
+        </div>
+    </div>
+}
+</div>
+
+<!-- Delete Modal -->
+<div id="deleteModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                <p><strong>Are you sure you want to delete this company?</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">No</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete" data-dismiss="modal" data-toggle="modal">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('#delete').on('click', function ()
+            {
+                $('#deleteModal').modal();
+            });
+
+            $('#confirmDelete').on('click', function ()
+            {
+                location.href = "/PalletRepair/DeleteCompany?companyID=" + '@Model.CompanyGUID';
+            });
+        });
+    </script>
+}

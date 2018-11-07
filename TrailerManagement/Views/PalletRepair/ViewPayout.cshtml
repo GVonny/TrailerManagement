@@ -1,0 +1,492 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Payout";
+    var payout = Model.Payout;
+}
+
+<br>
+<input type="button" id="showAdditionalInfoModal" value="Update Payout Info" class="btn btn-primary"/>
+<br />
+<br />
+<table class="table table-responsive">
+    <thead>
+        <tr class="font-md">
+            <th colspan="2" class="text-center"><h2>@payout.Vendor - @payout.VendorNumber</h2> </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="col-md-6"><strong>Trailer Number: </strong>@payout.TrailerNumber</td>
+            <td class="col-md-6"><strong>Pallet Order Number: </strong>@payout.OrderNumber</td>
+        </tr>
+        <tr>
+            <td class="col-md-6"><strong>Invoice Number:&nbsp;</strong>@payout.InvoiceNumber</td>
+            <td class="col-md-6"><strong>Bill Of Lading:&nbsp;</strong>@payout.BillOfLading</td>
+        </tr>
+        <tr>
+            <td class="col-md-6"><strong>Packing List Number:&nbsp;</strong>@payout.PackingListNumber</td>
+            <td class="col-md-6"><strong>Purchase Order Number:&nbsp;</strong>@payout.PurchaseOrderNumber</td>
+        </tr>
+
+    </tbody>
+</table>
+
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr class="font-md">
+            <th>Part Number</th>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody id="palletTypes">
+        @foreach (CompletedSort t in Model.SortedTrailer)
+        {
+            <tr class="product-row" id="@t.CompletedSortGUID">
+                <td id="partNumber_@t.CompletedSortGUID">@t.PartNumber</td>
+                <td id="description_@t.CompletedSortGUID">@t.Description</td>
+                <td>
+                    <span id="quantity_@t.CompletedSortGUID" class="float-left">@t.Quantity</span>
+                    <span class="float-right">
+                        <a class="quantityLink" id="updateQuantity_@t.CompletedSortGUID" data-id="@t.CompletedSortGUID">Edit Quantity</a>
+                    </span>
+                </td>
+                <td>
+                    <span class="float-left" id="price_@t.CompletedSortGUID">@t.Cost</span>
+                    <span class="float-right">
+                        <a class="priceLink" id="price_@t.CompletedSortGUID" data-id="@t.CompletedSortGUID">Edit Price</a>
+                    </span>
+                </td>
+                <td>
+                    <a class="splitLink" id="split_@t.CompletedSortGUID" data-id="@t.CompletedSortGUID">Split</a>
+                </td>
+                @if (t.IsSplit.Equals(true))
+                {
+                    <td>
+                        <a class="undoLink" id="undo_@t.CompletedSortGUID" data-id="@t.CompletedSortGUID">Undo Split</a>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <a class="deleteLink" id="delete_@t.CompletedSortGUID" data-id="@t.CompletedSortGUID">Delete</a>
+                    </td>
+                }
+
+                <td class="hidden" id="vendor">@t.Vendor</td>
+                <td class="hidden" id="sortGUID">@t.SortGUID</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="col-xs-4 float-left">
+    <strong>Deductions:</strong>
+    <div>
+        <table>
+            <tr>
+                <td class="noBorder">@Html.DropDownList("deductionTypes", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "deductions" })</td>
+                <td class="noBorder"><input type="button" id="addDeduction" value="Add Deduction" class="btn btn-primary hidden float-right" style="margin-left:20px"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<br>
+
+<input type="button" id="finishPayout" value="Finish Payout" class="btn btn-primary float-right">
+
+<a href="PayoutList" class="btn btn-warning float-right" style="margin-right:50px">Finish Later</a>
+<br>
+<br>
+<br>
+<table class="table table-responsive">
+    <thead>
+        <tr class="font-md">
+            <th class="col-md-2">Stack Number</th>
+            <th class="col-md-2">Part Number</th>
+            <th>Note</th>
+        </tr>
+    </thead>
+    <tbody id="notes">
+        @foreach (MasterStack t in Model.Notes)
+        {
+            <tr>
+                <td id="stackNumber_@t.StackGUID">@t.StackNumber</td>
+                <td id="partNumber_@t.StackGUID">@t.PartNumber</td>
+                <td id="note_@t.StackGUID">@t.PalletNote</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<table class="table table-responsive">
+    <thead>
+        <tr class="font-md">
+            <th class="col-md-2">Stack Number</th>
+            <th class="col-md-2">Notes</th>
+            <th>Image</th>
+            <th>Taken By</th>
+        </tr>
+    </thead>
+    <tbody id="images">
+        @foreach (SortImage t in Model.Images)
+        {
+            var path = t.ImagePath.Replace("%20", " ");
+            <tr>
+                <td id="stackNumber_@t.SortGUID">@t.StackNumber</td>
+                <td id="notes_@t.SortGUID">@t.Notes</td>
+                <td id="image_@t.SortGUID">
+                    <a href="/SortImages/@t.ImagePath" download>
+                        <img src="/SortImages/@t.ImagePath" width="250" height="250" style="transform:rotate(90deg)">
+                    </a>
+                </td>
+                <td id="takenBy_@t.SortGUID">@t.TakenBy</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<!-- Price Modal -->
+<div id="priceModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                <p><strong>Enter the new price for part number:&nbsp;</strong><span id="partNumber"></span></p>
+                <p><strong>Original Price:&nbsp;</strong><span id="originalPrice"></span></p>
+
+            </div>
+            <div class="modal-body">
+                <strong>New Price &nbsp;</strong>
+                <input type="text" class="form-control" id="newPrice">
+
+                <label for="keepPricePreset">Keep as default price for future payouts?</label>
+                <input type="checkbox" id="keepPricePreset" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="updatePrice" data-dismiss="modal" data-toggle="modal">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Split Modal -->
+<div id="splitModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                <p><strong>Enter the new quantity you wish to split.</strong></p>
+                <p><strong>Original Part Number:&nbsp;</strong><span id="splitPartNumber"></span></p>
+                <p><strong>Original Quantity:&nbsp;</strong><span id="originalQuantity"></span></p>
+
+                <label for="showNewPalletType">Split to new type?</label>
+                <input type="checkbox" id="showNewPalletType" />
+
+
+                <div class="hidden" id="newPalletTypeDropDown">
+                    @Html.DropDownList("palletTypes", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "newPalletTypeInput" })
+                </div>
+            </div>
+            <div class="modal-body">
+                <strong>New Split Quantity:&nbsp;<span class="red" id="splitError"></span></strong>
+                <input type="text" class="form-control" id="newSplitQuantity">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="split" data-dismiss="modal" data-toggle="modal">Split</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Quantity Modal -->
+<div id="quantityModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alter Quantity</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                <p><strong>Pallet Type:&nbsp;</strong><span id="palletType"></span></p>
+                <p><strong>Old Quantity:&nbsp;</strong><span id="oldQuantity"></span></p>
+                <strong>New Quantity:</strong><input type="text" id="newQuantity" class="form-control">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="updateQuantity" data-dismiss="modal" data-toggle="modal">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete Modal -->
+<div id="deleteModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                Are you sure you want to delete this pallet type?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="deleteType" data-dismiss="modal" data-toggle="modal">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Price Error Modal -->
+<div id="errorModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                At least one part has no price, do you wish to go back and input a price?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Yes</button>
+                <button type="button" class="btn btn-danger" id="confirmFinish" data-dismiss="modal" data-toggle="modal">No, Finish</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Additional Info Modal -->
+<div id="additionalInfoModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Additional Info</h2>
+            </div>
+            <div class="modal-body">
+                <strong>Invoice Number:</strong>
+                <input type="text" class="form-control" id="invoiceNumber">
+                <br>
+
+                <strong>Bill of Lading:</strong>
+                <input type="text" class="form-control" id="billOfLading">
+                <br>
+
+                <strong>Packing List Number:</strong>
+                <input type="text" class="form-control" id="packingListNumber">
+                <br>
+
+                <strong>Purchase Order Number:</strong>
+                <input type="text" class="form-control" id="purchaseOrderNumber">
+                <br />
+
+                <strong>Pallet Order Number:</strong>
+                <input type="text" class="form-control" id="palletOrderNumber">
+                <br />
+
+                <strong>Vendor</strong>
+                @Html.DropDownList("Vendors", null, "- - - Select Vendor - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "vendors", @name = "vendor" })
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="updateAdditionalInfo" data-dismiss="modal" data-toggle="modal">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            var priceCounter = 0;
+            $('#palletTypes tr').each(function ()
+            {
+                var id = this.id;
+
+                if ($('#price_' + id).html() != "")
+                {
+                    var cost = parseFloat($('#price_' + id).html());
+                    $('#price_' + id).html("$" + cost.toFixed(2));
+                }
+                else
+                {
+                    priceCounter++;
+                    $('#price_' + id).html("$0.00");
+                }
+            });
+
+            var sortID;
+            $('#showAdditionalInfoModal').on('click', function ()
+            {
+                sortID = '@payout.SortGUID';
+                $('#additionalInfoModal').modal();
+            });
+
+            $('#updateAdditionalInfo').on('click', function ()
+            {
+                location.href = "/PalletRepair/UpdatePayoutInfo?sortID=" + sortID + "&invoiceNumber=" + $('#invoiceNumber').val() + "&billOfLading=" + $('#billOfLading').val() + "&packingListNumber=" + $('#packingListNumber').val() + "&purchaseOrderNumber=" + $('#purchaseOrderNumber').val() + "&palletOrderNumber=" + $('#palletOrderNumber').val() + "&vendor=" + $('#vendors').val();
+            });
+
+            var editID;
+            $('.quantityLink').on('click', function ()
+            {
+                editID = $(this).data("id");
+                $('#palletType').html($('#partNumber_' + editID).html());
+                $('#oldQuantity').html($('#quantity_' + editID).html());
+
+                $('#quantityModal').modal();
+            });
+
+            $('.splitLink').on('click', function ()
+            {
+                editID = $(this).data("id");
+                $('#splitPartNumber').html($('#partNumber_' + editID).html());
+                $('#originalQuantity').html($('#quantity_' + editID).html());
+                $('#splitModal').modal();
+            });
+
+            $('.priceLink').on('click', function ()
+            {
+                editID = $(this).data("id");
+                $('#partNumber').html($('#partNumber_' + editID).html());
+                $('#originalPrice').html($('#price_' + editID).html());
+                $('#priceModal').modal();
+            });
+
+            $('.undoLink').on('click', function ()
+            {
+                editID = $(this).data("id");
+                location.href = "/PalletRepair/UndoSplit?completedSortID=" + editID;
+            });
+
+            $('.deleteLink').on('click', function ()
+            {
+                editID = $(this).data("id");
+                $('#deleteModal').modal();
+            });
+
+            $('#finishPayout').on('click', function ()
+            {
+                var id = $('#sortGUID').html();
+
+                if (priceCounter > 0)
+                {
+                    $('#errorModal').modal();
+                }
+                else
+                {
+                    location.href = "/PalletRepair/ViewCompletedPayout?sortID=" + id;
+                }
+            });
+
+            $('#confirmFinish').on('click', function ()
+            {
+                var id = $('#sortGUID').html();
+                location.href = "/PalletRepair/ViewCompletedPayout?sortID=" + id;
+            });
+
+            $('#finishLater').on('click', function ()
+            {
+                location.href = "/PalletRepair/PayoutList";
+            });
+
+            $('#addDeduction').on('click', function ()
+            {
+                var id = $('#sortGUID').html();
+                var deduction = $('#deductions').val();
+                if (deduction != "")
+                {
+                    location.href = "/PalletRepair/AddDeduction?sortID=" + id + "&deduction=" + deduction;
+                }
+                //console.log("/PalletRepair/AddDeduction?sortID=" + id + "&deduction=" + deduction);
+            });
+
+            $('#deleteType').on('click', function ()
+            {
+                location.href = "/PalletRepair/Delete?completedSortID=" + editID;
+            });
+
+            $('#updateQuantity').on('click', function ()
+            {
+                location.href = "/PalletRepair/EditPayoutQuantity?completedSortID=" + editID + "&newQuantity=" + $('#newQuantity').val();
+            });
+
+            $('#updatePrice').on('click', function ()
+            {
+                if ($('#newPrice').val() != "")
+                {
+                    if (keepPreset)
+                    {
+                        location.href = "/PalletRepair/UpdatePrice?completedSortID=" + editID + "&newPrice=" + $('#newPrice').val() + "&keepPreset=" + keepPreset;
+                    }
+                    else
+                    {
+                        location.href = "/PalletRepair/UpdatePrice?completedSortID=" + editID + "&newPrice=" + $('#newPrice').val();
+                    }
+                }
+            });
+
+            $('#split').on('click', function ()
+            {
+                if ($('#newSplitQuantity').val() != "" && ($('#newSplitQuantity').val() <= parseInt($('#originalQuantity').html())))
+                {
+                    location.href = "/PalletRepair/SplitPayoutPalletType?completedSortID=" + editID + "&newSplitQuantity=" + $('#newSplitQuantity').val() + "&newPartNumber=" + $('#newPalletTypeInput').val();
+                }
+            });
+
+            $('#deductions').on('change', function ()
+            {
+                $('#addDeduction').removeClass('hidden');
+            });
+
+            $('#showNewPalletType').change(function ()
+            {
+                if ($(this).is(':checked'))
+                {
+                    $('#newPalletTypeDropDown').removeClass('hidden');
+                }
+                else
+                {
+                    $('#newPalletTypeDropDown').addClass('hidden');
+                }
+            });
+
+            var keepPreset = false;
+            $('#keepPricePreset').change(function ()
+            {
+                if ($(this).is(':checked'))
+                {
+                    keepPreset = true;
+                }
+                else
+                {
+                    keepPreset = false;
+                }
+            });
+        });
+    </script>
+}

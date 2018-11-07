@@ -1,0 +1,471 @@
+﻿@model TrailerManagement.Models.EditTrailer
+@{
+    ViewBag.Title = "Edit Trailer";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="well">
+    <form method="post" class="form-horizontal">
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-horizontal">
+            <!-- Trailer Number -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.TrailerNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.TrailerNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Trailer Number", id = "trailerNumber" } })
+                    @Html.ValidationMessageFor(model => model.TrailerNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- DOT Date -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.DOTDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.DOTDate, new { htmlAttributes = new { @class = "datepicker", @type = "date", id = "dotDate" } })
+                    @Html.ValidationMessageFor(model => model.DOTDate, "", new { @class = "text-danger" })
+                </div>
+                <input type="checkbox" id="dotDateIsTodayCheckBox" class="col-md-offset-3" />&nbsp;Today?
+            </div>
+            <!-- Trailer Status -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control", placeholder = "Trailer Status", id = "status" } })
+                    @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Lease Info -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.Leased, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.Leased, new { htmlAttributes = new { @class = "form-control", placeholder = "Lease Info", id = "lease" } })
+                    @Html.ValidationMessageFor(model => model.Leased, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Insurance Card -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.InsuranceCard, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.DropDownList("InsuranceCard", new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "", Value = "" },
+                        new SelectListItem { Text = "YES", Value = "YES" },
+                        new SelectListItem { Text = "NO", Value = "NO" },
+                    },
+                    htmlAttributes: new { @class = "form-control signin-form", id="insuranceCard"})
+                </div>
+            </div>
+            <!-- Insured -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.Insured, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.DropDownList("Insured", new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "", Value = "" },
+                        new SelectListItem { Text = "YES", Value = "YES" },
+                        new SelectListItem { Text = "NO", Value = "NO" },
+                    },
+                    htmlAttributes: new { @class = "form-control signin-form", id="insured"})
+                </div>
+            </div>
+            <!-- Title -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", placeholder = "Title: YES/NO", id = "title" } })
+                    @Html.ValidationMessageFor(model => model.Insured, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Plate Number -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.PlateNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.PlateNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Plate Number", id = "plateNumber" } })
+                    @Html.ValidationMessageFor(model => model.PlateNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Vin Number -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.VinNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.VinNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Vin Number", id = "vinNumber" } })
+                    @Html.ValidationMessageFor(model => model.VinNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Manufacturer -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.Manufacturer, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.Manufacturer, new { htmlAttributes = new { @class = "form-control", placeholder = "Manufacturer", id = "manufacturer" } })
+                    @Html.ValidationMessageFor(model => model.Manufacturer, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Manufacture Year -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.ManufactureYear, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.ManufactureYear, new { htmlAttributes = new { @class = "form-control", placeholder = "Manufacture Year", id = "manufactureYear" } })
+                    @Html.ValidationMessageFor(model => model.ManufactureYear, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Trailer Location -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.TrailerLocation, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.TrailerLocation, new { htmlAttributes = new { @class = "form-control", placeholder = "Trailer Location", id = "trailerLocation" } })
+                    @Html.ValidationMessageFor(model => model.TrailerLocation, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Trailer Length -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.TrailerLength, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.TrailerLength, new { htmlAttributes = new { @class = "form-control", placeholder = "Trailer Length", id = "trailerLength" } })
+                    @Html.ValidationMessageFor(model => model.TrailerLength, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Issues -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.Issues, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.Issues, new { htmlAttributes = new { @class = "form-control", placeholder = "Notes", id = "issues" } })
+                    @Html.ValidationMessageFor(model => model.Issues, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- DateModified -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.DateModified, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.DateModified, new { htmlAttributes = new { @class = "form-control", id = "dateModified" } })
+                    @Html.ValidationMessageFor(model => model.DateModified, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Submit -->
+            <div class="form-group">
+                <div class="col-xs-offset-2 col-xs-10">
+                    <input type="submit" id="save" value="Save" class="btn btn-primary" />
+                    <input type="button" id="cancel" class=" btn btn-warning" value="Cancel" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('#container').addClass('hidden');
+
+            function disableBack()
+            {
+                window.history.forward()
+            }
+
+            window.onload = disableBack();
+            window.onpageshow = function (evt)
+            {
+                if (evt.persisted)
+                    disableBack()
+            }
+
+            //fields are disabled to not allow user to change values
+            $('#dateModified').attr('disabled', 'disabled');
+            $('#trailerNumber').attr('disabled', 'disabled');
+
+            //save button click
+            $('#save').on('click', function ()
+            {
+                if (lastModifiedDate == "")
+                {
+                    modified = 1;
+                }
+                checkModification();
+                //disabled attribute removed to allow for the value to be accessed to store
+                $('#dateModified').removeAttr('disabled', 'disabled');
+                $('#trailerNumber').removeAttr('disabled', 'disabled');
+            });
+
+            $('#cancel').on('click', function ()
+            {
+                location.href = "/Trailer/TrailerList";
+            });
+            
+            $('#dotDateIsTodayCheckBox').change(function ()
+            {
+                if ($(this).is(':checked'))
+                {
+                    $('#dotDate').val(getCurrentDate());
+                    modified++;
+                }
+                else
+                {
+                    $('#dotDate').val(dotDate);
+                    modified--;
+                }
+            });
+
+            //generates the current date in the correct format
+            //sets date modified to current date
+            function getCurrentDate()
+            {
+                //current date object string
+                var currentDate = new Date().toString();
+                //string manipulation to parse out the month, day, and year
+                var currentMonth = currentDate.substring(4, 7);
+                var currentDay = currentDate.substring(8, 10);
+                var currentYear = currentDate.substring(11, 15);
+
+                //converts month abreviation to month number
+                switch (currentMonth)
+                {
+                    case "Jan":
+                        currentMonth = "01";
+                        break;
+                    case "Feb":
+                        currentMonth = "02";
+                        break;
+                    case "Mar":
+                        currentMonth = "03";
+                        break;
+                    case "Apr":
+                        currentMonth = "04";
+                        break;
+                    case "May":
+                        currentMonth = "05";
+                        break;
+                    case "Jun":
+                        currentMonth = "06";
+                        break;
+                    case "Jul":
+                        currentMonth = "07";
+                        break;
+                    case "Aug":
+                        currentMonth = "08";
+                        break;
+                    case "Sep":
+                        currentMonth = "09";
+                        break;
+                    case "Oct":
+                        currentMonth = "10";
+                        break;
+                    case "Nov":
+                        currentMonth = "11";
+                        break;
+                    case "Dec":
+                        currentMonth = "12";
+                        break;
+                }
+                //currentDate = "yyyy-MM-dd"
+                currentDate = (currentYear + "-" + currentMonth + "-" + currentDay);
+                return currentDate;
+            }
+
+            //variable to store the current value of the last modified date
+            var lastModifiedDate = $('#dateModified').val();
+            //counter to keep track of how many changes were made editing trailer info
+            var modified = 0;
+
+            //each on change function stores original value
+            //then stores the value after making changes
+            //if the two values are different the counter increases by 1
+            //otherwise decreses by 1 if they are identical
+            var dotDate = $('#dotDate').val();
+            $('#dotDate').on('change', function ()
+            {
+                var newDate = $('#dotDate').val();
+                //changes date modified field if the new value does not equal previous value
+                if (dotDate != newDate)
+                {
+                    modified++;
+                }
+                else
+                {
+                    modified--;
+                }
+            });
+
+            var status = $('#status').val();
+            $('#status').on('change', function ()
+            {
+                var newStatus = $('#status').val();
+                //changes date modified field if the new value does not equal previous value
+                if (status != newStatus)
+                {
+                    modified++;
+                }
+                else
+                {
+                    modified--;
+                }
+            });
+
+            var lease = $('#lease').val();
+            $('#lease').on('change', function ()
+            {
+                var newLease = $('#status').val();
+                //changes date modified field if the new value does not equal previous value
+                if (lease != newLease)
+                {
+                    modified++;
+                }
+                else
+                {
+                    modified--;
+                }
+            });
+
+            var insuranceCard = $('#insuranceCard').val();
+            $('#insuranceCard').on('change', function ()
+            {
+                var newInsuranceCard = $('#insuranceCard').val();
+                //changes date modified field if the new value does not equal previous value
+                if (insuranceCard != newInsuranceCard)
+                {
+                    modified++;
+                }
+                else
+                {
+                    modified--;
+                }
+            });
+
+            var insured = $('#insured').val();
+            $('#insured').on('change', function ()
+            {
+                var newInsured = $('#insured').val();
+                //changes date modified field if the new value does not equal previous value
+                if (insured != newInsured)
+                {
+                    modified++;
+                }
+                else
+                {
+                    modified--;
+                }
+            });
+
+            var title = $('#title').val();
+            $('#title').on('change', function ()
+            {
+                var newTitle = $('#title').val();
+                console.log(newTitle);
+                //changes date modified field if the new value does not equal previous value
+                if (title != newTitle)
+                {
+                    modified++;
+                }
+                else
+                {
+                    modified--;
+                }
+            });
+
+            var plateNumber = $('#plateNumber').val();
+            $('#plateNumber').on('change', function ()
+            {
+                var newPlateNumber = $('#plateNumber').val();
+                //changes date modified field if the new value does not equal previous value
+                if (plateNumber != newPlateNumber)
+                {
+                    modified++;
+                }
+                else
+                {
+                    modified--;
+                }
+            });
+
+            var vinNumber = $('#vinNumber').val();
+            $('#vinNumber').on('change', function ()
+            {
+                var newVinNumber = $('#vinNumber').val();
+                //changes date modified field if the new value does not equal previous value
+                if (vinNumber != newVinNumber)
+                {
+                    modified++;
+                }
+                else
+                {
+                    modified--;
+                }
+            });
+
+            var manufacturer = $('#manufacturer').val();
+            $('#manufacturer').on('change', function ()
+            {
+                var newManufacturer = $('#manufacturer').val();
+                //changes date modified field if the new value does not equal previous value
+                if (manufacturer != newManufacturer)
+                {
+                    modified++;
+                }
+                else
+                {
+                    modified--;
+                }
+            });
+
+            var manufactureYear = $('#manufactureYear').val();
+            $('#manufactureYear').on('change', function ()
+            {
+                var newManufactureYear = $('#manufactureYear').val();
+                //changes date modified field if the new value does not equal previous value
+                if (manufactureYear != newManufactureYear)
+                {
+                    modified++;
+                }
+                else
+                {
+                    modified--;
+                }
+            });
+
+            var trailerLocation = $('#trailerLocation').val();
+            $('#trailerLocation').on('change', function ()
+            {
+                var newTrailerLocation = $('#trailerLocation').val();
+                //changes date modified field if the new value does not equal previous value
+                if (trailerLocation != newTrailerLocation)
+                {
+                    modified++;
+                }
+                else
+                {
+                    modified--;
+                }
+            });
+
+            var issues = $('#issues').val();
+            $('#issues').on('change', function ()
+            {
+                var newIssues = $('#issues').val();
+                //changes date modified field if the new value does not equal previous value
+                if (issues != newIssues)
+                {
+                    modified++;
+                }
+                else
+                {
+                    modified--;
+                }
+            });
+
+            //function to check if number of modifications is greater than 0
+            //if so calls getCurrentDate to get the current date
+            function checkModification()
+            {
+                if (modified > 0)
+                {
+                    $('#dateModified').val(getCurrentDate());
+                }
+                else
+                {
+                    $('#dateModified').val(lastModifiedDate);
+                }
+            }
+        });
+    </script>
+}

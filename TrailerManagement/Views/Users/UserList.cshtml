@@ -1,0 +1,99 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "User List";
+}
+
+<br />
+<div>
+    <span class="h2 float-left">@ViewBag.Title</span>
+    <a href="~/Users/CreateUser" class="btn btn-primary float-left" id="createUser">Create User</a>
+    <div class="text-right h4 float-right">
+        Order by:
+        <p class="hover">
+            @Html.ActionLink("Username", "UserList", new { SortOrder = ViewBag.Username })&nbsp;|
+            @Html.ActionLink("Permission", "UserList", new { SortOrder = ViewBag.Permission })
+        </p>
+    </div>
+</div>
+<br />
+
+<table class="table table-hover table-responsive">
+    @using (Html.BeginForm("TrailerList", "Home", FormMethod.Get))
+    {
+        <thead>
+            <tr class="font-md">
+                <th>Name</th>
+                <th>Username</th>
+                <th class="text-center">Password</th>
+                <td>Department</td>
+                <th class="text-center">Permission</th>
+            </tr>
+        </thead>
+    }
+    <tbody id="users">
+        @foreach (User u in Model)
+        {
+            <tr class="product-row" id="@u.UserGUID">
+                <td id="firstName_@u.UserGUID">@u.FirstName</td>
+                <td id="username_@u.UserGUID">@u.Username</td>
+                <td class="text-center" id="password_@u.UserGUID">@u.Password</td>
+                <td id="department_@u.UserGUID">@u.Department</td>
+                <td class="text-center" id="permission_@u.UserGUID">@u.Permission</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            var userID = "";
+            $('#users tr').each(function ()
+            {
+                userID = this.id;
+                var password = $('#password_' + userID).html();
+                var dotPassword = "";
+
+                //changes password from password to dots * in table view
+                for (var x = 0; x < password.length; x++)
+                {
+                    dotPassword += "*";
+                }
+
+                //changes permission table view
+                var permission = $('#permission_' + userID).html();
+                switch (permission)
+                {
+                    case "10":
+                        permission = "Employee";
+                        break;
+                    case "20":
+                        permission = "Driver";
+                        break;
+                    case "30":
+                        permission = "Edit";
+                        break;
+                    case "40":
+                        permission = "Admin";
+                        break;
+                    case "50":
+                        permission = "Creator";
+                        break;
+                }
+                $('#password_' + userID).html(dotPassword);
+                $('#permission_' + userID).html(permission);
+            });
+
+            //edit user redirect
+            $('#users').on('click', '.product-row', function ()
+            {
+                userID = this.id;
+                location.href = "EditUser/" + userID;
+            });
+        });
+    </script>
+}

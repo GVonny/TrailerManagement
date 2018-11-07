@@ -1,0 +1,50 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Customers/Vendors";
+}
+
+<h2 class="float-left">Customers And Vendors</h2>
+<input type="button" class="btn btn-primary float-left no-print" value="Create Company" id="createCompany" style="margin-top:20px;margin-left:10px"  />
+
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr class="font-md">
+            <th class="text-center">Vendor Number</th>
+            <th class="text-center">Customer Number</th>
+            <th class="text-center">Name</th>
+            <th class="text-center">Sort Type</th>
+            <th class="text-center">Email</th>
+        </tr>
+    </thead>
+    <tbody id="companies">
+        @foreach(CustomersAndVendor c in Model)
+        {
+            <tr class="product-row" id="@c.CompanyGUID">
+                <td id="vendorNumber_@c.CompanyGUID">@c.VendorNumber</td>
+                <td id="customerNumber_@c.CompanyGUID">@c.CustomerNumber</td>
+                <td id="name_@c.CompanyGUID">@c.Name</td>
+                <td id="sortType_@c.CompanyGUID">@c.SortType</td>
+                <td id="email_@c.CompanyGUID">@c.EmailAddresses</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('#companies').on('click', '.product-row', function ()
+            {
+                var companyID = this.id;
+                location.href = "/PalletRepair/EditCompany/" + companyID;
+            });
+
+            $('#createCompany').on('click', function ()
+            {
+                location.href = "/PalletRepair/CreateCompany";
+            })
+        });
+    </script>    
+}

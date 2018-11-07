@@ -1,0 +1,206 @@
+﻿@model TrailerManagement.Models.EditUser
+@{
+    ViewBag.Title = "Edit User";
+}
+
+<h2>Edit User</h2>
+
+<div class="well">
+    <form method="post" class="form-horizontal">
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-horizontal">
+            <!-- Username -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label col-xs-2" })
+                <div class="col-xs-6">
+                    @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", placeholder = "Username", id = "username" } })
+                    @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Password -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.Password, "Password", htmlAttributes: new { @class = "control-label col-xs-2" })
+                <div class="col-xs-6">
+                    @if (Convert.ToInt32(Session["permission"]) > 30)
+                    {
+                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "Username", id = "password" } })
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    }
+                    @if (Convert.ToInt32(Session["permission"]) < 40)
+                    {
+                        @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "Password" })
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    }
+                </div>
+                <div class="col-xs-4">To change password, enter new password and click save</div>
+            </div>
+            <!-- FirstName -->
+            <div class="form-group hidden" id="firstname">
+                @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-xs-2" })
+                <div class="col-xs-6">
+                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", placeholder = "Name", id = "firstName" } })
+                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Department -->
+            <div class="form-group hidden" id="department">
+                @Html.LabelFor(model => model.Department, htmlAttributes: new { @class = "control-label col-xs-2" })
+                <div class="col-xs-6">
+                    @Html.DropDownListFor(model => model.Department, ViewData["departments"] as List<SelectListItem>, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form"})
+                    @Html.ValidationMessageFor(model => model.Department, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Permission -->
+            <div class="form-group hidden" id="permission">
+                @Html.LabelFor(model => model.Permission, "Permission", htmlAttributes: new { @class = "control-label col-xs-2" })
+                <div class="col-xs-6">
+                    @Html.DropDownList("Permission", new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "Employee", Value = "10" },
+                        new SelectListItem { Text = "Driver", Value = "20"},
+                        new SelectListItem { Text = "Edit", Value = "30" },
+                        new SelectListItem { Text = "Admin", Value = "40" },
+                    }, htmlAttributes: new { @class = "form-control signin-form"})
+                </div>
+            </div>
+            
+
+            <!-- Submit -->
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" id="save" value="Save" class="btn btn-primary" />
+                    @if (Convert.ToInt32(Session["permission"]) > 30)
+                    {
+                        <a href="~/Users/UserList" class="btn btn-warning">Cancel</a>
+                    }
+                    @if (Convert.ToInt32(Session["permission"]) < 40)
+                    {
+                        <a href="~/Home/Index" class="btn btn-warning">Cancel</a>
+                    }
+                    @if (Convert.ToInt32(Session["permission"]) > 30)
+                    {
+                        <input type="button" value="Remove User" id="remove" class="btn btn-danger" />
+                    }
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (Convert.ToInt32(Session["permission"]) > 30)
+{
+    <div>
+        <h3>Permission Levels</h3>
+        <div class="row">
+            <div class="col-xs-3">
+                <h4>Admin</h4>
+                <ul>
+                    <li>Create Users</li>
+                    <li>Modify Users</li>
+                    <li>Create Trailers</li>
+                    <li>Modify Trailers</li>
+                    <ul>
+                        <li>Active</li>
+                        <li>Master</li>
+                        <li>Inactive</li>
+                    </ul>
+                    <li>Add Trailers to Active</li>
+                    <li>Remove Trailers from Active</li>
+                    <li>Move Trailers to Inactive</li>
+                    <li>Modify Account Info</li>
+                </ul>
+            </div>
+            <div class="col-xs-3">
+                <h4>Edit</h4>
+                <ul>
+                    <li>Modify Trailers</li>
+                    <ul>
+                        <li>Active</li>
+                        <li>Master</li>
+                        <li>Inactive</li>
+                    </ul>
+                    <li>Modify Account Info</li>
+                </ul>
+            </div>
+            <div class="col-xs-3">
+                <h4>Driver</h4>
+                <ul>
+                    <li>Modify Trailers</li>
+                    <ul>
+                        <li>Active</li>
+                    </ul>
+                    <li>Modify Account Info</li>
+                </ul>
+            </div>
+            <div class="col-xs-3">
+                <h4>Employee</h4>
+                <ul>
+                    <li>View Active Trailer List</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+
+}
+
+<!-- Remove User Confirmation Modal -->
+<div id="removeConfirmModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                <p><strong>Are you sure you want to remove this user?</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="cancel">Cancel</button>
+                <button type="button" class="btn btn-primary" id="activeConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            var permission = '@Session["permission"]';
+            if (permission > 30)
+            {
+                $('#department').removeClass('hidden');
+                $('#permission').removeClass('hidden');
+                $('#firstname').removeClass('hidden');
+            }
+
+            //remove user button click to show confirmation modal
+            $('#remove').on('click', function ()
+            {
+                $('#removeConfirmModal').modal();
+            });
+
+            //modal cancel button click
+            $('#cancel').on('click', function ()
+            {
+                $('#removeConfirmModal').modal('hide');
+            });
+
+            //modal confirm button click
+            var id = $('#username').val();
+            $('#activeConfirm').on('click', function ()
+            {
+                location.href = '@Url.Action("RemoveUser", "Users")?username=' + id;
+            });
+        });
+    </script>
+}

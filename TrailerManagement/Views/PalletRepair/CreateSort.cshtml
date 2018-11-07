@@ -1,0 +1,176 @@
+﻿@using TrailerManagement.Models
+@{
+    ViewBag.Title = "Create Sort";
+}
+
+<h2>Create Sort</h2>
+
+<div class="well">
+    @using (Html.BeginForm("CreateSort", "PalletRepair", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            <!-- Customer/Vendor -->
+            <div class="form-group">
+                <div class="col-xs-3 text-right">
+                    <strong>Vendor</strong>
+                </div>
+                <div class="col-xs-5">
+                    @Html.DropDownList("Vendors", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "vendors", @name="vendors" })                   
+                </div>
+            </div>
+
+            <!-- Trailer Number -->
+            <div class="form-group">
+                <div class="col-xs-3 text-right">
+                    <strong>Trailer Number</strong>
+                </div>
+                <div class="col-xs-4">
+                    <input type="text" id="trailerNumber" name="trailerNumber" class="form-control" placeholder="Trailer Number">
+                </div>
+            </div>
+
+            <!-- Order Number -->
+            @*<div class="form-group">
+                <div class="col-xs-3 text-right">
+                    <strong>Order Number</strong>
+                </div>
+                <div class="col-xs-4">
+                    <input type="text" id="orderNumber" name="orderNumber" class="form-control" placeholder="Order Number">
+                </div>
+            </div>*@
+
+            <!-- Load Status -->
+            <div class="form-group">
+                <div class="col-xs-3 text-right">
+                    <strong>Load Status</strong>
+                </div>
+                <div class="col-xs-4">
+                    @Html.DropDownList("LoadStatus", new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "- - Select - -", Value = "" },
+                        new SelectListItem { Text = "EMPTY", Value = "EMPTY" },
+                        new SelectListItem { Text = "¼ FULL", Value = "¼ FULL" },
+                        new SelectListItem { Text = "½ FULL", Value = "½ FULL" },
+                        new SelectListItem { Text = "¾ FULL", Value = "¾ FULL" },
+                        new SelectListItem { Text = "FULL", Value = "FULL" },
+                    },
+                    htmlAttributes: new { @class = "form-control signin-form", @id = "loadStatus", @name="loadStatus" })
+                </div>
+            </div>
+
+            <!-- Date Arrived -->
+            <div class="form-group">
+                <div class="col-xs-3 text-right">
+                    <strong>Date Arrived</strong>
+                </div>
+                <div class="col-xs-4">
+                    <input type="date" name="dateArrived" class="datepicker" id="dateArrived">
+                </div>
+                <div>
+                    <label for="today">&nbsp;Today</label>
+                    <input type="radio" name="status" id="today" class="col-md-offset-3" />
+                    <label for="notArrived">&nbsp;Hasn't arrived yet</label>
+                    <input type="radio" name="status" id="notArrived" class="col-md-offset-3" />
+                </div>
+            </div>
+
+            <!-- Sumbit -->
+            <div class="form-group">
+                <div class="col-xs-offset-3 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-primary" id="create"/>
+                    <a href="/PalletRepair/SortList" value="Cancel" class="btn btn-warning" id="cancel">Cancel</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('#notArrived').change(function ()
+            {
+                if ($(this).is(':checked'))
+                {
+                    $('#dateArrived').val("");
+                    $('#dateArrived').attr('disabled', 'disabled');
+                }
+                else
+                {
+                    $('#dateArrived').removeAttr('disabled', 'disabled');
+                }
+            });
+
+            $('#today').click(function ()
+            {
+                if ($(this).is(':checked'))
+                {
+                    $('#dateArrived').val(getCurrentDate);
+                    $('#dateArrived').removeAttr('disabled', 'disabled');
+                }
+                else
+                {
+                    $('#dateArrived').removeAttr('disabled', 'disabled');
+                }
+            });
+
+            function getCurrentDate()
+            {
+                //current date object string
+                var currentDate = new Date().toString();
+                //string manipulation to parse out the month, day, and year
+                var currentMonth = currentDate.substring(4, 7);
+                var currentDay = currentDate.substring(8, 10);
+                var currentYear = currentDate.substring(11, 15);
+
+                //converts month abreviation to month number
+                switch (currentMonth)
+                {
+                    case "Jan":
+                        currentMonth = "01";
+                        break;
+                    case "Feb":
+                        currentMonth = "02";
+                        break;
+                    case "Mar":
+                        currentMonth = "03";
+                        break;
+                    case "Apr":
+                        currentMonth = "04";
+                        break;
+                    case "May":
+                        currentMonth = "05";
+                        break;
+                    case "Jun":
+                        currentMonth = "06";
+                        break;
+                    case "Jul":
+                        currentMonth = "07";
+                        break;
+                    case "Aug":
+                        currentMonth = "08";
+                        break;
+                    case "Sep":
+                        currentMonth = "09";
+                        break;
+                    case "Oct":
+                        currentMonth = "10";
+                        break;
+                    case "Nov":
+                        currentMonth = "11";
+                        break;
+                    case "Dec":
+                        currentMonth = "12";
+                        break;
+                }
+                //currentDate = "yyyy-MM-dd"
+                currentDate = (currentYear + "-" + currentMonth + "-" + currentDay);
+                return currentDate;
+            }
+        });
+    </script>
+}
+

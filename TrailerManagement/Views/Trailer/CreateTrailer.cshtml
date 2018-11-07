@@ -1,0 +1,241 @@
+﻿@using TrailerManagement.Models;
+@model TrailerManagement.Models.CreateTrailer
+@{
+    ViewBag.Title = "Create Trailer";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="well">
+    <!-- Trailer Form -->
+    @using (Html.BeginForm())
+    {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-horizontal">
+        <!-- Trailer Number -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.TrailerNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.TrailerNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Trailer Number" } })
+                @Html.ValidationMessageFor(model => model.TrailerNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <!-- DOT Date -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.DOTDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.DOTDate, new { htmlAttributes = new { @class = "datepicker", @type = "date", id = "dotDate" } })
+                @Html.ValidationMessageFor(model => model.DOTDate, "", new { @class = "text-danger" })
+            </div>
+            <input type="checkbox" id="dotDateIsTodayCheckBox" class="col-md-offset-3" />&nbsp;Today?
+        </div>
+        <!-- Trailer Status -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control", placeholder = "Trailer Status" } })
+                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <!-- Lease Info -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.Leased, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Leased, new { htmlAttributes = new { @class = "form-control", placeholder = "Lease Info" } })
+                @Html.ValidationMessageFor(model => model.Leased, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <!-- Insurance Card -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.InsuranceCard, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.DropDownList("InsuranceCard", new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "", Value = "" },
+                    new SelectListItem { Text = "YES", Value = "YES" },
+                    new SelectListItem { Text = "NO", Value = "NO" },
+                },
+                htmlAttributes: new { @class = "form-control signin-form"})
+            </div>
+        </div>
+        <!-- Insured -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.Insured, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.DropDownList("Insured", new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "", Value = "" },
+                    new SelectListItem { Text = "YES", Value = "YES" },
+                    new SelectListItem { Text = "NO", Value = "NO" },
+                },
+                htmlAttributes: new { @class = "form-control signin-form" })
+            </div>
+        </div>
+        <!-- Title -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.DropDownList("Title", new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "", Value = "" },
+                    new SelectListItem { Text = "YES", Value = "YES" },
+                    new SelectListItem { Text = "NO", Value = "NO" },
+                    new SelectListItem { Text = "N/LEASE", Value = "N/LEASE"},
+                },
+                htmlAttributes: new { @class = "form-control signin-form"})
+            </div>
+        </div>
+        <!-- Plate Number -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.PlateNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.PlateNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Plate Number" } })
+                @Html.ValidationMessageFor(model => model.PlateNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <!-- Vin Number -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.VinNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.VinNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Vin Number" } })
+                @Html.ValidationMessageFor(model => model.VinNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <!-- Manufacturer -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.Manufacturer, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Manufacturer, new { htmlAttributes = new { @class = "form-control", placeholder = "Manufacturer" } })
+                @Html.ValidationMessageFor(model => model.Manufacturer, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <!-- Manufacture Year -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.ManufactureYear, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.ManufactureYear, new { htmlAttributes = new { @class = "form-control", placeholder = "Manufacture Year" } })
+                @Html.ValidationMessageFor(model => model.ManufactureYear, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <!-- Trailer Location -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.TrailerLocation, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.TrailerLocation, new { htmlAttributes = new { @class = "form-control", placeholder = "Trailer Location" } })
+                @Html.ValidationMessageFor(model => model.TrailerLocation, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <!-- Trailer Length -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.TrailerLength, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.TrailerLength, new { htmlAttributes = new { @class = "form-control", placeholder = "Trailer Length" } })
+                @Html.ValidationMessageFor(model => model.TrailerLength, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <!-- Issues -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.Issues, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.Issues, new { htmlAttributes = new { @class = "form-control", placeholder = "Notes" } })
+                @Html.ValidationMessageFor(model => model.Issues, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <!-- DateModified -->
+        <div class="form-group">
+            @Html.LabelFor(model => model.DateModified, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.DateModified, new { htmlAttributes = new { @class = "form-control", id = "dateModified" } })
+                @Html.ValidationMessageFor(model => model.DateModified, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <!-- Submit -->
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" id="save" value="Save" class="btn btn-primary" />
+                <a href="~/Trailer/TrailerList" class="btn btn-warning">Cancel</a>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+@section scripts
+{
+<script>
+    $(function ()
+    {
+        //page script creates and sets the current date for last modified
+        var currentDate = new Date().toString();
+        var currentMonth = currentDate.substring(4, 7);
+        var currentDay = currentDate.substring(8, 10);
+        var currentYear = currentDate.substring(11, 15);
+        currentYear = parseInt(currentYear);
+
+        //converts month abreviation to month number
+        switch (currentMonth)
+        {
+            case "Jan":
+                currentMonth = "01";
+                break;
+            case "Feb":
+                currentMonth = "02";
+                break;
+            case "Mar":
+                currentMonth = "03";
+                break;
+            case "Apr":
+                currentMonth = "04";
+                break;
+            case "May":
+                currentMonth = "05";
+                break;
+            case "Jun":
+                currentMonth = "06";
+                break;
+            case "Jul":
+                currentMonth = "07";
+                break;
+            case "Aug":
+                currentMonth = "08";
+                break;
+            case "Sep":
+                currentMonth = "09";
+                break;
+            case "Oct":
+                currentMonth = "10";
+                break;
+            case "Nov":
+                currentMonth = "11";
+                break;
+            case "Dec":
+                currentMonth = "12";
+                break;
+        }
+
+        currentDate = (currentYear + "-" + currentMonth + "-" + currentDay);
+        //format yyyy-mm-dd
+        $('#dateModified').val(currentDate).attr('disabled', 'disabled');
+
+        $('#dotDateIsTodayCheckBox').change(function ()
+        {
+            if ($(this).is(':checked'))
+            {
+                $('#dotDate').val(currentDate);
+            }
+            else
+            {
+                $('#dotDate').val("");
+            }
+        });
+
+        $('#save').on('click', function ()
+        {
+            $('#dateModified').removeAttr('disabled', 'disabled');
+        });
+    });
+</script>
+}

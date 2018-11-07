@@ -1,0 +1,94 @@
+﻿@model TrailerManagement.Models.CreateCompany
+
+@{
+    ViewBag.Title = "Create Company";
+}
+
+<h2>Create Company</h2>
+
+<div class="well">
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="col-md-2 float-left text-right">
+                <strong>Customer Number:</strong>
+            </div>
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.CustomerNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Customer Number" } })
+                @Html.ValidationMessageFor(model => model.CustomerNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2 float-left text-right">
+                <strong>Vendor Number:</strong>
+            </div>
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.VendorNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Vendor Number" } })
+                @Html.ValidationMessageFor(model => model.VendorNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2 float-left text-right">
+                <strong>Name:</strong>
+            </div>
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Name" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2 float-left text-right">
+                <strong>Sort Type:</strong>
+            </div>
+            <div class="col-md-4">
+                @Html.DropDownList("SortType", new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "- - - Select Type - - -", Value = "" },
+                    new SelectListItem { Text = "PAID", Value = "PAID" },
+                    new SelectListItem { Text = "SCRAP ONLY", Value = "SCRAP ONLY" },
+                    new SelectListItem { Text = "SCRAP AND PAID", Value = "SCRAP AND PAID" },
+                    new SelectListItem { Text = "FIXED LOAD PAID $100", Value = "FIXED LOAD PAID $100" },
+                    new SelectListItem { Text = "FIXED LOAD PAID $200", Value = "FIXED LOAD PAID $200" },
+                    new SelectListItem { Text = "FIXED LOAD PAID $250", Value = "FIXED LOAD PAID $250" },
+                },
+                htmlAttributes: new { @class = "form-control signin-form", id = "sortType" })
+                @Html.ValidationMessageFor(model => model.SortType, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2 float-left text-right">
+                <strong>Email Address(es):</strong>
+            </div>
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.EmailAddresses, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email Address(es)" } })
+                @Html.ValidationMessageFor(model => model.EmailAddresses, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2 float-left text-right">
+                <strong>Sort Type Description</strong>
+            </div>
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.SortTypeDescription, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SortTypeDescription, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a href="/PalletRepair/CustomersAndVendors" class="btn btn-warning">Cancel</a>
+            </div>
+        </div>
+    </div>
+}
+</div>
+

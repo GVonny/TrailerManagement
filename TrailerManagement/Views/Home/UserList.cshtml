@@ -1,0 +1,94 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "User List";
+}
+
+<br />
+<div>
+    <span class="h2 float-left">@ViewBag.Title</span>
+    <a href="~/Home/CreateUser" class="btn btn-primary float-left" id="createUser">Create User</a>
+    <div class="text-right h4 float-right">
+        Order by:
+        <p class="hover">
+            @Html.ActionLink("Username", "UserList", new { SortOrder = ViewBag.Username })&nbsp;|
+            @Html.ActionLink("Permission", "UserList", new { SortOrder = ViewBag.Permission })
+        </p>
+    </div>
+</div>
+<br />
+
+<table class="table table-hover table-responsive">
+    @using (Html.BeginForm("TrailerList", "Home", FormMethod.Get))
+    {
+        <thead>
+            <tr class="font-md">
+                <th>Name</th>
+                <th>Username</th>
+                <th class="text-center">Password</th>
+                <th class="text-center">Permission</th>
+            </tr>
+        </thead>
+    }
+    <tbody id="users">
+        @foreach (User u in Model)
+        {
+            <tr class="product-row" id="@u.Username">
+                <td id="firstName_@u.Username">@u.FirstName</td>
+                <td id="username_@u.Username">@u.Username</td>
+                <td class="text-center" id="password_@u.Username">@u.Password</td>
+                <td class="text-center" id="permission_@u.Username">@u.Permission</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            var UserID = "";
+            $('#users tr').each(function ()
+            {
+                UserID = this.id;
+                var password = $('#password_' + UserID).html();
+                var dotPassword = "";
+
+                //changes password from password to dots * in table view
+                for (var x = 0; x < password.length; x++)
+                {
+                    dotPassword += "*";
+                }
+
+                //changes permission table view
+                var permission = $('#permission_' + UserID).html();
+                switch (permission)
+                {
+                    case "1":
+                        permission = "Employee";
+                        break;
+                    case "2":
+                        permission = "Driver";
+                        break;
+                    case "3":
+                        permission = "Edit";
+                        break;
+                    case "4":
+                        permission = "Admin";
+                        break;
+                }
+                $('#password_' + UserID).html(dotPassword);
+                $('#permission_' + UserID).html(permission);
+            });
+
+            //edit user redirect
+            $('#users').on('click', '.product-row', function ()
+            {
+                UserID = this.id;
+                location.href = "EditUser/" + $('#username_' + UserID).html();
+            });
+        });
+    </script>
+}
