@@ -88,7 +88,7 @@ namespace TrailerManagement.Controllers
                     model.Trailer = trailer;
                     model.Vendor = vendor;
 
-                    this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.PartNumber != "50-0140" && c.PartNumber != "50-0001" && c.PartNumber != "50-0004" && c.Type != "SCRAP" && c.Type != "DEDUCTION" && (!c.Description.Contains("REMAN"))).OrderBy(c => c.Description), "PartNumber", "Description").ToList();
+                    this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.PartNumber != "50-0140" && c.PartNumber != "50-0001" && c.PartNumber != "50-0004" && c.Type != "SCRAP" && c.Type != "DEDUCTION").OrderBy(c => c.Description), "PartNumber", "Description").ToList();
 
                     this.ViewData["scrapTypes"] = new SelectList(db.PalletTypes.Where(c => c.Description.ToLower().Contains("scrap")).OrderByDescending(c => c.PartNumber), "PartNumber", "Description").ToList();
 
@@ -206,7 +206,7 @@ namespace TrailerManagement.Controllers
                     var trailer = db.MasterStacks.Where(t => t.SortGUID == sortID).OrderBy(t => t.StackNumber);
                     model.Trailer = trailer.ToList();
                     ViewBag.SortID = sortID;
-                    this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "DEDUCTION" && (c.Description.Contains("REMAN 28 X 28") || !c.Description.Contains("REMAN") || c.PartNumber.Contains("SCRAP"))).OrderBy(c => c.Description), "PartNumber", "Description").ToList();
+                    this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "DEDUCTION" && c.Type != "SCRAP").OrderBy(c => c.Description), "PartNumber", "Description").ToList();
 
                     var sort = db.SortLists.FirstOrDefault(s => s.SortGUID == sortID);
                     model.Sort = sort;
@@ -335,7 +335,6 @@ namespace TrailerManagement.Controllers
                     DateArrived = sort.DateArrived,
                     Status = "NEW",
                     TimeToSort = sort.TimeToSort,
-
                 };
 
                 if (vendor != null)
@@ -409,7 +408,7 @@ namespace TrailerManagement.Controllers
                     model.Notes = notes.ToList();
 
                     this.ViewData["deductionTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type == "DEDUCTION").OrderBy(c => c.PartNumber), "PartNumber", "PartNumber").ToList();
-                    this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "DEDUCTION" && (c.Description.Contains("REMAN 28 X 28") || !c.Description.Contains("REMAN"))).OrderBy(c => c.Description), "PartNumber", "Description").ToList();
+                    this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "DEDUCTION").OrderBy(c => c.Description), "PartNumber", "Description").ToList();
                     this.ViewData["Vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
 
                     return View(model);
@@ -546,7 +545,7 @@ namespace TrailerManagement.Controllers
 
                 var pallet = db.PalletTypes.FirstOrDefault(p => p.PartNumber == newPartNumber);
 
-                var stackCheck = db.MasterStacks.FirstOrDefault(t => t.PartNumber == newPartNumber && t.StackNumber == stackNumber);
+                var stackCheck = db.MasterStacks.FirstOrDefault(t => t.SortGUID == sortID && t.PartNumber == newPartNumber && t.StackNumber == stackNumber);
 
                 if (stackCheck != null)
                 {
@@ -585,7 +584,7 @@ namespace TrailerManagement.Controllers
             using (TrailerEntities db = new TrailerEntities())
             {
                 var splitFrom = db.CompletedSorts.FirstOrDefault(t => t.CompletedSortGUID == completedSortID);
-                var splitToo = db.CompletedSorts.FirstOrDefault(t => t.PartNumber == newPartNumber);
+                var splitToo = db.CompletedSorts.FirstOrDefault(t => t.SortGUID == splitFrom.SortGUID && t.PartNumber == newPartNumber);
 
                 var newPalletType = db.PalletTypes.FirstOrDefault(t => t.PartNumber == newPartNumber);
 
@@ -674,12 +673,15 @@ namespace TrailerManagement.Controllers
 
                 var SortID = undoSort.SortGUID;
 
-                var completedSortToUpdate =
-                    db.CompletedSorts.FirstOrDefault(t => t.PartNumber == undoSort.SplitFrom && t.SortGUID == undoSort.SortGUID);
+                var completedSortToUpdate = db.CompletedSorts.FirstOrDefault(t => t.PartNumber == undoSort.SplitFrom && t.SortGUID == undoSort.SortGUID);
 
                 if (completedSortToUpdate != null)
                 {
                     completedSortToUpdate.Quantity += undoSort.Quantity;
+                    db.CompletedSorts.Remove(undoSort);
+                }
+                else
+                {
                     db.CompletedSorts.Remove(undoSort);
                 }
 
@@ -1229,7 +1231,7 @@ namespace TrailerManagement.Controllers
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
-                    this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "DEDUCTION" && (c.Description.Contains("REMAN 28 X 28") || !c.Description.Contains("REMAN"))).OrderBy(c => c.PartNumber), "PartNumber", "PartNumber").ToList();
+                    this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "DEDUCTION").OrderBy(c => c.PartNumber), "PartNumber", "PartNumber").ToList();
                     this.ViewData["vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
                     return View();
                 }
@@ -1245,7 +1247,7 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "DEDUCTION" && (c.Description.Contains("REMAN 28 X 28") || !c.Description.Contains("REMAN"))).OrderBy(c => c.PartNumber), "PartNumber", "PartNumber").ToList();
+                this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "DEDUCTION").OrderBy(c => c.PartNumber), "PartNumber", "PartNumber").ToList();
                 this.ViewData["vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
                 if (ModelState.IsValid)
                 {
