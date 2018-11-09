@@ -473,7 +473,8 @@ namespace TrailerManagement.Controllers
             }
         }
         
-        public ActionResult UpdatePayoutInfo(int sortID, string invoiceNumber, string billOfLading, string packingListNumber, string purchaseOrderNumber, string palletOrderNumber, string vendor)
+        [HttpPost]
+        public ActionResult UpdatePayoutInfo(int sortID, string invoiceNumber, string billOfLading, string packingListNumber, string purchaseOrderNumber, string palletOrderNumber, string vendors)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
@@ -499,26 +500,57 @@ namespace TrailerManagement.Controllers
                 {
                     payout.OrderNumber = palletOrderNumber;
                 }
-                if(vendor != "")
+                //if (vendors != "")
+                //{
+                //    var oldVendor = payout.Vendor;
+                //    payout.Vendor = vendors;
+                //    var vendorFromMaster = db.CustomersAndVendors.FirstOrDefault(v => v.Name == vendors);
+                //    payout.VendorNumber = Convert.ToInt32(vendorFromMaster.VendorNumber);
+
+                //    var vendorPrices = db.PalletPrices.Where(p => p.VendorName == vendorFromMaster.Name);
+
+                //    var completedStacks = db.CompletedSorts.Where(c => c.Vendor == oldVendor && c.SortGUID == payout.SortGUID);
+
+                //    foreach (CompletedSort cs in completedStacks)
+                //    {
+                //        cs.Vendor = vendors;
+                //        foreach (PalletPrice pp in vendorPrices)
+                //        {
+                //            if (cs.PartNumber == pp.PartNumber)
+                //            {
+                //                cs.Cost = pp.PurchasePrice;
+                //            }
+                //        }
+                //    }
+                //}
+                db.SaveChanges();
+                return RedirectToAction(actionName: "ViewPayout", controllerName: "PalletRepair", routeValues: new { sortID });
+            }
+        }
+
+        public ActionResult UpdatePayoutVendor(int sortID, string vendors)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
+
+                var oldVendor = payout.Vendor;
+                payout.Vendor = vendors;
+                var vendorFromMaster = db.CustomersAndVendors.FirstOrDefault(v => v.Name == vendors);
+                payout.VendorNumber = Convert.ToInt32(vendorFromMaster.VendorNumber);
+
+                var vendorPrices = db.PalletPrices.Where(p => p.VendorName == vendorFromMaster.Name);
+
+                var completedStacks = db.CompletedSorts.Where(c => c.Vendor == oldVendor && c.SortGUID == payout.SortGUID);
+
+                foreach (CompletedSort cs in completedStacks)
                 {
-                    var oldVendor = payout.Vendor;
-                    payout.Vendor = vendor;
-                    var vendorFromMaster = db.CustomersAndVendors.FirstOrDefault(v => v.Name == vendor);
-                    payout.VendorNumber = Convert.ToInt32(vendorFromMaster.VendorNumber);
-
-                    var vendorPrices = db.PalletPrices.Where(p => p.VendorName == vendorFromMaster.Name);
-
-                    var completedStacks = db.CompletedSorts.Where(c => c.Vendor == oldVendor && c.SortGUID == payout.SortGUID);
-
-                    foreach(CompletedSort cs in completedStacks)
+                    cs.Vendor = vendors;
+                    foreach (PalletPrice pp in vendorPrices)
                     {
-                        cs.Vendor = vendor;
-                        foreach(PalletPrice pp in vendorPrices)
+                        if (cs.PartNumber == pp.PartNumber)
                         {
-                            if(cs.PartNumber == pp.PartNumber)
-                            {
-                                cs.Cost = pp.PurchasePrice;
-                            }
+                            cs.Cost = pp.PurchasePrice;
                         }
                     }
                 }

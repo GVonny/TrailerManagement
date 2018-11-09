@@ -6,6 +6,7 @@
 
 <br>
 <input type="button" id="showAdditionalInfoModal" value="Update Payout Info" class="btn btn-primary"/>
+<input type="button" id="showUpdatePayoutVendorModal" value="Update Vendor" class="btn btn-primary" />
 <br />
 <br />
 <table class="table table-responsive">
@@ -101,6 +102,7 @@
 <br>
 <br>
 <br>
+<!-- Notes Table -->
 <table class="table table-responsive">
     <thead>
         <tr class="font-md">
@@ -120,6 +122,7 @@
         }
     </tbody>
 </table>
+<!-- Images Table -->
 <table class="table table-responsive">
     <thead>
         <tr class="font-md">
@@ -274,7 +277,7 @@
         </div>
     </div>
 </div>
-<!-- Additional Info Modal -->
+<!-- Form Test -->
 <div id="additionalInfoModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -282,36 +285,88 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h2 class="modal-title">Additional Info</h2>
+                <h2 class="modal-title">Update Payout Info <span id="vendorName"></span></h2>
+
+                @using (Html.BeginForm("UpdatePayoutInfo", "PalletRepair", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="modal-body">
+                            <div class="form-group hidden">
+                                <input type="number" class="form-control" id="sortID" name="sortID" value="@payout.SortGUID">
+                                <br>
+                            </div>
+                            <div class="form-group">
+                                <strong>Invoice Number:</strong>
+                                <input type="text" class="form-control" id="invoiceNumber" name="invoiceNumber">
+                            </div>
+                            <div class="form-group">
+                                <strong>Bill Of Lading:</strong>
+                                <input type="text" class="form-control" id="billOfLading" name="billOfLading">
+                            </div>
+                            <div class="form-group">
+                                <strong>Packing List Number:</strong>
+                                <input type="text" class="form-control" id="packingListNumber" name="packingListNumber">
+                            </div>
+                            <div class="form-group">
+                                <strong>PurchaseOrderNumber:</strong>
+                                <input type="text" class="form-control" id="purchaseOrderNumber" name="purchaseOrderNumber">
+                            </div>
+                            <div class="form-group">
+                                <strong>PalletOrderNumber:</strong>
+                                <input type="text" class="form-control" id="palletOrderNumber" name="palletOrderNumber">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <input type="submit" value="Continue" id="submit" class="btn btn-primary" />
+                                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
-            <div class="modal-body">
-                <strong>Invoice Number:</strong>
-                <input type="text" class="form-control" id="invoiceNumber">
-                <br>
+        </div>
+    </div>
+</div>
+<!-- Vendor Update -->
+<div id="updatePayoutVendor" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Update Payout Vendor</h2>
 
-                <strong>Bill of Lading:</strong>
-                <input type="text" class="form-control" id="billOfLading">
-                <br>
+                @using (Html.BeginForm("UpdatePayoutVendor", "PalletRepair", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
 
-                <strong>Packing List Number:</strong>
-                <input type="text" class="form-control" id="packingListNumber">
-                <br>
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                <strong>Purchase Order Number:</strong>
-                <input type="text" class="form-control" id="purchaseOrderNumber">
-                <br />
-
-                <strong>Pallet Order Number:</strong>
-                <input type="text" class="form-control" id="palletOrderNumber">
-                <br />
-
-                <strong>Vendor</strong>
-                @Html.DropDownList("Vendors", null, "- - - Select Vendor - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "vendors", @name = "vendor" })
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="updateAdditionalInfo" data-dismiss="modal" data-toggle="modal">Continue</button>
+                        <div class="modal-body">
+                            <div class="form-group hidden">
+                                <input type="number" class="form-control" id="sortID" name="sortID" value="@payout.SortGUID">
+                                <br>
+                            </div>
+                            <div class="form-group">
+                                <strong>Vendor Change</strong>
+                                @Html.DropDownList("Vendors", null, "- - - Select new vendor - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "vendor", @name = "vendor" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <input type="submit" value="Continue" id="submit" class="btn btn-primary" />
+                                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -346,11 +401,16 @@
                 $('#additionalInfoModal').modal();
             });
 
-            $('#updateAdditionalInfo').on('click', function ()
+            $('#showUpdatePayoutVendorModal').on('click', function ()
             {
-                console.log("/PalletRepair/UpdatePayoutInfo?sortID=" + sortID + "&invoiceNumber=" + $('#invoiceNumber').val() + "&billOfLading=" + $('#billOfLading').val() + "&packingListNumber=" + $('#packingListNumber').val() + "&purchaseOrderNumber=" + $('#purchaseOrderNumber').val() + "&palletOrderNumber=" + $('#palletOrderNumber').val() + "&vendor=" + $('#vendors').val());
-                location.href = "/PalletRepair/UpdatePayoutInfo?sortID=" + sortID + "&invoiceNumber=" + $('#invoiceNumber').val() + "&billOfLading=" + $('#billOfLading').val() + "&packingListNumber=" + $('#packingListNumber').val() + "&purchaseOrderNumber=" + $('#purchaseOrderNumber').val() + "&palletOrderNumber=" + $('#palletOrderNumber').val() + "&vendor=" + $('#vendors').val();
+                $('#updatePayoutVendor').modal();
             });
+
+            //$('#updateAdditionalInfo').on('click', function ()
+            //{
+            //    console.log("/PalletRepair/UpdatePayoutInfo?sortID=" + sortID + "&invoiceNumber=" + $('#invoiceNumber').val() + "&billOfLading=" + $('#billOfLading').val() + "&packingListNumber=" + $('#packingListNumber').val() + "&purchaseOrderNumber=" + $('#purchaseOrderNumber').val() + "&palletOrderNumber=" + $('#palletOrderNumber').val() + "&vendor=" + $('#vendors').val());
+            //    //location.href = "/PalletRepair/UpdatePayoutInfo?sortID=" + sortID + "&invoiceNumber=" + $('#invoiceNumber').val() + "&billOfLading=" + $('#billOfLading').val() + "&packingListNumber=" + $('#packingListNumber').val() + "&purchaseOrderNumber=" + $('#purchaseOrderNumber').val() + "&palletOrderNumber=" + $('#palletOrderNumber').val() + "&vendor=" + $('#vendors').val();
+            //});
 
             var editID;
             $('.quantityLink').on('click', function ()

@@ -21,9 +21,9 @@
         </tr>
     </thead>
     <tbody id="payouts">
-       @foreach (Payout p in Model)
+        @foreach (Payout p in Model)
         {
-            if(p.Status != "CLOSED")
+            if (p.Status != "CLOSED")
             {
                 <tr class="product-row" id="@p.SortGUID">
                     <td id="customer_@p.SortGUID">@p.Vendor</td>
@@ -49,7 +49,7 @@
     </tbody>
 </table>
 
-<!-- Additional Info Modal -->
+<!-- Form Test -->
 <div id="additionalInfoModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -57,36 +57,49 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h2 class="modal-title">Additional Info</h2>
-            </div>
-            <div class="modal-body">
-                <strong>Invoice Number:</strong>
-                <input type="text" class="form-control" id="invoiceNumber">
-                <br>
+                <h2 class="modal-title">Update Payout Info <span id="vendorName"></span></h2>
 
-                <strong>Bill of Lading:</strong>
-                <input type="text" class="form-control" id="billOfLading">
-                <br>
+                @using (Html.BeginForm("UpdatePayoutInfo", "PalletRepair", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
 
-                <strong>Packing List Number:</strong>
-                <input type="text" class="form-control" id="packingListNumber">
-                <br>
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                <strong>Purchase Order Number:</strong>
-                <input type="text" class="form-control" id="purchaseOrderNumber">
-                <br />
-
-                <strong>Pallet Order Number:</strong>
-                <input type="text" class="form-control" id="palletOrderNumber">
-                <br />
-
-                <strong>Vendor Change (if necessary)</strong>
-                @Html.DropDownList("Vendors", null, "- - - Select Vendor - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "vendors", @name = "vendor" })
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="updateAdditionalInfo" data-dismiss="modal" data-toggle="modal">Continue</button>
+                        <div class="modal-body">
+                            <div class="form-group hidden">
+                                <input type="number" class="form-control" id="sortID" name="sortID">
+                                <br>
+                            </div>
+                            <div class="form-group">
+                                <strong>Invoice Number:</strong>
+                                <input type="text" class="form-control" id="invoiceNumber" name="invoiceNumber">
+                            </div>
+                            <div class="form-group">
+                                <strong>Bill Of Lading:</strong>
+                                <input type="text" class="form-control" id="billOfLading" name="billOfLading">
+                            </div>
+                            <div class="form-group">
+                                <strong>Packing List Number:</strong>
+                                <input type="text" class="form-control" id="packingListNumber" name="packingListNumber">
+                            </div>
+                            <div class="form-group">
+                                <strong>PurchaseOrderNumber:</strong>
+                                <input type="text" class="form-control" id="purchaseOrderNumber" name="purchaseOrderNumber">
+                            </div>
+                            <div class="form-group">
+                                <strong>PalletOrderNumber:</strong>
+                                <input type="text" class="form-control" id="palletOrderNumber" name="palletOrderNumber">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <input type="submit" value="Continue" id="submit" class="btn btn-primary" />
+                                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -103,6 +116,7 @@
                 sortID = this.id;
                 if ($('#status_' + sortID).html() == "NEW")
                 {
+                    $('#sortID').val(sortID);
                     $('#additionalInfoModal').modal();
                 }
                 else
@@ -114,6 +128,7 @@
             $('#payouts tr').each(function ()
             {
                 var payoutID = this.id;
+                
                 var timeToUnload = $('#timeToUnload_' + payoutID).html();
                 timeToUnload = (timeToUnload / 60).toFixed(2) + " minutes";
                 $('#timeToUnload_' + payoutID).html(timeToUnload);
@@ -133,7 +148,7 @@
             {
                 $('.closed-row').addClass('hidden');
             }
-            
+
             $('#showClosedPayouts').change(function ()
             {
                 if ($(this).is(':checked'))
@@ -148,7 +163,8 @@
 
             $('#updateAdditionalInfo').on('click', function ()
             {
-                location.href = "/PalletRepair/UpdatePayoutInfo?sortID=" + sortID + "&invoiceNumber=" + $('#invoiceNumber').val() + "&billOfLading=" + $('#billOfLading').val() + "&packingListNumber=" + $('#packingListNumber').val() + "&purchaseOrderNumber=" + $('#purchaseOrderNumber').val() + "&palletOrderNumber=" + $('#palletOrderNumber').val() + "&vendor=" + $('#vendors').val();            });
+                location.href = "/PalletRepair/UpdatePayoutInfo?sortID=" + sortID + "&invoiceNumber=" + $('#invoiceNumber').val() + "&billOfLading=" + $('#billOfLading').val() + "&packingListNumber=" + $('#packingListNumber').val() + "&purchaseOrderNumber=" + $('#purchaseOrderNumber').val() + "&palletOrderNumber=" + $('#palletOrderNumber').val() + "&vendor=" + $('#vendors').val();
+            });
         });
     </script>
 }
