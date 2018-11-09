@@ -323,27 +323,27 @@ namespace TrailerManagement.Controllers
                 //    activeTrailerEdit.Notes = "";
                 //    activeTrailerEdit.Tags = "";
                 //}
-                
-                //var vendor = db.CustomersAndVendors.FirstOrDefault(v => v.Name == sort.Vendor);
 
-                //Payout payout = new Payout()
-                //{
-                //    TrailerNumber = sort.TrailerNumber,
-                //    SortGUID = sort.SortGUID,
-                //    Vendor = sort.Vendor,
-                //    OrderNumber = sort.OrderNumber,
-                //    DateArrived = sort.DateArrived,
-                //    Status = "NEW",
-                //    TimeToSort = sort.TimeToSort,
-                    
-                //};
+                var vendor = db.CustomersAndVendors.FirstOrDefault(v => v.Name == sort.Vendor);
 
-                //if(vendor != null)
-                //{
-                //    payout.VendorNumber = Convert.ToInt32(vendor.VendorNumber);
-                //}
-                
-                //db.Payouts.Add(payout);
+                Payout payout = new Payout()
+                {
+                    TrailerNumber = sort.TrailerNumber,
+                    SortGUID = sort.SortGUID,
+                    Vendor = sort.Vendor,
+                    OrderNumber = sort.OrderNumber,
+                    DateArrived = sort.DateArrived,
+                    Status = "NEW",
+                    TimeToSort = sort.TimeToSort,
+
+                };
+
+                if (vendor != null)
+                {
+                    payout.VendorNumber = Convert.ToInt32(vendor.VendorNumber);
+                }
+
+                db.Payouts.Add(payout);
 
                 db.SaveChanges();
                 return RedirectToAction(actionName: "NewPayout", controllerName: "Email", routeValues: new { sortID });
@@ -479,11 +479,26 @@ namespace TrailerManagement.Controllers
             {
                 var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
 
-                payout.InvoiceNumber = invoiceNumber;
-                payout.BillOfLading = billOfLading;
-                payout.PackingListNumber = packingListNumber;
-                payout.PurchaseOrderNumber = purchaseOrderNumber;
-                payout.OrderNumber = palletOrderNumber;
+                if(invoiceNumber != "")
+                {
+                    payout.InvoiceNumber = invoiceNumber;
+                }
+                if(billOfLading != "")
+                {
+                    payout.BillOfLading = billOfLading;
+                }
+                if(packingListNumber != "")
+                {
+                    payout.PackingListNumber = packingListNumber;
+                }
+                if(purchaseOrderNumber != "")
+                {
+                    payout.PurchaseOrderNumber = purchaseOrderNumber;
+                }
+                if(palletOrderNumber != "")
+                {
+                    payout.OrderNumber = palletOrderNumber;
+                }
                 if(vendor != "")
                 {
                     var oldVendor = payout.Vendor;
@@ -491,7 +506,7 @@ namespace TrailerManagement.Controllers
                     var vendorFromMaster = db.CustomersAndVendors.FirstOrDefault(v => v.Name == vendor);
                     payout.VendorNumber = Convert.ToInt32(vendorFromMaster.VendorNumber);
 
-                    var vendorPrices = db.PalletPrices.Where(p => p.VendorName == vendor);
+                    var vendorPrices = db.PalletPrices.Where(p => p.VendorName == vendorFromMaster.Name);
 
                     var completedStacks = db.CompletedSorts.Where(c => c.Vendor == oldVendor && c.SortGUID == payout.SortGUID);
 
