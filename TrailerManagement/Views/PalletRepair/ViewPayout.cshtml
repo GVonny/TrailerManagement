@@ -6,7 +6,7 @@
 
 <br>
 <input type="button" id="showAdditionalInfoModal" value="Update Payout Info" class="btn btn-primary"/>
-<input type="button" id="showUpdatePayoutVendorModal" value="Update Vendor" class="btn btn-primary" />
+@*<input type="button" id="showUpdatePayoutVendorModal" value="Update Vendor" class="btn btn-primary" />*@
 <br />
 <br />
 <table class="table table-responsive">
@@ -76,7 +76,6 @@
                     </td>
                 }
 
-                <td class="hidden" id="vendor">@t.Vendor</td>
                 <td class="hidden" id="sortGUID">@t.SortGUID</td>
             </tr>
         }
@@ -342,12 +341,12 @@
                 </button>
                 <h2 class="modal-title">Update Payout Vendor</h2>
 
-                @using (Html.BeginForm("UpdatePayoutVendor", "PalletRepair", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                @*@using (Html.BeginForm("UpdatePayoutVendor", "PalletRepair", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
-                    @Html.AntiForgeryToken()
+                    @Html.AntiForgeryToken()*@
 
                     <div class="form-horizontal">
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
 
                         <div class="modal-body">
                             <div class="form-group hidden">
@@ -361,12 +360,12 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-10">
-                                <input type="submit" value="Continue" id="submit" class="btn btn-primary" />
+                                <input type="button" value="Continue" id="submit2" class="btn btn-primary" />
                                 <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
                             </div>
                         </div>
                     </div>
-                }
+                @*}*@
             </div>
         </div>
     </div>
@@ -404,6 +403,13 @@
             $('#showUpdatePayoutVendorModal').on('click', function ()
             {
                 $('#updatePayoutVendor').modal();
+            });
+
+            $('#submit2').on('click', function ()
+            {
+                var sortID = '@payout.SortGUID';
+                console.log("/PalletRepair/UpdatePayoutVendor?sortID=" + sortID + "&vendors=" + $('#vendor').val());
+                location.href = "/PalletRepair/UpdatePayoutVendor?sortID=" + sortID + "&vendors=" + $('#vendor').val();
             });
 
             //$('#updateAdditionalInfo').on('click', function ()
