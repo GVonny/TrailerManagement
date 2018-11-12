@@ -543,6 +543,7 @@ namespace TrailerManagement.Controllers
                         Quantity = newQuantity,
                         PalletNote = note,
                         PeopleOnStack = stack.PeopleOnStack,
+                        UserSignedIn = Session["name"].ToString(),
                         IsSplit = true,
                         SplitFrom = oldPartNumber,
                     };
