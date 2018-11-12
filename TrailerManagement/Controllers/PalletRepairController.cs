@@ -116,7 +116,6 @@ namespace TrailerManagement.Controllers
                     trailer.TimeToSort += timeOnStack;
                 }
                 
-
                 string[] palletTypes = partNumbers.Split('|');
                 string[] palletQuantities = quantities.Split('|');
                 string[] palletNotes = notes.Split('|');
@@ -361,7 +360,7 @@ namespace TrailerManagement.Controllers
                 using (TrailerEntities db = new TrailerEntities())
                 {
                     var payouts = from x in db.Payouts select x;
-                    payouts = payouts.OrderByDescending(p => p.Status).ThenBy(p => p.Vendor);
+                    payouts = payouts.OrderByDescending(p => p.Status).ThenByDescending(p => p.DateArrived).ThenBy(p => p.Vendor);
                     this.ViewData["Vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
                     return View(payouts.ToList());
                 }
