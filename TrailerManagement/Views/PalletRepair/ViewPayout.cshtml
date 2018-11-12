@@ -86,7 +86,7 @@
         <table>
             <tr>
                 <td class="noBorder">@Html.DropDownList("deductionTypes", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "deductions" })</td>
-                <td class="noBorder"><input type="button" id="addDeduction" value="Add Deduction" class="btn btn-primary hidden float-right" style="margin-left:20px"></td>
+                <td class="noBorder"><input type="button" id="addDeduction" value="Add Deduction" class="btn btn-primary float-right" style="margin-left:20px"></td>
             </tr>
         </table>
     </div>
@@ -483,7 +483,6 @@
 
             $('#addDeduction').on('click', function ()
             {
-                var id = $('#sortGUID').html();
                 var deduction = $('#deductions').val();
                 if (deduction != "")
                 {
@@ -523,11 +522,6 @@
                 {
                     location.href = "/PalletRepair/SplitPayoutPalletType?completedSortID=" + editID + "&newSplitQuantity=" + $('#newSplitQuantity').val() + "&newPartNumber=" + $('#newPalletTypeInput').val();
                 }
-            });
-
-            $('#deductions').on('change', function ()
-            {
-                $('#addDeduction').removeClass('hidden');
             });
 
             $('#showNewPalletType').change(function ()

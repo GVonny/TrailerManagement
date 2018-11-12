@@ -374,91 +374,70 @@ namespace TrailerManagement.Controllers
 
         public ActionResult ViewPayout(int sortID)
         {
-            if (Session["username"] == null)
+            using (TrailerEntities db = new TrailerEntities())
             {
-                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
-            }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
-            {
-                using (TrailerEntities db = new TrailerEntities())
+                dynamic model = new ExpandoObject();
+
+                var sortedTrailer = db.SortLists.FirstOrDefault(t => t.SortGUID == sortID);
+                string vendor = sortedTrailer.Vendor;
+
+                var sortedStacks = db.CompletedSorts.Where(t => t.SortGUID == sortID).OrderBy(t => t.PartNumber).ThenBy(t => t.Description);
+                model.SortedTrailer = sortedStacks.ToList();
+                    
+                var vendorFromMaster = db.CustomersAndVendors.FirstOrDefault(t => t.Name == vendor.ToString());
+                if(vendorFromMaster != null)
                 {
-                    dynamic model = new ExpandoObject();
-
-                    var sortedTrailer = db.SortLists.FirstOrDefault(t => t.SortGUID == sortID);
-                    string vendor = sortedTrailer.Vendor;
-
-                    var sortedStacks = db.CompletedSorts.Where(t => t.SortGUID == sortID).OrderBy(t => t.PartNumber).ThenBy(t => t.Description);
-                    model.SortedTrailer = sortedStacks.ToList();
-                    
-                    var vendorFromMaster = db.CustomersAndVendors.FirstOrDefault(t => t.Name == vendor.ToString());
-                    if(vendorFromMaster != null)
-                    {
-                        ViewBag.VendorNumber = vendorFromMaster.VendorNumber;
-                    }
-                    
-                    var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
-                    model.Payout = payout;
-                    payout.Status = "IN PROCESS";
-                    db.SaveChanges();
-
-                    var images = db.SortImages.Where(i => i.SortGUID == sortID);
-                    model.Images = images.ToList();
-                    
-                    var notes = db.MasterStacks.Where(n => n.SortGUID == sortID && n.PalletNote != null);
-                    model.Notes = notes.ToList();
-
-                    this.ViewData["deductionTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type == "DEDUCTION").OrderBy(c => c.PartNumber), "PartNumber", "PartNumber").ToList();
-                    this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "DEDUCTION").OrderBy(c => c.Description), "PartNumber", "Description").ToList();
-                    this.ViewData["Vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
-
-                    return View(model);
+                    ViewBag.VendorNumber = vendorFromMaster.VendorNumber;
                 }
+                    
+                var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
+                model.Payout = payout;
+                payout.Status = "IN PROCESS";
+                db.SaveChanges();
+
+                var images = db.SortImages.Where(i => i.SortGUID == sortID);
+                model.Images = images.ToList();
+                    
+                var notes = db.MasterStacks.Where(n => n.SortGUID == sortID && n.PalletNote != null);
+                model.Notes = notes.ToList();
+
+                this.ViewData["deductionTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type == "DEDUCTION").OrderBy(c => c.PartNumber), "PartNumber", "PartNumber").ToList();
+                this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "DEDUCTION").OrderBy(c => c.Description), "PartNumber", "Description").ToList();
+                this.ViewData["Vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
+
+                return View(model);
             }
-            else
-            {
-                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
-            }
+            
         }
 
         public ActionResult ViewCompletedPayout(int sortID)
         {
-            //if (Session["username"] == null)
-            //{
-            //    return RedirectToAction(actionName: "SignIn", controllerName: "Users");
-            //}
-            //if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
-            //{
-                using (TrailerEntities db = new TrailerEntities())
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                dynamic model = new ExpandoObject();
+
+                var singleType = db.CompletedSorts.Where(c => c.SortGUID == sortID).FirstOrDefault();
+                if(singleType != null)
                 {
-                    dynamic model = new ExpandoObject();
-
-                    var singleType = db.CompletedSorts.Where(c => c.SortGUID == sortID).FirstOrDefault();
-                    if(singleType != null)
+                    ViewBag.Vendor = singleType.Vendor;
+                    var vendorFromMaster = db.CustomersAndVendors.FirstOrDefault(v => v.Name == singleType.Vendor);
+                    if (vendorFromMaster != null)
                     {
-                        ViewBag.Vendor = singleType.Vendor;
-                        var vendorFromMaster = db.CustomersAndVendors.FirstOrDefault(v => v.Name == singleType.Vendor);
-                        if (vendorFromMaster != null)
-                        {
-                            ViewBag.VendorNumber = vendorFromMaster.VendorNumber;
-                        }
+                        ViewBag.VendorNumber = vendorFromMaster.VendorNumber;
                     }
-                    
-                    var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
-                    model.Payout = payout;
-
-                    payout.Status = "CLOSED";
-                    db.SaveChanges();
-
-                    var completedPayouts = db.CompletedSorts.Where(c => c.SortGUID == sortID);
-                    model.CompletePayout = completedPayouts.ToList();
-
-                    return View(model);
                 }
-            //}
-            //else
-            //{
-            //    return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
-            //}
+                    
+                var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
+                model.Payout = payout;
+
+                payout.Status = "CLOSED";
+                db.SaveChanges();
+
+                var completedPayouts = db.CompletedSorts.Where(c => c.SortGUID == sortID);
+                model.CompletePayout = completedPayouts.ToList();
+
+                return View(model);
+            }
         }
 
         //UPDATE LIST INFO
