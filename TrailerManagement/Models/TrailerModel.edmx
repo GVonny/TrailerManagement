@@ -48,6 +48,8 @@
           <Property Name="SortType" Type="varchar" MaxLength="25" />
           <Property Name="EmailAddresses" Type="varchar(max)" />
           <Property Name="SortTypeDescription" Type="varchar(max)" />
+          <Property Name="PhoneNumber" Type="varchar" MaxLength="10" />
+          <Property Name="ContactName" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Departments">
           <Key>
@@ -420,6 +422,8 @@
           <Property Name="SortType" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
           <Property Name="EmailAddresses" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="SortTypeDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ContactName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -620,6 +624,8 @@
           <EntitySetMapping Name="CustomersAndVendors">
             <EntityTypeMapping TypeName="TrailerModel.CustomersAndVendor">
               <MappingFragment StoreEntitySet="CustomersAndVendors">
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
                 <ScalarProperty Name="SortTypeDescription" ColumnName="SortTypeDescription" />
                 <ScalarProperty Name="EmailAddresses" ColumnName="EmailAddresses" />
                 <ScalarProperty Name="SortType" ColumnName="SortType" />

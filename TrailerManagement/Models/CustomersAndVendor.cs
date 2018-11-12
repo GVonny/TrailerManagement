@@ -22,5 +22,7 @@ namespace TrailerManagement.Models
         public string SortType { get; set; }
         public string EmailAddresses { get; set; }
         public string SortTypeDescription { get; set; }
+        public string PhoneNumber { get; set; }
+        public string ContactName { get; set; }
     }
 }

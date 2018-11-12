@@ -13,14 +13,17 @@
             <th class="text-center" style="color:red"><h2>For this vendor: @trailer.Vendor</h2></th>
         </tr>
     </thead>
-    <tbody>
-        <tr>
-            <td>
-                <h3 class="text-center">@vendor.SortTypeDescription</h3>
-            </td>
-        </tr>
-    </tbody>
-</table>
+    @if (vendor != null)
+    {
+        <tbody>
+            <tr>
+                <td>
+                    <h3 class="text-center">@vendor.SortTypeDescription</h3>
+                </td>
+            </tr>
+        </tbody>
+    }
+    </table>
 
 <h2>Sort Sheet</h2>
 

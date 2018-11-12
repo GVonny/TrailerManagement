@@ -19,6 +19,8 @@ namespace TrailerManagement.Models
         public string SortType { get; set; }
         public string EmailAddresses { get; set; }
         public string SortTypeDescription { get; set; }
+        public string PhoneNumber { get; set; }
+        public string ContactName { get; set; }
 
         public CustomersAndVendor MapToCompany()
         {
@@ -30,6 +32,8 @@ namespace TrailerManagement.Models
                 SortType = this.SortType,
                 EmailAddresses = this.EmailAddresses,
                 SortTypeDescription = this.SortTypeDescription,
+                PhoneNumber = this.PhoneNumber,
+                ContactName = this.ContactName,
             };
 
             if (this.VendorNumber == null)

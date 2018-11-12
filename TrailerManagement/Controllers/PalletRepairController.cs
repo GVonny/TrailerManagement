@@ -422,23 +422,25 @@ namespace TrailerManagement.Controllers
 
         public ActionResult ViewCompletedPayout(int sortID)
         {
-            if (Session["username"] == null)
-            {
-                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
-            }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
-            {
+            //if (Session["username"] == null)
+            //{
+            //    return RedirectToAction(actionName: "SignIn", controllerName: "Users");
+            //}
+            //if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
+            //{
                 using (TrailerEntities db = new TrailerEntities())
                 {
                     dynamic model = new ExpandoObject();
 
-                    var singleType = db.CompletedSorts.First(c => c.SortGUID == sortID);
-                    ViewBag.Vendor = singleType.Vendor;
-                    
-                    var vendorFromMaster = db.CustomersAndVendors.FirstOrDefault(v => v.Name == singleType.Vendor);
-                    if(vendorFromMaster != null)
+                    var singleType = db.CompletedSorts.Where(c => c.SortGUID == sortID).FirstOrDefault();
+                    if(singleType != null)
                     {
-                        ViewBag.VendorNumber = vendorFromMaster.VendorNumber;
+                        ViewBag.Vendor = singleType.Vendor;
+                        var vendorFromMaster = db.CustomersAndVendors.FirstOrDefault(v => v.Name == singleType.Vendor);
+                        if (vendorFromMaster != null)
+                        {
+                            ViewBag.VendorNumber = vendorFromMaster.VendorNumber;
+                        }
                     }
                     
                     var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
@@ -452,11 +454,11 @@ namespace TrailerManagement.Controllers
 
                     return View(model);
                 }
-            }
-            else
-            {
-                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
-            }
+            //}
+            //else
+            //{
+            //    return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            //}
         }
 
         //UPDATE LIST INFO
@@ -503,7 +505,7 @@ namespace TrailerManagement.Controllers
                 return RedirectToAction(actionName: "ViewPayout", controllerName: "PalletRepair", routeValues: new { sortID });
             }
         }
-
+        
         public ActionResult UpdatePayoutVendor(int sortID, string vendors)
         {
             using (TrailerEntities db = new TrailerEntities())

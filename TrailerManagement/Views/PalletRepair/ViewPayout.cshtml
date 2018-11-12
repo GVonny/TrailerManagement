@@ -13,7 +13,6 @@
     <thead>
         <tr class="font-md">
             <th colspan="2" class="text-center"><h2>@payout.Vendor - @payout.VendorNumber</h2> </th>
-
         </tr>
     </thead>
     <tbody>
@@ -29,7 +28,6 @@
             <td class="col-md-6"><strong>Packing List Number:&nbsp;</strong>@payout.PackingListNumber</td>
             <td class="col-md-6"><strong>Purchase Order Number:&nbsp;</strong>@payout.PurchaseOrderNumber</td>
         </tr>
-
     </tbody>
 </table>
 
@@ -341,12 +339,12 @@
                 </button>
                 <h2 class="modal-title">Update Payout Vendor</h2>
 
-                @*@using (Html.BeginForm("UpdatePayoutVendor", "PalletRepair", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                @using (Html.BeginForm("UpdatePayoutVendor", "PalletRepair"))
                 {
-                    @Html.AntiForgeryToken()*@
+                    @Html.AntiForgeryToken()
 
                     <div class="form-horizontal">
-                        @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                         <div class="modal-body">
                             <div class="form-group hidden">
@@ -360,12 +358,12 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-10">
-                                <input type="button" value="Continue" id="submit2" class="btn btn-primary" />
+                                <input type="button" value="Continue" id="submit" class="btn btn-primary" />
                                 <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
                             </div>
                         </div>
                     </div>
-                @*}*@
+                }
             </div>
         </div>
     </div>
@@ -405,12 +403,12 @@
                 $('#updatePayoutVendor').modal();
             });
 
-            $('#submit2').on('click', function ()
+            @*$('#submit2').on('click', function ()
             {
                 var sortID = '@payout.SortGUID';
                 console.log("/PalletRepair/UpdatePayoutVendor?sortID=" + sortID + "&vendors=" + $('#vendor').val());
                 location.href = "/PalletRepair/UpdatePayoutVendor?sortID=" + sortID + "&vendors=" + $('#vendor').val();
-            });
+            });*@
 
             //$('#updateAdditionalInfo').on('click', function ()
             //{
@@ -466,14 +464,16 @@
                 }
                 else
                 {
-                    location.href = "/PalletRepair/ViewCompletedPayout?sortID=" + id;
+                    //location.href = "/PalletRepair/ViewCompletedPayout?sortID=" + id;
+                    location.href = "/Email/CompletePayout?sortID=" + @payout.SortGUID;
                 }
             });
 
             $('#confirmFinish').on('click', function ()
             {
                 var id = $('#sortGUID').html();
-                location.href = "/PalletRepair/ViewCompletedPayout?sortID=" + id;
+                //location.href = "/PalletRepair/ViewCompletedPayout?sortID=" + id;
+                location.href = "/Email/CompletePayout?sortID=" + @payout.SortGUID;
             });
 
             $('#finishLater').on('click', function ()
@@ -487,7 +487,7 @@
                 var deduction = $('#deductions').val();
                 if (deduction != "")
                 {
-                    location.href = "/PalletRepair/AddDeduction?sortID=" + id + "&deduction=" + deduction;
+                    location.href = "/PalletRepair/AddDeduction?sortID=" + @payout.SortGUID + "&deduction=" + deduction;
                 }
                 //console.log("/PalletRepair/AddDeduction?sortID=" + id + "&deduction=" + deduction);
             });
