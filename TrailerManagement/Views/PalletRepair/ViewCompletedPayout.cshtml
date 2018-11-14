@@ -95,15 +95,15 @@
     <script>
         $(function ()
         {
-            var vendor = '@ViewBag.Vendor';
-            var vendorNumber = '@ViewBag.VendorNumber';
+            var vendor = '@payout.Vendor';
+            var vendorNumber = '@payout.VendorNumber';
             if (vendorNumber == "")
             {
                 $('#header').html(vendor);
             }
             else
             {
-                $('#header').html(vendor + " - " + '@ViewBag.VendorNumber');
+                $('#header').html(vendor + " - " + '@payout.VendorNumber');
             }
             
             var grandTotal = 0;

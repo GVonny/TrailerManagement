@@ -274,7 +274,7 @@
         </div>
     </div>
 </div>
-<!-- Form Test -->
+<!-- Update Payout Info Modal -->
 <div id="additionalInfoModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -341,8 +341,6 @@
 
                 @using (Html.BeginForm("UpdatePayoutVendor", "PalletRepair"))
                 {
-                    @Html.AntiForgeryToken()
-
                     <div class="form-horizontal">
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -353,12 +351,12 @@
                             </div>
                             <div class="form-group">
                                 <strong>Vendor Change</strong>
-                                @Html.DropDownList("Vendors", null, "- - - Select new vendor - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "vendor", @name = "vendor" })
+                                @Html.DropDownList("Vendors", null, "- - - Select new vendor - - -", htmlAttributes: new { @class = "form-control", @id = "vendors", @name = "vendors" })
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-10">
-                                <input type="button" value="Continue" id="submit" class="btn btn-primary" />
+                                <input type="submit" value="Update" id="submit2" class="btn btn-primary" />
                                 <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
                             </div>
                         </div>
@@ -406,8 +404,8 @@
             @*$('#submit2').on('click', function ()
             {
                 var sortID = '@payout.SortGUID';
-                console.log("/PalletRepair/UpdatePayoutVendor?sortID=" + sortID + "&vendors=" + $('#vendor').val());
-                location.href = "/PalletRepair/UpdatePayoutVendor?sortID=" + sortID + "&vendors=" + $('#vendor').val();
+                console.log("/PalletRepair/ThisIsAMethod?sortID=" + sortID + "&vendors=" + $('#vendors').val());
+                location.href = "/PalletRepair/ThisIsAMethod?sortID=" + sortID + "&vendors=" + $('#vendors').val();
             });*@
 
             //$('#updateAdditionalInfo').on('click', function ()

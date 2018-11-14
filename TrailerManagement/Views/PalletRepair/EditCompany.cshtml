@@ -16,7 +16,7 @@
 
         <div class="form-group">
             <div class="col-md-2 float-left text-right">
-                <strong>Name</strong>
+                <strong>Company Name:</strong>
             </div>
             <div class="col-md-4">
                 @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
@@ -26,7 +26,7 @@
 
         <div class="form-group">
             <div class="col-md-2 float-left text-right">
-                <strong>Customer Number</strong>
+                <strong>Customer Number:</strong>
             </div>
             <div class="col-md-4">
                 @Html.EditorFor(model => model.CustomerNumber, new { htmlAttributes = new { @class = "form-control" } })
@@ -36,7 +36,7 @@
 
         <div class="form-group">
             <div class="col-md-2 float-left text-right">
-                <strong>Vendor Number</strong>
+                <strong>Vendor Number:</strong>
             </div>
             <div class="col-md-4">
                 @Html.EditorFor(model => model.VendorNumber, new { htmlAttributes = new { @class = "form-control" } })
@@ -46,7 +46,7 @@
 
         <div class="form-group">
             <div class="col-md-2 float-left text-right">
-                <strong>Sort Type</strong>
+                <strong>Sort Type:</strong>
             </div>
             <div class="col-md-4">
                 @Html.DropDownList("SortType", new List<SelectListItem>
@@ -97,11 +97,21 @@
 
         <div class="form-group">
             <div class="col-md-2 float-left text-right">
-                <strong>Sort Type Description</strong>
+                <strong>Sort Type Description:</strong>
             </div>
             <div class="col-md-4">
                 @Html.EditorFor(model => model.SortTypeDescription, new { htmlAttributes = new { @class = "form-control", @placeholder = "Put as much details as you feel necessary" } })
                 @Html.ValidationMessageFor(model => model.SortTypeDescription, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2 float-left text-right">
+                <strong>Payout Description:</strong>
+            </div>
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.PayoutDescription, new { htmlAttributes = new { @class = "form-control", @placeholder = "Put as much details as you feel necessary" } })
+                @Html.ValidationMessageFor(model => model.PayoutDescription, "", new { @class = "text-danger" })
             </div>
         </div>
 

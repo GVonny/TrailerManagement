@@ -48,7 +48,7 @@ namespace TrailerManagement.Controllers
                 message.IsBodyHtml = true;
                 message.BodyEncoding = UTF8Encoding.UTF8;
                 //uncomment to send emails to nancy
-                client.Send(message);
+                //client.Send(message);
 
                 if (sortedTrailer != null)
                 {

@@ -194,7 +194,7 @@ else
             $('#finish').on('click', function ()
             {
                 //do something here where it creates a completed sort record
-                var sortID = '@ViewBag.SortID';
+                var sortID = '@sort.SortGUID';
                 location.href = "/PalletRepair/CompleteSort?sortID=" + sortID;
             });
 

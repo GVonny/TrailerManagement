@@ -45,8 +45,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) 
-                && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
+            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
@@ -125,7 +124,7 @@ namespace TrailerManagement.Controllers
                 {
                     //check to see if values under entered stack number already exists
                     var stacks = db.MasterStacks.Where(t => t.SortGUID == trailer.SortGUID && t.StackNumber == stackNumber);
-                    //if so removes all values under stack number to allow for new values to over ride old stack info
+                    //if so removes all values under stack number to allow for new values to override old stack info
                     if (stacks != null)
                     {
                         foreach (MasterStack stack in stacks)
@@ -204,7 +203,7 @@ namespace TrailerManagement.Controllers
 
                     var trailer = db.MasterStacks.Where(t => t.SortGUID == sortID).OrderBy(t => t.StackNumber);
                     model.Trailer = trailer.ToList();
-                    ViewBag.SortID = sortID;
+
                     this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "DEDUCTION" && c.Type != "SCRAP").OrderBy(c => c.Description), "PartNumber", "Description").ToList();
 
                     var sort = db.SortLists.FirstOrDefault(s => s.SortGUID == sortID);
@@ -354,14 +353,15 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) 
-                && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
+            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
                     var payouts = from x in db.Payouts select x;
                     payouts = payouts.OrderByDescending(p => p.Status).ThenByDescending(p => p.DateArrived).ThenBy(p => p.Vendor);
+
                     this.ViewData["Vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
+
                     return View(payouts.ToList());
                 }
             }
@@ -378,22 +378,16 @@ namespace TrailerManagement.Controllers
                 dynamic model = new ExpandoObject();
 
                 var sortedTrailer = db.SortLists.FirstOrDefault(t => t.SortGUID == sortID);
-                string vendor = sortedTrailer.Vendor;
 
                 var sortedStacks = db.CompletedSorts.Where(t => t.SortGUID == sortID).OrderBy(t => t.PartNumber).ThenBy(t => t.Description);
                 model.SortedTrailer = sortedStacks.ToList();
-                    
-                var vendorFromMaster = db.CustomersAndVendors.FirstOrDefault(t => t.Name == vendor.ToString());
-                if(vendorFromMaster != null)
-                {
-                    ViewBag.VendorNumber = vendorFromMaster.VendorNumber;
-                }
-                    
+                                    
                 var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
-                model.Payout = payout;
                 payout.Status = "IN PROCESS";
                 db.SaveChanges();
 
+                model.Payout = payout;
+                
                 var images = db.SortImages.Where(i => i.SortGUID == sortID);
                 model.Images = images.ToList();
                     
@@ -406,7 +400,6 @@ namespace TrailerManagement.Controllers
 
                 return View(model);
             }
-            
         }
 
         public ActionResult ViewCompletedPayout(int sortID)
@@ -414,18 +407,7 @@ namespace TrailerManagement.Controllers
             using (TrailerEntities db = new TrailerEntities())
             {
                 dynamic model = new ExpandoObject();
-
-                var singleType = db.CompletedSorts.Where(c => c.SortGUID == sortID).FirstOrDefault();
-                if(singleType != null)
-                {
-                    ViewBag.Vendor = singleType.Vendor;
-                    var vendorFromMaster = db.CustomersAndVendors.FirstOrDefault(v => v.Name == singleType.Vendor);
-                    if (vendorFromMaster != null)
-                    {
-                        ViewBag.VendorNumber = vendorFromMaster.VendorNumber;
-                    }
-                }
-                    
+                                    
                 var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
                 model.Payout = payout;
 
@@ -484,6 +466,7 @@ namespace TrailerManagement.Controllers
             }
         }
         
+        [HttpPost]
         public ActionResult UpdatePayoutVendor(int sortID, string vendors)
         {
             using (TrailerEntities db = new TrailerEntities())
@@ -603,10 +586,6 @@ namespace TrailerManagement.Controllers
                 {
                     db.CompletedSorts.Remove(splitFrom);
                 }
-
-
-                //checking for price in PalletPrices table
-
                 
                 if (newType.PartNumber == palletPrices.PartNumber)
                 {
@@ -1021,6 +1000,7 @@ namespace TrailerManagement.Controllers
                 company.SortType = editCompany.SortType;
                 company.EmailAddresses = editCompany.EmailAddresses;
                 company.SortTypeDescription = editCompany.SortTypeDescription;
+                company.PayoutDescription = editCompany.PayoutDescription;
 
                 if (editCompany.VendorNumber == null && editCompany.CustomerNumber != null)
                 {
@@ -1030,7 +1010,7 @@ namespace TrailerManagement.Controllers
                 {
                     company.Type = "Vendor Only";
                 }
-                else
+                else if(editCompany.CustomerNumber != null && editCompany.VendorNumber != null)
                 {
                     company.Type = "Customer/Vendor";
                 }
