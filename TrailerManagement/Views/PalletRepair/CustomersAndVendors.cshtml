@@ -4,20 +4,52 @@
 }
 
 <h2 class="float-left">Customers And Vendors</h2>
-<input type="button" class="btn btn-primary float-left no-print" value="Create Company" id="createCompany" style="margin-top:20px;margin-left:10px"  />
+<input type="button" class="btn btn-primary float-left no-print" value="Create Company" id="createCompany" style="margin-top:20px;margin-left:10px" />
+<br>
+<br>
+<br>
+<p class="float-right no-print" style="font-size:1.1em">
+    <a href="CustomersAndVendors?startsWith=ALL">ALL</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=A">A</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=B">B</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=C">C</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=D">D</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=E">E</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=F">F</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=G">G</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=H">H</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=I">I</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=J">J</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=K">K</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=L">L</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=M">M</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=N">N</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=O">O</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=P">P</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=Q">Q</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=R">R</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=S">S</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=T">T</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=U">U</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=V">V</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=W">W</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=X">X</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=Y">Y</a>&nbsp;|&nbsp;
+    <a href="CustomersAndVendors?startsWith=Z">Z</a>
+</p>
 
 <table class="table table-hover table-responsive">
     <thead>
         <tr class="font-md">
-            <th class="text-center">Vendor Number</th>
-            <th class="text-center">Customer Number</th>
+            <th class="text-center col-xs-1">Vendor Number</th>
+            <th class="text-center col-xs-1">Customer Number</th>
             <th class="text-center">Name</th>
             <th class="text-center">Sort Type</th>
-            <th class="text-center">Sort Type Description</th>
+            <th class="text-center col-xs-4">Sort Type Description</th>
         </tr>
     </thead>
     <tbody id="companies">
-        @foreach(CustomersAndVendor c in Model)
+        @foreach (CustomersAndVendor c in Model)
         {
             <tr class="product-row" id="@c.CompanyGUID">
                 <td id="vendorNumber_@c.CompanyGUID">@c.VendorNumber</td>
@@ -46,5 +78,5 @@
                 location.href = "/PalletRepair/CreateCompany";
             })
         });
-    </script>    
+    </script>
 }

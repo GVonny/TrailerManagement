@@ -917,7 +917,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult CustomersAndVendors()
+        public ActionResult CustomersAndVendors(string startsWith)
         {
             if (Session["username"] == null)
             {
@@ -928,7 +928,12 @@ namespace TrailerManagement.Controllers
                 using (TrailerEntities db = new TrailerEntities())
                 {
                     var customersAndVendors = db.CustomersAndVendors.OrderBy(c => c.Name).ToList();
-
+                    if (startsWith != "ALL")
+                    {
+                        var customersAndVendors2 = customersAndVendors.Where(p => p.Name.StartsWith(startsWith)).OrderBy(p => p.Name);
+                        return View(customersAndVendors2);
+                    }
+                    
                     return View(customersAndVendors);
                 }
             }
