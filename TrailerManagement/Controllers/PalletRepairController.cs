@@ -386,6 +386,12 @@ namespace TrailerManagement.Controllers
                 payout.Status = "IN PROCESS";
                 db.SaveChanges();
 
+                var vendor = db.CustomersAndVendors.FirstOrDefault(v => v.Name == payout.Vendor);
+                if(vendor != null)
+                {
+                    model.Vendor = vendor;
+                }
+
                 model.Payout = payout;
                 
                 var images = db.SortImages.Where(i => i.SortGUID == sortID);
@@ -988,7 +994,7 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditCompany([Bind(Include = "CustomerNumber,VendorNumber,Name,SortType,EmailAddresses,SortTypeDescription")] CustomersAndVendor editCompany, int id)
+        public ActionResult EditCompany([Bind(Include = "CustomerNumber,VendorNumber,Name,SortType,EmailAddresses,SortTypeDescription,PayoutDescription")] CustomersAndVendor editCompany, int id)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
@@ -996,12 +1002,18 @@ namespace TrailerManagement.Controllers
 
                 company.VendorNumber = editCompany.VendorNumber;
                 company.CustomerNumber = editCompany.CustomerNumber;
-                company.Name = editCompany.Name;
+                company.Name = editCompany.Name.ToUpper();
                 company.SortType = editCompany.SortType;
                 company.EmailAddresses = editCompany.EmailAddresses;
-                company.SortTypeDescription = editCompany.SortTypeDescription;
-                company.PayoutDescription = editCompany.PayoutDescription;
-
+                if(editCompany.SortTypeDescription != null)
+                {
+                    company.SortTypeDescription = editCompany.SortTypeDescription.ToUpper();
+                }
+                if(editCompany.PayoutDescription != null)
+                {
+                    company.PayoutDescription = editCompany.PayoutDescription.ToUpper();
+                }
+                
                 if (editCompany.VendorNumber == null && editCompany.CustomerNumber != null)
                 {
                     company.Type = "Customer Only";

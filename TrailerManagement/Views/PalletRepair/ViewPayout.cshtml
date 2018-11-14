@@ -2,17 +2,28 @@
 @{
     ViewBag.Title = "Payout";
     var payout = Model.Payout;
+    var vendor = Model.Vendor;
 }
 
 <br>
-<input type="button" id="showAdditionalInfoModal" value="Update Payout Info" class="btn btn-primary"/>
+<input type="button" id="showAdditionalInfoModal" value="Update Payout Info" class="btn btn-primary" />
 @*<input type="button" id="showUpdatePayoutVendorModal" value="Update Vendor" class="btn btn-primary" />*@
+
 <br />
 <br />
 <table class="table table-responsive">
     <thead>
         <tr class="font-md">
-            <th colspan="2" class="text-center"><h2>@payout.Vendor - @payout.VendorNumber</h2> </th>
+            <th colspan="2" class="text-center">
+                <h2>@payout.Vendor - @payout.VendorNumber</h2>
+                @if (vendor != null)
+                {
+                    <div class="text-center" style="color:red">
+                        @vendor.PayoutDescription
+                    </div>
+                    
+                }
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -220,16 +231,32 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <h2 class="modal-title">Alter Quantity</h2>
-            </div>
-            <div class="modal-body" id="confirmText">
-                <p><strong>Pallet Type:&nbsp;</strong><span id="palletType"></span></p>
-                <p><strong>Old Quantity:&nbsp;</strong><span id="oldQuantity"></span></p>
-                <strong>New Quantity:</strong><input type="text" id="newQuantity" class="form-control">
+                @using (Html.BeginForm("EditPayoutQuantity", "PalletRepair"))
+                {
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="updateQuantity" data-dismiss="modal" data-toggle="modal">Update</button>
+                        <div class="modal-body">
+                            <div class="form-group hidden">
+                                <input type="number" id="completedSortID" name="completedSortID" />
+                            </div>
+                            <div class="form-group">
+                                <p><h3><strong>Part Number:&nbsp;</strong><span id="palletType"></span></h3></p>
+                                <p><h3><strong>Old Quantity:&nbsp;</strong><span id="oldQuantity"></span></h3></p>
+                            </div>
+                            <div class="form-group">
+                                <strong>New Quantity</strong>
+                                <input type="number" id="newQuantity" class="form-control" name="newQuantity" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <input type="submit" value="Update" class="btn btn-primary" />
+                                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -268,7 +295,7 @@
                 At least one part has no price, do you wish to go back?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Yes</button>
+                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Yes, Go Back</button>
                 <button type="button" class="btn btn-danger" id="confirmFinish" data-dismiss="modal" data-toggle="modal">No, Finish</button>
             </div>
         </div>
@@ -329,7 +356,7 @@
         </div>
     </div>
 </div>
-<!-- Vendor Update -->
+<!-- Vendor Update Modal -->
 <div id="updatePayoutVendor" class="modal fade modal-spacing" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -366,6 +393,45 @@
         </div>
     </div>
 </div>
+<!-- No Deduction Selected Modal-->
+<div id="noDeductionModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                Please select a deduction before clicking add.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Finish Payout Confirmation Modal-->
+<div id="finishPayoutConfirmationModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                Are you sure you want to finish payout? Future changes can not be made after completing.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                <button type="button" id="confirmFinishPayout" class="btn btn-primary" data-dismiss="modal" data-toggle="modal">Finish</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section scripts
 {
@@ -377,7 +443,7 @@
             {
                 var id = this.id;
 
-                if ($('#price_' + id).html() != "")
+                if ($('#price_' + id).html() != "" && $('#price_' + id).html() != "0")
                 {
                     var cost = parseFloat($('#price_' + id).html());
                     $('#price_' + id).html("$" + cost.toFixed(2));
@@ -420,6 +486,7 @@
                 editID = $(this).data("id");
                 $('#palletType').html($('#partNumber_' + editID).html());
                 $('#oldQuantity').html($('#quantity_' + editID).html());
+                $('#completedSortID').val(editID);
 
                 $('#quantityModal').modal();
             });
@@ -454,18 +521,21 @@
 
             $('#finishPayout').on('click', function ()
             {
-                var id = $('#sortGUID').html();
-
+                console.log(priceCounter);
                 if (priceCounter > 0)
                 {
                     $('#errorModal').modal();
                 }
                 else
                 {
-                    //location.href = "/PalletRepair/ViewCompletedPayout?sortID=" + id;
-                    location.href = "/Email/CompletePayout?sortID=" + @payout.SortGUID;
+                    $('#finishPayoutConfirmationModal').modal();
                 }
             });
+
+            $('#confirmFinishPayout').on('click', function ()
+            {
+                location.href = "/Email/CompletePayout?sortID=" + @payout.SortGUID;
+            })
 
             $('#confirmFinish').on('click', function ()
             {
@@ -486,6 +556,11 @@
                 {
                     location.href = "/PalletRepair/AddDeduction?sortID=" + @payout.SortGUID + "&deduction=" + deduction;
                 }
+                else
+                {
+                    $('#noDeductionModal').modal();
+                }
+
                 //console.log("/PalletRepair/AddDeduction?sortID=" + id + "&deduction=" + deduction);
             });
 
