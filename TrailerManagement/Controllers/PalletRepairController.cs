@@ -969,7 +969,7 @@ namespace TrailerManagement.Controllers
                     db.CustomersAndVendors.Add(createCompany.MapToCompany());
                     db.SaveChanges();
                 }
-                return RedirectToAction(actionName: "CustomersAndVendors", controllerName: "PalletRepair");
+                return RedirectToAction(actionName: "CustomersAndVendors", controllerName: "PalletRepair", routeValues: new { startsWith = "ALL" });
             }
             else
             {
@@ -1033,7 +1033,7 @@ namespace TrailerManagement.Controllers
                 }
 
                 db.SaveChanges();
-                return RedirectToAction(actionName: "CustomersAndVendors", controllerName: "PalletRepair");
+                return RedirectToAction(actionName: "CustomersAndVendors", controllerName: "PalletRepair", routeValues: new { startsWith = "ALL" } );
             }
         }
 
@@ -1050,7 +1050,7 @@ namespace TrailerManagement.Controllers
                     var company = db.CustomersAndVendors.Find(companyID);
                     db.CustomersAndVendors.Remove(company);
                     db.SaveChanges();
-                    return RedirectToAction(actionName: "CustomersAndVendors", controllerName: "PalletRepair");
+                    return RedirectToAction(actionName: "CustomersAndVendors", controllerName: "PalletRepair", routeValues: new { startsWith = "ALL" });
                 }
             }
             else
