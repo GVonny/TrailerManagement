@@ -137,6 +137,16 @@
           <Property Name="DateArrived" Type="varchar" MaxLength="10" />
           <Property Name="TimeToSort" Type="float" />
         </EntityType>
+        <EntityType Name="SafetyCodes">
+          <Key>
+            <PropertyRef Name="SafetyCodeGUID" />
+          </Key>
+          <Property Name="SafetyCodeGUID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="50" />
+          <Property Name="SubType" Type="varchar" MaxLength="100" />
+          <Property Name="OshaCode" Type="varchar" MaxLength="50" />
+          <Property Name="Description" Type="varchar(max)" />
+        </EntityType>
         <EntityType Name="SortImages">
           <Key>
             <PropertyRef Name="SortImageGUID" />
@@ -209,6 +219,7 @@
           <EntitySet Name="PalletPrices" EntityType="Self.PalletPrices" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PalletTypes" EntityType="Self.PalletTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payouts" EntityType="Self.Payouts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SafetyCodes" EntityType="Self.SafetyCodes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SortImages" EntityType="Self.SortImages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SortList" EntityType="Self.SortList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TrailerList" EntityType="Self.TrailerList" Schema="dbo" store:Type="Tables" />
@@ -270,6 +281,7 @@
           <EntitySet Name="CompletedSorts" EntityType="TrailerModel.CompletedSort" />
           <EntitySet Name="PalletTypes" EntityType="TrailerModel.PalletType" />
           <EntitySet Name="CustomersAndVendors" EntityType="TrailerModel.CustomersAndVendor" />
+          <EntitySet Name="SafetyCodes" EntityType="TrailerModel.SafetyCode" />
         </EntityContainer>
         <EntityType Name="TrailerList">
           <Key>
@@ -426,6 +438,16 @@
           <Property Name="PhoneNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="ContactName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="PayoutDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="SafetyCode">
+          <Key>
+            <PropertyRef Name="SafetyCodeGUID" />
+          </Key>
+          <Property Name="SafetyCodeGUID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SubType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OshaCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -637,6 +659,17 @@
                 <ScalarProperty Name="VendorNumber" ColumnName="VendorNumber" />
                 <ScalarProperty Name="CustomerNumber" ColumnName="CustomerNumber" />
                 <ScalarProperty Name="CompanyGUID" ColumnName="CompanyGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SafetyCodes">
+            <EntityTypeMapping TypeName="TrailerModel.SafetyCode">
+              <MappingFragment StoreEntitySet="SafetyCodes">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="OshaCode" ColumnName="OshaCode" />
+                <ScalarProperty Name="SubType" ColumnName="SubType" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="SafetyCodeGUID" ColumnName="SafetyCodeGUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

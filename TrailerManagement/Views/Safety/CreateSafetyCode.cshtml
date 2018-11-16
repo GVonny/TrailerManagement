@@ -1,0 +1,92 @@
+﻿@model TrailerManagement.Models.SafetyCode
+
+@{
+    ViewBag.Title = "CreateSafetyCode";
+}
+
+<h2>CreateSafetyCode</h2>
+
+<div class="well">
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5 hidden" id="customCodeType">
+                @Html.EditorFor(model => model.Type, new { htmlAttributes = new { @class = "form-control", id="customType", placeholder = "Type", required = "required" } })
+                @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-5" id="codeTypeDropDown">
+                @Html.DropDownListFor(model => model.Type, ViewData["codeTypes"] as List<SelectListItem>, "- - - Codes - - -", htmlAttributes: new { @class = "form-control signin-form", id = "codes", name = "code" })
+                @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-2">
+                <label for="showCustomCodeType">New Code Type</label>
+                <input class="float-left" type="checkbox" name="showCustomCodeType" id="showCustomCodeType" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SubType, "Sub Type", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.SubType, new { htmlAttributes = new { @class = "form-control", placeholder = "Sub Type", required = "required" } })
+                @Html.ValidationMessageFor(model => model.SubType, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.OshaCode, "Osha Code", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.OshaCode, new { htmlAttributes = new { @class = "form-control", placeholder = "Osha Code", required = "required" } })
+                @Html.ValidationMessageFor(model => model.OshaCode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.TextAreaFor(model => model.Description, 8, 60, new { htmlAttributes = new { @class = "form-control"} })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a href="SafetyCodes" class="btn btn-warning">Cancel</a>
+            </div>
+        </div>
+    </div>
+}
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('#customType').attr('disabled', 'disabled');
+            $('#showCustomCodeType').change(function ()
+            {
+                if ($(this).is(':checked'))
+                {
+                    $('#codes').attr('disabled', 'disabled');
+                    $('#codeTypeDropDown').addClass('hidden');
+                    $('#customCodeType').removeClass('hidden');
+                    $('#customType').removeAttr('disabled', 'disabled');
+                }
+                else
+                {
+                    $('#codes').removeAttr('disabled', 'disabled');
+                    $('#codeTypeDropDown').removeClass('hidden');
+                    $('#customCodeType').addClass('hidden');
+                    $('#customType').attr('disabled', 'disabled');
+                }
+            });
+        });
+    </script>
+}

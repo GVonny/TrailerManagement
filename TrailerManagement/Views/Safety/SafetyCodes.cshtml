@@ -1,0 +1,43 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Safety Codes";
+}
+
+<h2 class="float-left">Safety Codes</h2>
+<a href="CreateSafetyCode" class="btn btn-primary" style="margin-top:20px; margin-left:10px">Create Safety Code</a>
+
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr class="font-md">
+            <th class="col-xs-2">Type</th>
+            <th class="col-xs-2">Sub Type</th>
+            <th class="col-xs-3">Osha Code</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody id="safetyCodes">
+        @foreach (SafetyCode t in Model)
+        {
+            <tr class="product-row" id="@t.SafetyCodeGUID">
+                <td id="type_@t.SafetyCodeGUID">@t.Type</td>
+                <td id="subType_@t.SafetyCodeGUID">@t.SubType</td>
+                <td id="oshaCode_@t.SafetyCodeGUID">@t.OshaCode</td>
+                <td id="description_@t.SafetyCodeGUID">@t.Description</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('#safetyCodes').on('click', '.product-row', function ()
+            {
+                var id = this.id;
+                location.href = "EditSafetyCode?safetyCodeID=" + id;
+            });
+        });
+    </script>
+}
