@@ -14,7 +14,7 @@ namespace TrailerManagement.Controllers
     {
         Constants constant = new Constants();
                 
-        public ActionResult SortList()
+        public ActionResult SortList(string status)
         {
             if(Session["username"] == null)
             {
@@ -26,10 +26,24 @@ namespace TrailerManagement.Controllers
                 {
                     dynamic model = new CreateSortImage();
                     var trailers = from x in db.SortLists select x;
+                    switch (status)
+                    {
+                        case "CLOSED":
+                        {
+                            trailers = trailers.Where(t => t.Status == "CLOSED");
+                            ViewBag.Closed = true;
+                            break;
+                        }
+                        default:
+                        {
+                            trailers = trailers.Where(t => t.Status == "OPEN" || t.Status == "NEW");
+                            break;
+                        }
+                    }
+
                     this.ViewData["Vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
 
                     model.Trailers = trailers.OrderByDescending(t => t.Status).ThenBy(t => t.DateArrived).ToList();
-
                     return View(model);
                 }
             }
@@ -347,7 +361,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult PayoutList()
+        public ActionResult PayoutList(string status)
         {
             if (Session["username"] == null)
             {
@@ -358,6 +372,21 @@ namespace TrailerManagement.Controllers
                 using (TrailerEntities db = new TrailerEntities())
                 {
                     var payouts = from x in db.Payouts select x;
+                    
+                    switch (status)
+                    {
+                        case "CLOSED":
+                        {
+                            payouts = payouts.Where(p => p.Status == "CLOSED");
+                            ViewBag.Closed = true;
+                            break;
+                        }
+                        default:
+                        {
+                            payouts = payouts.Where(p => p.Status == "NEW" || p.Status == "IN PROCESS");
+                            break;
+                        }
+                    }
                     payouts = payouts.OrderByDescending(p => p.Status).ThenByDescending(p => p.DateArrived).ThenBy(p => p.Vendor);
 
                     this.ViewData["Vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();

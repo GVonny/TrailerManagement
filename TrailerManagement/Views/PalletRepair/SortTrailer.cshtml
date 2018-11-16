@@ -192,7 +192,6 @@
                 </div>
             </div>
 
-
             <input type="button" value="Next Stack" class="btn btn-primary col-xs-4" id="nextStack" />
             <a href="/PalletRepair/SortList" value="Finish Later" class="btn btn-danger col-xs-4" id="finishLater">Finish Later</a>
             <input type="button" value="All Done" class="btn btn-warning float-right col-xs-4" id="finish" />
@@ -485,6 +484,14 @@
                     palletQuantities = "";
                     palletNotes = "";
                 }
+            }
+            else
+            {
+                $('#confirmText').html("You did not enter a total stack size amount.");
+                $('#errorModal').modal();
+                partNumbers = "";
+                palletQuantities = "";
+                palletNotes = "";
             }
         }
 

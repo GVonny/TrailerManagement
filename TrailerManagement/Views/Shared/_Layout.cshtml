@@ -53,7 +53,7 @@
                                 <ul class="dropdown-menu">
                                     @if (Convert.ToInt32(Session["permission"]) > 20 && (Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) >= 10000))
                                     {
-                                        <li><a href="~/PalletRepair/SortList">Sort List</a></li>
+                                        <li><a href="~/PalletRepair/SortList?status=OPEN">Sort List</a></li>
                                     }
 
                                     @if (Convert.ToInt32(Session["permission"]) > 30 && ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) >= 10000)))

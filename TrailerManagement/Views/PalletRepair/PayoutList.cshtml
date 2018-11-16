@@ -1,6 +1,7 @@
 ﻿@using TrailerManagement.Models;
 @{
     ViewBag.Title = "Payouts";
+    var isClosed = ViewBag.Closed;
 }
 
 <h2 class="float-left">Payouts</h2> <a href="SortList" class="btn btn-primary" style="margin-top:20px; margin-left:15px">Sort List</a>
@@ -23,8 +24,8 @@
     <tbody id="payouts">
         @foreach (Payout p in Model)
         {
-            if (p.Status != "CLOSED")
-            {
+            //if (p.Status != "CLOSED")
+            //{
                 <tr class="product-row" id="@p.SortGUID">
                     <td id="customer_@p.SortGUID">@p.Vendor</td>
                     <td id="trailerNumber_@p.SortGUID">@p.TrailerNumber</td>
@@ -33,7 +34,7 @@
                     <td id="timeToUnload_@p.SortGUID">@p.TimeToSort</td>
                     <td id="status_@p.SortGUID">@p.Status</td>
                 </tr>
-            }
+            @*}
             else
             {
                 <tr class="closed-row hidden" id="@p.SortGUID">
@@ -44,7 +45,7 @@
                     <td id="timeToUnload_@p.SortGUID">@p.TimeToSort</td>
                     <td id="status_@p.SortGUID">@p.Status</td>
                 </tr>
-            }
+            }*@
         }
     </tbody>
 </table>
@@ -140,24 +141,21 @@
                 location.href = "/PalletRepair/ViewCompletedPayout?sortID=" + sortID;
             });
 
-            if ($('#showClosedPayouts').is(':checked'))
+            var isClosed = '@isClosed';
+            if (isClosed == "True")
             {
-                $('.closed-row').removeClass('hidden');
-            }
-            else
-            {
-                $('.closed-row').addClass('hidden');
+                $('#showClosedPayouts').attr('checked', 'checked');
             }
 
             $('#showClosedPayouts').change(function ()
             {
                 if ($(this).is(':checked'))
                 {
-                    $('.closed-row').removeClass('hidden');
+                    location.href = "/PalletRepair/PayoutList?status=CLOSED";
                 }
                 else
                 {
-                    $('.closed-row').addClass('hidden');
+                    location.href = "/PalletRepair/PayoutList";
                 }
             });
 
