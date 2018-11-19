@@ -279,7 +279,7 @@ h1{
 .float-center {
     float: right;
     position: relative;
-    left: -50%;
+    left: -40%;
 }
 
 #createTrailer{

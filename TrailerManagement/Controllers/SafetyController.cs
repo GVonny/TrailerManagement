@@ -1,6 +1,8 @@
 ﻿using Microsoft.Ajax.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -28,7 +30,7 @@ namespace TrailerManagement.Controllers
             {
                 var code = db.SafetyCodes.FirstOrDefault(c => c.SafetyCodeGUID == safetyCodeID);
 
-                var codes = db.SafetyCodes.DistinctBy(c => c.Type).ToList();
+                var codes = db.SafetyCodes.DistinctBy(c => c.Type).OrderBy(c => c.Type).ToList();
 
                 this.ViewData["codeTypes"] = new SelectList(codes, "Type", "Type").ToList();
 
@@ -57,7 +59,7 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                var codes = db.SafetyCodes.DistinctBy(c => c.Type).ToList();
+                var codes = db.SafetyCodes.DistinctBy(c => c.Type).OrderBy(c => c.Type).ToList();
 
                 this.ViewData["codeTypes"] = new SelectList(codes, "Type", "Type").ToList();
 
@@ -100,9 +102,189 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                var concerns = db.SafetyConcerns.ToList();
+                dynamic model = new ExpandoObject();
 
-                return View(concerns);
+                var concerns = db.SafetyConcerns.ToList();
+                model.Concerns = concerns;
+
+                var violations = db.CodeViolations.ToList();
+                model.Violations = violations;
+                
+                return View(model);
+            }
+        }
+
+        public ActionResult AddSafetyConcern()
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var codes = db.SafetyCodes.DistinctBy(c => c.OshaCode).OrderBy(c => c.OshaCode).ToList();
+                this.ViewData["codeTypes"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
+                this.ViewData["codeTypes2"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
+                this.ViewData["codeTypes3"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
+
+                return View();
+            }
+        }
+
+        [HttpPost]
+        public ActionResult CreateSafetyConcern(string area, string conditionNoted, string codeTypes, string codeTypes2, string codeTypes3, string correctiveAction, HttpPostedFileBase ImageFile)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var path = "";
+                if (ImageFile != null)
+                {
+                    if (ImageFile.ContentLength > 0)
+                    {
+                        var extension = Path.GetExtension(ImageFile.FileName);
+                        var fullPath = Server.MapPath("~/SafetyImages/") + area + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+                        path = area + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+
+                        ImageFile.SaveAs(fullPath);
+                    }
+                }
+
+                SafetyConcern newConcern = new SafetyConcern()
+                {
+                    Area = area,
+                    ConditionNoted = conditionNoted,
+                    CorrectiveActionMeasure = correctiveAction,
+                    Severity = "NEW",
+                    ImagePath = path,
+                };
+                db.SafetyConcerns.Add(newConcern);
+                db.SaveChanges();
+
+                if(codeTypes != "")
+                {
+                    var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes);
+                    CodeViolation newViolation = new CodeViolation()
+                    {
+                        SafetyConcernGUID = newConcern.SafetyConcernGUID,
+                        Type = description.Type,
+                        ViolationCode = codeTypes,
+                        Description = description.Description,
+                    };
+                    db.CodeViolations.Add(newViolation);
+                }
+                if (codeTypes2 != "")
+                {
+                    var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes2);
+                    CodeViolation newViolation = new CodeViolation()
+                    {
+                        SafetyConcernGUID = newConcern.SafetyConcernGUID,
+                        Type = description.Type,
+                        ViolationCode = codeTypes2,
+                        Description = description.Description,
+                    };
+                    db.CodeViolations.Add(newViolation);
+                }
+                if (codeTypes3 != "")
+                {
+                    var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes3);
+                    CodeViolation newViolation = new CodeViolation()
+                    {
+                        SafetyConcernGUID = newConcern.SafetyConcernGUID,
+                        Type = description.Type,
+                        ViolationCode = codeTypes3,
+                        Description = description.Description,
+                    };
+                    db.CodeViolations.Add(newViolation);
+                }
+
+                db.SaveChanges();
+                return RedirectToAction(actionName: "SafetyConcerns", controllerName: "Safety");
+            }   
+        }
+
+        public ActionResult EditSafetyConcern(int safetyConcernID)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcernID);
+
+                var violations = db.CodeViolations.Where(v => v.SafetyConcernGUID == safetyConcernID);
+
+                var codes = db.SafetyCodes.DistinctBy(c => c.OshaCode).OrderBy(c => c.OshaCode).ToList();
+                this.ViewData["codeTypes"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
+                this.ViewData["codeTypes2"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
+                this.ViewData["codeTypes3"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
+
+                return View(concern);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult EditSafetyConcern([Bind(Include = "SafetyConcernGUID,Area,ConditionNoted,CorrectiveActionMeasure")] SafetyConcern safetyConcern, string codeTypes, string codeTypes2, string codeTypes3, HttpPostedFileBase ImageFile)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcern.SafetyConcernGUID);
+                concern.Area = safetyConcern.Area;
+                concern.ConditionNoted = safetyConcern.ConditionNoted;
+                concern.CorrectiveActionMeasure = safetyConcern.CorrectiveActionMeasure;
+
+                var path = "";
+                if (ImageFile != null)
+                {
+                    if (ImageFile.ContentLength > 0)
+                    {
+                        var extension = Path.GetExtension(ImageFile.FileName);
+                        var fullPath = Server.MapPath("~/SafetyImages/") + concern.Area + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+                        path = concern.Area + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+
+                        ImageFile.SaveAs(fullPath);
+                        concern.ImagePath = path;
+                    }
+                }
+
+                var violations = db.CodeViolations.Where(v => v.SafetyConcernGUID == concern.SafetyConcernGUID);
+                
+                if (codeTypes != "")
+                {
+                    foreach (var v in violations)
+                    {
+                        db.CodeViolations.Remove(v);
+                    }
+
+                    var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes);
+                    CodeViolation newViolation = new CodeViolation()
+                    {
+                        SafetyConcernGUID = concern.SafetyConcernGUID,
+                        Type = description.Type,
+                        ViolationCode = codeTypes,
+                        Description = description.Description,
+                    };
+                    db.CodeViolations.Add(newViolation);
+                }
+                if (codeTypes2 != "")
+                {
+                    var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes2);
+                    CodeViolation newViolation = new CodeViolation()
+                    {
+                        SafetyConcernGUID = concern.SafetyConcernGUID,
+                        Type = description.Type,
+                        ViolationCode = codeTypes2,
+                        Description = description.Description,
+                    };
+                    db.CodeViolations.Add(newViolation);
+                }
+                if (codeTypes3 != "")
+                {
+                    var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes3);
+                    CodeViolation newViolation = new CodeViolation()
+                    {
+                        SafetyConcernGUID = concern.SafetyConcernGUID,
+                        Type = description.Type,
+                        ViolationCode = codeTypes3,
+                        Description = description.Description,
+                    };
+                    db.CodeViolations.Add(newViolation);
+                }
+                db.SaveChanges();
+
+                return RedirectToAction(actionName: "SafetyConcerns", controllerName: "Safety");
             }
         }
     }

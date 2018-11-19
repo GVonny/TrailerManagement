@@ -189,6 +189,9 @@
     <Compile Include="Models\ActiveTrailerList.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CodeViolation.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\CompletedSort.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
@@ -270,6 +273,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\icon.PNG" />
     <Content Include="Content\logo.png" />
+    <Content Include="Content\logo2.png" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -356,6 +360,8 @@
     <Content Include="Views\Safety\EditSafetyCode.cshtml" />
     <Content Include="Views\Safety\CreateSafetyCode.cshtml" />
     <Content Include="Views\Safety\SafetyConcerns.cshtml" />
+    <Content Include="Views\Safety\AddSafetyConcern.cshtml" />
+    <Content Include="Views\Safety\EditSafetyConcern.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

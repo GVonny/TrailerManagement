@@ -20,6 +20,7 @@
         <EntityTypeShape EntityType="TrailerModel.CustomersAndVendor" Width="2" PointX="9.375" PointY="3.75" />
         <EntityTypeShape EntityType="TrailerModel.SafetyCode" Width="1.5" PointX="4" PointY="4.75" />
         <EntityTypeShape EntityType="TrailerModel.SafetyConcern" Width="2" PointX="13.125" PointY="0.5" />
+        <EntityTypeShape EntityType="TrailerModel.CodeViolation" Width="1.75" PointX="13.125" PointY="2.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

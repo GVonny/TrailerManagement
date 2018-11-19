@@ -12,13 +12,12 @@ namespace TrailerManagement.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class SafetyConcern
+    public partial class CodeViolation
     {
-        public long SafetyConcernGUID { get; set; }
-        public string Area { get; set; }
-        public string ConditionNoted { get; set; }
-        public string CorrectiveActionMeasure { get; set; }
-        public string Severity { get; set; }
-        public string ImagePath { get; set; }
+        public long CodeViolationGUID { get; set; }
+        public Nullable<long> SafetyConcernGUID { get; set; }
+        public string Type { get; set; }
+        public string ViolationCode { get; set; }
+        public string Description { get; set; }
     }
 }

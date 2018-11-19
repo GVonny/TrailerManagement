@@ -40,5 +40,6 @@ namespace TrailerManagement.Models
         public virtual DbSet<CustomersAndVendor> CustomersAndVendors { get; set; }
         public virtual DbSet<SafetyCode> SafetyCodes { get; set; }
         public virtual DbSet<SafetyConcern> SafetyConcerns { get; set; }
+        public virtual DbSet<CodeViolation> CodeViolations { get; set; }
     }
 }

@@ -1,7 +1,136 @@
-﻿
+﻿@using TrailerManagement.Models;
 @{
-    ViewBag.Title = "SafetyConcerns";
+    ViewBag.Title = "Safety Concerns";
+}
+<br class="no-print" />
+
+
+<center>
+    <img src="~/Content/logo2.png" style="margin-bottom:-15px;" />
+</center>
+
+<h3><strong class="col-xs-12 text-center">Safety Audit Report. <span id="date"></span></strong></h3>
+
+<span class="float-left">
+    <a href="AddSafetyConcern" class="btn btn-primary no-print">Add Concern</a>
+</span>
+<br />
+<br />
+<br class="no-print"/>
+<br class="no-print"/>
+
+@foreach (SafetyConcern s in Model.Concerns)
+{
+<div>
+    <table class="table table-responsive" id="@s.SafetyConcernGUID">
+        <tbody>
+            <tr style="border-style:solid; border-color:#333333">
+                <th>Area: @s.Area</th>
+                <td rowspan="4" class="col-xs-2">
+                    <img src="@s.ImagePath" height="150" width="150" />
+                </td>
+            </tr>
+
+            <tr style="border-style:solid; border-color:#333333">
+                <th>Condition Noted: @s.ConditionNoted</th>
+            </tr>
+
+            <tr style="border-style:solid; border-color:#333333">
+                <th>
+                    <strong>Code Violation:</strong>
+                    @foreach (CodeViolation c in Model.Violations)
+                    {
+                        if (c.SafetyConcernGUID == s.SafetyConcernGUID)
+                        {
+                            @c.ViolationCode @c.Type <small>- @c.Description</small>
+                        }
+                    }
+                </th>
+            </tr>
+
+            <tr style="border-style:solid; border-color:#333333">
+                <th>Corrective Action Measure: <small>@s.CorrectiveActionMeasure</small></th>
+            </tr>
+        </tbody>
+    </table>
+</div>
 }
 
-<h2>Safety Concerns</h2>
+<style type="text/css">
+    table {
+        page-break-inside: auto
+    }
 
+    div {
+        page-break-inside: avoid;
+    }
+    /* This is the key */
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-footer-group
+    }
+</style>
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('table').on('click', function ()
+            {
+                var id = this.id;
+                location.href = "/Safety/EditSafetyConcern?safetyConcernID=" + id;
+            });
+
+            var date = new Date();
+
+            var month = date.getMonth();
+            var day = date.getDate();
+            var year = date.getFullYear();
+
+            switch (month)
+            {
+                case 1:
+                    month = "JANUARY";
+                    break;
+                case 2:
+                    month = "FEBRUARY";
+                    break;
+                case 3:
+                    month = "MARCH";
+                    break;
+                case 4:
+                    month = "APRIL";
+                    break;
+                case 5:
+                    month = "MAY";
+                    break;
+                case 6:
+                    month = "JUNE";
+                    break;
+                case 7:
+                    month = "JULY";
+                    break;
+                case 8:
+                    month = "AUGUST";
+                    break;
+                case 9:
+                    month = "SEPTEMBER";
+                    break;
+                case 10:
+                    month = "OCTOBER";
+                    break;
+                case 11:
+                    month = "NOVEMBER";
+                    break;
+                case 12:
+                    month = "DECEMBER";
+                    break;
+            };
+
+            $('#date').html(month + " " + day + ", " + year + ".");
+        });
+    </script>
+}
