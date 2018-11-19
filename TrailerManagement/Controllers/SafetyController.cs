@@ -95,5 +95,15 @@ namespace TrailerManagement.Controllers
                 return RedirectToAction(actionName: "SafetyCodes", controllerName: "Safety");
             }
         }
+
+        public ActionResult SafetyConcerns()
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var concerns = db.SafetyConcerns.ToList();
+
+                return View(concerns);
+            }
+        }
     }
 }

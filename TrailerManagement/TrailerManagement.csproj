@@ -230,6 +230,9 @@
     <Compile Include="Models\SafetyCode.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SafetyConcern.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SignIn.cs" />
     <Compile Include="Models\SortImage.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
@@ -352,6 +355,7 @@
     <Content Include="Views\Safety\SafetyCodes.cshtml" />
     <Content Include="Views\Safety\EditSafetyCode.cshtml" />
     <Content Include="Views\Safety\CreateSafetyCode.cshtml" />
+    <Content Include="Views\Safety\SafetyConcerns.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

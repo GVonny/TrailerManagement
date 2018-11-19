@@ -39,5 +39,6 @@ namespace TrailerManagement.Models
         public virtual DbSet<PalletType> PalletTypes { get; set; }
         public virtual DbSet<CustomersAndVendor> CustomersAndVendors { get; set; }
         public virtual DbSet<SafetyCode> SafetyCodes { get; set; }
+        public virtual DbSet<SafetyConcern> SafetyConcerns { get; set; }
     }
 }
