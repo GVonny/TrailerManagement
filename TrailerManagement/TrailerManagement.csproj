@@ -359,7 +359,7 @@
     <Content Include="Views\Safety\SafetyCodes.cshtml" />
     <Content Include="Views\Safety\EditSafetyCode.cshtml" />
     <Content Include="Views\Safety\CreateSafetyCode.cshtml" />
-    <Content Include="Views\Safety\SafetyConcerns.cshtml" />
+    <Content Include="Views\Safety\SafetyAudit.cshtml" />
     <Content Include="Views\Safety\AddSafetyConcern.cshtml" />
     <Content Include="Views\Safety\EditSafetyConcern.cshtml" />
   </ItemGroup>

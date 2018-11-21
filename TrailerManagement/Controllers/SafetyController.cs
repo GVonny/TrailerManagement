@@ -164,7 +164,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult SafetyConcerns()
+        public ActionResult SafetyAudit()
         {
             if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
             {
@@ -284,7 +284,7 @@ namespace TrailerManagement.Controllers
                     }
 
                     db.SaveChanges();
-                    return RedirectToAction(actionName: "SafetyConcerns", controllerName: "Safety");
+                    return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety");
                 }   
             }
             else if (Convert.ToInt32(Session["department"]) != 4500 || Convert.ToInt32(Session["department"]) != 10000)
@@ -396,7 +396,7 @@ namespace TrailerManagement.Controllers
                     }
                     db.SaveChanges();
 
-                    return RedirectToAction(actionName: "SafetyConcerns", controllerName: "Safety");
+                    return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety");
                 }
             }
             else if (Convert.ToInt32(Session["department"]) != 4500 || Convert.ToInt32(Session["department"]) != 10000)
@@ -418,7 +418,7 @@ namespace TrailerManagement.Controllers
                     var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcernID);
                     db.SafetyConcerns.Remove(concern);
                     db.SaveChanges();
-                    return RedirectToAction(actionName: "SafetyConcerns", controllerName: "Safety");
+                    return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety");
                 }
             }
             else if (Convert.ToInt32(Session["department"]) != 4500 || Convert.ToInt32(Session["department"]) != 10000)
