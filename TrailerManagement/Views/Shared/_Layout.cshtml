@@ -73,6 +73,21 @@
                         {
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    Safety<span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/Safety/SafetyConcerns">Safety Audit</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="~/Safety/SafetyCodes">Safety Codes</a></li>
+                                    <li><a href="~/Safety/CreateSafetyCode">Create Safety Code</a></li>
+                                </ul>
+                            </li>
+                        }
+
+                        @if (Convert.ToInt32(Session["permission"]) > 20 && (Convert.ToInt32(Session["department"]) >= 10000))
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                     Reports<span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">

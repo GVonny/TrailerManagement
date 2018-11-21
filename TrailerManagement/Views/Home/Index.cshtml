@@ -9,7 +9,7 @@
 <br />
 
 <div>
-    @if (Convert.ToInt32(Session["permission"]) > 10)
+    @if (Convert.ToInt32(Session["permission"]) > 10 && Convert.ToInt32(Session["department"]) != 4500)
     {
         <fieldset>
             <legend>Trailers</legend>
@@ -63,6 +63,26 @@
                     <p><a href="~/PalletRepair/PalletPrices?startsWith=ALL" class="btn btn-primary btn-default">Continue &raquo;</a></p>
                 </div>
             }
+        </fieldset>
+    }
+</div>
+<div>
+    @if (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000)
+    {
+        <fieldset>
+            <legend>Safety</legend>
+            <div class="col-xs-3">
+                <h2>Safety Audit</h2>
+                <p><a href="~/Safety/SafetyConcerns" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+            </div>
+            <div class="col-xs-3">
+                <h2>Safety Codes</h2>
+                <p><a href="~/Safety/SafetyCodes" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+            </div>
+            <div class="col-xs-4">
+                <h2>Create Safety Code</h2>
+                <p><a href="~/Safety/CreateSafetyCode" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+            </div>
         </fieldset>
     }
 </div>

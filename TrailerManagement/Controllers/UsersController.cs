@@ -76,7 +76,16 @@ namespace TrailerManagement.Controllers
                         ViewBag.Permission = SortOrder == "Permission" ? "Permission_desc" : "Permission";
 
                         var user = from x in db.Users select x;
-                        user = user.Where(t => t.Permission != "40");
+                        var department = Session["department"].ToString();
+                        if(department.Equals("10000"))
+                        {
+                            user = user.Where(t => t.Permission != constant.PERMISSION_ADMIN.ToString());
+                        }
+                        else
+                        {
+                            user = user.Where(t => t.Permission != constant.PERMISSION_ADMIN.ToString() && t.Department.Equals(department));
+                        }
+                        
 
                         switch (SortOrder)
                         {
