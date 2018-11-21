@@ -322,19 +322,19 @@ namespace TrailerManagement.Controllers
                 var sort = db.SortLists.Find(sortID);
 
                 //uncomment to change the status of active trailers when sort is complete
-                //var activeTrailerEdit = db.ActiveTrailerLists.FirstOrDefault(a => a.TrailerNumber == sort.TrailerNumber);
-                //if(activeTrailerEdit != null)
-                //{
-                //    activeTrailerEdit.TrailerStatus = constant.TRAILER_STATUS_EMPTY;
-                //    activeTrailerEdit.LoadStatus = "";
-                //    activeTrailerEdit.Customer = "";
-                //    activeTrailerEdit.OrderNumber = "";
-                //    activeTrailerEdit.OrderDate = "";
-                //    activeTrailerEdit.TrailerLocation = "PR";
-                //    activeTrailerEdit.LocationStatus = "ON SITE";
-                //    activeTrailerEdit.Notes = "";
-                //    activeTrailerEdit.Tags = "";
-                //}
+                var activeTrailerEdit = db.ActiveTrailerLists.FirstOrDefault(a => a.TrailerNumber == sort.TrailerNumber);
+                if (activeTrailerEdit != null)
+                {
+                    activeTrailerEdit.TrailerStatus = constant.TRAILER_STATUS_EMPTY;
+                    activeTrailerEdit.LoadStatus = "";
+                    activeTrailerEdit.Customer = "";
+                    activeTrailerEdit.OrderNumber = "";
+                    activeTrailerEdit.OrderDate = "";
+                    activeTrailerEdit.TrailerLocation = "PR";
+                    activeTrailerEdit.LocationStatus = "ON SITE";
+                    activeTrailerEdit.Notes = "";
+                    activeTrailerEdit.Tags = "";
+                }
 
                 var vendor = db.CustomersAndVendors.FirstOrDefault(v => v.Name == sort.Vendor);
 
