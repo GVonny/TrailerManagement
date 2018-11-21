@@ -16,275 +16,396 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                var codes = from x in db.SafetyCodes select x;
+                if(Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
+                {
+                    var codes = from x in db.SafetyCodes select x;
 
-                codes = codes.OrderBy(c => c.Type);
+                    codes = codes.OrderBy(c => c.Type);
 
-                return View(codes.ToList());
+                    return View(codes.ToList());
+                }
+                else if(Convert.ToInt32(Session["department"]) != 4500 || Convert.ToInt32(Session["department"]) != 10000)
+                {
+                    return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+                }
+                else
+                {
+                    return RedirectToAction(actionName: "SignIn", controllerName: "Users");
+                }
             }
         }
 
         public ActionResult EditSafetyCode(int safetyCodeID)
         {
-            using (TrailerEntities db = new TrailerEntities())
+            if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
             {
-                var code = db.SafetyCodes.FirstOrDefault(c => c.SafetyCodeGUID == safetyCodeID);
+                using (TrailerEntities db = new TrailerEntities())
+                {
+                    var code = db.SafetyCodes.FirstOrDefault(c => c.SafetyCodeGUID == safetyCodeID);
 
-                var codes = db.SafetyCodes.DistinctBy(c => c.Type).OrderBy(c => c.Type).ToList();
+                    var codes = db.SafetyCodes.DistinctBy(c => c.Type).OrderBy(c => c.Type).ToList();
 
-                this.ViewData["codeTypes"] = new SelectList(codes, "Type", "Type").ToList();
+                    this.ViewData["codeTypes"] = new SelectList(codes, "Type", "Type").ToList();
 
-                return View(code);
+                    return View(code);
+                }
+            }
+            else if (Convert.ToInt32(Session["department"]) != 4500 || Convert.ToInt32(Session["department"]) != 10000)
+            {
+                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+            else
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
         }
 
         [HttpPost]
         public ActionResult EditSafetyCode([Bind(Include = "SafetyCodeGUID,Type,SubType,OshaCode,Description")] SafetyCode editSafetyCode)
         {
-            using (TrailerEntities db = new TrailerEntities())
+            if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
             {
-                var code = db.SafetyCodes.FirstOrDefault(c => c.SafetyCodeGUID == editSafetyCode.SafetyCodeGUID);
+                using (TrailerEntities db = new TrailerEntities())
+                {
+                    var code = db.SafetyCodes.FirstOrDefault(c => c.SafetyCodeGUID == editSafetyCode.SafetyCodeGUID);
 
-                code.Type = editSafetyCode.Type;
-                code.SubType = editSafetyCode.SubType;
-                code.OshaCode = editSafetyCode.OshaCode;
-                code.Description = editSafetyCode.Description;
+                    code.Type = editSafetyCode.Type;
+                    code.SubType = editSafetyCode.SubType;
+                    code.OshaCode = editSafetyCode.OshaCode;
+                    code.Description = editSafetyCode.Description;
 
-                db.SaveChanges();
-                return RedirectToAction(actionName: "SafetyCodes", controllerName: "Safety");
+                    db.SaveChanges();
+                    return RedirectToAction(actionName: "SafetyCodes", controllerName: "Safety");
+                }
+            }
+            else if (Convert.ToInt32(Session["department"]) != 4500 || Convert.ToInt32(Session["department"]) != 10000)
+            {
+                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+            else
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
         }
 
         public ActionResult CreateSafetyCode()
         {
-            using (TrailerEntities db = new TrailerEntities())
+            if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
             {
-                var codes = db.SafetyCodes.DistinctBy(c => c.Type).OrderBy(c => c.Type).ToList();
+                using (TrailerEntities db = new TrailerEntities())
+                {
+                    var codes = db.SafetyCodes.DistinctBy(c => c.Type).OrderBy(c => c.Type).ToList();
 
-                this.ViewData["codeTypes"] = new SelectList(codes, "Type", "Type").ToList();
+                    this.ViewData["codeTypes"] = new SelectList(codes, "Type", "Type").ToList();
 
-                return View();
+                    return View();
+                }
+            }
+            else if (Convert.ToInt32(Session["department"]) != 4500 || Convert.ToInt32(Session["department"]) != 10000)
+            {
+                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+            else
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
         }
 
         [HttpPost]
         public ActionResult CreateSafetyCode([Bind(Include = "Type,SubType,OshaCode,Description")] SafetyCode createSafetyCode)
         {
-            using (TrailerEntities db = new TrailerEntities())
+            if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
             {
-                SafetyCode newCode = new SafetyCode()
+                using (TrailerEntities db = new TrailerEntities())
                 {
-                    Type = createSafetyCode.Type,
-                    SubType = createSafetyCode.SubType,
-                    OshaCode = createSafetyCode.OshaCode,
-                    Description = createSafetyCode.Description,
-                };
+                    SafetyCode newCode = new SafetyCode()
+                    {
+                        Type = createSafetyCode.Type,
+                        SubType = createSafetyCode.SubType,
+                        OshaCode = createSafetyCode.OshaCode,
+                        Description = createSafetyCode.Description,
+                    };
 
-                db.SafetyCodes.Add(newCode);
-                db.SaveChanges();
+                    db.SafetyCodes.Add(newCode);
+                    db.SaveChanges();
 
-                return RedirectToAction(actionName: "SafetyCodes", controllerName: "Safety");
+                    return RedirectToAction(actionName: "SafetyCodes", controllerName: "Safety");
+                }
+            }
+            else if (Convert.ToInt32(Session["department"]) != 4500 || Convert.ToInt32(Session["department"]) != 10000)
+            {
+                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+            else
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
         }
 
         public ActionResult DeleteSafetyCode(int safetyCodeID)
         {
-            using (TrailerEntities db = new TrailerEntities())
+            if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
             {
-                var code = db.SafetyCodes.FirstOrDefault(c => c.SafetyCodeGUID == safetyCodeID);
-                db.SafetyCodes.Remove(code);
-                db.SaveChanges();
-                return RedirectToAction(actionName: "SafetyCodes", controllerName: "Safety");
+                using (TrailerEntities db = new TrailerEntities())
+                {
+                    var code = db.SafetyCodes.FirstOrDefault(c => c.SafetyCodeGUID == safetyCodeID);
+                    db.SafetyCodes.Remove(code);
+                    db.SaveChanges();
+                    return RedirectToAction(actionName: "SafetyCodes", controllerName: "Safety");
+                }
+            }
+            else if (Convert.ToInt32(Session["department"]) != 4500 || Convert.ToInt32(Session["department"]) != 10000)
+            {
+                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+            else
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
         }
 
         public ActionResult SafetyConcerns()
         {
-            using (TrailerEntities db = new TrailerEntities())
+            if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
             {
-                dynamic model = new ExpandoObject();
+                using (TrailerEntities db = new TrailerEntities())
+                {
+                    dynamic model = new ExpandoObject();
 
-                var concerns = db.SafetyConcerns.ToList();
-                model.Concerns = concerns;
+                    var concerns = db.SafetyConcerns.ToList();
+                    model.Concerns = concerns;
 
-                var violations = db.CodeViolations.ToList();
-                model.Violations = violations;
+                    var violations = db.CodeViolations.ToList();
+                    model.Violations = violations;
                 
-                return View(model);
+                    return View(model);
+                }
+            }
+            else if (Convert.ToInt32(Session["department"]) != 4500 || Convert.ToInt32(Session["department"]) != 10000)
+            {
+                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+            else
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
         }
 
         public ActionResult AddSafetyConcern()
         {
-            using (TrailerEntities db = new TrailerEntities())
+            if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
             {
-                var codes = db.SafetyCodes.DistinctBy(c => c.OshaCode).OrderBy(c => c.OshaCode).ToList();
-                this.ViewData["codeTypes"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
-                this.ViewData["codeTypes2"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
-                this.ViewData["codeTypes3"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
+                using (TrailerEntities db = new TrailerEntities())
+                {
+                    var codes = db.SafetyCodes.DistinctBy(c => c.OshaCode).OrderBy(c => c.OshaCode).ToList();
+                    this.ViewData["codeTypes"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
+                    this.ViewData["codeTypes2"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
+                    this.ViewData["codeTypes3"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
 
-                return View();
+                    return View();
+                }
+            }
+            else if (Convert.ToInt32(Session["department"]) != 4500 || Convert.ToInt32(Session["department"]) != 10000)
+            {
+                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+            else
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
         }
 
         [HttpPost]
         public ActionResult CreateSafetyConcern(string area, string conditionNoted, string codeTypes, string codeTypes2, string codeTypes3, string correctiveAction, HttpPostedFileBase ImageFile)
         {
-            using (TrailerEntities db = new TrailerEntities())
+            if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
             {
-                var path = "";
-                if (ImageFile != null)
+                using (TrailerEntities db = new TrailerEntities())
                 {
-                    if (ImageFile.ContentLength > 0)
+                    var path = "";
+                    if (ImageFile != null)
                     {
-                        var extension = Path.GetExtension(ImageFile.FileName);
-                        var fullPath = Server.MapPath("~/SafetyImages/") + area + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
-                        path = area + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+                        if (ImageFile.ContentLength > 0)
+                        {
+                            var extension = Path.GetExtension(ImageFile.FileName);
+                            var fullPath = Server.MapPath("~/SafetyImages/") + area + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+                            path = area + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
 
-                        ImageFile.SaveAs(fullPath);
+                            ImageFile.SaveAs(fullPath);
+                        }
                     }
-                }
 
-                SafetyConcern newConcern = new SafetyConcern()
-                {
-                    Area = area,
-                    ConditionNoted = conditionNoted,
-                    CorrectiveActionMeasure = correctiveAction,
-                    Severity = "NEW",
-                    ImagePath = path,
-                };
-                db.SafetyConcerns.Add(newConcern);
-                db.SaveChanges();
+                    SafetyConcern newConcern = new SafetyConcern()
+                    {
+                        Area = area,
+                        ConditionNoted = conditionNoted,
+                        CorrectiveActionMeasure = correctiveAction,
+                        Severity = "NEW",
+                        ImagePath = path,
+                    };
+                    db.SafetyConcerns.Add(newConcern);
+                    db.SaveChanges();
 
-                if(codeTypes != "")
-                {
-                    var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes);
-                    CodeViolation newViolation = new CodeViolation()
+                    if(codeTypes != "")
                     {
-                        SafetyConcernGUID = newConcern.SafetyConcernGUID,
-                        Type = description.Type,
-                        ViolationCode = codeTypes,
-                        Description = description.Description,
-                    };
-                    db.CodeViolations.Add(newViolation);
-                }
-                if (codeTypes2 != "")
-                {
-                    var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes2);
-                    CodeViolation newViolation = new CodeViolation()
+                        var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes);
+                        CodeViolation newViolation = new CodeViolation()
+                        {
+                            SafetyConcernGUID = newConcern.SafetyConcernGUID,
+                            Type = description.Type,
+                            ViolationCode = codeTypes,
+                            Description = description.Description,
+                        };
+                        db.CodeViolations.Add(newViolation);
+                    }
+                    if (codeTypes2 != "")
                     {
-                        SafetyConcernGUID = newConcern.SafetyConcernGUID,
-                        Type = description.Type,
-                        ViolationCode = codeTypes2,
-                        Description = description.Description,
-                    };
-                    db.CodeViolations.Add(newViolation);
-                }
-                if (codeTypes3 != "")
-                {
-                    var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes3);
-                    CodeViolation newViolation = new CodeViolation()
+                        var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes2);
+                        CodeViolation newViolation = new CodeViolation()
+                        {
+                            SafetyConcernGUID = newConcern.SafetyConcernGUID,
+                            Type = description.Type,
+                            ViolationCode = codeTypes2,
+                            Description = description.Description,
+                        };
+                        db.CodeViolations.Add(newViolation);
+                    }
+                    if (codeTypes3 != "")
                     {
-                        SafetyConcernGUID = newConcern.SafetyConcernGUID,
-                        Type = description.Type,
-                        ViolationCode = codeTypes3,
-                        Description = description.Description,
-                    };
-                    db.CodeViolations.Add(newViolation);
-                }
+                        var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes3);
+                        CodeViolation newViolation = new CodeViolation()
+                        {
+                            SafetyConcernGUID = newConcern.SafetyConcernGUID,
+                            Type = description.Type,
+                            ViolationCode = codeTypes3,
+                            Description = description.Description,
+                        };
+                        db.CodeViolations.Add(newViolation);
+                    }
 
-                db.SaveChanges();
-                return RedirectToAction(actionName: "SafetyConcerns", controllerName: "Safety");
-            }   
+                    db.SaveChanges();
+                    return RedirectToAction(actionName: "SafetyConcerns", controllerName: "Safety");
+                }   
+            }
+            else if (Convert.ToInt32(Session["department"]) != 4500 || Convert.ToInt32(Session["department"]) != 10000)
+            {
+                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+            else
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
+            }
         }
 
         public ActionResult EditSafetyConcern(int safetyConcernID)
         {
-            using (TrailerEntities db = new TrailerEntities())
+            if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
             {
-                var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcernID);
+                using (TrailerEntities db = new TrailerEntities())
+                {
+                    var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcernID);
 
-                var violations = db.CodeViolations.Where(v => v.SafetyConcernGUID == safetyConcernID);
+                    var violations = db.CodeViolations.Where(v => v.SafetyConcernGUID == safetyConcernID);
 
-                var codes = db.SafetyCodes.DistinctBy(c => c.OshaCode).OrderBy(c => c.OshaCode).ToList();
-                this.ViewData["codeTypes"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
-                this.ViewData["codeTypes2"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
-                this.ViewData["codeTypes3"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
+                    var codes = db.SafetyCodes.DistinctBy(c => c.OshaCode).OrderBy(c => c.OshaCode).ToList();
+                    this.ViewData["codeTypes"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
+                    this.ViewData["codeTypes2"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
+                    this.ViewData["codeTypes3"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
 
-                return View(concern);
+                    return View(concern);
+                }
+            }
+            else if (Convert.ToInt32(Session["department"]) != 4500 || Convert.ToInt32(Session["department"]) != 10000)
+            {
+                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+            else
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
         }
 
         [HttpPost]
         public ActionResult EditSafetyConcern([Bind(Include = "SafetyConcernGUID,Area,ConditionNoted,CorrectiveActionMeasure")] SafetyConcern safetyConcern, string codeTypes, string codeTypes2, string codeTypes3, HttpPostedFileBase ImageFile)
         {
-            using (TrailerEntities db = new TrailerEntities())
+            if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
             {
-                var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcern.SafetyConcernGUID);
-                concern.Area = safetyConcern.Area;
-                concern.ConditionNoted = safetyConcern.ConditionNoted;
-                concern.CorrectiveActionMeasure = safetyConcern.CorrectiveActionMeasure;
-
-                var path = "";
-                if (ImageFile != null)
+                using (TrailerEntities db = new TrailerEntities())
                 {
-                    if (ImageFile.ContentLength > 0)
+                    var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcern.SafetyConcernGUID);
+                    concern.Area = safetyConcern.Area;
+                    concern.ConditionNoted = safetyConcern.ConditionNoted;
+                    concern.CorrectiveActionMeasure = safetyConcern.CorrectiveActionMeasure;
+
+                    var path = "";
+                    if (ImageFile != null)
                     {
-                        var extension = Path.GetExtension(ImageFile.FileName);
-                        var fullPath = Server.MapPath("~/SafetyImages/") + concern.Area + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
-                        path = concern.Area + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+                        if (ImageFile.ContentLength > 0)
+                        {
+                            var extension = Path.GetExtension(ImageFile.FileName);
+                            var fullPath = Server.MapPath("~/SafetyImages/") + concern.Area + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+                            path = concern.Area + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
 
-                        ImageFile.SaveAs(fullPath);
-                        concern.ImagePath = path;
+                            ImageFile.SaveAs(fullPath);
+                            concern.ImagePath = path;
+                        }
                     }
-                }
 
-                var violations = db.CodeViolations.Where(v => v.SafetyConcernGUID == concern.SafetyConcernGUID);
+                    var violations = db.CodeViolations.Where(v => v.SafetyConcernGUID == concern.SafetyConcernGUID);
                 
-                if (codeTypes != "")
-                {
-                    foreach (var v in violations)
+                    if (codeTypes != "")
                     {
-                        db.CodeViolations.Remove(v);
+                        foreach (var v in violations)
+                        {
+                            db.CodeViolations.Remove(v);
+                        }
+
+                        var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes);
+                        CodeViolation newViolation = new CodeViolation()
+                        {
+                            SafetyConcernGUID = concern.SafetyConcernGUID,
+                            Type = description.Type,
+                            ViolationCode = codeTypes,
+                            Description = description.Description,
+                        };
+                        db.CodeViolations.Add(newViolation);
                     }
+                    if (codeTypes2 != "")
+                    {
+                        var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes2);
+                        CodeViolation newViolation = new CodeViolation()
+                        {
+                            SafetyConcernGUID = concern.SafetyConcernGUID,
+                            Type = description.Type,
+                            ViolationCode = codeTypes2,
+                            Description = description.Description,
+                        };
+                        db.CodeViolations.Add(newViolation);
+                    }
+                    if (codeTypes3 != "")
+                    {
+                        var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes3);
+                        CodeViolation newViolation = new CodeViolation()
+                        {
+                            SafetyConcernGUID = concern.SafetyConcernGUID,
+                            Type = description.Type,
+                            ViolationCode = codeTypes3,
+                            Description = description.Description,
+                        };
+                        db.CodeViolations.Add(newViolation);
+                    }
+                    db.SaveChanges();
 
-                    var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes);
-                    CodeViolation newViolation = new CodeViolation()
-                    {
-                        SafetyConcernGUID = concern.SafetyConcernGUID,
-                        Type = description.Type,
-                        ViolationCode = codeTypes,
-                        Description = description.Description,
-                    };
-                    db.CodeViolations.Add(newViolation);
+                    return RedirectToAction(actionName: "SafetyConcerns", controllerName: "Safety");
                 }
-                if (codeTypes2 != "")
-                {
-                    var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes2);
-                    CodeViolation newViolation = new CodeViolation()
-                    {
-                        SafetyConcernGUID = concern.SafetyConcernGUID,
-                        Type = description.Type,
-                        ViolationCode = codeTypes2,
-                        Description = description.Description,
-                    };
-                    db.CodeViolations.Add(newViolation);
-                }
-                if (codeTypes3 != "")
-                {
-                    var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes3);
-                    CodeViolation newViolation = new CodeViolation()
-                    {
-                        SafetyConcernGUID = concern.SafetyConcernGUID,
-                        Type = description.Type,
-                        ViolationCode = codeTypes3,
-                        Description = description.Description,
-                    };
-                    db.CodeViolations.Add(newViolation);
-                }
-                db.SaveChanges();
-
-                return RedirectToAction(actionName: "SafetyConcerns", controllerName: "Safety");
+            }
+            else if (Convert.ToInt32(Session["department"]) != 4500 || Convert.ToInt32(Session["department"]) != 10000)
+            {
+                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+            else
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
         }
     }

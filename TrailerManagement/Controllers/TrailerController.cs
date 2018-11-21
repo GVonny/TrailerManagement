@@ -57,7 +57,7 @@ namespace TrailerManagement.Controllers
                     }
                     if (Convert.ToInt32(Session["permission"]) == constant.PERMISSION_DRIVER)
                     {
-                        trailer = trailer.Where(t => t.TrailerStatus == constant.TRAILER_STATUS_IN_TRANSIT || t.TrailerStatus == constant.TRAILER_STATUS_DELIVERED).OrderBy(t => t.TrailerStatus).ThenBy(t => t.TrailerNumber);
+                        trailer = trailer.Where(t => t.TrailerStatus == constant.TRAILER_STATUS_IN_TRANSIT || t.TrailerStatus == constant.TRAILER_STATUS_DELIVERED || t.TrailerStatus == constant.TRAILER_STATUS_READY_TO_ROLL).OrderBy(t => t.TrailerStatus).ThenBy(t => t.TrailerNumber);
                     }
                     return View(trailer.ToList());
                 }

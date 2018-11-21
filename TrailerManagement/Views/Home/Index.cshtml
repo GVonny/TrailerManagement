@@ -9,7 +9,7 @@
 <br />
 
 <div>
-    @if (Convert.ToInt32(Session["permission"]) > 10 && Convert.ToInt32(Session["department"]) != 4500)
+    @if (Convert.ToInt32(Session["permission"]) > 10 && (Convert.ToInt32(Session["department"]) != 4500 && Convert.ToInt32(Session["department"]) != 2100))
     {
         <fieldset>
             <legend>Trailers</legend>
@@ -17,7 +17,7 @@
                     <h2>Active List</h2>
                     <p><a href="~/Trailer/ActiveTrailerList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
                 </div>
-            @if (Convert.ToInt32(Session["permission"]) > 30)
+            @if (Convert.ToInt32(Session["permission"]) > 30 && (Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 10000))
             {
                 <div class="col-xs-3">
                     <h2>Master List</h2>

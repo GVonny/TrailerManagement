@@ -23,7 +23,7 @@
             <!-- Trailer Status -->
             <div class="form-group">
                 @Html.LabelFor(model => model.TrailerStatus, "Trailer Status", htmlAttributes: new { @class = "control-label col-md-2" })
-                @if (Convert.ToInt32(Session["permission"]) > 2)
+                @if (Convert.ToInt32(Session["permission"]) > 20)
                 {
                     <div class="col-md-3">
                         @Html.DropDownList("TrailerStatus", new List<SelectListItem>
@@ -269,7 +269,7 @@
             $('#orderDate').val(getCurrentDate());
             
             var permission = '@Session["permission"]';
-            if (permission > 2)
+            if (permission > 20)
             {
                 //unhides fields depending on permission level
                 $('.form-group').removeClass('hidden');
