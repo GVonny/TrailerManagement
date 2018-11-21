@@ -229,7 +229,7 @@ namespace TrailerManagement.Controllers
                         {
                             var extension = Path.GetExtension(ImageFile.FileName);
                             var fullPath = Server.MapPath("~/SafetyImages/") + area + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
-                            path = area + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+                            path = area + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
 
                             ImageFile.SaveAs(fullPath);
                         }
@@ -396,6 +396,28 @@ namespace TrailerManagement.Controllers
                     }
                     db.SaveChanges();
 
+                    return RedirectToAction(actionName: "SafetyConcerns", controllerName: "Safety");
+                }
+            }
+            else if (Convert.ToInt32(Session["department"]) != 4500 || Convert.ToInt32(Session["department"]) != 10000)
+            {
+                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+            else
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
+            }
+        }
+
+        public ActionResult DeleteSafetyConcern(int safetyConcernID)
+        {
+            if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
+            {
+                using (TrailerEntities db = new TrailerEntities())
+                {
+                    var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcernID);
+                    db.SafetyConcerns.Remove(concern);
+                    db.SaveChanges();
                     return RedirectToAction(actionName: "SafetyConcerns", controllerName: "Safety");
                 }
             }

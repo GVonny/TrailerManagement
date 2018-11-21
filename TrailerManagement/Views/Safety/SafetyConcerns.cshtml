@@ -22,13 +22,14 @@
 
 @foreach (SafetyConcern s in Model.Concerns)
 {
+var path = s.ImagePath.Replace("%20", " ");
 <div>
     <table class="table table-responsive" id="@s.SafetyConcernGUID">
         <tbody>
             <tr style="border-style:solid; border-color:#333333">
                 <th>Area: @s.Area</th>
                 <td rowspan="4" class="col-xs-2">
-                    <img src="@s.ImagePath" height="150" width="150" />
+                    <img src="/SafetyImages/@path" height="150" width="150" />
                 </td>
             </tr>
 
