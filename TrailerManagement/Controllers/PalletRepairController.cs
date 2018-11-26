@@ -531,7 +531,7 @@ namespace TrailerManagement.Controllers
 
                 this.ViewData["deductionTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type == "DEDUCTION").OrderBy(c => c.PartNumber), "PartNumber", "PartNumber").ToList();
                 this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "DEDUCTION").OrderBy(c => c.Description), "PartNumber", "Description").ToList();
-                this.ViewData["vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "CompanyGUID", "Name").ToList();
+                this.ViewData["vendorID"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "CompanyGUID", "Name").ToList();
 
                 return View(model);
             }
