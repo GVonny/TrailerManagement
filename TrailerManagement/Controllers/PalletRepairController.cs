@@ -531,7 +531,7 @@ namespace TrailerManagement.Controllers
 
                 this.ViewData["deductionTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type == "DEDUCTION").OrderBy(c => c.PartNumber), "PartNumber", "PartNumber").ToList();
                 this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "DEDUCTION").OrderBy(c => c.Description), "PartNumber", "Description").ToList();
-                this.ViewData["vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
+                this.ViewData["vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "CompanyGUID", "Name").ToList();
 
                 return View(model);
             }
@@ -602,15 +602,16 @@ namespace TrailerManagement.Controllers
         }
         
         [HttpPost]
-        public ActionResult UpdatePayoutVendor(int sortID, string vendors)
+        public ActionResult UpdatePayoutVendor(int sortID, int vendorID)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
                 var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
 
                 var oldVendor = payout.Vendor;
-                payout.Vendor = vendors;
-                var vendorFromMaster = db.CustomersAndVendors.FirstOrDefault(v => v.Name == vendors);
+                
+                var vendorFromMaster = db.CustomersAndVendors.FirstOrDefault(v => v.CompanyGUID == vendorID);
+                payout.Vendor = vendorFromMaster.Name;
                 payout.VendorNumber = Convert.ToInt32(vendorFromMaster.VendorNumber);
 
                 var vendorPrices = db.PalletPrices.Where(p => p.VendorName == vendorFromMaster.Name);
@@ -619,7 +620,7 @@ namespace TrailerManagement.Controllers
 
                 foreach (CompletedSort cs in completedStacks)
                 {
-                    cs.Vendor = vendors;
+                    cs.Vendor = vendorFromMaster.Name;
                     foreach (PalletPrice pp in vendorPrices)
                     {
                         if (cs.PartNumber == pp.PartNumber)
