@@ -203,6 +203,39 @@ namespace TrailerManagement.Controllers
             }
         }
 
+        public ActionResult SortSummary(int sortID)
+        {
+            if (Session["username"] == null)
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
+            }
+            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
+            {
+                using (TrailerEntities db = new TrailerEntities())
+                {
+                    dynamic model = new ExpandoObject();
+
+                    var trailer = db.MasterStacks.Where(t => t.SortGUID == sortID).OrderBy(t => t.StackNumber);
+                    model.Trailer = trailer.ToList();
+
+                    var stackNumber = trailer.Max(t => t.StackNumber);
+
+                    this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "DEDUCTION" && c.Type != "SCRAP").OrderBy(c => c.Description), "PartNumber", "Description").ToList();
+
+                    var sort = db.SortLists.FirstOrDefault(s => s.SortGUID == sortID);
+                    model.Sort = sort;
+                    model.People = sort.NumberOfPeopleToStart;
+                    model.StackNumber = stackNumber;
+
+                    return View(model);
+                }
+            }
+            else
+            {
+                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+        }
+
         public ActionResult SortConfirmation(int sortID)
         {
             if (Session["username"] == null)

@@ -362,6 +362,7 @@
     <Content Include="Views\Safety\SafetyAudit.cshtml" />
     <Content Include="Views\Safety\AddSafetyConcern.cshtml" />
     <Content Include="Views\Safety\EditSafetyConcern.cshtml" />
+    <Content Include="Views\PalletRepair\SortSummary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
