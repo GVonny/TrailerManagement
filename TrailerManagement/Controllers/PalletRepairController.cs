@@ -114,6 +114,37 @@ namespace TrailerManagement.Controllers
             }
         }
 
+        public ActionResult SortStacks(int sortID)
+        {
+            if (Session["username"] == null)
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
+            }
+            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
+            {
+                using (TrailerEntities db = new TrailerEntities())
+                {
+                    var trailer = db.SortLists.Find(sortID);
+                    trailer.Status = "OPEN";
+                    db.SaveChanges();
+
+                    dynamic model = new ExpandoObject();
+
+                    model.Sort = trailer;
+
+                    this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "SCRAP" && c.Type != "DEDUCTION").OrderBy(c => c.Description), "PartNumber", "Description").ToList();
+
+                    this.ViewData["scrapTypes"] = new SelectList(db.PalletTypes.Where(c => c.Description.ToLower().Contains("scrap")).OrderByDescending(c => c.PartNumber), "PartNumber", "Description").ToList();
+
+                    return View(model);
+                }
+            }
+            else
+            {
+                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+        }
+
         public ActionResult CreateNewStack(int sortID, int stackNumber, string partNumbers, string quantities, int numberOfPeople, string notes, Boolean? allDone, double timeOnStack)
         {
             using (TrailerEntities db = new TrailerEntities())
@@ -200,6 +231,38 @@ namespace TrailerManagement.Controllers
                 {
                     return RedirectToAction(actionName: "SortTrailer", controllerName: "PalletRepair", routeValues: new { sortID, stackNumber, numberOfPeople });
                 }
+            }
+        }
+
+        public ActionResult CreateNewBulkStack(int sortID, string partNumbers, string stackQuantities, string palletQuantities, double timeOnStack)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                string[] palletTypes = partNumbers.Split('|');
+                string[] stacks = stackQuantities.Split('|');
+                string[] quantities = palletQuantities.Split('|');
+
+                for(int x = 0; x < palletTypes.Length; x++)
+                {
+                    var partNumber = palletTypes[x];
+                    var palletType = db.PalletTypes.FirstOrDefault(p => p.PartNumber == partNumber);
+                    var numberStacks = Convert.ToInt32(stacks[x]);
+                    var quantity = Convert.ToInt32(quantities[x]);
+                    MasterStack stack = new MasterStack()
+                    {
+                        SortGUID = sortID,
+                        StackNumber = x + 1,
+                        PartNumber = palletTypes[x],
+                        Description = palletType.Description,
+                        Quantity = (numberStacks * quantity),
+                        PeopleOnStack = 1,
+                        UserSignedIn = Session["name"].ToString(),
+                    };
+                    db.MasterStacks.Add(stack);
+                }
+                db.SaveChanges();
+
+                return RedirectToAction(actionName: "SortList", controllerName: "PalletRepair");
             }
         }
 

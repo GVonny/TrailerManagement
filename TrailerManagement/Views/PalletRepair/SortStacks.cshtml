@@ -1,0 +1,206 @@
+﻿@{
+    ViewBag.Title = "SortStacks";
+    //var sort = Model.Sort;
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<h2>Sort Sheet</h2>
+
+<div class="well">
+    <form class="form-horizontal">
+        <a href="/PalletRepair/SortList" value="Finish Later" class="btn btn-danger col-xs-4">Finish Later</a>
+        <input type="button" value="All Done" class="btn btn-warning float-right col-xs-4" id="finish2" />
+        <button type="button" id="hideKeyboard" class="btn btn-primary float-right col-xs-4"><span class="fa fa-keyboard-o"></span>&nbsp;Hide Keyboard</button>
+
+        <div class="form-group">
+            <div class="col-xs-4">
+                <h3 class="text-center">Pallet Types</h3>
+            </div>
+            <div class="col-xs-3">
+                <h3>Number of Stacks</h3>
+            </div>
+            <div class="col-xs-3">
+                <h3>Quantity per Stack</h3>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-4">
+                <h4><strong id="palletType1" class="float-right">Unrepaired 48x40 Cores:</strong></h4>
+            </div>
+            <div class="col-xs-3">
+                <input type="number" id="palletType1StackQuantity" class="form-control" placeholder="Number of stacks">
+            </div>
+            <div class="col-xs-3">
+                <input type="number" id="palletType1Quantity" class="form-control" placeholder="(50-0140) - Quantity">
+            </div>
+            <div class="col-xs-1">
+                <button type="button" id="hideKeyboard" class="btn btn-primary" style="height:35px" tabindex="-1"><span class="fa fa-keyboard-o"></span></button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-4">
+                <h4><strong id="palletType2" class="float-right">Repaired 48x40 4/Way Flush (Grade A):</strong></h4>
+            </div>
+            <div class="col-xs-3">
+                <input type="number" id="palletType2StackQuantity" class="form-control" placeholder="Number of stacks">
+            </div>
+            <div class="col-xs-3">
+                <input type="number" id="palletType2Quantity" class="form-control" placeholder="(50-0001) - Quantity">
+            </div>
+
+            <div class="col-xs-1">
+                <button type="button" id="hideKeyboard" class="btn btn-primary" style="height:35px" tabindex="-1"><span class="fa fa-keyboard-o"></span></button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-4">
+                <h4><strong id="palletType3" class="float-right">Repaired 48x40 4/Way Flush (Grade B):</strong></h4>
+            </div>
+            <div class="col-xs-3">
+                <input type="number" id="palletType3StackQuantity" class="form-control" placeholder="Number of stacks">
+            </div>
+            <div class="col-xs-3">
+                <input type="number" id="palletType3Quantity" class="form-control" placeholder="(50-0004) - Quantity">
+            </div>
+            <div class="col-xs-1">
+                <button type="button" id="hideKeyboard" class="btn btn-primary" style="height:35px" tabindex="-1"><span class="fa fa-keyboard-o"></span></button>
+            </div>
+        </div>
+        <div class="form-group" id="palletType4">
+            <div class="col-xs-4" id="palletType4TypeInput">
+                <strong>Extra Pallet Type 1:</strong>
+                @Html.DropDownList("palletTypes", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "palletType4Input" })
+            </div>
+            <div class="col-xs-3">
+                <input type="number" id="palletType4StackQuantity" class="form-control" placeholder="Number of stacks" style="margin-top:20px;">
+            </div>
+            <div class="col-xs-3">
+                <input type="number" id="palletType4Quantity" class="form-control" placeholder="Quantity" style="margin-top:20px;"><br>
+            </div>
+            <div class="col-xs-1">
+                <button type="button" id="hideKeyboard" class="btn btn-primary" style="height:35px; margin-top:20px" tabindex="-1"><span class="fa fa-keyboard-o"></span></button>
+            </div>
+        </div>
+        <div class="form-group" id="palletType5">
+            <div class="col-xs-4" id="palletType5TypeInput">
+                <strong>Extra Pallet Type 2:</strong>
+                @Html.DropDownList("palletTypes", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "palletType5Input" })
+            </div>
+            <div class="col-xs-3">
+                <input type="number" id="palletType5StackQuantity" class="form-control" placeholder="Number of stacks" style="margin-top:20px;">
+            </div>
+            <div class="col-xs-3">
+                <input type="number" id="palletType5Quantity" class="form-control" placeholder="Quantity" style="margin-top:20px;"><br>
+            </div>
+            <div class="col-xs-1">
+                <button type="button" id="hideKeyboard" class="btn btn-primary" style="height:35px; margin-top:20px" tabindex="-1"><span class="fa fa-keyboard-o"></span></button>
+            </div>
+        </div>
+        <div class="form-group" id="palletType6">
+            <div class="col-xs-4" id="palletType6TypeInput">
+                <strong>Extra Pallet Type 3:</strong>
+                @Html.DropDownList("palletTypes", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "palletType6Input" })
+            </div>
+            <div class="col-xs-3">
+                <input type="number" id="palletType6StackQuantity" class="form-control" placeholder="Number of stacks" style="margin-top:20px;">
+            </div>
+            <div class="col-xs-3">
+                <input type="number" id="palletType6Quantity" class="form-control" placeholder="Quantity" style="margin-top:20px;"><br>
+            </div>
+            <div class="col-xs-1">
+                <button type="button" id="hideKeyboard" class="btn btn-primary" style="height:35px; margin-top:20px" tabindex="-1"><span class="fa fa-keyboard-o"></span></button>
+            </div>
+        </div>
+        <div class="form-group" id="palletType7">
+            <div class="col-xs-4" id="palletType7TypeInput">
+                <strong>Extra Pallet Type 4:</strong>
+                @Html.DropDownList("palletTypes", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "palletType7Input" })
+            </div>
+            <div class="col-xs-3">
+                <input type="number" id="palletType7StackQuantity" class="form-control" placeholder="Number of stacks" style="margin-top:20px;">
+            </div>
+            <div class="col-xs-3">
+                <input type="number" id="palletType7Quantity" class="form-control" placeholder="Quantity" style="margin-top:20px;"><br>
+            </div>
+            <div class="col-xs-1">
+                <button type="button" id="hideKeyboard" class="btn btn-primary" style="height:35px; margin-top:20px" tabindex="-1"><span class="fa fa-keyboard-o"></span></button>
+            </div>
+        </div>
+        <div class="form-group" id="palletTypeScrap">
+            <div class="col-xs-4">
+                <strong>Scrap:</strong>
+                @Html.DropDownList("scrapTypes", null, htmlAttributes: new { @class = "form-control signin-form", @id = "scrapTypes" })
+            </div>
+            <div class="col-xs-2">
+                <strong>Scrap Quantity:</strong>
+                <input type="number" id="scrapQuantity" class="form-control"><br>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <a href="/PalletRepair/SortList" value="Finish Later" class="btn btn-danger col-xs-4" id="finishLater">Finish Later</a>
+            <input type="button" value="All Done" class="btn btn-warning float-right col-xs-4" id="finish" />
+            <button type="button" id="hideKeyboard" class="btn btn-primary float-right col-xs-4"><span class="fa fa-keyboard-o"></span>&nbsp;Hide Keyboard</button>
+        </div>
+    </form>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            var timeOnLoad = new Date();
+            var seconds;
+            function calculateTimeOnPage()
+            {
+                var timeOnLeave = new Date();
+
+                seconds = (timeOnLeave.getTime() - timeOnLoad.getTime()) / 1000;
+            }
+
+            var partNumbers = "";
+            var palletQuantities = "";
+            var stackQuantities = ""
+            function PalletType(partNumber, stackQuantity, quantity)
+            {
+                if (quantity != "")
+                {
+                    partNumbers += partNumber + "|";
+                    stackQuantities += stackQuantity + "|";
+                    palletQuantities += quantity + "|";
+                }
+            }
+
+            $('#finish').on('click', function ()
+            {
+                createStack();
+                calculateTimeOnPage();
+                var temp = parseFloat(seconds);
+                temp = temp.toFixed(2);
+                location.href = "/PalletRepair/CreateNewBulkStack?sortID=1&partNumbers=" + partNumbers + "&stackQuantities=" + stackQuantities + "&palletQuantities=" + palletQuantities + "&timeOnStack=" + temp;
+
+                //console.log("/PalletRepair/CreateNewBulkStack?sortID=1&partNumbers=" + partNumbers + "&stackQuantities=" + stackQuantities + "&palletQuantities=" + palletQuantities + "&timeOnStack=" + temp);
+            });
+
+            function createStack()
+            {
+                new PalletType("50-0140", $('#palletType1StackQuantity').val(), $('#palletType1Quantity').val());
+                new PalletType("50-0001", $('#palletType2StackQuantity').val(), $('#palletType2Quantity').val());
+                new PalletType("50-0004", $('#palletType3StackQuantity').val(), $('#palletType3Quantity').val());
+                new PalletType($('#palletType4Input').val(), $('#palletType4StackQuantity').val(), $('#palletType4Quantity').val());
+                new PalletType($('#palletType5Input').val(), $('#palletType5StackQuantity').val(), $('#palletType5Quantity').val());
+                new PalletType($('#palletType6Input').val(), $('#palletType6StackQuantity').val(), $('#palletType6Quantity').val());
+                new PalletType($('#palletType7Input').val(), $('#palletType7StackQuantity').val(), $('#palletType7Quantity').val());
+                new PalletType($('#scrapTypes').val(), 1,$('#scrapQuantity').val());
+
+                partNumbers = partNumbers.substring(0, partNumbers.length - 1);
+                stackQuantities = stackQuantities.substring(0, stackQuantities.length - 1);
+                palletQuantities = palletQuantities.substring(0, palletQuantities.length - 1);
+                console.log(partNumbers);
+                console.log(stackQuantities);
+                console.log(palletQuantities);
+            }
+        });
+    </script>
+}
