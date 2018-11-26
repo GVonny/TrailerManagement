@@ -262,7 +262,7 @@ namespace TrailerManagement.Controllers
                 }
                 db.SaveChanges();
 
-                return RedirectToAction(actionName: "SortList", controllerName: "PalletRepair");
+                return RedirectToAction(actionName: "SortConfirmation", controllerName: "PalletRepair", routeValues: new { sortID });
             }
         }
 
@@ -515,6 +515,10 @@ namespace TrailerManagement.Controllers
                 if(vendor != null)
                 {
                     model.Vendor = vendor;
+                }
+                else
+                {
+                    model.Vendor = null;
                 }
 
                 model.Payout = payout;
@@ -911,7 +915,7 @@ namespace TrailerManagement.Controllers
         //ADD/EDIT/VIEW/DELETE
 
         [HttpPost]
-        public ActionResult CreateSortImage(HttpPostedFileBase ImageFile, string vendors, int peopleOnTrailer, int sortID, string notes)
+        public ActionResult CreateSortImage(HttpPostedFileBase ImageFile, string vendors, int peopleOnTrailer, int sortID, string notes, string sortType)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
@@ -952,7 +956,19 @@ namespace TrailerManagement.Controllers
                         }
                     }
                     db.SaveChanges();
-                    return RedirectToAction(actionName: "SortTrailer", controllerName: "PalletRepair", routeValues: new { sortID, numberOfPeople = peopleOnTrailer });
+
+                    if(sortType == "Stack Sort")
+                    {
+                        return RedirectToAction(actionName: "SortTrailer", controllerName: "PalletRepair", routeValues: new { sortID, numberOfPeople = peopleOnTrailer });
+                    }
+                    else if(sortType == "Bulk Sort")
+                    {
+                        return RedirectToAction(actionName: "SortStacks", controllerName: "PalletRepair", routeValues: new { sortID });
+                    }
+                    else
+                    {
+                        return RedirectToAction(actionName: "SortTrailer", controllerName: "PalletRepair", routeValues: new { sortID, numberOfPeople = peopleOnTrailer });
+                    }
                 }
                 else
                 {

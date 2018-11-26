@@ -1,6 +1,6 @@
 ﻿@{
     ViewBag.Title = "SortStacks";
-    //var sort = Model.Sort;
+    var sort = Model.Sort;
 }
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -178,7 +178,7 @@
                 calculateTimeOnPage();
                 var temp = parseFloat(seconds);
                 temp = temp.toFixed(2);
-                location.href = "/PalletRepair/CreateNewBulkStack?sortID=1&partNumbers=" + partNumbers + "&stackQuantities=" + stackQuantities + "&palletQuantities=" + palletQuantities + "&timeOnStack=" + temp;
+                location.href = "/PalletRepair/CreateNewBulkStack?sortID=" + @sort.SortGUID + "&partNumbers=" + partNumbers + "&stackQuantities=" + stackQuantities + "&palletQuantities=" + palletQuantities + "&timeOnStack=" + temp;
 
                 //console.log("/PalletRepair/CreateNewBulkStack?sortID=1&partNumbers=" + partNumbers + "&stackQuantities=" + stackQuantities + "&palletQuantities=" + palletQuantities + "&timeOnStack=" + temp);
             });
