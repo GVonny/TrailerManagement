@@ -9,7 +9,7 @@
 <br />
 
 <div>
-    @if (Convert.ToInt32(Session["permission"]) > 10 && (Convert.ToInt32(Session["department"]) != 4500 && Convert.ToInt32(Session["department"]) != 2100))
+    @if (Convert.ToInt32(Session["permission"]) > 10 && (Convert.ToInt32(Session["department"]) != 4500 || (Convert.ToInt32(Session["department"]) != 2100 || Convert.ToInt32(Session["permission"]) > 30)))
     {
         <fieldset>
             <legend>Trailers</legend>

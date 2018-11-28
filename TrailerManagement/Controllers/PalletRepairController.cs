@@ -586,12 +586,16 @@ namespace TrailerManagement.Controllers
         }
         
         [HttpPost]
-        public ActionResult UpdatePayoutInfo(int sortID, string invoiceNumber, string billOfLading, string packingListNumber, string purchaseOrderNumber, string palletOrderNumber, string vendors)
+        public ActionResult UpdatePayoutInfo(int sortID, string trailerNumber, string invoiceNumber, string billOfLading, string packingListNumber, string purchaseOrderNumber, string palletOrderNumber)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
                 var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
 
+                if(trailerNumber != "")
+                {
+                    payout.TrailerNumber = trailerNumber;
+                }
                 if(invoiceNumber != "")
                 {
                     payout.InvoiceNumber = invoiceNumber;
