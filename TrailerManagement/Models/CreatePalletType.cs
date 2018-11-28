@@ -29,6 +29,7 @@ namespace TrailerManagement.Models
                 Type = this.Type,
                 TagsRequired = this.TagsRequired,
                 PutAwayLocation = this.PutAwayLocation,
+                Status = "ACTIVE",
             };
             return newPalletType;
         }

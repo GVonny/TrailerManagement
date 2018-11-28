@@ -522,7 +522,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult ViewPayout(int sortID)
+        public ActionResult ViewPayout(int sortID, Boolean? isCompleted)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
@@ -534,7 +534,14 @@ namespace TrailerManagement.Controllers
                 model.SortedTrailer = sortedStacks.ToList();
                                     
                 var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
-                payout.Status = "IN PROCESS";
+                if(isCompleted != null)
+                {
+                    if (isCompleted == false)
+                    {
+                        payout.Status = "IN PROCESS";
+                    }
+                }
+                
                 db.SaveChanges();
 
                 var vendor = db.CustomersAndVendors.FirstOrDefault(v => v.Name == payout.Vendor);
@@ -1268,7 +1275,7 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreatePalletType([Bind(Include ="PartNumber,Description,Type,TagsRequired,PutAwayLocation")] CreatePalletType palletType, int id)
+        public ActionResult CreatePalletType([Bind(Include ="PartNumber,Description,Type,TagsRequired,PutAwayLocation")] CreatePalletType palletType)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
