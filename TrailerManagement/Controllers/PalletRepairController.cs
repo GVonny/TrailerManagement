@@ -350,6 +350,16 @@ namespace TrailerManagement.Controllers
             {
                 var sortedStacks = db.MasterStacks.Where(t => t.SortGUID == sortID);
 
+                var completeStacks = db.CompletedSorts.Where(c => c.SortGUID == sortID);
+
+                if(completeStacks != null)
+                {
+                    foreach (CompletedSort stack in completeStacks)
+                    {
+                        db.CompletedSorts.Remove(stack);
+                    }
+                }
+                
                 ArrayList palletTypes = new ArrayList();
                 List<Int32> palletQuantities = new List<Int32>();
 
