@@ -44,6 +44,8 @@
 
                 <td id="numberOfPeopleToStart_@t.SortGUID" class="hidden">@t.NumberOfPeopleToStart</td>
                 <td id="maxStackNumber_@t.SortGUID" class="hidden">@t.MaxStackNumber</td>
+
+                <td class="hidden" id="sortChoice_@t.SortGUID">@t.SortChoice</td>
             </tr>
         }
     </tbody>
@@ -145,7 +147,7 @@
             {
                 id = this.id;
                 var dateArrived = $('#dateArrived_' + id).html();
-                if (dateArrived.includes('-'))
+                if (dateArrived.indexOf('-') != -1)
                 {
                     if ($('#numberOfPeopleToStart_' + id).html() == "")
                     {
@@ -160,7 +162,14 @@
                     }
                     else
                     {
-                        location.href = "/PalletRepair/SortTrailer?sortID=" + id + "&numberOfPeople=" + $('#numberOfPeopleToStart_' + id).html();
+                        if ($('#sortChoice_' + id).html() == "STACK")
+                        {
+                            location.href = "/PalletRepair/SortTrailer?sortID=" + id + "&numberOfPeople=" + $('#numberOfPeopleToStart_' + id).html();
+                        }
+                        else if ($('#sortChoice_' + id).html() == "BULK")
+                        {
+                            location.href = "/PalletRepair/SortStacks?sortID=" + id;
+                        }
                     }
                 }
                 else

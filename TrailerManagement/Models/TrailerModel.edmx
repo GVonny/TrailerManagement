@@ -197,6 +197,7 @@
           <Property Name="NumberOfPeopleToStart" Type="int" />
           <Property Name="TimeToSort" Type="float" />
           <Property Name="Status" Type="varchar" MaxLength="15" />
+          <Property Name="SortChoice" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="TrailerList">
           <Key>
@@ -299,7 +300,6 @@
           <EntitySet Name="SortImages" EntityType="TrailerModel.SortImage" />
           <EntitySet Name="Users" EntityType="TrailerModel.User" />
           <EntitySet Name="Payouts" EntityType="TrailerModel.Payout" />
-          <EntitySet Name="SortLists" EntityType="TrailerModel.SortList" />
           <EntitySet Name="PalletPrices" EntityType="TrailerModel.PalletPrice" />
           <EntitySet Name="MasterStacks" EntityType="TrailerModel.MasterStack" />
           <EntitySet Name="CompletedSorts" EntityType="TrailerModel.CompletedSort" />
@@ -308,6 +308,7 @@
           <EntitySet Name="SafetyCodes" EntityType="TrailerModel.SafetyCode" />
           <EntitySet Name="SafetyConcerns" EntityType="TrailerModel.SafetyConcern" />
           <EntitySet Name="CodeViolations" EntityType="TrailerModel.CodeViolation" />
+          <EntitySet Name="SortLists" EntityType="TrailerModel.SortList" />
         </EntityContainer>
         <EntityType Name="TrailerList">
           <Key>
@@ -378,23 +379,6 @@
           <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="DateArrived" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="TimeToSort" Type="Double" />
-        </EntityType>
-        <EntityType Name="SortList">
-          <Key>
-            <PropertyRef Name="SortGUID" />
-          </Key>
-          <Property Name="SortGUID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TrailerNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Customer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Vendor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="OrderNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
-          <Property Name="SortType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="LoadStatus" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="DateArrived" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="MaxStackNumber" Type="Int32" />
-          <Property Name="NumberOfPeopleToStart" Type="Int32" />
-          <Property Name="TimeToSort" Type="Double" />
-          <Property Name="Status" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="PalletPrice">
           <Key>
@@ -496,6 +480,24 @@
           <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ViolationCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="SortList">
+          <Key>
+            <PropertyRef Name="SortGUID" />
+          </Key>
+          <Property Name="SortGUID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TrailerNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Customer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Vendor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OrderNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="SortType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LoadStatus" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="DateArrived" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="MaxStackNumber" Type="Int32" />
+          <Property Name="NumberOfPeopleToStart" Type="Int32" />
+          <Property Name="TimeToSort" Type="Double" />
+          <Property Name="Status" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="SortChoice" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -618,24 +620,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="SortLists">
-            <EntityTypeMapping TypeName="TrailerModel.SortList">
-              <MappingFragment StoreEntitySet="SortList">
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="TimeToSort" ColumnName="TimeToSort" />
-                <ScalarProperty Name="NumberOfPeopleToStart" ColumnName="NumberOfPeopleToStart" />
-                <ScalarProperty Name="MaxStackNumber" ColumnName="MaxStackNumber" />
-                <ScalarProperty Name="DateArrived" ColumnName="DateArrived" />
-                <ScalarProperty Name="LoadStatus" ColumnName="LoadStatus" />
-                <ScalarProperty Name="SortType" ColumnName="SortType" />
-                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
-                <ScalarProperty Name="Vendor" ColumnName="Vendor" />
-                <ScalarProperty Name="Customer" ColumnName="Customer" />
-                <ScalarProperty Name="TrailerNumber" ColumnName="TrailerNumber" />
-                <ScalarProperty Name="SortGUID" ColumnName="SortGUID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="PalletPrices">
             <EntityTypeMapping TypeName="TrailerModel.PalletPrice">
               <MappingFragment StoreEntitySet="PalletPrices">
@@ -742,6 +726,25 @@
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="SafetyConcernGUID" ColumnName="SafetyConcernGUID" />
                 <ScalarProperty Name="CodeViolationGUID" ColumnName="CodeViolationGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SortLists">
+            <EntityTypeMapping TypeName="TrailerModel.SortList">
+              <MappingFragment StoreEntitySet="SortList">
+                <ScalarProperty Name="SortChoice" ColumnName="SortChoice" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="TimeToSort" ColumnName="TimeToSort" />
+                <ScalarProperty Name="NumberOfPeopleToStart" ColumnName="NumberOfPeopleToStart" />
+                <ScalarProperty Name="MaxStackNumber" ColumnName="MaxStackNumber" />
+                <ScalarProperty Name="DateArrived" ColumnName="DateArrived" />
+                <ScalarProperty Name="LoadStatus" ColumnName="LoadStatus" />
+                <ScalarProperty Name="SortType" ColumnName="SortType" />
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+                <ScalarProperty Name="Vendor" ColumnName="Vendor" />
+                <ScalarProperty Name="Customer" ColumnName="Customer" />
+                <ScalarProperty Name="TrailerNumber" ColumnName="TrailerNumber" />
+                <ScalarProperty Name="SortGUID" ColumnName="SortGUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -43,7 +43,7 @@ namespace TrailerManagement.Controllers
 
                     this.ViewData["Vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
 
-                    model.Trailers = trailers.OrderByDescending(t => t.Status).ThenBy(t => t.DateArrived).ToList();
+                    model.Trailers = trailers.OrderByDescending(t => t.Status).ThenByDescending(t => t.DateArrived).ToList();
                     return View(model);
                 }
             }
@@ -65,6 +65,7 @@ namespace TrailerManagement.Controllers
                 {
                     var trailer = db.SortLists.Find(sortID);
                     trailer.Status = "OPEN";
+                    trailer.SortChoice = "STACK";
                     db.SaveChanges();
 
                     if (stackNumber != null)
@@ -126,6 +127,7 @@ namespace TrailerManagement.Controllers
                 {
                     var trailer = db.SortLists.Find(sortID);
                     trailer.Status = "OPEN";
+                    trailer.SortChoice = "BULK";
                     db.SaveChanges();
 
                     dynamic model = new ExpandoObject();
@@ -238,6 +240,18 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
+                var sort = db.SortLists.FirstOrDefault(s => s.SortGUID == sortID);
+                var stackCount = 0;
+
+                var stackCheck = db.MasterStacks.Where(s => s.SortGUID == sortID);
+                if(stackCheck != null)
+                {
+                    foreach(MasterStack stack in stackCheck)
+                    {
+                        db.MasterStacks.Remove(stack);
+                    }
+                }
+
                 string[] palletTypes = partNumbers.Split('|');
                 string[] stacks = stackQuantities.Split('|');
                 string[] quantities = palletQuantities.Split('|');
@@ -259,7 +273,9 @@ namespace TrailerManagement.Controllers
                         UserSignedIn = Session["name"].ToString(),
                     };
                     db.MasterStacks.Add(stack);
+                    stackCount++;
                 }
+                sort.MaxStackNumber = stackCount;
                 db.SaveChanges();
 
                 return RedirectToAction(actionName: "SortConfirmation", controllerName: "PalletRepair", routeValues: new { sortID });

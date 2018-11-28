@@ -24,8 +24,8 @@
     <tbody id="payouts">
         @foreach (Payout p in Model)
         {
-            //if (p.Status != "CLOSED")
-            //{
+            if (p.Status != "CLOSED")
+            {
                 <tr class="product-row" id="@p.SortGUID">
                     <td id="customer_@p.SortGUID">@p.Vendor</td>
                     <td id="trailerNumber_@p.SortGUID">@p.TrailerNumber</td>
@@ -34,10 +34,10 @@
                     <td id="timeToUnload_@p.SortGUID">@p.TimeToSort</td>
                     <td id="status_@p.SortGUID">@p.Status</td>
                 </tr>
-            @*}
+            }
             else
             {
-                <tr class="closed-row hidden" id="@p.SortGUID">
+                <tr class="closed-row" id="@p.SortGUID">
                     <td id="customer_@p.SortGUID">@p.Vendor</td>
                     <td id="trailerNumber_@p.SortGUID">@p.TrailerNumber</td>
                     <td id="orderNumber_@p.SortGUID">@p.OrderNumber</td>
@@ -45,7 +45,7 @@
                     <td id="timeToUnload_@p.SortGUID">@p.TimeToSort</td>
                     <td id="status_@p.SortGUID">@p.Status</td>
                 </tr>
-            }*@
+            }
         }
     </tbody>
 </table>

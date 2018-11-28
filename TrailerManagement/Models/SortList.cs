@@ -26,5 +26,6 @@ namespace TrailerManagement.Models
         public Nullable<int> NumberOfPeopleToStart { get; set; }
         public Nullable<double> TimeToSort { get; set; }
         public string Status { get; set; }
+        public string SortChoice { get; set; }
     }
 }
