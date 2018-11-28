@@ -146,6 +146,7 @@
           <Property Name="Status" Type="varchar" MaxLength="10" />
           <Property Name="DateArrived" Type="varchar" MaxLength="10" />
           <Property Name="TimeToSort" Type="float" />
+          <Property Name="DateCompleted" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="SafetyCodes">
           <Key>
@@ -299,7 +300,6 @@
           <EntitySet Name="Departments" EntityType="TrailerModel.Department" />
           <EntitySet Name="SortImages" EntityType="TrailerModel.SortImage" />
           <EntitySet Name="Users" EntityType="TrailerModel.User" />
-          <EntitySet Name="Payouts" EntityType="TrailerModel.Payout" />
           <EntitySet Name="PalletPrices" EntityType="TrailerModel.PalletPrice" />
           <EntitySet Name="MasterStacks" EntityType="TrailerModel.MasterStack" />
           <EntitySet Name="CompletedSorts" EntityType="TrailerModel.CompletedSort" />
@@ -309,6 +309,7 @@
           <EntitySet Name="SafetyConcerns" EntityType="TrailerModel.SafetyConcern" />
           <EntitySet Name="CodeViolations" EntityType="TrailerModel.CodeViolation" />
           <EntitySet Name="SortLists" EntityType="TrailerModel.SortList" />
+          <EntitySet Name="Payouts" EntityType="TrailerModel.Payout" />
         </EntityContainer>
         <EntityType Name="TrailerList">
           <Key>
@@ -361,24 +362,6 @@
           <Property Name="Department" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="Permission" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="Email" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="Payout">
-          <Key>
-            <PropertyRef Name="PayoutGUID" />
-          </Key>
-          <Property Name="PayoutGUID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SortGUID" Type="Int64" />
-          <Property Name="TrailerNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Vendor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="VendorNumber" Type="Int32" />
-          <Property Name="OrderNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
-          <Property Name="PurchaseOrderNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="InvoiceNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PackingListNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="BillOfLading" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="DateArrived" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="TimeToSort" Type="Double" />
         </EntityType>
         <EntityType Name="PalletPrice">
           <Key>
@@ -499,6 +482,25 @@
           <Property Name="Status" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="SortChoice" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="Payout">
+          <Key>
+            <PropertyRef Name="PayoutGUID" />
+          </Key>
+          <Property Name="PayoutGUID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SortGUID" Type="Int64" />
+          <Property Name="TrailerNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Vendor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="VendorNumber" Type="Int32" />
+          <Property Name="OrderNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="PurchaseOrderNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="InvoiceNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PackingListNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BillOfLading" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="DateArrived" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="TimeToSort" Type="Double" />
+          <Property Name="DateCompleted" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -598,25 +600,6 @@
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="UserGUID" ColumnName="UserGUID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Payouts">
-            <EntityTypeMapping TypeName="TrailerModel.Payout">
-              <MappingFragment StoreEntitySet="Payouts">
-                <ScalarProperty Name="TimeToSort" ColumnName="TimeToSort" />
-                <ScalarProperty Name="DateArrived" ColumnName="DateArrived" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="BillOfLading" ColumnName="BillOfLading" />
-                <ScalarProperty Name="PackingListNumber" ColumnName="PackingListNumber" />
-                <ScalarProperty Name="InvoiceNumber" ColumnName="InvoiceNumber" />
-                <ScalarProperty Name="PurchaseOrderNumber" ColumnName="PurchaseOrderNumber" />
-                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
-                <ScalarProperty Name="VendorNumber" ColumnName="VendorNumber" />
-                <ScalarProperty Name="Vendor" ColumnName="Vendor" />
-                <ScalarProperty Name="TrailerNumber" ColumnName="TrailerNumber" />
-                <ScalarProperty Name="SortGUID" ColumnName="SortGUID" />
-                <ScalarProperty Name="PayoutGUID" ColumnName="PayoutGUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -745,6 +728,26 @@
                 <ScalarProperty Name="Customer" ColumnName="Customer" />
                 <ScalarProperty Name="TrailerNumber" ColumnName="TrailerNumber" />
                 <ScalarProperty Name="SortGUID" ColumnName="SortGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Payouts">
+            <EntityTypeMapping TypeName="TrailerModel.Payout">
+              <MappingFragment StoreEntitySet="Payouts">
+                <ScalarProperty Name="DateCompleted" ColumnName="DateCompleted" />
+                <ScalarProperty Name="TimeToSort" ColumnName="TimeToSort" />
+                <ScalarProperty Name="DateArrived" ColumnName="DateArrived" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="BillOfLading" ColumnName="BillOfLading" />
+                <ScalarProperty Name="PackingListNumber" ColumnName="PackingListNumber" />
+                <ScalarProperty Name="InvoiceNumber" ColumnName="InvoiceNumber" />
+                <ScalarProperty Name="PurchaseOrderNumber" ColumnName="PurchaseOrderNumber" />
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+                <ScalarProperty Name="VendorNumber" ColumnName="VendorNumber" />
+                <ScalarProperty Name="Vendor" ColumnName="Vendor" />
+                <ScalarProperty Name="TrailerNumber" ColumnName="TrailerNumber" />
+                <ScalarProperty Name="SortGUID" ColumnName="SortGUID" />
+                <ScalarProperty Name="PayoutGUID" ColumnName="PayoutGUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

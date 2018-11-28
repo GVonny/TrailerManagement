@@ -460,6 +460,12 @@ namespace TrailerManagement.Controllers
 
                 var vendor = db.CustomersAndVendors.FirstOrDefault(v => v.Name == sort.Vendor);
 
+                var payoutCheck = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
+                if(payoutCheck != null)
+                {
+                    db.Payouts.Remove(payoutCheck);
+                }
+
                 Payout payout = new Payout()
                 {
                     TrailerNumber = sort.TrailerNumber,
@@ -499,17 +505,18 @@ namespace TrailerManagement.Controllers
                     {
                         case "CLOSED":
                         {
-                            payouts = payouts.Where(p => p.Status == "CLOSED");
+                            payouts = payouts.Where(p => p.Status == "CLOSED").OrderByDescending(p => p.DateCompleted);
                             ViewBag.Closed = true;
                             break;
                         }
                         default:
                         {
                             payouts = payouts.Where(p => p.Status == "NEW" || p.Status == "IN PROCESS");
+                            payouts = payouts.OrderByDescending(p => p.Status).ThenByDescending(p => p.DateArrived).ThenBy(p => p.Vendor);
                             break;
                         }
                     }
-                    payouts = payouts.OrderByDescending(p => p.Status).ThenByDescending(p => p.DateArrived).ThenBy(p => p.Vendor);
+                    
 
                     this.ViewData["Vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
 

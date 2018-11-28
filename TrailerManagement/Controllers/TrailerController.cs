@@ -532,19 +532,29 @@ namespace TrailerManagement.Controllers
                 //remove comments to copy information when trailer "NEED EMPTY"
                 if (UpdatedTrailer.TrailerStatus == constant.TRAILER_STATUS_NEED_EMPTY)
                 {
-                    if (!db.SortLists.Any(t => t.TrailerNumber == trailer.TrailerNumber))
+                    SortList newSort = new SortList()
                     {
-                        SortList newSort = new SortList()
+                        TrailerNumber = UpdatedTrailer.TrailerNumber,
+                        Customer = UpdatedTrailer.Customer,
+                        OrderNumber = UpdatedTrailer.OrderNumber,
+                        SortType = UpdatedTrailer.Notes,
+                        LoadStatus = UpdatedTrailer.LoadStatus,
+                        DateArrived = UpdatedTrailer.DateModified,
+                        Status = "NEW",
+                    };
+                    db.SortLists.Add(newSort);
+                }
+                
+                if(UpdatedTrailer.TrailerStatus != constant.TRAILER_STATUS_NEED_EMPTY)
+                {
+                    var sorts = db.SortLists.Where(t => t.TrailerNumber == UpdatedTrailer.TrailerNumber);
+                    
+                    if(sorts != null)
+                    {
+                        foreach (SortList sort in sorts)
                         {
-                            TrailerNumber = UpdatedTrailer.TrailerNumber,
-                            Customer = UpdatedTrailer.Customer,
-                            OrderNumber = UpdatedTrailer.OrderNumber,
-                            SortType = UpdatedTrailer.Notes,
-                            LoadStatus = UpdatedTrailer.LoadStatus,
-                            DateArrived = UpdatedTrailer.DateModified,
-                            Status = "NEW",
-                        };
-                        db.SortLists.Add(newSort);
+                            db.SortLists.Remove(sort);
+                        }
                     }
                 }
 

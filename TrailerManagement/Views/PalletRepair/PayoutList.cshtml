@@ -11,16 +11,32 @@
 </div>
 <br />
 <table class="table table-hover table-responsive">
-    <thead>
-        <tr class="font-md">
-            <th class="col-xs-4">Vendor</th>
-            <th>Trailer Number</th>
-            <th>Order Number</th>
-            <th>Date Arrived</th>
-            <th>Time to Unload</th>
-            <th>Status</th>
-        </tr>
-    </thead>
+    @if (isClosed == true)
+    {
+        <thead>
+            <tr class="font-md">
+                <th class="col-xs-4">Vendor</th>
+                <th>Trailer Number</th>
+                <th>Order Number</th>
+                <th>Date Completed</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+    }
+    else
+    {
+        <thead>
+            <tr class="font-md">
+                <th class="col-xs-4">Vendor</th>
+                <th>Trailer Number</th>
+                <th>Order Number</th>
+                <th>Date Arrived</th>
+                <th>Time to Unload</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+    }
+
     <tbody id="payouts">
         @foreach (Payout p in Model)
         {
@@ -41,8 +57,7 @@
                     <td id="customer_@p.SortGUID">@p.Vendor</td>
                     <td id="trailerNumber_@p.SortGUID">@p.TrailerNumber</td>
                     <td id="orderNumber_@p.SortGUID">@p.OrderNumber</td>
-                    <td id="dateArrived_@p.SortGUID">@p.DateArrived</td>
-                    <td id="timeToUnload_@p.SortGUID">@p.TimeToSort</td>
+                    <td id="dateArrived_@p.SortGUID">@p.DateCompleted</td>
                     <td id="status_@p.SortGUID">@p.Status</td>
                 </tr>
             }

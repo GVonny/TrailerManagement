@@ -31,7 +31,6 @@ namespace TrailerManagement.Models
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<SortImage> SortImages { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<Payout> Payouts { get; set; }
         public virtual DbSet<PalletPrice> PalletPrices { get; set; }
         public virtual DbSet<MasterStack> MasterStacks { get; set; }
         public virtual DbSet<CompletedSort> CompletedSorts { get; set; }
@@ -41,5 +40,6 @@ namespace TrailerManagement.Models
         public virtual DbSet<SafetyConcern> SafetyConcerns { get; set; }
         public virtual DbSet<CodeViolation> CodeViolations { get; set; }
         public virtual DbSet<SortList> SortLists { get; set; }
+        public virtual DbSet<Payout> Payouts { get; set; }
     }
 }

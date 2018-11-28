@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
-using System.Web;
 using System.Web.Mvc;
 using TrailerManagement.Models;
 
@@ -24,7 +21,7 @@ namespace TrailerManagement.Controllers
                 client.Timeout = 100000;
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
                 client.UseDefaultCredentials = false;
-                client.Credentials = new NetworkCredential("grant.vonhaden@palletusa.com", TrailerManagement.Properties.Settings.Default.EmailPassword);
+                client.Credentials = new NetworkCredential("grant.vonhaden@palletusa.com", Properties.Settings.Default.EmailPassword);
                 
                 string vendor;
                 string trailerNumber;
@@ -59,19 +56,26 @@ namespace TrailerManagement.Controllers
                 return RedirectToAction(actionName: "SortList", controllerName: "PalletRepair");
             }
         }
-
+        
         public ActionResult CompletePayout(int sortID)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
                 var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
+                DateTime date = DateTime.Now;
+                var currentDate = date.ToString();
+                var day = currentDate.Substring(3, 2);
+                var month = currentDate.Substring(0, 2);
+                var year = currentDate.Substring(6, 4);
+                payout.DateCompleted = (year + "-" + month + "-" + day);
+                db.SaveChanges();
 
                 SmtpClient client = new SmtpClient("smtp.outlook.com", 587);
                 client.EnableSsl = true;
                 client.Timeout = 100000;
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
                 client.UseDefaultCredentials = false;
-                client.Credentials = new NetworkCredential("grant.vonhaden@palletusa.com", TrailerManagement.Properties.Settings.Default.EmailPassword);
+                client.Credentials = new NetworkCredential("grant.vonhaden@palletusa.com", Properties.Settings.Default.EmailPassword);
 
                 string vendor;
                 string body = "";

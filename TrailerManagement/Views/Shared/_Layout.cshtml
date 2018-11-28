@@ -23,7 +23,7 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        @if (Convert.ToInt32(Session["permission"]) > 10 && (Convert.ToInt32(Session["department"]) != 4500 && Convert.ToInt32(Session["department"]) != 2100))
+                        @if (Convert.ToInt32(Session["permission"]) > 10 && (Convert.ToInt32(Session["department"]) != 4500 && (Convert.ToInt32(Session["department"]) != 2100 || Convert.ToInt32(Session["permission"]) > 30)))
                         {
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -31,13 +31,12 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a href="~/Trailer/ActiveTrailerList">Active List</a></li>
-                                    @if (Convert.ToInt32(Session["permission"]) > 20)
+                                    @if (Convert.ToInt32(Session["permission"]) > 30 && (Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 10000))
                                     {
                                         <li><a href="~/Trailer/TrailerList">Master List</a></li>
                                         <li><a href="~/Trailer/InactiveTrailerList">Inactive List</a></li>
-                                    }
-                                    @if (Convert.ToInt32(Session["permission"]) > 30)
-                                    {
+                                    
+                                    
                                         <li role="separator" class="divider"></li>
                                         <li><a href="~/Trailer/CreateTrailer">Create Trailer</a></li>
                                     }
