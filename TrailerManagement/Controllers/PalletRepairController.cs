@@ -52,6 +52,17 @@ namespace TrailerManagement.Controllers
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
             }
         }
+
+        public ActionResult RemoveSort(int sortID)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var sort = db.SortLists.FirstOrDefault(s => s.SortGUID == sortID);
+                db.SortLists.Remove(sort);
+                db.SaveChanges();
+                return RedirectToAction(actionName: "SortList", controllerName: "PalletRepair");
+            }
+        }
        
         public ActionResult SortTrailer(int sortID, int? stackNumber, int? numberOfPeople, bool? imageUploaded)
         {
