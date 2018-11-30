@@ -3,14 +3,13 @@
     ViewBag.Title = "Completed Payout";
     int counter = 1;
     var payout = Model.Payout;
+    var startsWith = Session["startsWith"];
 }
 <br class="no-print">
-<table class="col-xs-12">
-        
-</table>
+<table class="col-xs-12"></table>
 <table class="table table-responsive col-xs-12">
     <thead>
-        <tr >
+        <tr>
             <th class="text-center" colspan="2"><h4><strong>Received From</strong></h4></th>
         </tr>
     </thead>
@@ -75,7 +74,7 @@
             </tr>
             counter++;
         }
-        
+
     </tbody>
     <tfoot>
         <tr>
@@ -87,9 +86,20 @@
 </table>
 
 <a class="no-print btn btn-primary" href="javascript:window.print()">Click to Print This Page</a>
+@if (Session["username"] != null)
+{
+    if (startsWith.Equals(""))
+    {
+        <a class="no-print btn btn-warning" href="/PalletRepair/PayoutList?status=CLOSED">Payouts</a>
+    }
+    else
+    {
+        <a class="no-print btn btn-warning" href="/PalletRepair/PayoutList?status=CLOSED&startsWith=@startsWith">Payouts</a>
+    }
 
-<a class="no-print btn btn-primary" href="/PalletRepair/PayoutList">Payouts</a>
-<a class="no-print btn btn-primary" href="/PalletRepair/ViewPayout?sortID=@payout.SortGUID&isCompleted=true">Edit Payout</a>
+    <a class="no-print btn btn-danger" href="/PalletRepair/ViewPayout?sortID=@payout.SortGUID&isCompleted=true">Edit Payout</a>
+}
+
 
 @section scripts
 {
@@ -106,7 +116,7 @@
             {
                 $('#header').html(vendor + " - " + '@payout.VendorNumber');
             }
-            
+
             var grandTotal = 0;
             $('#palletTypes tr').each(function ()
             {
@@ -127,10 +137,10 @@
                 $('#date_' + id).html(getCurrentDate());
 
                 var total = 0;
-                
+
                 var quantity = $('#quantity_' + id).html()
                 total = cost * parseFloat(quantity);
-                
+
 
                 var partNumber = $('#partNumber_' + id).html();
                 if (partNumber == "DEDUCTION")
@@ -193,10 +203,10 @@
                         currentMonth = "12";
                         break;
                 }
-                
+
                 currentDate = (currentMonth + "-" + currentDay + "-" + currentYear);
                 return currentDate;
             }
         });
-    </script>    
+    </script>
 }

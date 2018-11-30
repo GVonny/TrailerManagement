@@ -5,6 +5,14 @@
 <br />
 @if ((Convert.ToInt32(Session["permission"]) > 20))
 {
+    if (Convert.ToInt32(Session["permission"]) > 30 && (Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000))
+    {
+        <div class="float-left">
+            <a href="/PalletRepair/SortList" class="btn btn-primary">Sort List</a>
+            <a href="/PalletRepair/PayoutList" class="btn btn-primary">Payout List</a>
+        </div>
+    }
+
     <div class="text-center no-print">Date Modified</div>
     <div id="colorCode" class="text-center no-print">
         <span class="green">Green: less than 2 weeks old</span>&nbsp;|

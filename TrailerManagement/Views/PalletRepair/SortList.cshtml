@@ -6,7 +6,13 @@
 
 <h2 class="float-left">Sort List</h2>
 <a href="CreateSort" class="btn btn-primary float-left" style="margin-top:20px; margin-left:10px">Add Trailer</a>
-@if(Convert.ToInt32(Session["permission"]) > 30)
+@if (Convert.ToInt32(Session["permission"]) >= 40)
+{
+    <a href="PayoutList" class="btn btn-primary float-left" style="margin-top:20px; margin-left:10px">Payout List</a>
+    <a href="/Trailer/ActiveTrailerList" class="btn btn-primary" style="margin-top:20px; margin-left:10px">Active List</a>
+}
+
+@if (Convert.ToInt32(Session["permission"]) > 30)
 {
     <div class="float-right">
         <label for="showClosedSorts">Show Closed Sorts</label>
@@ -28,31 +34,31 @@
     <tbody id="removals">
         @foreach (SortList t in Model.Trailers)
         {
-        <tr class="product-row" id="@t.SortGUID">
-            <td id="trailerNumber_@t.SortGUID">@t.TrailerNumber</td>
-            <td id="customer_@t.SortGUID">@t.Customer</td>
-            <td class="hidden" id="vendor_@t.SortGUID">@t.Vendor</td>
-            <td id="loadStatus_@t.SortGUID">@t.LoadStatus</td>
-            <td id="sortType_@t.SortGUID">@t.SortType</td>
-            <td id="dateArrived_@t.SortGUID">@t.DateArrived</td>
-            @if (Convert.ToInt32(Session["permission"]) > 30)
-            {
-                if (t.Status == "NEW")
+            <tr class="product-row" id="@t.SortGUID">
+                <td id="trailerNumber_@t.SortGUID">@t.TrailerNumber</td>
+                <td id="customer_@t.SortGUID">@t.Customer</td>
+                <td class="hidden" id="vendor_@t.SortGUID">@t.Vendor</td>
+                <td id="loadStatus_@t.SortGUID">@t.LoadStatus</td>
+                <td id="sortType_@t.SortGUID">@t.SortType</td>
+                <td id="dateArrived_@t.SortGUID">@t.DateArrived</td>
+                @if (Convert.ToInt32(Session["permission"]) > 30)
                 {
-                    <td id="remove_@t.SortGUID"><a href="/PalletRepair/RemoveSort?sortID=@t.SortGUID">remove</a></td>
+                    if (t.Status == "NEW")
+                    {
+                        <td id="remove_@t.SortGUID"><a href="/PalletRepair/RemoveSort?sortID=@t.SortGUID">remove</a></td>
+                    }
                 }
-            }
-            @if (t.Status == "OPEN" || t.Status == "CLOSED")
-            {
-                <td id="status_@t.SortGUID">@t.Status</td>
-            }
+                @if (t.Status == "OPEN" || t.Status == "CLOSED")
+                {
+                    <td id="status_@t.SortGUID">@t.Status</td>
+                }
 
 
-            <td id="numberOfPeopleToStart_@t.SortGUID" class="hidden">@t.NumberOfPeopleToStart</td>
-            <td id="maxStackNumber_@t.SortGUID" class="hidden">@t.MaxStackNumber</td>
+                <td id="numberOfPeopleToStart_@t.SortGUID" class="hidden">@t.NumberOfPeopleToStart</td>
+                <td id="maxStackNumber_@t.SortGUID" class="hidden">@t.MaxStackNumber</td>
 
-            <td class="hidden" id="sortChoice_@t.SortGUID">@t.SortChoice</td>
-        </tr>
+                <td class="hidden" id="sortChoice_@t.SortGUID">@t.SortChoice</td>
+            </tr>
         }
     </tbody>
 </table>
@@ -92,12 +98,12 @@
                 </button>
                 <h2 class="modal-title">Additional Info for <span id="vendorName"></span></h2>
 
-                @using (Html.BeginForm("CreateSortImage", "PalletRepair", FormMethod.Post, new { enctype = "multipart/form-data" })) 
+                @using (Html.BeginForm("CreateSortImage", "PalletRepair", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
                     @Html.AntiForgeryToken()
                     <div class="form-horizontal">
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        
+
                         <div class="modal-body">
                             <div class="form-group hidden">
                                 <input type="number" class="form-control" id="sortID" name="sortID">
@@ -105,7 +111,7 @@
                             </div>
                             <div class="form-group">
                                 <strong>Vendor Confirmation</strong>
-                                @Html.DropDownList("Vendors", null, "- - - If vendor is not in list, leave blank - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "vendors", @name = "vendor"})
+                                @Html.DropDownList("Vendors", null, "- - - If vendor is not in list, leave blank - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "vendors", @name = "vendor" })
                                 <br>
                             </div>
                             <div class="form-group">
@@ -115,7 +121,7 @@
                             </div>
                             <div class="form-group">
                                 <strong>Initial Image Upload</strong>
-                                 <input type="file" name="ImageFile" id="ImageFile">
+                                <input type="file" name="ImageFile" id="ImageFile">
                             </div>
                             <div class="form-group">
                                 <strong>Image Note</strong>
@@ -158,7 +164,7 @@
                     if ($('#numberOfPeopleToStart_' + id).html() == "")
                     {
                         $('#sortID').val(id);
-                        
+
                         var vendor = $('#customer_' + id).html();
                         $('#vendorName').html(vendor);
                         $('#additionalInfoModal').modal();
@@ -168,7 +174,12 @@
                     }
                     else
                     {
-                        if ($('#sortChoice_' + id).html() == "STACK")
+                        var status = $('#status_' + id).html();
+                        if (status == "CLOSED")
+                        {
+                            location.href = "/PalletRepair/CompleteSortSummary?sortID=" + id;
+                        }
+                        else if ($('#sortChoice_' + id).html() == "STACK")
                         {
                             location.href = "/PalletRepair/SortTrailer?sortID=" + id + "&numberOfPeople=" + $('#numberOfPeopleToStart_' + id).html();
                         }

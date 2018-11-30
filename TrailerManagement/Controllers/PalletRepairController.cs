@@ -43,7 +43,7 @@ namespace TrailerManagement.Controllers
 
                     this.ViewData["Vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
 
-                    model.Trailers = trailers.OrderByDescending(t => t.Status).ThenByDescending(t => t.DateArrived).ToList();
+                    model.Trailers = trailers.OrderByDescending(t => t.Status).ThenByDescending(t => t.DateArrived).ThenBy(t => t.Customer).ToList();
                     return View(model);
                 }
             }
@@ -326,6 +326,39 @@ namespace TrailerManagement.Controllers
             }
         }
 
+        public ActionResult CompleteSortSummary(int sortID)
+        {
+            if (Session["username"] == null)
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
+            }
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
+            {
+                using (TrailerEntities db = new TrailerEntities())
+                {
+                    dynamic model = new ExpandoObject();
+
+                    var trailer = db.MasterStacks.Where(t => t.SortGUID == sortID).OrderBy(t => t.StackNumber);
+                    model.Trailer = trailer.ToList();
+
+                    var stackNumber = trailer.Max(t => t.StackNumber);
+
+                    this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "DEDUCTION" && c.Type != "SCRAP").OrderBy(c => c.Description), "PartNumber", "Description").ToList();
+
+                    var sort = db.SortLists.FirstOrDefault(s => s.SortGUID == sortID);
+                    model.Sort = sort;
+                    model.People = sort.NumberOfPeopleToStart;
+                    model.StackNumber = stackNumber;
+
+                    return View(model);
+                }
+            }
+            else
+            {
+                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+        }
+
         public ActionResult SortConfirmation(int sortID)
         {
             if (Session["username"] == null)
@@ -500,7 +533,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult PayoutList(string status)
+        public ActionResult PayoutList(string status, string startsWith)
         {
             if (Session["username"] == null)
             {
@@ -510,28 +543,50 @@ namespace TrailerManagement.Controllers
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
+                    dynamic model = new ExpandoObject();
                     var payouts = from x in db.Payouts select x;
-                    
+
+                    Session["startsWith"] = ""; 
                     switch (status)
                     {
                         case "CLOSED":
                         {
-                            payouts = payouts.Where(p => p.Status == "CLOSED").OrderByDescending(p => p.DateCompleted).ThenBy(p => p.Vendor);
+                            if(startsWith != null && startsWith != "ALL")
+                            {
+                                payouts = payouts.Where(p => p.Vendor.StartsWith(startsWith) && p.Status == "CLOSED").OrderBy(p => p.Vendor).ThenByDescending(p => p.DateCompleted);
+
+                                Session["startsWith"] = startsWith;
+                            }
+                            else
+                            {
+                                payouts = payouts.Where(p => p.Status == "CLOSED").OrderByDescending(p => p.DateCompleted).ThenBy(p => p.Vendor);
+                            }
                             ViewBag.Closed = true;
                             break;
                         }
                         default:
                         {
-                            payouts = payouts.Where(p => p.Status == "NEW" || p.Status == "IN PROCESS");
-                            payouts = payouts.OrderByDescending(p => p.Status).ThenByDescending(p => p.DateArrived).ThenBy(p => p.Vendor);
+                            payouts = payouts.Where(p => p.Status == "NEW" || p.Status == "IN PROCESS").OrderByDescending(p => p.Status).ThenByDescending(p => p.DateArrived).ThenBy(p => p.Vendor);
                             break;
                         }
                     }
-                    
+
+                    var closedPayouts = db.Payouts.Where(p => p.Status == "CLOSED").OrderBy(p => p.Vendor);
+                    List<string> startingLetters = new List<string>();
+                    foreach(Payout payout in closedPayouts)
+                    {
+                        var startingLetter = payout.Vendor.Substring(0,1);
+                        if(!startingLetters.Contains(startingLetter))
+                        {
+                            startingLetters.Add(startingLetter);
+                        }
+                    }
 
                     this.ViewData["Vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
 
-                    return View(payouts.ToList());
+                    model.Payouts = payouts.ToList();
+                    model.StartingLetters = startingLetters;
+                    return View(model);
                 }
             }
             else
@@ -546,23 +601,7 @@ namespace TrailerManagement.Controllers
             {
                 var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
                 payout.Status = "CLOSED";
-
-                //var sort = db.SortLists.FirstOrDefault(s => s.SortGUID == sortID);
-
-                //var masterStacks = db.MasterStacks.Where(m => m.SortGUID == sortID);
-                //foreach(MasterStack stack in masterStacks)
-                //{
-                //    db.MasterStacks.Remove(stack);
-                //}
-
-                //var completedStacks = db.CompletedSorts.Where(c => c.SortGUID == sortID);
-
-                //foreach(CompletedSort part in completedStacks)
-                //{
-                //    db.CompletedSorts.Remove(part);
-                //}
-
-                //db.Payouts.Remove(payout);
+                
                 db.SaveChanges();
                 return RedirectToAction(actionName: "PayoutList", controllerName: "PalletRepair");
             }
@@ -621,7 +660,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult ViewCompletedPayout(int sortID)
+        public ActionResult ViewCompletedPayout(int sortID, string startsWith)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
@@ -1378,11 +1417,34 @@ namespace TrailerManagement.Controllers
             using (TrailerEntities db = new TrailerEntities())
             {
                 var pallet = db.PalletTypes.Find(id);
-                pallet.PartNumber = palletType.PartNumber;
-                pallet.Description = palletType.Description;
+                if(palletType.PartNumber != null)
+                {
+                    pallet.PartNumber = palletType.PartNumber.ToUpper();
+                }
+                else
+                {
+                    pallet.PartNumber = palletType.PartNumber;
+                }
+
+                if (palletType.Description != null)
+                {
+                    pallet.Description = palletType.Description.ToUpper();
+                }
+                else
+                {
+                    pallet.Description = palletType.Description;
+                }
                 pallet.Type = palletType.Type;
                 pallet.TagsRequired = palletType.TagsRequired;
-                pallet.PutAwayLocation = palletType.PutAwayLocation;
+                if(palletType.PutAwayLocation != null)
+                {
+                    pallet.PutAwayLocation = palletType.PutAwayLocation.ToUpper();
+                }
+                else
+                {
+                    pallet.PutAwayLocation = palletType.PutAwayLocation;
+                }
+                
                 pallet.Status = palletType.Status;
 
                 db.SaveChanges();
