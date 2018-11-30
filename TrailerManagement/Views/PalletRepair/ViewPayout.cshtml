@@ -3,6 +3,7 @@
     ViewBag.Title = "Payout";
     var payout = Model.Payout;
     var vendor = Model.Vendor;
+    var isCompleted = Model.IsCompleted;
 }
 
 <br>
@@ -21,7 +22,7 @@
                     <div class="text-center" style="color:red">
                         @vendor.PayoutDescription
                     </div>
-                    
+
                 }
             </th>
         </tr>
@@ -104,9 +105,26 @@
 </div>
 <br>
 
-<input type="button" id="finishPayout" value="Finish Payout" class="btn btn-primary float-right">
+@if (isCompleted == true)
+{
+    <input type="button" id="finishPayout" value="Save Changes" class="btn btn-primary float-right">
+}
+else
+{
+    <input type="button" id="finishPayout" value="Finish Payout" class="btn btn-primary float-right">
+}
 
-<a href="PayoutList" class="btn btn-warning float-right" style="margin-right:50px">Finish Later</a>
+@if (isCompleted == false)
+{
+    <input type="button" id="finishScrapPayout" value="Close Scrap Payout" class="btn btn-primary float-right" style="margin-right:50px;" />
+    <a href="PayoutList" class="btn btn-warning float-right" style="margin-right:50px">Finish Later</a>
+}
+else
+{
+    <a href="PayoutList?status=CLOSED" class="btn btn-warning float-right" style="margin-right:50px">Payout List</a>
+}
+
+
 <br>
 <br>
 <br>
@@ -427,11 +445,44 @@
                 <h2 class="modal-title">Alert!</h2>
             </div>
             <div class="modal-body" id="confirmText">
-                Are you sure you want to finish payout? Future changes can be made after completing.
+                @if (isCompleted == true)
+                {
+                    <div>
+                        Are you sure you want to save changes to already completed payout? Future changes can be made after completing.
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        Are you sure you want to finish payout? Future changes can be made after completing.
+                    </div>
+                }
             </div>
+
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal">Cancel</button>
                 <button type="button" id="confirmFinishPayout" class="btn btn-primary" data-dismiss="modal" data-toggle="modal">Finish</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Close Scrap Payout Modal -->
+<div id="closeScrapPayoutModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span>aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                Are you sure you want to close this scrap payout? Future changes can be made after completing.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                <a href="/PalletRepair/RemovePayout?sortID=@payout.SortGUID" class="float-right btn btn-primary">Finish</a>
             </div>
         </div>
     </div>
@@ -471,18 +522,10 @@
                 $('#updatePayoutVendor').modal();
             });
 
-            @*$('#submit2').on('click', function ()
+            $('#finishScrapPayout').on('click', function ()
             {
-                var sortID = '@payout.SortGUID';
-                console.log("/PalletRepair/ThisIsAMethod?sortID=" + sortID + "&vendors=" + $('#vendors').val());
-                location.href = "/PalletRepair/ThisIsAMethod?sortID=" + sortID + "&vendors=" + $('#vendors').val();
-            });*@
-
-            //$('#updateAdditionalInfo').on('click', function ()
-            //{
-            //    console.log("/PalletRepair/UpdatePayoutInfo?sortID=" + sortID + "&invoiceNumber=" + $('#invoiceNumber').val() + "&billOfLading=" + $('#billOfLading').val() + "&packingListNumber=" + $('#packingListNumber').val() + "&purchaseOrderNumber=" + $('#purchaseOrderNumber').val() + "&palletOrderNumber=" + $('#palletOrderNumber').val() + "&vendor=" + $('#vendors').val());
-            //    //location.href = "/PalletRepair/UpdatePayoutInfo?sortID=" + sortID + "&invoiceNumber=" + $('#invoiceNumber').val() + "&billOfLading=" + $('#billOfLading').val() + "&packingListNumber=" + $('#packingListNumber').val() + "&purchaseOrderNumber=" + $('#purchaseOrderNumber').val() + "&palletOrderNumber=" + $('#palletOrderNumber').val() + "&vendor=" + $('#vendors').val();
-            //});
+                $('#closeScrapPayoutModal').modal();
+            });
 
             var editID;
             $('.quantityLink').on('click', function ()

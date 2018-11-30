@@ -545,7 +545,24 @@ namespace TrailerManagement.Controllers
             using (TrailerEntities db = new TrailerEntities())
             {
                 var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
-                db.Payouts.Remove(payout);
+                payout.Status = "CLOSED";
+
+                //var sort = db.SortLists.FirstOrDefault(s => s.SortGUID == sortID);
+
+                //var masterStacks = db.MasterStacks.Where(m => m.SortGUID == sortID);
+                //foreach(MasterStack stack in masterStacks)
+                //{
+                //    db.MasterStacks.Remove(stack);
+                //}
+
+                //var completedStacks = db.CompletedSorts.Where(c => c.SortGUID == sortID);
+
+                //foreach(CompletedSort part in completedStacks)
+                //{
+                //    db.CompletedSorts.Remove(part);
+                //}
+
+                //db.Payouts.Remove(payout);
                 db.SaveChanges();
                 return RedirectToAction(actionName: "PayoutList", controllerName: "PalletRepair");
             }
@@ -565,10 +582,15 @@ namespace TrailerManagement.Controllers
                 var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
                 if(isCompleted != null)
                 {
+                    model.IsCompleted = isCompleted;
                     if (isCompleted == false)
                     {
                         payout.Status = "IN PROCESS";
                     }
+                }
+                else
+                {
+                    model.IsCompleted = null;
                 }
                 
                 db.SaveChanges();

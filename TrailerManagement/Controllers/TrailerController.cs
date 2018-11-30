@@ -530,7 +530,7 @@ namespace TrailerManagement.Controllers
                 TrailerList trailerEdit = db.TrailerLists.FirstOrDefault(t => t.TrailerNumber == UpdatedTrailer.TrailerNumber);
 
                 //remove comments to copy information when trailer "NEED EMPTY"
-                if (UpdatedTrailer.TrailerStatus == constant.TRAILER_STATUS_NEED_EMPTY)
+                if (trailer.TrailerStatus != constant.TRAILER_STATUS_NEED_EMPTY && UpdatedTrailer.TrailerStatus == constant.TRAILER_STATUS_NEED_EMPTY)
                 {
                     SortList newSort = new SortList()
                     {
