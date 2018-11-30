@@ -65,12 +65,12 @@
         {
             <tr class="product-row" id="@t.CompletedSortGUID">
                 <td class="text-right"><strong>@counter</strong></td>
-                <td class="text-center" id="date_@t.CompletedSortGUID"></td>
+                <td class="text-center col-xs-2" id="date_@t.CompletedSortGUID"></td>
                 <td class="text-center" id="partNumber_@t.CompletedSortGUID">@t.PartNumber</td>
                 <td class="text-center" id="quantity_@t.CompletedSortGUID">@t.Quantity</td>
                 <td id="description_@t.CompletedSortGUID">@t.Description</td>
                 <td class="text-right" id="price_@t.CompletedSortGUID">@t.Cost</td>
-                <td class="text-right" id="total_@t.CompletedSortGUID"></td>
+                <td class="text-right" id="total_@t.CompletedSortGUID" style="width:15%"></td>
             </tr>
             counter++;
         }
@@ -78,8 +78,8 @@
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="5"></td>
-            <td class="text-right"><strong>Total Due:</strong></td>
+            <td colspan="4"></td>
+            <td colspan="2" class="text-right"><strong>Total Due:</strong></td>
             <td class="text-center"><strong id="grandTotal"></strong></td>
         </tr>
     </tfoot>
