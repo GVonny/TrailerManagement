@@ -1109,6 +1109,15 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
+                var trailerNumberTemp = trailerNumber;
+                if(trailerNumberTemp.Contains("USA"))
+                {
+                    var spaceIndex = trailerNumberTemp.IndexOf(" ");
+                    if(spaceIndex > 0)
+                    {
+
+                    }
+                }
                 SortList sort = new SortList();
                 {
                     sort.TrailerNumber = trailerNumber;

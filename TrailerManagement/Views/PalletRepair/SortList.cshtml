@@ -37,7 +37,10 @@
             <td id="dateArrived_@t.SortGUID">@t.DateArrived</td>
             @if (Convert.ToInt32(Session["permission"]) > 30)
             {
-                <td id="remove_@t.SortGUID"><a href="/PalletRepair/RemoveSort?sortID=@t.SortGUID">remove</a></td>
+                if (t.Status == "NEW")
+                {
+                    <td id="remove_@t.SortGUID"><a href="/PalletRepair/RemoveSort?sortID=@t.SortGUID">remove</a></td>
+                }
             }
             @if (t.Status == "OPEN" || t.Status == "CLOSED")
             {
