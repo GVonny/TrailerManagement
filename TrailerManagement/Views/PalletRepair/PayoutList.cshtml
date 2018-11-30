@@ -18,6 +18,7 @@
                 <th class="col-xs-4">Vendor</th>
                 <th>Trailer Number</th>
                 <th>Order Number</th>
+                <th>Date Arrived</th>
                 <th>Date Completed</th>
                 <th>Status</th>
             </tr>
@@ -49,6 +50,7 @@
                     <td id="dateArrived_@p.SortGUID">@p.DateArrived</td>
                     <td id="timeToUnload_@p.SortGUID">@p.TimeToSort</td>
                     <td id="status_@p.SortGUID">@p.Status</td>
+                    <td id="remove_@p.SortGUID"><a href="/PalletRepair/RemovePayout?sortID=@p.SortGUID">remove</a></td>
                 </tr>
             }
             else
@@ -57,6 +59,7 @@
                     <td id="customer_@p.SortGUID">@p.Vendor</td>
                     <td id="trailerNumber_@p.SortGUID">@p.TrailerNumber</td>
                     <td id="orderNumber_@p.SortGUID">@p.OrderNumber</td>
+                    <td id="dateArrived_@p.SortGUID">@p.DateArrived</td>
                     <td id="dateArrived_@p.SortGUID">@p.DateCompleted</td>
                     <td id="status_@p.SortGUID">@p.Status</td>
                 </tr>

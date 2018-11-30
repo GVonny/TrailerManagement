@@ -20,7 +20,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
             { 
                 using (TrailerEntities db = new TrailerEntities())
                 {
@@ -70,7 +70,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
@@ -132,7 +132,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
@@ -299,7 +299,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
@@ -332,7 +332,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
@@ -506,7 +506,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
@@ -516,7 +516,7 @@ namespace TrailerManagement.Controllers
                     {
                         case "CLOSED":
                         {
-                            payouts = payouts.Where(p => p.Status == "CLOSED").OrderByDescending(p => p.DateCompleted);
+                            payouts = payouts.Where(p => p.Status == "CLOSED").OrderByDescending(p => p.DateCompleted).ThenBy(p => p.Vendor);
                             ViewBag.Closed = true;
                             break;
                         }
@@ -537,6 +537,17 @@ namespace TrailerManagement.Controllers
             else
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+        }
+
+        public ActionResult RemovePayout(int sortID)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
+                db.Payouts.Remove(payout);
+                db.SaveChanges();
+                return RedirectToAction(actionName: "PayoutList", controllerName: "PalletRepair");
             }
         }
 
@@ -1079,7 +1090,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
@@ -1120,7 +1131,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
@@ -1146,7 +1157,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
             {
                 return View();
             }
@@ -1180,7 +1191,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
@@ -1240,7 +1251,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
@@ -1262,7 +1273,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
@@ -1282,7 +1293,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
             {
                 return View();
             }
@@ -1316,7 +1327,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
@@ -1354,7 +1365,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
@@ -1376,7 +1387,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
@@ -1402,7 +1413,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
@@ -1456,7 +1467,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
@@ -1497,7 +1508,7 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {

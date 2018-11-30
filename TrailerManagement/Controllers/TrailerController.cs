@@ -553,7 +553,7 @@ namespace TrailerManagement.Controllers
                     {
                         foreach (SortList sort in sorts)
                         {
-                            db.SortLists.Remove(sort);
+                            sort.Status = "CLOSED";
                         }
                     }
                 }

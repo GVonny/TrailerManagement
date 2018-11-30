@@ -21,6 +21,20 @@ namespace TrailerManagement.Models
         public string TRAILER_STATUS_NEED_WORK { get; }
         public string TRAILER_STATUS_IN_TRANSIT { get; }
         public string TRAILER_STATUS_DELIVERED { get; }
+
+        public int DEPARTMENT_ASSEMBLY { get; }
+        public int DEPARTMENT_AUTOMATED_ASSEMBLY { get; }
+        public int DEPARTMENT_DIRECT_SUPPLY_MANAGEMENT { get; }
+        public int DEPARTMENT_PALLET_REPAIR { get; }
+        public int DEPARTMENT_SAW_SHOP { get; }
+        public int DEPARTMENT_MAINTANANCE { get; }
+        public int DEPARTMENT_TRANSPORTATION { get; }
+        public int DEPARTMENT_PURCHASING { get; }
+        public int DEPARTMENT_HR_SAFETY { get; }
+        public int DEPARTMENT_SALES { get; }
+        public int DEPARTMENT_G_AND_A { get; }
+        public int DEPARTMENT_SUPER_ADMIN { get; }
+        
         
         public Constants()
         {
@@ -36,6 +50,19 @@ namespace TrailerManagement.Models
             TRAILER_STATUS_NEED_WORK = "5";
             TRAILER_STATUS_IN_TRANSIT = "6";
             TRAILER_STATUS_DELIVERED = "7";
+
+            DEPARTMENT_ASSEMBLY = 1100;
+            DEPARTMENT_AUTOMATED_ASSEMBLY = 1200;
+            DEPARTMENT_DIRECT_SUPPLY_MANAGEMENT = 1900;
+            DEPARTMENT_PALLET_REPAIR = 2100;
+            DEPARTMENT_SAW_SHOP = 3100;
+            DEPARTMENT_MAINTANANCE = 4200;
+            DEPARTMENT_TRANSPORTATION = 4300;
+            DEPARTMENT_PURCHASING = 4400;
+            DEPARTMENT_HR_SAFETY = 4500;
+            DEPARTMENT_SALES = 8100;
+            DEPARTMENT_G_AND_A = 9100;
+            DEPARTMENT_SUPER_ADMIN = 10000;
         }
     }
 }
