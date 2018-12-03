@@ -5,20 +5,22 @@
 }
 
 <h2 class="float-left">Sort List</h2>
-<a href="CreateSort" class="btn btn-primary float-left" style="margin-top:20px; margin-left:10px">Add Trailer</a>
+
 @if (Convert.ToInt32(Session["permission"]) >= 40)
 {
     <a href="PayoutList" class="btn btn-primary float-left" style="margin-top:20px; margin-left:10px">Payout List</a>
     <a href="/Trailer/ActiveTrailerList" class="btn btn-primary" style="margin-top:20px; margin-left:10px">Active List</a>
 }
-
+    <a href="CreateSort" class="btn btn-primary float-left" style="margin-top:20px; margin-left:10px">Add Trailer</a>
 @if (Convert.ToInt32(Session["permission"]) > 30)
 {
     <div class="float-right">
         <label for="showClosedSorts">Show Closed Sorts</label>
-        <input type="checkbox" id="showClosedSorts" name="showClosedSorts" style="margin-top:30px">
+        <input type="checkbox" id="showClosedSorts" name="showClosedSorts" style="margin-top:40px">
     </div>
 }
+
+
 <br />
 
 <table class="table table-hover table-responsive">

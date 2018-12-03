@@ -6,20 +6,38 @@
     var startsWith = Session["startsWith"];
 }
 
-<div class="row">
-    <div class="col-xs-1">
-        <h2 class="float-left">Payouts</h2>
-    </div>
-    <div class="col-xs-3">
-        <a href="SortList" class="btn btn-primary" style="margin-top:20px; margin-left:25px">Sort List</a>
-        <a href="/Trailer/ActiveTrailerList" class="btn btn-primary" style="margin-top:20px; margin-left:10px">Active List</a>
-    </div>
+<div class="row" style="margin-top:-15px">
+    @if (isClosed == true)
+    {
+        <div class="col-xs-2" style="width:22%; margin-top:15px">
+            <h2 class="float-left">Closed Payouts</h2>
+        </div>
+    }
+    else
+    {
+        <div class="col-xs-1" style="margin-top:15px">
+            <h2 class="float-left">Payouts</h2>
+        </div>
+    }
+
+        <div class="col-xs-3" style="margin-right:-65px;">
+            @if (isClosed == true)
+            {
+                <a href="SortList" class="btn btn-primary" style="margin-top:35px; margin-left:-30px">Sort List</a>
+            }
+            else
+            {
+                <a href="SortList" class="btn btn-primary" style="margin-top:35px; margin-left:25px;">Sort List</a>
+            }
+            
+            <a href="/Trailer/ActiveTrailerList" class="btn btn-primary" style="margin-top:35px; margin-left:10px">Active List</a>
+        </div>
     <label for="showClosedPayouts" class="float-right" style="margin-top:52px">Show Closed Payouts</label>
     <input type="checkbox" class="float-right" id="showClosedPayouts" name="showClosedPayouts" style="margin-top:55px">
     @if (isClosed == true)
     {
-        <div class="col-xs-5 float-right" style="font-size:1.1em; margin-top:40px; margin-left:60px">
-            
+        <div class="col-xs-5 float-left" style="font-size:1.1em; margin-top:50px;margin-left:-40px">
+
             |&nbsp;<a href="PayoutList?status=CLOSED">ALL</a>&nbsp;|&nbsp;
 
             @foreach (var letter in startingLetters)

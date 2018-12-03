@@ -218,7 +218,7 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateSafetyConcern(string area, string conditionNoted, string codeTypes, string codeTypes2, string codeTypes3, string correctiveAction, HttpPostedFileBase ImageFile)
+        public ActionResult CreateSafetyConcern(string area, string conditionNoted, string codeTypes, string codeTypes2, string codeTypes3, string correctiveAction, string severity, HttpPostedFileBase ImageFile)
         {
             if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
             {
@@ -242,9 +242,17 @@ namespace TrailerManagement.Controllers
                         Area = area,
                         ConditionNoted = conditionNoted,
                         CorrectiveActionMeasure = correctiveAction,
-                        Severity = "NEW",
+                        
                         ImagePath = path,
                     };
+                    if(severity == "")
+                    {
+                        newConcern.Severity = "LOW";
+                    }
+                    else
+                    {
+                        newConcern.Severity = severity;
+                    }
                     db.SafetyConcerns.Add(newConcern);
                     db.SaveChanges();
 
@@ -328,7 +336,7 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditSafetyConcern([Bind(Include = "SafetyConcernGUID,Area,ConditionNoted,CorrectiveActionMeasure")] SafetyConcern safetyConcern, string codeTypes, string codeTypes2, string codeTypes3, HttpPostedFileBase ImageFile)
+        public ActionResult EditSafetyConcern([Bind(Include = "SafetyConcernGUID,Area,ConditionNoted,CorrectiveActionMeasure,Severity")] SafetyConcern safetyConcern, string codeTypes, string codeTypes2, string codeTypes3, HttpPostedFileBase ImageFile)
         {
             if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
             {
@@ -338,6 +346,7 @@ namespace TrailerManagement.Controllers
                     concern.Area = safetyConcern.Area;
                     concern.ConditionNoted = safetyConcern.ConditionNoted;
                     concern.CorrectiveActionMeasure = safetyConcern.CorrectiveActionMeasure;
+                    concern.Severity = safetyConcern.Severity;
 
                     var path = "";
                     if (ImageFile != null)

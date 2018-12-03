@@ -158,6 +158,18 @@ a.special {
     color: darkorange;
 }
 
+
+.greenBackground {
+    background-color: green !important;
+}
+.yellowBackground {
+    background-color: darkorange !important;
+}
+.redBackground {
+    background-color: red !important;
+    color:white;
+}
+
 .shipped{
     color:darkgreen;
 }
@@ -309,6 +321,19 @@ h1{
 @media print {
     .no-print, .no-print * {
         display: none !important;
+    }
+    .greenBackground {
+        background-color: green !important;
+    }
+
+    .yellowBackground {
+        background-color: darkorange !important;
+    }
+
+    .redBackground {
+        background-color: red !important;
+        color: white !important;
+        border-color:black !important;
     }
 }
 
