@@ -230,6 +230,12 @@
     <Compile Include="Models\Payout.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\payouttemp.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\payouttemp2.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SafetyCode.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>

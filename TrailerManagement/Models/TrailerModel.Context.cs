@@ -41,5 +41,7 @@ namespace TrailerManagement.Models
         public virtual DbSet<CodeViolation> CodeViolations { get; set; }
         public virtual DbSet<SortList> SortLists { get; set; }
         public virtual DbSet<Payout> Payouts { get; set; }
+        public virtual DbSet<payouttemp2> payouttemp2 { get; set; }
+        public virtual DbSet<payouttemp> payouttemps { get; set; }
     }
 }
