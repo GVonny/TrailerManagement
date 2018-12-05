@@ -364,7 +364,14 @@ namespace TrailerManagement.Controllers
                         {
                             var extension = Path.GetExtension(ImageFile.FileName);
                             var fullPath = Server.MapPath("~/SafetyImages/") + concern.Area + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
-                            path = concern.Area + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+                            path = concern.Area + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+
+                            var oldPath = Server.MapPath("~/SafetyImages/" + concern.ImagePath);
+                            if(System.IO.File.Exists(oldPath))
+                            {
+                                System.IO.File.Delete(oldPath);
+                            }
+
 
                             ImageFile.SaveAs(fullPath);
                             concern.ImagePath = path;
@@ -436,6 +443,11 @@ namespace TrailerManagement.Controllers
                 using (TrailerEntities db = new TrailerEntities())
                 {
                     var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcernID);
+                    var oldPath = Server.MapPath("~/SafetyImages/" + concern.ImagePath);
+                    if (System.IO.File.Exists(oldPath))
+                    {
+                        System.IO.File.Delete(oldPath);
+                    }
                     db.SafetyConcerns.Remove(concern);
                     db.SaveChanges();
                     return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety");
