@@ -28,90 +28,109 @@
 <h2>Edit Safety Concern</h2>
 
 <div class="well">
-
-    @using (Html.BeginForm())
-            {
-                @Html.AntiForgeryToken()
-
-                <div class="form-horizontal">
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.HiddenFor(model => model.SafetyConcernGUID)
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Area, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-5">
-                    @Html.EditorFor(model => model.Area, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Area, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.ConditionNoted, "Condition Noted", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-5">
-                    @Html.EditorFor(model => model.ConditionNoted, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.ConditionNoted, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-xs-2">
-                    <strong class="float-right" style="margin-top:5px; margin-right:-10px;">Codes Violated:</strong>
-                </div>
-                <div class="col-xs-5">
-                    @Html.DropDownList("codeTypes", null, "- - - Select Code 1 - - -", htmlAttributes: new { @class = "form-control signin-form", id = "code1" })
-                </div>
+    <table>
+        <tr>
+            <td class="col-xs-9">
                 <br />
-                <br />
-                <div class="col-xs-offset-2 col-xs-5">
-                    @Html.DropDownList("codeTypes2", null, "- - - Select Code 2 - - -", htmlAttributes: new { @class = "form-control signin-form", id = "code2" })
-                </div>
-                <br />
-                <br />
-                <div class="col-xs-offset-2 col-xs-5">
-                    @Html.DropDownList("codeTypes3", null, "- - - Select Code 3 - - -", htmlAttributes: new { @class = "form-control signin-form", id = "code3" })
-                </div>
-            </div>
+                @using (Html.BeginForm("EditSafetyConcern", "Safety", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.CorrectiveActionMeasure, "Corrective Action", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-5">
-                    @Html.EditorFor(model => model.CorrectiveActionMeasure, new { htmlAttributes = new { @class = "form-control"} })
-                    @Html.ValidationMessageFor(model => model.CorrectiveActionMeasure, "", new { @class = "text-danger" })
-                </div>
-            </div>
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(model => model.SafetyConcernGUID)
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Severity, "Severity", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-5">
-                    @Html.DropDownListFor(model => model.Severity, new List<SelectListItem>
-                    {
-                        new SelectListItem { Text = "LOW", Value = "LOW" },
-                        new SelectListItem { Text = "MEDIUM", Value = "MEDIUM" },
-                        new SelectListItem { Text = "HIGH", Value = "HIGH"},
-                    },
-                    htmlAttributes: new { @class = "form-control signin-form", id = "severity" })
-                    @Html.ValidationMessageFor(model => model.Severity, "", new { @class = "text-danger" })
-                </div>
-            </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Area, "Area:", htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.Area, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Area, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
 
-            <div class="form-group">
-                <div class="col-xs-2">
-                    <strong class="float-right" style="margin-right:-10px;">Image Upload:</strong>
-                </div>
-                <div class="col-xs-5">
-                    <input type="file" name="ImageFile" id="ImageFile">
-                </div>
-            </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ConditionNoted, "Condition Noted:", htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.ConditionNoted, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.ConditionNoted, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
 
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-5">
-                    <input type="submit" value="Save" class="btn btn-primary" />
-                    <a href="SafetyAudit" class="btn btn-warning">Cancel</a>
-                    <input type="button" class="btn btn-danger float-right" value="Delete" id="delete">
-                </div>
-            </div>
-        </div>
-    }
+                        <div class="form-group">
+                            <div class="col-xs-3">
+                                <strong class="float-right" style="margin-top:5px; margin-right:-10px;">Codes Violated:</strong>
+                            </div>
+                            <div class="col-xs-5">
+                                @Html.DropDownList("codeTypes", null, "- - - Select Code 1 - - -", htmlAttributes: new { @class = "form-control signin-form", id = "code1" })
+                            </div>
+                            <br />
+                            <br />
+                            <div class="col-xs-offset-3 col-xs-5">
+                                @Html.DropDownList("codeTypes2", null, "- - - Select Code 2 - - -", htmlAttributes: new { @class = "form-control signin-form", id = "code2" })
+                            </div>
+                            <br />
+                            <br />
+                            <div class="col-xs-offset-3 col-xs-5">
+                                @Html.DropDownList("codeTypes3", null, "- - - Select Code 3 - - -", htmlAttributes: new { @class = "form-control signin-form", id = "code3" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CorrectiveActionMeasure, "Corrective Action:", htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.CorrectiveActionMeasure, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.CorrectiveActionMeasure, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Severity, "Severity:", htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.Severity, new List<SelectListItem>
+                                {
+                                    new SelectListItem { Text = "LOW", Value = "LOW" },
+                                    new SelectListItem { Text = "MEDIUM", Value = "MEDIUM" },
+                                    new SelectListItem { Text = "HIGH", Value = "HIGH"},
+                                },
+                                htmlAttributes: new { @class = "form-control signin-form", id = "severity" })
+                                @Html.ValidationMessageFor(model => model.Severity, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-xs-3">
+                                <strong class="float-right" style="margin-right:-10px;">Image Upload:</strong>
+                            </div>
+                            <div class="col-xs-2">
+                                <input type="file" name="ImageFile" id="ImageFile">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-md-5">
+                                <input type="submit" value="Save" class="btn btn-primary" />
+                                <a href="SafetyAudit" class="btn btn-warning">Cancel</a>
+                                <input type="button" class="btn btn-danger float-right" value="Delete" id="delete">
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </td>
+            <td>
+                @if (Model.ImagePath != null)
+                {
+                    <div class="text-center"><strong>Current Image:</strong></div>
+
+                    <br />
+                    <br />
+                    <div class="col-md-4 text-center">
+                        <img src="/SafetyImages/@Model.ImagePath" height="250" width="250" />
+                    </div>
+                }
+            </td>
+        </tr>
+    </table>
 </div>
 
 <!-- Delete Modal -->
