@@ -1,7 +1,28 @@
 ﻿@model TrailerManagement.Models.SafetyConcern
+@using TrailerManagement.Models;
 @{
     ViewBag.Title = "Edit Safety Concern";
     var safetyConcernID = Model.SafetyConcernGUID;
+    var violations = (List<String>)ViewData["Violations"];
+    var count = violations.Count;
+    var violation1 = "";
+    var violation2 = "";
+    var violation3 = "";
+    switch(count)
+    {
+        case 1:
+            violation1 = violations[0].ToString();
+            break;
+        case 2:
+            violation1 = violations[0].ToString();
+            violation2 = violations[1].ToString();
+            break;
+        case 3:
+            violation1 = violations[0].ToString();
+            violation2 = violations[1].ToString();
+            violation3 = violations[2].ToString();
+            break;
+    }
 }
 
 <h2>Edit Safety Concern</h2>
@@ -9,10 +30,10 @@
 <div class="well">
 
     @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
+            {
+                @Html.AntiForgeryToken()
 
-        <div class="form-horizontal">
+                <div class="form-horizontal">
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.SafetyConcernGUID)
 
@@ -54,7 +75,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.CorrectiveActionMeasure, "Corrective Action", htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-5">
-                    @Html.EditorFor(model => model.CorrectiveActionMeasure, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(model => model.CorrectiveActionMeasure, new { htmlAttributes = new { @class = "form-control"} })
                     @Html.ValidationMessageFor(model => model.CorrectiveActionMeasure, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -116,13 +137,32 @@
 
 @section scripts
 {
-    <script>
+<script>
         $(function ()
         {
             $('#delete').on('click', function ()
             {
                 $('#deleteModal').modal();
             });
+
+            var length = parseInt('@violations.Count');
+            console.log(length);
+
+            if (@count == 1)
+            {
+                $('#code1').val('@violation1');
+            }
+            else if (@count == 2)
+            {
+                $('#code1').val('@violation1');
+                $('#code2').val('@violation2');
+            }
+            else if (@count == 3)
+            {
+                $('#code1').val('@violation1');
+                $('#code2').val('@violation2');
+                $('#code3').val('@violation3');
+            }
         });
-    </script>
+</script>
 }

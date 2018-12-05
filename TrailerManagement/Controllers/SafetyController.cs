@@ -318,6 +318,15 @@ namespace TrailerManagement.Controllers
                     var violations = db.CodeViolations.Where(v => v.SafetyConcernGUID == safetyConcernID);
 
                     var codes = db.SafetyCodes.DistinctBy(c => c.OshaCode).OrderBy(c => c.OshaCode).ToList();
+
+                    List<string> violationsList = new List<string>();
+                    foreach(CodeViolation violation in violations)
+                    {
+                        violationsList.Add(violation.ViolationCode);
+                    }
+
+                    ViewData["Violations"] = violationsList;
+
                     this.ViewData["codeTypes"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
                     this.ViewData["codeTypes2"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
                     this.ViewData["codeTypes3"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
