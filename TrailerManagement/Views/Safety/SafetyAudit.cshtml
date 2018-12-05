@@ -28,7 +28,7 @@ var path = s.ImagePath.Replace("%20", " ");
         <tbody id="concerns">
             <tr>
                 <th id="area_@s.SafetyConcernGUID">Area: @s.Area</th>
-                <td rowspan="4" class="col-xs-2">
+                <td rowspan="4" width="250">
                     <img src="~/SafetyImages/@s.ImagePath" height="250" width="250" />
                 </td>
             </tr>
@@ -63,24 +63,29 @@ var path = s.ImagePath.Replace("%20", " ");
 }
 
 <style type="text/css">
-    table {
-        page-break-inside: auto
-    }
+    @@media print
+    {
+        table {
+            page-break-inside: auto;
+            -webkit-print-color-adjust: exact !important;
+        }
 
-    div {
-        page-break-inside: avoid;
-    }
-    body {
-        -webkit-print-color-adjust: exact;
-    }
+        div {
+            page-break-inside: avoid;
+        }
+        body {
+            -webkit-print-color-adjust: exact !important;
+        }
 
-    /* This is the key */
-    thead {
-        display: table-header-group
-    }
 
-    tfoot {
-        display: table-footer-group
+        /* This is the key */
+        thead {
+            display: table-header-group
+        }
+
+        tfoot {
+            display: table-footer-group
+        }
     }
 </style>
 @section scripts
@@ -102,6 +107,9 @@ var path = s.ImagePath.Replace("%20", " ");
                 {
                     case "MEDIUM":
                         $('#condition_' + id).addClass('yellowBackground');
+                        //$('#' + id).css('border-color', 'darkorange');
+                        //$('tr td').css('border-color', 'darkorange');
+                        //$('tr th').css('border-color', 'darkorange');
                         break;
                     case "HIGH":
                         $('#condition_' + id).addClass('redBackground');

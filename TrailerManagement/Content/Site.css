@@ -161,13 +161,17 @@ a.special {
 
 .greenBackground {
     background-color: green !important;
+    -webkit-print-color-adjust: exact !important;
 }
 .yellowBackground {
     background-color: darkorange !important;
+    -webkit-print-color-adjust: exact !important;
 }
 .redBackground {
     background-color: red !important;
-    color:white;
+    -webkit-print-color-adjust: exact !important;
+    color: white;
+    border-color:black;
 }
 
 .shipped{
@@ -324,17 +328,21 @@ h1{
     }
     .greenBackground {
         background-color: green !important;
+        -webkit-print-color-adjust: exact !important;
     }
 
     .yellowBackground {
         background-color: darkorange !important;
+        -webkit-print-color-adjust: exact !important;
     }
 
     .redBackground {
         background-color: red !important;
         color: white !important;
-        border-color:black !important;
+        border-color: black !important;
+        -webkit-print-color-adjust: exact !important;
     }
+
 }
 
 
