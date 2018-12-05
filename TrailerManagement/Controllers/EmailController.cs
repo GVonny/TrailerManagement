@@ -65,8 +65,12 @@ namespace TrailerManagement.Controllers
                 DateTime date = DateTime.Now;
                 var currentDate = date.ToString();
                 var day = currentDate.Substring(3, 2);
+                if(day.Contains('/'))
+                {
+                    day = "0" + day.Substring(0, 1);
+                }
                 var month = currentDate.Substring(0, 2);
-                var year = currentDate.Substring(6, 4);
+                var year = currentDate.Substring(5, 4);
                 payout.DateCompleted = (year + "-" + month + "-" + day);
                 db.SaveChanges();
 

@@ -545,6 +545,7 @@ namespace TrailerManagement.Controllers
                 {
                     dynamic model = new ExpandoObject();
                     var payouts = from x in db.Payouts select x;
+                    var oneWeek = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd");
 
                     Session["startsWith"] = ""; 
                     switch (status)
@@ -575,10 +576,13 @@ namespace TrailerManagement.Controllers
                     List<string> startingLetters = new List<string>();
                     foreach(Payout payout in closedPayouts)
                     {
-                        var startingLetter = payout.Vendor.Substring(0,1);
-                        if(!startingLetters.Contains(startingLetter))
+                        if(payout.Vendor != "")
                         {
-                            startingLetters.Add(startingLetter);
+                            var startingLetter = payout.Vendor.Substring(0, 1);
+                            if (!startingLetters.Contains(startingLetter))
+                            {
+                                startingLetters.Add(startingLetter);
+                            }
                         }
                     }
 
