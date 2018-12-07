@@ -30,7 +30,7 @@
 <div class="well">
     <table>
         <tr>
-            <td class="col-xs-9">
+            <td class="col-xs-9 noBorder">
                 <br />
                 @using (Html.BeginForm("EditSafetyConcern", "Safety", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
@@ -117,7 +117,7 @@
                 }
 
             </td>
-            <td>
+            <td class="noBorder">
                 @if (Model.ImagePath != null)
                 {
                     <div class="text-center"><strong>Current Image:</strong></div>
@@ -125,7 +125,9 @@
                     <br />
                     <br />
                     <div class="col-md-4 text-center">
-                        <img src="/SafetyImages/@Model.ImagePath" height="250" width="250" />
+                        <a href="/SafetyImages/@Model.ImagePath" download>
+                            <img src="/SafetyImages/@Model.ImagePath" height="250" width="250" />
+                        </a>
                     </div>
                 }
             </td>

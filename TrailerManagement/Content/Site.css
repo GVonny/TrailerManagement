@@ -159,6 +159,8 @@ a.special {
 }
 
 
+
+
 .greenBackground {
     background-color: green !important;
     -webkit-print-color-adjust: exact !important;
@@ -171,7 +173,7 @@ a.special {
     background-color: red !important;
     -webkit-print-color-adjust: exact !important;
     color: white;
-    border-color:black;
+    border-color:#333;
 }
 
 .shipped{
@@ -231,7 +233,7 @@ a.special {
 
 #logoText {
     padding-top: 20px;
-    text-align: right;
+    text-align: center;
 }
 
 #hideKeyboard{
@@ -304,6 +306,7 @@ h1{
 
 .noBorder{
     border:none;
+
 }
 
 #updateNumberOfPeople

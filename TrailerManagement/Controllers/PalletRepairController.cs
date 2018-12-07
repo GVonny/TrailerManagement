@@ -632,6 +632,10 @@ namespace TrailerManagement.Controllers
                 model.SortedTrailer = sortedStacks.ToList();
                                     
                 var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
+                if(payout.Status == "NEW")
+                {
+                    payout.Status = "IN PROCESS";
+                }
                 if(isCompleted != null)
                 {
                     model.IsCompleted = isCompleted;

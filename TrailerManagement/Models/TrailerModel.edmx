@@ -148,44 +148,6 @@
           <Property Name="TimeToSort" Type="float" />
           <Property Name="DateCompleted" Type="varchar" MaxLength="10" />
         </EntityType>
-        <EntityType Name="payouttemp">
-          <Key>
-            <PropertyRef Name="payoutguid" />
-          </Key>
-          <Property Name="payoutguid" Type="bigint" Nullable="false" />
-          <Property Name="sortguid" Type="bigint" />
-          <Property Name="trailernumber" Type="varchar" MaxLength="20" />
-          <Property Name="vendor" Type="varchar" MaxLength="50" />
-          <Property Name="vendornumber" Type="int" />
-          <Property Name="ordernumber" Type="varchar" MaxLength="20" />
-          <Property Name="purchaseordernumber" Type="varchar" MaxLength="50" />
-          <Property Name="invoicenumber" Type="varchar" MaxLength="50" />
-          <Property Name="packinglistnumber" Type="varchar" MaxLength="50" />
-          <Property Name="billoflading" Type="varchar" MaxLength="50" />
-          <Property Name="status" Type="varchar" MaxLength="10" />
-          <Property Name="datearrived" Type="varchar" MaxLength="10" />
-          <Property Name="timetosort" Type="float" />
-          <Property Name="datecompleted" Type="varchar" MaxLength="10" />
-        </EntityType>
-        <EntityType Name="payouttemp2">
-          <Key>
-            <PropertyRef Name="payoutguid" />
-          </Key>
-          <Property Name="payoutguid" Type="bigint" Nullable="false" />
-          <Property Name="sortguid" Type="bigint" />
-          <Property Name="trailernumber" Type="varchar" MaxLength="20" />
-          <Property Name="vendor" Type="varchar" MaxLength="50" />
-          <Property Name="vendornumber" Type="int" />
-          <Property Name="ordernumber" Type="varchar" MaxLength="20" />
-          <Property Name="purchaseordernumber" Type="varchar" MaxLength="50" />
-          <Property Name="invoicenumber" Type="varchar" MaxLength="50" />
-          <Property Name="packinglistnumber" Type="varchar" MaxLength="50" />
-          <Property Name="billoflading" Type="varchar" MaxLength="50" />
-          <Property Name="status" Type="varchar" MaxLength="10" />
-          <Property Name="datearrived" Type="varchar" MaxLength="10" />
-          <Property Name="timetosort" Type="float" />
-          <Property Name="datecompleted" Type="date" />
-        </EntityType>
         <EntityType Name="SafetyCodes">
           <Key>
             <PropertyRef Name="SafetyCodeGUID" />
@@ -207,6 +169,9 @@
           <Property Name="CorrectiveActionMeasure" Type="varchar" MaxLength="100" />
           <Property Name="Severity" Type="varchar" MaxLength="10" />
           <Property Name="ImagePath" Type="varchar(max)" />
+          <Property Name="AreaNote" Type="varchar(max)" />
+          <Property Name="ViolationCount" Type="int" />
+          <Property Name="Status" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="SortImages">
           <Key>
@@ -282,8 +247,6 @@
           <EntitySet Name="PalletPrices" EntityType="Self.PalletPrices" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PalletTypes" EntityType="Self.PalletTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payouts" EntityType="Self.Payouts" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="payouttemp" EntityType="Self.payouttemp" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="payouttemp2" EntityType="Self.payouttemp2" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SafetyCodes" EntityType="Self.SafetyCodes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SafetyConcerns" EntityType="Self.SafetyConcerns" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SortImages" EntityType="Self.SortImages" Schema="dbo" store:Type="Tables" />
@@ -350,8 +313,6 @@
           <EntitySet Name="CodeViolations" EntityType="TrailerModel.CodeViolation" />
           <EntitySet Name="SortLists" EntityType="TrailerModel.SortList" />
           <EntitySet Name="Payouts" EntityType="TrailerModel.Payout" />
-          <EntitySet Name="payouttemp2" EntityType="TrailerModel.payouttemp2" />
-          <EntitySet Name="payouttemps" EntityType="TrailerModel.payouttemp" />
         </EntityContainer>
         <EntityType Name="TrailerList">
           <Key>
@@ -495,6 +456,9 @@
           <Property Name="CorrectiveActionMeasure" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Severity" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="ImagePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="AreaNote" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ViolationCount" Type="Int32" />
+          <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="CodeViolation">
           <Key>
@@ -542,44 +506,6 @@
           <Property Name="DateArrived" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="TimeToSort" Type="Double" />
           <Property Name="DateCompleted" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="payouttemp2">
-          <Key>
-            <PropertyRef Name="payoutguid" />
-          </Key>
-          <Property Name="payoutguid" Type="Int64" Nullable="false" />
-          <Property Name="sortguid" Type="Int64" />
-          <Property Name="trailernumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="vendor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="vendornumber" Type="Int32" />
-          <Property Name="ordernumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="purchaseordernumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="invoicenumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="packinglistnumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="billoflading" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="datearrived" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="timetosort" Type="Double" />
-          <Property Name="datecompleted" Type="DateTime" Precision="0" />
-        </EntityType>
-        <EntityType Name="payouttemp">
-          <Key>
-            <PropertyRef Name="payoutguid" />
-          </Key>
-          <Property Name="payoutguid" Type="Int64" Nullable="false" />
-          <Property Name="sortguid" Type="Int64" />
-          <Property Name="trailernumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="vendor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="vendornumber" Type="Int32" />
-          <Property Name="ordernumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="purchaseordernumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="invoicenumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="packinglistnumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="billoflading" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="datearrived" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="timetosort" Type="Double" />
-          <Property Name="datecompleted" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -772,6 +698,9 @@
           <EntitySetMapping Name="SafetyConcerns">
             <EntityTypeMapping TypeName="TrailerModel.SafetyConcern">
               <MappingFragment StoreEntitySet="SafetyConcerns">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ViolationCount" ColumnName="ViolationCount" />
+                <ScalarProperty Name="AreaNote" ColumnName="AreaNote" />
                 <ScalarProperty Name="ImagePath" ColumnName="ImagePath" />
                 <ScalarProperty Name="Severity" ColumnName="Severity" />
                 <ScalarProperty Name="CorrectiveActionMeasure" ColumnName="CorrectiveActionMeasure" />
@@ -831,47 +760,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="payouttemp2">
-            <EntityTypeMapping TypeName="TrailerModel.payouttemp2">
-              <MappingFragment StoreEntitySet="payouttemp2">
-                <ScalarProperty Name="datecompleted" ColumnName="datecompleted" />
-                <ScalarProperty Name="timetosort" ColumnName="timetosort" />
-                <ScalarProperty Name="datearrived" ColumnName="datearrived" />
-                <ScalarProperty Name="status" ColumnName="status" />
-                <ScalarProperty Name="billoflading" ColumnName="billoflading" />
-                <ScalarProperty Name="packinglistnumber" ColumnName="packinglistnumber" />
-                <ScalarProperty Name="invoicenumber" ColumnName="invoicenumber" />
-                <ScalarProperty Name="purchaseordernumber" ColumnName="purchaseordernumber" />
-                <ScalarProperty Name="ordernumber" ColumnName="ordernumber" />
-                <ScalarProperty Name="vendornumber" ColumnName="vendornumber" />
-                <ScalarProperty Name="vendor" ColumnName="vendor" />
-                <ScalarProperty Name="trailernumber" ColumnName="trailernumber" />
-                <ScalarProperty Name="sortguid" ColumnName="sortguid" />
-                <ScalarProperty Name="payoutguid" ColumnName="payoutguid" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="payouttemps">
-            <EntityTypeMapping TypeName="TrailerModel.payouttemp">
-              <MappingFragment StoreEntitySet="payouttemp">
-                <ScalarProperty Name="datecompleted" ColumnName="datecompleted" />
-                <ScalarProperty Name="timetosort" ColumnName="timetosort" />
-                <ScalarProperty Name="datearrived" ColumnName="datearrived" />
-                <ScalarProperty Name="status" ColumnName="status" />
-                <ScalarProperty Name="billoflading" ColumnName="billoflading" />
-                <ScalarProperty Name="packinglistnumber" ColumnName="packinglistnumber" />
-                <ScalarProperty Name="invoicenumber" ColumnName="invoicenumber" />
-                <ScalarProperty Name="purchaseordernumber" ColumnName="purchaseordernumber" />
-                <ScalarProperty Name="ordernumber" ColumnName="ordernumber" />
-                <ScalarProperty Name="vendornumber" ColumnName="vendornumber" />
-                <ScalarProperty Name="vendor" ColumnName="vendor" />
-                <ScalarProperty Name="trailernumber" ColumnName="trailernumber" />
-                <ScalarProperty Name="sortguid" ColumnName="sortguid" />
-                <ScalarProperty Name="payoutguid" ColumnName="payoutguid" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-        </EntityContainerMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

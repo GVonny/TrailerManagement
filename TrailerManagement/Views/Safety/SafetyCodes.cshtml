@@ -1,10 +1,26 @@
 ﻿@using TrailerManagement.Models;
 @{
     ViewBag.Title = "Safety Codes";
+    var closedCodes = ViewBag.Closed;
 }
 
-<h2 class="float-left">Safety Codes</h2>
-<a href="CreateSafetyCode" class="btn btn-primary" style="margin-top:20px; margin-left:10px">Create Safety Code</a>
+<div>
+    <div class="col-xs-4">
+        <h2 class="float-left">Safety Codes</h2>
+        <a href="CreateSafetyCode" class="btn btn-primary" style="margin-top:20px; margin-left:10px">Create Safety Code</a>
+    </div>
+    <div class="col-xs-4">
+        <a href="SafetyCodes" id="showAll" class="btn btn-danger float-right" style="margin-top:20px">Show All</a>
+        <input type="button" value="Search" id="codeSearch" class="btn btn-warning float-right" style="margin-top:20px; margin-right:10px;" />
+        <input type="text" class="addSearch float-right" id="searchString" placeholder="search codes" style="margin-top:20px; margin-right:10px;" />
+
+    </div>
+    <div class="float-right" style="margin-top:35px;">
+        <label for="showInactiveCodes">Show Inactive Codes</label>
+        <input type="checkbox" id="showInactiveCodes"/>
+    </div>
+</div>
+
 
 <table class="table table-hover table-responsive">
     <thead>
@@ -23,6 +39,10 @@
                 <td id="subType_@t.SafetyCodeGUID">@t.SubType</td>
                 <td id="oshaCode_@t.SafetyCodeGUID">@t.OshaCode</td>
                 <td id="description_@t.SafetyCodeGUID">@t.Description</td>
+                @if (t.Status == "INACTIVE")
+                {
+                    <td id="status_@t.SafetyCodeGUID" style="border-top-style:solid; border-top-width:3px; border-top-color:#333;">@t.Status</td>
+                }
             </tr>
         }
     </tbody>
@@ -37,6 +57,31 @@
             {
                 var id = this.id;
                 location.href = "EditSafetyCode?safetyCodeID=" + id;
+            });
+
+            $('#codeSearch').on('click', function ()
+            {
+                var search = $('#searchString').val();
+                location.href = "/Safety/SafetyCodes?search=" + search;
+            });
+
+            var closed = '@closedCodes';
+            if (closed == "True")
+            {
+                $('#showInactiveCodes').attr('checked', 'checked');
+            }
+
+            $('#showInactiveCodes').change(function ()
+            {
+                console.log("test");
+                if ($(this).is(':checked'))
+                {
+                    location.href = "/Safety/SafetyCodes?search=INACTIVE";
+                }
+                else
+                {
+                    location.href = "/Safety/SafetyCodes";
+                }
             });
         });
     </script>

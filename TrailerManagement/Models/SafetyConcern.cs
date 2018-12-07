@@ -20,5 +20,8 @@ namespace TrailerManagement.Models
         public string CorrectiveActionMeasure { get; set; }
         public string Severity { get; set; }
         public string ImagePath { get; set; }
+        public string AreaNote { get; set; }
+        public Nullable<int> ViolationCount { get; set; }
+        public string Status { get; set; }
     }
 }

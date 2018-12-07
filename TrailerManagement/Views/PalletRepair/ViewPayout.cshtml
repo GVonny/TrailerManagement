@@ -29,16 +29,16 @@
     </thead>
     <tbody>
         <tr>
-            <td class="col-md-6"><strong>Trailer Number: </strong>@payout.TrailerNumber</td>
-            <td class="col-md-6"><strong>Pallet Order Number: </strong>@payout.OrderNumber</td>
+            <td class="col-md-6"><strong>Trailer Number: </strong><span id="payoutTrailerNumber">@payout.TrailerNumber</span></td>
+            <td class="col-md-6"><strong>Pallet Order Number: </strong><span id="payoutOrderNumber">@payout.OrderNumber</span></td>
         </tr>
         <tr>
-            <td class="col-md-6"><strong>Invoice Number:&nbsp;</strong>@payout.InvoiceNumber</td>
-            <td class="col-md-6"><strong>Bill Of Lading:&nbsp;</strong>@payout.BillOfLading</td>
+            <td class="col-md-6"><strong>Invoice Number:&nbsp;</strong><span id="payoutInvoiceNumber">@payout.InvoiceNumber</span></td>
+            <td class="col-md-6"><strong>Bill Of Lading:&nbsp;</strong><span id="payoutBillOfLading">@payout.BillOfLading</span></td>
         </tr>
         <tr>
-            <td class="col-md-6"><strong>Packing List Number:&nbsp;</strong>@payout.PackingListNumber</td>
-            <td class="col-md-6"><strong>Purchase Order Number:&nbsp;</strong>@payout.PurchaseOrderNumber</td>
+            <td class="col-md-6"><strong>Packing List Number:&nbsp;</strong><span id="payoutPackingListNumber">@payout.PackingListNumber</span></td>
+            <td class="col-md-6"><strong>Purchase Order Number:&nbsp;</strong><span id="payoutPurchaseOrderNumber">@payout.PurchaseOrderNumber</span></td>
         </tr>
     </tbody>
 </table>
@@ -346,6 +346,10 @@ else
                                 <input type="text" class="form-control" id="trailerNumber" name="trailerNumber">
                             </div>
                             <div class="form-group">
+                                <strong>Pallet Order Number:</strong>
+                                <input type="text" class="form-control" id="palletOrderNumber" name="palletOrderNumber">
+                            </div>
+                            <div class="form-group">
                                 <strong>Invoice Number:</strong>
                                 <input type="text" class="form-control" id="invoiceNumber" name="invoiceNumber">
                             </div>
@@ -360,10 +364,6 @@ else
                             <div class="form-group">
                                 <strong>Purchase Order Number:</strong>
                                 <input type="text" class="form-control" id="purchaseOrderNumber" name="purchaseOrderNumber">
-                            </div>
-                            <div class="form-group">
-                                <strong>Pallet Order Number:</strong>
-                                <input type="text" class="form-control" id="palletOrderNumber" name="palletOrderNumber">
                             </div>
                         </div>
                         <div class="form-group">
@@ -514,6 +514,24 @@ else
             $('#showAdditionalInfoModal').on('click', function ()
             {
                 sortID = '@payout.SortGUID';
+                var trailerNumber = $('#payoutTrailerNumber').html();
+                $('#trailerNumber').val(trailerNumber);
+
+                var invoiceNumber = $('#payoutInvoiceNumber').html();
+                $('#invoiceNumber').val(invoiceNumber);
+
+                var packingListNumber = $('#payoutPackingListNumber').html();
+                $('#packingListNumber').val(packingListNumber);
+
+                var palletOrderNumber = $('#payoutOrderNumber').html();
+                $('#palletOrderNumber').val(palletOrderNumber);
+
+                var billOfLading = $('#payoutBillOfLading').html();
+                $('#billOfLading').val(billOfLading);
+
+                var purchaseOrderNumber = $('#payoutPurchaseOrderNumber').html();
+                $('#purchaseOrderNumber').val(purchaseOrderNumber);
+
                 $('#additionalInfoModal').modal();
             });
 

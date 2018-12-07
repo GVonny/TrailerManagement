@@ -4,7 +4,6 @@
 }
 <br class="no-print" />
 
-
 <center>
     <img src="~/Content/logo2.png" style="margin-bottom:-15px;" />
 </center>
@@ -24,16 +23,16 @@
 {
 var path = s.ImagePath.Replace("%20", " ");
 <div>
-    <table class="table table-responsive" id="@s.SafetyConcernGUID" style="border-style:solid;border-color:black">
+    <table class="table table-responsive" id="@s.SafetyConcernGUID" style="border-style:solid;border-color:#333">
         <tbody id="concerns">
             <tr>
-                <th id="area_@s.SafetyConcernGUID">Area: @s.Area</th>
+                <th id="area_@s.SafetyConcernGUID">Area: @s.Area @if (s.AreaNote != "" && s.AreaNote != null) { <span> - @s.AreaNote</span> }</th>
                 <td rowspan="4" width="250">
                     <img src="~/SafetyImages/@s.ImagePath" height="250" width="250" />
                 </td>
             </tr>
 
-            <tr style="border-style:solid; border-color:black">
+            <tr style="border-style:solid; border-color:#333">
                 <th id="condition_@s.SafetyConcernGUID">Condition Noted: @s.ConditionNoted</th>
             </tr>
 
@@ -67,6 +66,12 @@ var path = s.ImagePath.Replace("%20", " ");
     {
         table {
             page-break-inside: auto;
+            border-color:black!important;
+            -webkit-print-color-adjust: exact !important;
+        }
+
+        table tr {
+            border-color: black !important;
             -webkit-print-color-adjust: exact !important;
         }
 
@@ -93,9 +98,9 @@ var path = s.ImagePath.Replace("%20", " ");
     <script>
         $(function ()
         {
-            $('table').on('click', function ()
+            $('table th').on('click', function ()
             {
-                var id = this.id;
+                var id = this.parentElement.parentElement.parentElement.id;
                 location.href = "/Safety/EditSafetyConcern?safetyConcernID=" + id;
             });
 

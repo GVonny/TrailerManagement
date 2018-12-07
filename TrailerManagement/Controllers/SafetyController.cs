@@ -14,7 +14,7 @@ namespace TrailerManagement.Controllers
     {
         Constants constant = new Constants();
 
-        public ActionResult SafetyCodes()
+        public ActionResult SafetyCodes(string search)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
@@ -22,7 +22,24 @@ namespace TrailerManagement.Controllers
                 {
                     var codes = from x in db.SafetyCodes select x;
 
-                    codes = codes.OrderBy(c => c.Type);
+                    if(search != "" && search != null)
+                    {
+                        if(search == "INACTIVE")
+                        {
+                            ViewBag.Closed = true;
+                            codes = codes.Where(c => c.Status == "INACTIVE");
+                        }
+                        else
+                        {
+                            codes = codes.Where(c => c.Type.ToLower().Contains(search.ToLower()) || c.SubType.ToLower().Contains(search.ToLower()) && c.Status == "ACTIVE");
+                        }
+                    }
+                    else
+                    {
+                        codes = codes.Where(c => c.Status == "ACTIVE");
+                    }
+
+                    codes = codes.OrderBy(c => c.Type).ThenBy(c => c.Status);
 
                     return View(codes.ToList());
                 }
@@ -44,6 +61,11 @@ namespace TrailerManagement.Controllers
                 using (TrailerEntities db = new TrailerEntities())
                 {
                     var code = db.SafetyCodes.FirstOrDefault(c => c.SafetyCodeGUID == safetyCodeID);
+
+                    if(code.Status == "INACTIVE")
+                    {
+                        ViewBag.Closed = true;
+                    }
 
                     var codes = db.SafetyCodes.DistinctBy(c => c.Type).OrderBy(c => c.Type).ToList();
 
@@ -126,6 +148,7 @@ namespace TrailerManagement.Controllers
                         SubType = createSafetyCode.SubType,
                         OshaCode = createSafetyCode.OshaCode,
                         Description = createSafetyCode.Description,
+                        Status = "ACTIVE",
                     };
 
                     db.SafetyCodes.Add(newCode);
@@ -144,14 +167,36 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult DeleteSafetyCode(int safetyCodeID)
+        public ActionResult DisableSafetyCode(int safetyCodeID)
         {
             if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
                     var code = db.SafetyCodes.FirstOrDefault(c => c.SafetyCodeGUID == safetyCodeID);
-                    db.SafetyCodes.Remove(code);
+                    code.Status = "INACTIVE";
+                    db.SaveChanges();
+                    return RedirectToAction(actionName: "SafetyCodes", controllerName: "Safety");
+                }
+            }
+            else if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
+            {
+                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+            else
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
+            }
+        }
+
+        public ActionResult EnableSafetyCode(int safetyCodeID)
+        {
+            if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
+            {
+                using (TrailerEntities db = new TrailerEntities())
+                {
+                    var code = db.SafetyCodes.FirstOrDefault(c => c.SafetyCodeGUID == safetyCodeID);
+                    code.Status = "ACTIVE";
                     db.SaveChanges();
                     return RedirectToAction(actionName: "SafetyCodes", controllerName: "Safety");
                 }
@@ -193,6 +238,25 @@ namespace TrailerManagement.Controllers
             }
         }
 
+        public ActionResult ClosedSafetyConcerns()
+        {
+            if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
+            {
+                using (TrailerEntities db = new TrailerEntities())
+                {
+                    return View();
+                }
+            }
+            else if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
+            {
+                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+            else
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
+            }
+        }
+
         public ActionResult AddSafetyConcern()
         {
             if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
@@ -203,6 +267,9 @@ namespace TrailerManagement.Controllers
                     this.ViewData["codeTypes"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
                     this.ViewData["codeTypes2"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
                     this.ViewData["codeTypes3"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
+
+                    var areas = db.Departments.DistinctBy(a => a.DepartmentName).ToList();
+                    this.ViewData["departments"] = new SelectList(areas, "DepartmentName", "DepartmentName").ToList();
 
                     return View();
                 }
@@ -218,7 +285,7 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateSafetyConcern(string area, string conditionNoted, string codeTypes, string codeTypes2, string codeTypes3, string correctiveAction, string severity, HttpPostedFileBase ImageFile)
+        public ActionResult CreateSafetyConcern(string departments, string areaNote, string conditionNoted, string codeTypes, string codeTypes2, string codeTypes3, string correctiveAction, string severity, HttpPostedFileBase ImageFile)
         {
             if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
             {
@@ -230,8 +297,8 @@ namespace TrailerManagement.Controllers
                         if (ImageFile.ContentLength > 0)
                         {
                             var extension = Path.GetExtension(ImageFile.FileName);
-                            var fullPath = Server.MapPath("~/SafetyImages/") + area + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
-                            path = area + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+                            var fullPath = Server.MapPath("~/SafetyImages/") + departments + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+                            path = departments + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
 
                             ImageFile.SaveAs(fullPath);
                         }
@@ -239,9 +306,12 @@ namespace TrailerManagement.Controllers
 
                     SafetyConcern newConcern = new SafetyConcern()
                     {
-                        Area = area,
+                        Area = departments,
+                        AreaNote = areaNote,
                         ConditionNoted = conditionNoted,
                         CorrectiveActionMeasure = correctiveAction,
+                        ViolationCount = 1,
+                        Status = "OPEN",
                         
                         ImagePath = path,
                     };
@@ -462,5 +532,7 @@ namespace TrailerManagement.Controllers
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
         }
+
+        
     }
 }

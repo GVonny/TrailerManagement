@@ -1,6 +1,7 @@
 ﻿@model TrailerManagement.Models.SafetyCode
 @{
     ViewBag.Title = "Edit Safety Code";
+    var closed = ViewBag.Closed;
 }
 
 <h2>Edit Safety Code</h2>
@@ -65,8 +66,16 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-5">
                 <input type="submit" value="Save" class="btn btn-primary" />
-                <a href="SafetyAudit" class="btn btn-warning">Cancel</a>
-                <input type="button" value="Delete" class="btn btn-danger float-right" id="delete" />
+                <a href="SafetyCodes" class="btn btn-warning">Cancel</a>
+                @if (Model.Status == "ACTIVE")
+                {
+                    <a href="/Safety/DisableSafetyCode?safetyCodeID= + @Model.SafetyCodeGUID" class="btn btn-danger float-right">Deactivate Code</a>
+                }
+                else
+                {
+                    <a href="/Safety/EnableSafetyCode?safetyCodeID= + @Model.SafetyCodeGUID" class="btn btn-danger float-right">Reactivate Code</a>
+                }
+
             </div>
         </div>
     </div>
@@ -78,12 +87,6 @@
     <script>
         $(function ()
         {
-            $('#delete').on('click', function ()
-            {
-                var id = $('#safetyCodeID').val();
-                location.href = "/Safety/DeleteSafetyCode?safetyCodeID=" + id;
-            });
-
             $('#customType').attr('disabled', 'disabled');
             $('#showCustomCodeType').change(function ()
             {
