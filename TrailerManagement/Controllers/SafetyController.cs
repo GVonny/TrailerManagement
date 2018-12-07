@@ -416,6 +416,9 @@ namespace TrailerManagement.Controllers
 
                     ViewData["Violations"] = violationsList;
 
+                    var areas = db.Departments.DistinctBy(a => a.DepartmentName).ToList();
+                    this.ViewData["departments"] = new SelectList(areas, "DepartmentName", "DepartmentName").ToList();
+
                     this.ViewData["typeSubType"] = new SelectList(codes, "TypeSubType", "TypeSubType");
                     this.ViewData["typeSubType2"] = new SelectList(codes, "TypeSubType", "TypeSubType");
 
