@@ -222,7 +222,7 @@ namespace TrailerManagement.Controllers
                 {
                     dynamic model = new ExpandoObject();
 
-                    var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").ToList();
+                    var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenBy(c => c.AreaNote).ToList();
                     model.Concerns = concerns;
 
                     var violations = db.CodeViolations.ToList();
@@ -295,9 +295,6 @@ namespace TrailerManagement.Controllers
                     this.ViewData["typeSubType"] = new SelectList(codes, "TypeSubType", "TypeSubType");
                     this.ViewData["typeSubType2"] = new SelectList(codes, "TypeSubType", "TypeSubType");
 
-                    this.ViewData["codeTypes"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
-                    this.ViewData["codeTypes2"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
-
                     var areas = db.Departments.DistinctBy(a => a.DepartmentName).ToList();
                     this.ViewData["departments"] = new SelectList(areas, "DepartmentName", "DepartmentName").ToList();
 
@@ -315,7 +312,7 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateSafetyConcern(string departments, string areaNote, string conditionNoted, string codeTypes, string codeTypes2, string correctiveAction, string severity, HttpPostedFileBase ImageFile)
+        public ActionResult CreateSafetyConcern(string departments, string areaNote, string conditionNoted, string typeSubType, string typeSubType2, string correctiveAction, string severity, HttpPostedFileBase ImageFile)
         {
             if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
             {
@@ -357,27 +354,29 @@ namespace TrailerManagement.Controllers
                     db.SafetyConcerns.Add(newConcern);
                     db.SaveChanges();
 
-                    if(codeTypes != "")
+                    if(typeSubType != null)
                     {
-                        var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes);
+                        var violation = db.SafetyCodes.FirstOrDefault(d => d.TypeSubType == typeSubType);
                         CodeViolation newViolation = new CodeViolation()
                         {
                             SafetyConcernGUID = newConcern.SafetyConcernGUID,
-                            Type = description.Type,
-                            ViolationCode = codeTypes,
-                            Description = description.Description,
+                            Type = violation.Type,
+                            OshaCode = violation.OshaCode,
+                            Description = violation.Description,
+                            TypeSubType = violation.TypeSubType,
                         };
                         db.CodeViolations.Add(newViolation);
                     }
-                    if (codeTypes2 != "")
+                    if (typeSubType2 != null)
                     {
-                        var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes2);
+                        var violation = db.SafetyCodes.FirstOrDefault(d => d.TypeSubType == typeSubType2);
                         CodeViolation newViolation = new CodeViolation()
                         {
                             SafetyConcernGUID = newConcern.SafetyConcernGUID,
-                            Type = description.Type,
-                            ViolationCode = codeTypes2,
-                            Description = description.Description,
+                            Type = violation.Type,
+                            OshaCode = violation.OshaCode,
+                            Description = violation.Description,
+                            TypeSubType = violation.TypeSubType,
                         };
                         db.CodeViolations.Add(newViolation);
                     }
@@ -411,7 +410,7 @@ namespace TrailerManagement.Controllers
                     List<string> violationsList = new List<string>();
                     foreach(CodeViolation violation in violations)
                     {
-                        violationsList.Add(violation.ViolationCode);
+                        violationsList.Add(violation.TypeSubType);
                     }
 
                     ViewData["Violations"] = violationsList;
@@ -421,9 +420,6 @@ namespace TrailerManagement.Controllers
 
                     this.ViewData["typeSubType"] = new SelectList(codes, "TypeSubType", "TypeSubType");
                     this.ViewData["typeSubType2"] = new SelectList(codes, "TypeSubType", "TypeSubType");
-
-                    this.ViewData["codeTypes"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
-                    this.ViewData["codeTypes2"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
 
                     return View(concern);
                 }
@@ -439,7 +435,7 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditSafetyConcern([Bind(Include = "SafetyConcernGUID,Area,ConditionNoted,CorrectiveActionMeasure,Severity")] SafetyConcern safetyConcern, string codeTypes, string codeTypes2, HttpPostedFileBase ImageFile)
+        public ActionResult EditSafetyConcern([Bind(Include = "SafetyConcernGUID,Area,ConditionNoted,CorrectiveActionMeasure,Severity")] SafetyConcern safetyConcern, string typeSubType, string typeSubType2, HttpPostedFileBase ImageFile)
         {
             if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
             {
@@ -474,32 +470,34 @@ namespace TrailerManagement.Controllers
 
                     var violations = db.CodeViolations.Where(v => v.SafetyConcernGUID == concern.SafetyConcernGUID);
                 
-                    if (codeTypes != "")
+                    if (typeSubType != "")
                     {
                         foreach (var v in violations)
                         {
                             db.CodeViolations.Remove(v);
                         }
 
-                        var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes);
+                        var violation = db.SafetyCodes.FirstOrDefault(d => d.TypeSubType == typeSubType);
                         CodeViolation newViolation = new CodeViolation()
                         {
                             SafetyConcernGUID = concern.SafetyConcernGUID,
-                            Type = description.Type,
-                            ViolationCode = codeTypes,
-                            Description = description.Description,
+                            Type = violation.Type,
+                            OshaCode = violation.OshaCode,
+                            Description = violation.Description,
+                            TypeSubType = violation.TypeSubType,
                         };
                         db.CodeViolations.Add(newViolation);
                     }
-                    if (codeTypes2 != "")
+                    if (typeSubType2 != "")
                     {
-                        var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes2);
+                        var violation = db.SafetyCodes.FirstOrDefault(d => d.TypeSubType == typeSubType2);
                         CodeViolation newViolation = new CodeViolation()
                         {
                             SafetyConcernGUID = concern.SafetyConcernGUID,
-                            Type = description.Type,
-                            ViolationCode = codeTypes2,
-                            Description = description.Description,
+                            Type = violation.Type,
+                            OshaCode = violation.OshaCode,
+                            Description = violation.Description,
+                            TypeSubType = violation.TypeSubType,
                         };
                         db.CodeViolations.Add(newViolation);
                     }

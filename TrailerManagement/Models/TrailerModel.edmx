@@ -28,9 +28,10 @@
           </Key>
           <Property Name="CodeViolationGUID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="SafetyConcernGUID" Type="bigint" />
-          <Property Name="Type" Type="varchar" MaxLength="50" />
-          <Property Name="ViolationCode" Type="varchar" MaxLength="50" />
+          <Property Name="Type" Type="varchar(max)" />
+          <Property Name="OshaCode" Type="varchar" MaxLength="50" />
           <Property Name="Description" Type="varchar(max)" />
+          <Property Name="TypeSubType" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="CompletedSorts">
           <Key>
@@ -313,9 +314,9 @@
           <EntitySet Name="CustomersAndVendors" EntityType="TrailerModel.CustomersAndVendor" />
           <EntitySet Name="SafetyCodes" EntityType="TrailerModel.SafetyCode" />
           <EntitySet Name="SafetyConcerns" EntityType="TrailerModel.SafetyConcern" />
-          <EntitySet Name="CodeViolations" EntityType="TrailerModel.CodeViolation" />
           <EntitySet Name="SortLists" EntityType="TrailerModel.SortList" />
           <EntitySet Name="Payouts" EntityType="TrailerModel.Payout" />
+          <EntitySet Name="CodeViolations" EntityType="TrailerModel.CodeViolation" />
         </EntityContainer>
         <EntityType Name="TrailerList">
           <Key>
@@ -466,16 +467,6 @@
           <Property Name="DateOpened" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="DateClosed" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="CodeViolation">
-          <Key>
-            <PropertyRef Name="CodeViolationGUID" />
-          </Key>
-          <Property Name="CodeViolationGUID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SafetyConcernGUID" Type="Int64" />
-          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ViolationCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-        </EntityType>
         <EntityType Name="SortList">
           <Key>
             <PropertyRef Name="SortGUID" />
@@ -512,6 +503,17 @@
           <Property Name="DateArrived" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="TimeToSort" Type="Double" />
           <Property Name="DateCompleted" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="CodeViolation">
+          <Key>
+            <PropertyRef Name="CodeViolationGUID" />
+          </Key>
+          <Property Name="CodeViolationGUID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SafetyConcernGUID" Type="Int64" />
+          <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="OshaCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="TypeSubType" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -719,17 +721,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="CodeViolations">
-            <EntityTypeMapping TypeName="TrailerModel.CodeViolation">
-              <MappingFragment StoreEntitySet="CodeViolations">
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="ViolationCode" ColumnName="ViolationCode" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="SafetyConcernGUID" ColumnName="SafetyConcernGUID" />
-                <ScalarProperty Name="CodeViolationGUID" ColumnName="CodeViolationGUID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="SortLists">
             <EntityTypeMapping TypeName="TrailerModel.SortList">
               <MappingFragment StoreEntitySet="SortList">
@@ -766,6 +757,18 @@
                 <ScalarProperty Name="TrailerNumber" ColumnName="TrailerNumber" />
                 <ScalarProperty Name="SortGUID" ColumnName="SortGUID" />
                 <ScalarProperty Name="PayoutGUID" ColumnName="PayoutGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CodeViolations">
+            <EntityTypeMapping TypeName="TrailerModel.CodeViolation">
+              <MappingFragment StoreEntitySet="CodeViolations">
+                <ScalarProperty Name="TypeSubType" ColumnName="TypeSubType" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="OshaCode" ColumnName="OshaCode" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="SafetyConcernGUID" ColumnName="SafetyConcernGUID" />
+                <ScalarProperty Name="CodeViolationGUID" ColumnName="CodeViolationGUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

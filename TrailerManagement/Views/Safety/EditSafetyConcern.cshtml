@@ -61,12 +61,12 @@
                                 <strong class="float-right" style="margin-top:5px; margin-right:-10px;">Codes Violated:</strong>
                             </div>
                             <div class="col-xs-7">
-                                @Html.DropDownList("codeTypes", null, "- - - Select Code 1 - - -", htmlAttributes: new { @class = "form-control signin-form", id = "code1" })
+                                @Html.DropDownList("typeSubType", null, "- - - Select Code 1 - - -", htmlAttributes: new { @class = "form-control signin-form", id = "code1" })
                             </div>
                             <br />
                             <br />
                             <div class="col-xs-offset-3 col-xs-7">
-                                @Html.DropDownList("codeTypes2", null, "- - - Select Code 2 - - -", htmlAttributes: new { @class = "form-control signin-form", id = "code2" })
+                                @Html.DropDownList("typeSubType2", null, "- - - Select Code 2 - - -", htmlAttributes: new { @class = "form-control signin-form", id = "code2" })
                             </div>
                         </div>
 
@@ -121,24 +121,21 @@
                 }
             </td>
             <td class="noBorder">
-                @if (Model.ImagePath != null)
-                {
-                    <div class="text-center"><strong>Current Image:</strong></div>
-                    <br />
-                    <div class="text-center">
-                        <a href="/SafetyImages/@Model.ImagePath" download>
-                            <img src="/SafetyImages/@Model.ImagePath" height="250" width="250" />
-                        </a>
+                <div class="text-center"><strong>Current Image:</strong></div>
+                <br />
+                <div class="text-center">
+                    <a href="/SafetyImages/@Model.ImagePath" download>
+                        <img src="/SafetyImages/@Model.ImagePath" height="250" width="250" />
+                    </a>
+                </div>
+                <br />
+                <div>
+                    @Html.LabelFor(model => model.ViolationCount, "Times Violated:", htmlAttributes: new { @class = "control-label text-right col-md-6" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.ViolationCount, new { htmlAttributes = new { @class = "form-control text-right", @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.Area, "", new { @class = "text-danger" })
                     </div>
-                    <br />
-                    <div>
-                        @Html.LabelFor(model => model.ViolationCount, "Times Violated:", htmlAttributes: new { @class = "control-label text-right col-md-6" })
-                        <div class="col-md-4">
-                            @Html.EditorFor(model => model.ViolationCount, new { htmlAttributes = new { @class = "form-control text-right", @disabled = "disabled" } })
-                            @Html.ValidationMessageFor(model => model.Area, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                }
+                </div>
             </td>
         </tr>
     </table>

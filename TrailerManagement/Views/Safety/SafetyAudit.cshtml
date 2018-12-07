@@ -13,7 +13,7 @@
 <span class="float-left">
     <a href="AddSafetyConcern" class="btn btn-primary no-print">Add Concern</a>
     <a class="no-print btn btn-primary" href="~/Safety/PrintPartialViewToPDF">Convert to PDF</a>
-    <a href="/Safety/ClosedSafetyAudit" class="btn btn-primary">Closed Concerns</a>
+    <a href="/Safety/ClosedSafetyAudit" class="btn btn-primary no-print">Closed Concerns</a>
 </span>
 <br />
 <br />
@@ -58,7 +58,7 @@ var path = s.ImagePath.Replace("%20", " ");
                     {
                         if (c.SafetyConcernGUID == s.SafetyConcernGUID)
                         {
-                            @c.ViolationCode @c.Type <small>- @c.Description</small>
+                            @c.OshaCode @c.Type <small>- @c.Description</small>
                         }
                     }
                 </th>

@@ -17,7 +17,8 @@ namespace TrailerManagement.Models
         public long CodeViolationGUID { get; set; }
         public Nullable<long> SafetyConcernGUID { get; set; }
         public string Type { get; set; }
-        public string ViolationCode { get; set; }
+        public string OshaCode { get; set; }
         public string Description { get; set; }
+        public string TypeSubType { get; set; }
     }
 }
