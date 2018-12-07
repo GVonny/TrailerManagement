@@ -236,9 +236,16 @@ a.special {
     text-align: center;
 }
 
-#hideKeyboard{
+.btn-green{
     background-color:green;
-    border-color:green
+    border-color:green;
+    color:black;
+}
+
+.btn-green:hover
+{
+    color:white;
+    background-color:darkgreen;
 }
 
 .user {

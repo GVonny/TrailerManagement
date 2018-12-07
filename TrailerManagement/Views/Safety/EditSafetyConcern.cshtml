@@ -1,5 +1,7 @@
 ﻿@model TrailerManagement.Models.SafetyConcern
+
 @using TrailerManagement.Models;
+
 @{
     ViewBag.Title = "Edit Safety Concern";
     var safetyConcernID = Model.SafetyConcernGUID;
@@ -7,7 +9,6 @@
     var count = violations.Count;
     var violation1 = "";
     var violation2 = "";
-    var violation3 = "";
     switch(count)
     {
         case 1:
@@ -16,11 +17,6 @@
         case 2:
             violation1 = violations[0].ToString();
             violation2 = violations[1].ToString();
-            break;
-        case 3:
-            violation1 = violations[0].ToString();
-            violation2 = violations[1].ToString();
-            violation3 = violations[2].ToString();
             break;
     }
 }
@@ -42,7 +38,7 @@
 
                         <div class="form-group">
                             @Html.LabelFor(model => model.Area, "Area:", htmlAttributes: new { @class = "control-label col-md-3" })
-                            <div class="col-md-5">
+                            <div class="col-md-7">
                                 @Html.EditorFor(model => model.Area, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Area, "", new { @class = "text-danger" })
                             </div>
@@ -50,7 +46,7 @@
 
                         <div class="form-group">
                             @Html.LabelFor(model => model.ConditionNoted, "Condition Noted:", htmlAttributes: new { @class = "control-label col-md-3" })
-                            <div class="col-md-5">
+                            <div class="col-md-7">
                                 @Html.EditorFor(model => model.ConditionNoted, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.ConditionNoted, "", new { @class = "text-danger" })
                             </div>
@@ -60,40 +56,36 @@
                             <div class="col-xs-3">
                                 <strong class="float-right" style="margin-top:5px; margin-right:-10px;">Codes Violated:</strong>
                             </div>
-                            <div class="col-xs-5">
+                            <div class="col-xs-7">
                                 @Html.DropDownList("codeTypes", null, "- - - Select Code 1 - - -", htmlAttributes: new { @class = "form-control signin-form", id = "code1" })
                             </div>
                             <br />
                             <br />
-                            <div class="col-xs-offset-3 col-xs-5">
+                            <div class="col-xs-offset-3 col-xs-7">
                                 @Html.DropDownList("codeTypes2", null, "- - - Select Code 2 - - -", htmlAttributes: new { @class = "form-control signin-form", id = "code2" })
-                            </div>
-                            <br />
-                            <br />
-                            <div class="col-xs-offset-3 col-xs-5">
-                                @Html.DropDownList("codeTypes3", null, "- - - Select Code 3 - - -", htmlAttributes: new { @class = "form-control signin-form", id = "code3" })
                             </div>
                         </div>
 
                         <div class="form-group">
                             @Html.LabelFor(model => model.CorrectiveActionMeasure, "Corrective Action:", htmlAttributes: new { @class = "control-label col-md-3" })
-                            <div class="col-md-5">
+                            <div class="col-md-7">
                                 @Html.EditorFor(model => model.CorrectiveActionMeasure, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.CorrectiveActionMeasure, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(model => model.Severity, "Severity:", htmlAttributes: new { @class = "control-label col-md-3" })
-                            <div class="col-md-5">
-                                @Html.DropDownListFor(model => model.Severity, new List<SelectListItem>
+                            <div class="col-xs-3">
+                                <strong class="float-right" style="margin-top:5px; margin-right:-10px;">Severity:</strong>
+                            </div>
+                            <div class="col-md-7">
+                                @Html.DropDownList("severity", new List<SelectListItem>
                                 {
                                     new SelectListItem { Text = "LOW", Value = "LOW" },
                                     new SelectListItem { Text = "MEDIUM", Value = "MEDIUM" },
                                     new SelectListItem { Text = "HIGH", Value = "HIGH"},
-                                },
+                                }, "- - - Select Severity - - -",
                                 htmlAttributes: new { @class = "form-control signin-form", id = "severity" })
-                                @Html.ValidationMessageFor(model => model.Severity, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
@@ -107,27 +99,40 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="col-md-offset-3 col-md-5">
+                            <div class="col-md-offset-3 col-md-7">
                                 <input type="submit" value="Save" class="btn btn-primary" />
                                 <a href="SafetyAudit" class="btn btn-warning">Cancel</a>
-                                <input type="button" class="btn btn-danger float-right" value="Delete" id="delete">
+                                @if (Model.Status == "OPEN")
+                                {
+                                    <input type="button" class="btn float-right btn-green" value="&nbsp;Fixed" id="markClosed">
+                                    <a href="/Safety/RepeatSafetyConcern?safetyConcernID=@Model.SafetyConcernGUID" class="btn btn-danger float-right" id="notFixed" style="margin-right:5px">&nbsp;Not Fixed</a>
+                                }
+                                else
+                                {
+                                    <a href="/Safety/ReOpenSafetyConcern?safetyConcernID=@Model.SafetyConcernGUID" class="btn btn-danger float-right" id="notFixed" style="margin-right:5px">Re Open</a>
+                                }
                             </div>
                         </div>
                     </div>
                 }
-
             </td>
             <td class="noBorder">
                 @if (Model.ImagePath != null)
                 {
                     <div class="text-center"><strong>Current Image:</strong></div>
-
                     <br />
-                    <br />
-                    <div class="col-md-4 text-center">
+                    <div class="text-center">
                         <a href="/SafetyImages/@Model.ImagePath" download>
                             <img src="/SafetyImages/@Model.ImagePath" height="250" width="250" />
                         </a>
+                    </div>
+                    <br />
+                    <div>
+                        @Html.LabelFor(model => model.ViolationCount, "Times Violated:", htmlAttributes: new { @class = "control-label col-md-6" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.ViolationCount, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.Area, "", new { @class = "text-danger" })
+                        </div>
                     </div>
                 }
             </td>
@@ -135,8 +140,8 @@
     </table>
 </div>
 
-<!-- Delete Modal -->
-<div id="deleteModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+<!-- Close Modal -->
+<div id="closeModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -146,11 +151,11 @@
                 <h2 class="modal-title">Alert!</h2>
             </div>
             <div class="modal-body" id="confirmText">
-                Are you sure you want to delete this safety concern?
+                Are you sure you want to close this safety concern?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
-                <a href="DeleteSafetyConcern?safetyConcernID=@safetyConcernID" class="btn btn-danger float-right">Delete</a>
+                <a href="CloseSafetyConcern?safetyConcernID=@safetyConcernID" class="btn btn-primary float-right">Close</a>
             </div>
         </div>
     </div>
@@ -161,9 +166,9 @@
 <script>
         $(function ()
         {
-            $('#delete').on('click', function ()
+            $('#markClosed').on('click', function ()
             {
-                $('#deleteModal').modal();
+                $('#closeModal').modal();
             });
 
             var length = parseInt('@violations.Count');
@@ -177,12 +182,6 @@
             {
                 $('#code1').val('@violation1');
                 $('#code2').val('@violation2');
-            }
-            else if (@count == 3)
-            {
-                $('#code1').val('@violation1');
-                $('#code2').val('@violation2');
-                $('#code3').val('@violation3');
             }
         });
 </script>

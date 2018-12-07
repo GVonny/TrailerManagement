@@ -158,6 +158,7 @@
           <Property Name="OshaCode" Type="varchar" MaxLength="50" />
           <Property Name="Description" Type="varchar(max)" />
           <Property Name="Status" Type="varchar" MaxLength="10" />
+          <Property Name="TypeSubType" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="SafetyConcerns">
           <Key>
@@ -172,6 +173,8 @@
           <Property Name="AreaNote" Type="varchar(max)" />
           <Property Name="ViolationCount" Type="int" />
           <Property Name="Status" Type="varchar" MaxLength="10" />
+          <Property Name="DateOpened" Type="varchar" MaxLength="10" />
+          <Property Name="DateClosed" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="SortImages">
           <Key>
@@ -445,6 +448,7 @@
           <Property Name="OshaCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="TypeSubType" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="SafetyConcern">
           <Key>
@@ -459,6 +463,8 @@
           <Property Name="AreaNote" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="ViolationCount" Type="Int32" />
           <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="DateOpened" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="DateClosed" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="CodeViolation">
           <Key>
@@ -686,6 +692,7 @@
           <EntitySetMapping Name="SafetyCodes">
             <EntityTypeMapping TypeName="TrailerModel.SafetyCode">
               <MappingFragment StoreEntitySet="SafetyCodes">
+                <ScalarProperty Name="TypeSubType" ColumnName="TypeSubType" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="OshaCode" ColumnName="OshaCode" />
@@ -698,6 +705,8 @@
           <EntitySetMapping Name="SafetyConcerns">
             <EntityTypeMapping TypeName="TrailerModel.SafetyConcern">
               <MappingFragment StoreEntitySet="SafetyConcerns">
+                <ScalarProperty Name="DateClosed" ColumnName="DateClosed" />
+                <ScalarProperty Name="DateOpened" ColumnName="DateOpened" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="ViolationCount" ColumnName="ViolationCount" />
                 <ScalarProperty Name="AreaNote" ColumnName="AreaNote" />

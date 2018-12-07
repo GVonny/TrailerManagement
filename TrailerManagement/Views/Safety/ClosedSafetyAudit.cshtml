@@ -1,0 +1,142 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Safety Audit";
+}
+<br class="no-print" />
+
+<h3><strong class="col-xs-12 text-center">Closed Concerns from Safety Audit Report.</strong></h3>
+
+<br />
+<br />
+<br class="no-print" />
+<br class="no-print" />
+
+@foreach (SafetyConcern s in Model.Concerns)
+{
+    var path = s.ImagePath.Replace("%20", " ");
+    <div>
+        <table class="table table-responsive" id="@s.SafetyConcernGUID" style="border-style:solid;border-color:#333">
+            <tbody id="concerns">
+                <tr>
+                    <th id="area_@s.SafetyConcernGUID">
+                        Area: @s.Area @if (s.AreaNote != "" && s.AreaNote != null)
+                        {<span> - @s.AreaNote</span>}
+                    </th>
+
+                    <th class="text-right col-xs-3">
+                        <span>Repeat Violation: </span><span id="violationCount_@s.SafetyConcernGUID">@s.ViolationCount</span>
+                        @if (s.ViolationCount > 1)
+                        {
+                            <span> times</span>
+                        }
+                        else
+                        {
+                            <span> time</span>
+                        }
+                    </th>
+
+                    <td rowspan="4" width="250">
+                        <img src="~/SafetyImages/@s.ImagePath" height="250" width="250" />
+                    </td>
+                </tr>
+
+                <tr style="border-style:solid; border-color:#333">
+                    <th colspan="2" id="condition_@s.SafetyConcernGUID">Condition Noted: @s.ConditionNoted</th>
+                </tr>
+
+                <tr>
+                    <th colspan="2" id="violation_@s.SafetyConcernGUID">
+                        <strong>Code Violation:</strong>
+                        @foreach (CodeViolation c in Model.Violations)
+                        {
+                            if (c.SafetyConcernGUID == s.SafetyConcernGUID)
+                            {
+                                @c.ViolationCode @c.Type <small>- @c.Description</small>
+                            }
+                        }
+                    </th>
+                </tr>
+
+                <tr>
+                    <th colspan="2" id="action_@s.SafetyConcernGUID">Corrective Action Measure: <small>@s.CorrectiveActionMeasure</small></th>
+                </tr>
+
+                <tr class="hidden">
+                    <th id="severity_@s.SafetyConcernGUID">@s.Severity</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('table th').on('click', function ()
+            {
+                var id = this.parentElement.parentElement.parentElement.id;
+                location.href = "/Safety/EditSafetyConcern?safetyConcernID=" + id;
+            });
+
+            $('table').each(function ()
+            {
+                var id = this.id;
+                var count = $('#violationCount_' + id).html()
+                var violationCount = parseInt(count);
+                if (violationCount > 1)
+                {
+                    $('#condition_' + id).addClass('redBackground');
+                }
+            });
+
+            var date = new Date();
+            var month = date.getMonth();
+            var day = date.getDate();
+            var year = date.getFullYear();
+
+            switch (month)
+            {
+                case 0:
+                    month = "JANUARY";
+                    break;
+                case 1:
+                    month = "FEBRUARY";
+                    break;
+                case 2:
+                    month = "MARCH";
+                    break;
+                case 3:
+                    month = "APRIL";
+                    break;
+                case 4:
+                    month = "MAY";
+                    break;
+                case 5:
+                    month = "JUNE";
+                    break;
+                case 6:
+                    month = "JULY";
+                    break;
+                case 7:
+                    month = "AUGUST";
+                    break;
+                case 8:
+                    month = "SEPTEMBER";
+                    break;
+                case 9:
+                    month = "OCTOBER";
+                    break;
+                case 10:
+                    month = "NOVEMBER";
+                    break;
+                case 11:
+                    month = "DECEMBER";
+                    break;
+            };
+
+            $('#date').html(month + " " + day + ", " + year + ".");
+        });
+    </script>
+}

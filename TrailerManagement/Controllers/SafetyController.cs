@@ -1,4 +1,5 @@
 ﻿using Microsoft.Ajax.Utilities;
+using Rotativa;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -97,6 +98,7 @@ namespace TrailerManagement.Controllers
                     code.SubType = editSafetyCode.SubType;
                     code.OshaCode = editSafetyCode.OshaCode;
                     code.Description = editSafetyCode.Description;
+                    code.TypeSubType = editSafetyCode.Type + " - " + editSafetyCode.SubType;
 
                     db.SaveChanges();
                     return RedirectToAction(actionName: "SafetyCodes", controllerName: "Safety");
@@ -148,6 +150,7 @@ namespace TrailerManagement.Controllers
                         SubType = createSafetyCode.SubType,
                         OshaCode = createSafetyCode.OshaCode,
                         Description = createSafetyCode.Description,
+                        TypeSubType = createSafetyCode.Type + " - " + createSafetyCode.SubType, 
                         Status = "ACTIVE",
                     };
 
@@ -219,12 +222,12 @@ namespace TrailerManagement.Controllers
                 {
                     dynamic model = new ExpandoObject();
 
-                    var concerns = db.SafetyConcerns.ToList();
+                    var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").ToList();
                     model.Concerns = concerns;
 
                     var violations = db.CodeViolations.ToList();
                     model.Violations = violations;
-                
+
                     return View(model);
                 }
             }
@@ -238,13 +241,37 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult ClosedSafetyConcerns()
+        public ActionResult SafetyAuditPDF()
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                dynamic model = new ExpandoObject();
+
+                var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").ToList();
+                model.Concerns = concerns;
+
+                var violations = db.CodeViolations.ToList();
+                model.Violations = violations;
+
+                return View(model);
+            }
+        }
+
+        public ActionResult ClosedSafetyAudit()
         {
             if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
-                    return View();
+                    dynamic model = new ExpandoObject();
+
+                    var concerns = db.SafetyConcerns.Where(c => c.Status == "CLOSED").ToList();
+                    model.Concerns = concerns;
+
+                    var violations = db.CodeViolations.ToList();
+                    model.Violations = violations;
+
+                    return View(model);
                 }
             }
             else if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
@@ -256,17 +283,20 @@ namespace TrailerManagement.Controllers
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
         }
-
+        
         public ActionResult AddSafetyConcern()
         {
             if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
-                    var codes = db.SafetyCodes.DistinctBy(c => c.OshaCode).OrderBy(c => c.OshaCode).ToList();
+                    var codes = db.SafetyCodes.OrderBy(c => c.TypeSubType).ToList();
+
+                    this.ViewData["typeSubType"] = new SelectList(codes, "TypeSubType", "TypeSubType");
+                    this.ViewData["typeSubType2"] = new SelectList(codes, "TypeSubType", "TypeSubType");
+
                     this.ViewData["codeTypes"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
                     this.ViewData["codeTypes2"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
-                    this.ViewData["codeTypes3"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
 
                     var areas = db.Departments.DistinctBy(a => a.DepartmentName).ToList();
                     this.ViewData["departments"] = new SelectList(areas, "DepartmentName", "DepartmentName").ToList();
@@ -285,7 +315,7 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateSafetyConcern(string departments, string areaNote, string conditionNoted, string codeTypes, string codeTypes2, string codeTypes3, string correctiveAction, string severity, HttpPostedFileBase ImageFile)
+        public ActionResult CreateSafetyConcern(string departments, string areaNote, string conditionNoted, string codeTypes, string codeTypes2, string correctiveAction, string severity, HttpPostedFileBase ImageFile)
         {
             if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
             {
@@ -312,6 +342,7 @@ namespace TrailerManagement.Controllers
                         CorrectiveActionMeasure = correctiveAction,
                         ViolationCount = 1,
                         Status = "OPEN",
+                        DateOpened = DateTime.Now.ToString("yyyy-MM-dd"),
                         
                         ImagePath = path,
                     };
@@ -350,18 +381,6 @@ namespace TrailerManagement.Controllers
                         };
                         db.CodeViolations.Add(newViolation);
                     }
-                    if (codeTypes3 != "")
-                    {
-                        var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes3);
-                        CodeViolation newViolation = new CodeViolation()
-                        {
-                            SafetyConcernGUID = newConcern.SafetyConcernGUID,
-                            Type = description.Type,
-                            ViolationCode = codeTypes3,
-                            Description = description.Description,
-                        };
-                        db.CodeViolations.Add(newViolation);
-                    }
 
                     db.SaveChanges();
                     return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety");
@@ -387,7 +406,7 @@ namespace TrailerManagement.Controllers
 
                     var violations = db.CodeViolations.Where(v => v.SafetyConcernGUID == safetyConcernID);
 
-                    var codes = db.SafetyCodes.DistinctBy(c => c.OshaCode).OrderBy(c => c.OshaCode).ToList();
+                    var codes = db.SafetyCodes.OrderBy(c => c.TypeSubType).ToList();
 
                     List<string> violationsList = new List<string>();
                     foreach(CodeViolation violation in violations)
@@ -397,9 +416,11 @@ namespace TrailerManagement.Controllers
 
                     ViewData["Violations"] = violationsList;
 
+                    this.ViewData["typeSubType"] = new SelectList(codes, "TypeSubType", "TypeSubType");
+                    this.ViewData["typeSubType2"] = new SelectList(codes, "TypeSubType", "TypeSubType");
+
                     this.ViewData["codeTypes"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
                     this.ViewData["codeTypes2"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
-                    this.ViewData["codeTypes3"] = new SelectList(codes, "OshaCode", "OshaCode").ToList();
 
                     return View(concern);
                 }
@@ -415,7 +436,7 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditSafetyConcern([Bind(Include = "SafetyConcernGUID,Area,ConditionNoted,CorrectiveActionMeasure,Severity")] SafetyConcern safetyConcern, string codeTypes, string codeTypes2, string codeTypes3, HttpPostedFileBase ImageFile)
+        public ActionResult EditSafetyConcern([Bind(Include = "SafetyConcernGUID,Area,ConditionNoted,CorrectiveActionMeasure,Severity")] SafetyConcern safetyConcern, string codeTypes, string codeTypes2, HttpPostedFileBase ImageFile)
         {
             if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
             {
@@ -479,18 +500,6 @@ namespace TrailerManagement.Controllers
                         };
                         db.CodeViolations.Add(newViolation);
                     }
-                    if (codeTypes3 != "")
-                    {
-                        var description = db.SafetyCodes.FirstOrDefault(d => d.OshaCode == codeTypes3);
-                        CodeViolation newViolation = new CodeViolation()
-                        {
-                            SafetyConcernGUID = concern.SafetyConcernGUID,
-                            Type = description.Type,
-                            ViolationCode = codeTypes3,
-                            Description = description.Description,
-                        };
-                        db.CodeViolations.Add(newViolation);
-                    }
                     db.SaveChanges();
 
                     return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety");
@@ -506,19 +515,21 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult DeleteSafetyConcern(int safetyConcernID)
+        public ActionResult CloseSafetyConcern(int safetyConcernID)
         {
             if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
                     var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcernID);
-                    var oldPath = Server.MapPath("~/SafetyImages/" + concern.ImagePath);
-                    if (System.IO.File.Exists(oldPath))
-                    {
-                        System.IO.File.Delete(oldPath);
-                    }
-                    db.SafetyConcerns.Remove(concern);
+                    //code to remove images from server, keep for reference
+                    //var oldPath = Server.MapPath("~/SafetyImages/" + concern.ImagePath);
+                    //if (System.IO.File.Exists(oldPath))
+                    //{
+                    //    System.IO.File.Delete(oldPath);
+                    //}
+                    concern.Status = "CLOSED";
+                    concern.DateClosed = DateTime.Now.ToString("yyyy-MM-dd");
                     db.SaveChanges();
                     return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety");
                 }
@@ -533,6 +544,57 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        
+        public ActionResult RepeatSafetyConcern(int safetyConcernID)
+        {
+            if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
+            {
+                using (TrailerEntities db = new TrailerEntities())
+                {
+                    var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcernID);
+                    concern.ViolationCount++;
+                    db.SaveChanges();
+                    return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety");
+                }
+            }
+            else if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
+            {
+                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+            else
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
+            }
+        }
+
+        public ActionResult ReOpenSafetyConcern(int safetyConcernID)
+        {
+            if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
+            {
+                using (TrailerEntities db = new TrailerEntities())
+                {
+                    var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcernID);
+                    concern.Status = "OPEN";
+                    concern.ViolationCount++;
+                    concern.DateClosed = null;
+                    concern.DateOpened = DateTime.Now.ToString("yyyy-MM-dd");
+                    db.SaveChanges();
+                    return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety");
+                }
+            }
+            else if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
+            {
+                return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+            else
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
+            }
+        }
+
+        public ActionResult PrintPartialViewToPDF()
+        {
+            var report = new ActionAsPdf("SafetyAuditPDF");
+            return report;
+        }
     }
 }

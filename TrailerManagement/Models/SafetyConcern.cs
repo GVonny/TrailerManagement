@@ -23,5 +23,7 @@ namespace TrailerManagement.Models
         public string AreaNote { get; set; }
         public Nullable<int> ViolationCount { get; set; }
         public string Status { get; set; }
+        public string DateOpened { get; set; }
+        public string DateClosed { get; set; }
     }
 }
