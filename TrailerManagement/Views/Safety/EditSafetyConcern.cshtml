@@ -9,7 +9,7 @@
     var count = violations.Count;
     var violation1 = "";
     var violation2 = "";
-    switch(count)
+    switch (count)
     {
         case 1:
             violation1 = violations[0].ToString();
@@ -43,7 +43,7 @@
                                 @Html.ValidationMessageFor(model => model.Area, "", new { @class = "text-danger" })
                             </div>
                             <div class="col-md-4">
-                                @Html.EditorFor(model => model.AreaNote, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.EditorFor(model => model.AreaNote, new { htmlAttributes = new { @class = "form-control", placeholder = "Sub Area" } })
                                 @Html.ValidationMessageFor(model => model.AreaNote, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -104,16 +104,18 @@
 
                         <div class="form-group">
                             <div class="col-md-offset-3 col-md-7">
-                                <input type="submit" value="Save" class="btn btn-primary" />
-                                <a href="SafetyAudit" class="btn btn-warning">Cancel</a>
+                                <input type="submit" value="Save" class="btn btn-primary float-left" style="margin-right:5px;"/>
+
                                 @if (Model.Status == "OPEN")
                                 {
+                                    <a href="SafetyAudit" class="btn btn-warning float-left">Cancel</a>
                                     <input type="button" class="btn float-right btn-green" value="&nbsp;Fixed" id="markClosed">
                                     <a href="/Safety/RepeatSafetyConcern?safetyConcernID=@Model.SafetyConcernGUID" class="btn btn-danger float-right" id="notFixed" style="margin-right:5px">&nbsp;Not Fixed</a>
                                 }
                                 else
                                 {
-                                    <a href="/Safety/ReOpenSafetyConcern?safetyConcernID=@Model.SafetyConcernGUID" class="btn btn-danger float-right" id="notFixed" style="margin-right:5px">Re Open</a>
+                                    <a href="ClosedSafetyAudit" class="btn btn-warning float-left">Cancel</a>
+                                    <input type="button" class="btn btn-danger float-right" value="Re Open" id="reOpen" />
                                 }
                             </div>
                         </div>
@@ -161,15 +163,40 @@
         </div>
     </div>
 </div>
+<!-- Re Open Modal -->
+<div id="reOpenModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                Are you sure you want to re open this safety concern?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                <a href="/Safety/ReOpenSafetyConcern?safetyConcernID=@Model.SafetyConcernGUID" class="btn btn-danger float-right" id="notFixed" style="margin-right:5px">Re Open</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section scripts
 {
-<script>
+    <script>
         $(function ()
         {
             $('#markClosed').on('click', function ()
             {
                 $('#closeModal').modal();
+            });
+
+            $('#reOpen').on('click', function ()
+            {
+                $('#reOpenModal').modal();
             });
 
             var length = parseInt('@violations.Count');
@@ -185,5 +212,5 @@
                 $('#code2').val('@violation2');
             }
         });
-</script>
+    </script>
 }

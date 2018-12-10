@@ -75,7 +75,7 @@ namespace TrailerManagement.Controllers
                     return View(code);
                 }
             }
-            else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
+            else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
             }
@@ -104,7 +104,7 @@ namespace TrailerManagement.Controllers
                     return RedirectToAction(actionName: "SafetyCodes", controllerName: "Safety");
                 }
             }
-            else if (Convert.ToInt32(Session["department"]) != 4500 || Convert.ToInt32(Session["department"]) != 10000)
+            else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
             }
@@ -127,7 +127,7 @@ namespace TrailerManagement.Controllers
                     return View();
                 }
             }
-            else if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
+            else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
             }
@@ -160,7 +160,7 @@ namespace TrailerManagement.Controllers
                     return RedirectToAction(actionName: "SafetyCodes", controllerName: "Safety");
                 }
             }
-            else if (Convert.ToInt32(Session["department"]) != 4500 || Convert.ToInt32(Session["department"]) != 10000)
+            else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
             }
@@ -182,7 +182,7 @@ namespace TrailerManagement.Controllers
                     return RedirectToAction(actionName: "SafetyCodes", controllerName: "Safety");
                 }
             }
-            else if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
+            else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
             }
@@ -204,7 +204,7 @@ namespace TrailerManagement.Controllers
                     return RedirectToAction(actionName: "SafetyCodes", controllerName: "Safety");
                 }
             }
-            else if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
+            else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
             }
@@ -222,7 +222,7 @@ namespace TrailerManagement.Controllers
                 {
                     dynamic model = new ExpandoObject();
 
-                    var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenBy(c => c.AreaNote).ToList();
+                    var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenByDescending(c => c.AreaNote).ToList();
                     model.Concerns = concerns;
 
                     var violations = db.CodeViolations.ToList();
@@ -231,7 +231,7 @@ namespace TrailerManagement.Controllers
                     return View(model);
                 }
             }
-            else if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
+            else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
             }
@@ -247,7 +247,7 @@ namespace TrailerManagement.Controllers
             {
                 dynamic model = new ExpandoObject();
 
-                var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").ToList();
+                var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenByDescending(c => c.AreaNote).ToList();
                 model.Concerns = concerns;
 
                 var violations = db.CodeViolations.ToList();
@@ -274,7 +274,7 @@ namespace TrailerManagement.Controllers
                     return View(model);
                 }
             }
-            else if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
+            else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
             }
@@ -295,13 +295,13 @@ namespace TrailerManagement.Controllers
                     this.ViewData["typeSubType"] = new SelectList(codes, "TypeSubType", "TypeSubType");
                     this.ViewData["typeSubType2"] = new SelectList(codes, "TypeSubType", "TypeSubType");
 
-                    var areas = db.Departments.DistinctBy(a => a.DepartmentName).ToList();
+                    var areas = db.Departments.Where(a => a.DepartmentName != "ADMIN").OrderBy(a => a.DepartmentName).ToList();
                     this.ViewData["departments"] = new SelectList(areas, "DepartmentName", "DepartmentName").ToList();
 
                     return View();
                 }
             }
-            else if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
+            else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
             }
@@ -385,7 +385,7 @@ namespace TrailerManagement.Controllers
                     return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety");
                 }   
             }
-            else if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
+            else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
             }
@@ -415,7 +415,7 @@ namespace TrailerManagement.Controllers
 
                     ViewData["Violations"] = violationsList;
 
-                    var areas = db.Departments.DistinctBy(a => a.DepartmentName).ToList();
+                    var areas = db.Departments.Where(a => a.DepartmentName != "ADMIN").OrderBy(a => a.DepartmentName).ToList();
                     this.ViewData["departments"] = new SelectList(areas, "DepartmentName", "DepartmentName").ToList();
 
                     this.ViewData["typeSubType"] = new SelectList(codes, "TypeSubType", "TypeSubType");
@@ -424,7 +424,7 @@ namespace TrailerManagement.Controllers
                     return View(concern);
                 }
             }
-            else if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
+            else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
             }
@@ -435,7 +435,7 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditSafetyConcern([Bind(Include = "SafetyConcernGUID,Area,ConditionNoted,CorrectiveActionMeasure,Severity")] SafetyConcern safetyConcern, string typeSubType, string typeSubType2, HttpPostedFileBase ImageFile)
+        public ActionResult EditSafetyConcern([Bind(Include = "SafetyConcernGUID,Area,ConditionNoted,CorrectiveActionMeasure,Severity")] SafetyConcern safetyConcern, string typeSubType, string typeSubType2, HttpPostedFileBase ImageFile, string areaNote)
         {
             if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
             {
@@ -443,6 +443,7 @@ namespace TrailerManagement.Controllers
                 {
                     var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcern.SafetyConcernGUID);
                     concern.Area = safetyConcern.Area;
+                    concern.AreaNote = areaNote;
                     concern.ConditionNoted = safetyConcern.ConditionNoted;
                     concern.CorrectiveActionMeasure = safetyConcern.CorrectiveActionMeasure;
                     concern.Severity = safetyConcern.Severity;
@@ -506,7 +507,7 @@ namespace TrailerManagement.Controllers
                     return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety");
                 }
             }
-            else if (Convert.ToInt32(Session["department"]) != 4500 || Convert.ToInt32(Session["department"]) != 10000)
+            else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
             }
@@ -523,19 +524,13 @@ namespace TrailerManagement.Controllers
                 using (TrailerEntities db = new TrailerEntities())
                 {
                     var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcernID);
-                    //code to remove images from server, keep for reference
-                    //var oldPath = Server.MapPath("~/SafetyImages/" + concern.ImagePath);
-                    //if (System.IO.File.Exists(oldPath))
-                    //{
-                    //    System.IO.File.Delete(oldPath);
-                    //}
                     concern.Status = "CLOSED";
                     concern.DateClosed = DateTime.Now.ToString("yyyy-MM-dd");
                     db.SaveChanges();
                     return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety");
                 }
             }
-            else if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
+            else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
             }
@@ -557,7 +552,7 @@ namespace TrailerManagement.Controllers
                     return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety");
                 }
             }
-            else if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
+            else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
             }
@@ -582,7 +577,7 @@ namespace TrailerManagement.Controllers
                     return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety");
                 }
             }
-            else if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
+            else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
             }
@@ -592,7 +587,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult PrintPartialViewToPDF()
+        public ActionResult ViewSafetyAuditPDF()
         {
             var report = new ActionAsPdf("SafetyAuditPDF");
             return report;

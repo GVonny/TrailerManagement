@@ -22,7 +22,7 @@
                 <tr>
                     <th id="area_@s.SafetyConcernGUID">Area: @s.Area @if (s.AreaNote != "" && s.AreaNote != null){<span> - @s.AreaNote</span>}</th>
 
-                    <th id="violationCount_@s.SafetyConcernGUID" class="text-right col-xs-3"><span>Repeat Violation: </span>@s.ViolationCount 
+                    <th class="text-right col-xs-3"><span>Repeat Violation: </span><span id="violationCount_@s.SafetyConcernGUID">@s.ViolationCount</span>
                         @if (s.ViolationCount > 1)
                         {
                             <span> times</span> 
@@ -34,7 +34,7 @@
                     </th>
 
                     <td rowspan="4" width="250">
-                        <img src="~/SafetyImages/@s.ImagePath" height="250" width="250" />
+                        <img src="~/SafetyImages/@s.ImagePath" height="250" width="250" style="margin:-7px"/>
                     </td>
                 </tr>
 
@@ -49,14 +49,14 @@
                         {
                             if (c.SafetyConcernGUID == s.SafetyConcernGUID)
                             {
-                                @c.OshaCode @c.Type <small>- @c.Description</small>
+                                @c.OshaCode<span> - </span> @c.Type<span>:</span><small> @c.Description</small>
                             }
                         }
                     </th>
                 </tr>
 
                 <tr>
-                    <th colspan="2" id="action_@s.SafetyConcernGUID">Corrective Action Measure: <small>@s.CorrectiveActionMeasure</small></th>
+                    <th colspan="2" id="action_@s.SafetyConcernGUID" style="height:50px;">Corrective Action Measure: <small>@s.CorrectiveActionMeasure</small></th>
                 </tr>
 
                 <tr class="hidden">
@@ -67,36 +67,6 @@
     </div>
 }
 
-<style type="text/css">
-    @@media print {
-        table {
-            page-break-inside: auto;
-            border-color: black !important;
-            -webkit-print-color-adjust: exact !important;
-        }
-
-        table tr {
-            border-color: black !important;
-            -webkit-print-color-adjust: exact !important;
-        }
-
-        div {
-            page-break-inside: avoid;
-        }
-
-        body {
-            -webkit-print-color-adjust: exact !important;
-        }
-        /* This is the key */
-        thead {
-            display: table-header-group
-        }
-
-        tfoot {
-            display: table-footer-group
-        }
-    }
-</style>
 @section scripts
 {
     <script>

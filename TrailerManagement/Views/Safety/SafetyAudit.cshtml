@@ -5,14 +5,14 @@
 <br class="no-print" />
 
 <center>
-    <img src="~/Content/logo2.png" style="margin-bottom:-15px;" />
+    <img src="~/Content/logo.png" style="margin-bottom:-15px;" />
 </center>
 
 <h3><strong class="col-xs-12 text-center">Safety Audit Report. <span id="date"></span></strong></h3>
 
 <span class="float-left">
     <a href="AddSafetyConcern" class="btn btn-primary no-print">Add Concern</a>
-    <a class="no-print btn btn-primary" href="~/Safety/PrintPartialViewToPDF">Convert to PDF</a>
+    <a class="no-print btn btn-primary" href="~/Safety/ViewSafetyAuditPDF">Convert to PDF</a>
     <a href="/Safety/ClosedSafetyAudit" class="btn btn-primary no-print">Closed Concerns</a>
 </span>
 <br />
@@ -43,7 +43,7 @@ var path = s.ImagePath.Replace("%20", " ");
                 </th>
 
                 <td rowspan="4" width="250">
-                    <img src="~/SafetyImages/@s.ImagePath" height="250" width="250" />
+                    <img src="~/SafetyImages/@s.ImagePath" height="250" width="250" style="margin:-8px"/>
                 </td>
             </tr>
 
@@ -58,7 +58,7 @@ var path = s.ImagePath.Replace("%20", " ");
                     {
                         if (c.SafetyConcernGUID == s.SafetyConcernGUID)
                         {
-                            @c.OshaCode @c.Type <small>- @c.Description</small>
+                            @c.OshaCode<span> - </span> @c.Type<span>:</span><small> @c.Description</small>
                         }
                     }
                 </th>
