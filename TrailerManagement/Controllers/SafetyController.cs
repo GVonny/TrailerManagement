@@ -589,7 +589,8 @@ namespace TrailerManagement.Controllers
 
         public ActionResult ViewSafetyAuditPDF()
         {
-            var report = new ActionAsPdf("SafetyAuditPDF");
+            var date = DateTime.Now.ToString("MM-dd-yyyy");
+            var report = new ActionAsPdf("SafetyAuditPDF"); //{ FileName = "SafetyAudit - " + date + ".pdf" };
             return report;
         }
     }
