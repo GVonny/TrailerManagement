@@ -23,7 +23,7 @@
         @foreach (ActiveLocationRow r in Model.Rows)
         {
             <tr id="@r.InventoryRowGUID">
-                <td id="locationNumber_@r.LocationNumber" class="hidden">@r.LocationNumber</td>
+                <td id="locationNumber_@r.InventoryRowGUID" class="hidden">@r.LocationNumber</td>
                 <td id="rowNumber_@r.InventoryRowGUID">@r.RowNumber</td>
                 <td id="numberOfParts_@r.InventoryRowGUID">@r.NumberOfPartNumbers</td>
                 <td id="numberOfStacks_@r.InventoryRowGUID">@r.NumberOfStacks</td>
@@ -51,6 +51,7 @@
             {
                 console.log(this.id);
                 location.href = "/Inventory/AddToRow?locationID=" + $('#locationNumber_' + this.id).html() + "&rowNumber=" + $('#rowNumber_' + this.id).html();
+                console.log("/Inventory/AddToRow?locationID=" + $('#locationNumber_' + this.id).html() + "&rowNumber=" + $('#rowNumber_' + this.id).html())
             });
         });
     </script>

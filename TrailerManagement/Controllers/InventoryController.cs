@@ -119,14 +119,19 @@ namespace TrailerManagement.Controllers
             using (TrailerEntities db = new TrailerEntities())
             {
                 string[] input = fc.AllKeys;
+                var locationID = Convert.ToInt32(fc["locationNumber"]);
+                var rowNumber = Convert.ToInt32(fc["rowNumber"]);
                 var partNumbers = fc["partNumbers"].Split(',');
                 foreach(string part in partNumbers)
-                for(var x = 1; x < fc.Count; x++)
                 {
-                    var key = fc.GetKey(x);
-                    var stackQuantity = Convert.ToInt32(fc[key]);
+                    for (var x = 3; x < fc.Count; x++)
+                    {
+                        var key = fc.GetKey(x);
+                        var stackQuantity = Convert.ToInt32(fc[key]);
+                    }
                 }
-                return View();
+                
+                return RedirectToAction(actionName: "ActiveLocationRows", controllerName: "Inventory", routeValues: new { locationID });
             }
         }
     }
