@@ -12,8 +12,8 @@
 
 <span class="float-left">
     <a href="AddSafetyConcern" class="btn btn-primary no-print">Add Concern</a>
-    <a class="no-print btn btn-primary" href="~/Safety/ViewSafetyAuditPDF">Download PDF</a>
-    <a href="/Safety/ClosedSafetyAudit" class="btn btn-primary no-print">Closed Concerns</a>
+    <a class="no-print btn btn-primary" href="~/Safety/ViewSafetyAuditPDF">View as PDF</a>
+    <a href="/Safety/ClosedSafetyConcerns" class="btn btn-primary no-print">Closed Concerns</a>
 </span>
 <br />
 <br />
@@ -22,58 +22,62 @@
 
 @foreach (SafetyConcern s in Model.Concerns)
 {
-var path = s.ImagePath.Replace("%20", " ");
-<div>
-    <table class="table table-responsive" id="@s.SafetyConcernGUID" style="border-style:solid;border-color:#333">
-        <tbody id="concerns">
-            <tr>
-                <th id="area_@s.SafetyConcernGUID">Area: @s.Area @if (s.AreaNote != "" && s.AreaNote != null)
-                {<span> - @s.AreaNote</span>}</th>
-
-                <th class="text-right col-xs-3">
-                    <span>Repeat Violation: </span><span id="violationCount_@s.SafetyConcernGUID">@s.ViolationCount</span>
-                    @if (s.ViolationCount > 1)
-                    {
-                        <span> times</span>
-                    }
-                    else
-                    {
-                        <span> time</span>
-                    }
-                </th>
-
-                <td rowspan="4" width="250">
-                    <img src="~/SafetyImages/@s.ImagePath" height="250" width="250" style="margin:-8px"/>
-                </td>
-            </tr>
-
-            <tr style="border-style:solid; border-color:#333">
-                <th colspan="2" id="condition_@s.SafetyConcernGUID">Condition Noted: @s.ConditionNoted</th>
-            </tr>
-
-            <tr>
-                <th colspan="2" id="violation_@s.SafetyConcernGUID">
-                    <strong>Code Violation:</strong>
-                    @foreach (CodeViolation c in Model.Violations)
-                    {
-                        if (c.SafetyConcernGUID == s.SafetyConcernGUID)
+    var path = s.ImagePath.Replace("%20", " ");
+    <div>
+        <table class="table table-responsive" id="@s.SafetyConcernGUID" style="border-style:solid;border-color:#333">
+            <tbody id="concerns">
+                <tr>
+                    <th id="area_@s.SafetyConcernGUID">Area: @s.Area 
+                        @if (s.AreaNote != "" && s.AreaNote != null)
                         {
-                            @c.OshaCode<span> - </span> @c.Type<span>:</span><small> @c.Description</small>
+                            <span> - @s.AreaNote</span>
                         }
-                    }
-                </th>
-            </tr>
+                    </th>
 
-            <tr>
-                <th colspan="2" id="action_@s.SafetyConcernGUID">Corrective Action Measure: <small>@s.CorrectiveActionMeasure</small></th>
-            </tr>
+                    <th class="text-right col-xs-3">
+                        <span>Repeat Violation: </span><span id="violationCount_@s.SafetyConcernGUID">@s.ViolationCount</span>
+                        @if (s.ViolationCount > 1)
+                        {
+                            <span> times</span>
+                        }
+                        else
+                        {
+                            <span> time</span>
+                        }
+                    </th>
 
-            <tr class="hidden">
-                <th id="severity_@s.SafetyConcernGUID">@s.Severity</th>
-            </tr>
-        </tbody>
-    </table>
-</div>
+                    <td rowspan="4" width="250">
+                        <img src="~/SafetyImages/@s.ImagePath" height="250" width="250" style="margin:-8px"/>
+                    </td>
+                </tr>
+
+                <tr style="border-style:solid; border-color:#333">
+                    <th colspan="2" id="condition_@s.SafetyConcernGUID">Condition Noted: @s.ConditionNoted</th>
+                </tr>
+
+                <tr>
+                    <th colspan="2" id="violation_@s.SafetyConcernGUID">
+                        <strong>Code Violation:</strong>
+                        @foreach (CodeViolation c in Model.Violations)
+                        {
+                            if (c.SafetyConcernGUID == s.SafetyConcernGUID)
+                            {
+                                @c.OshaCode<span> - </span> @c.Type<span>:</span><small> @c.Description</small>
+                            }
+                        }
+                    </th>
+                </tr>
+
+                <tr>
+                    <th colspan="2" id="action_@s.SafetyConcernGUID">Corrective Action Measure: <small>@s.CorrectiveActionMeasure</small></th>
+                </tr>
+
+                <tr class="hidden">
+                    <th id="severity_@s.SafetyConcernGUID">@s.Severity</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 }
 
 <style type="text/css">

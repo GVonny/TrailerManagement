@@ -181,6 +181,7 @@
     <Compile Include="Controllers\EmailController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\SafetyController.cs" />
     <Compile Include="Controllers\TrailerController.cs" />
     <Compile Include="Controllers\PalletRepairController.cs" />
@@ -188,6 +189,9 @@
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ActiveInventoryLocation.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ActiveTrailerList.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
@@ -219,6 +223,9 @@
     <Compile Include="Models\EditTrailer.cs" />
     <Compile Include="Models\EditUser.cs" />
     <Compile Include="Models\InactiveTrailerList.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\InventoryRow.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\MasterStack.cs">
@@ -383,7 +390,8 @@
     <Content Include="Views\PalletRepair\SortStacks.cshtml" />
     <Content Include="Views\PalletRepair\CompleteSortSummary.cshtml" />
     <Content Include="Views\Safety\SafetyAuditPDF.cshtml" />
-    <Content Include="Views\Safety\ClosedSafetyAudit.cshtml" />
+    <Content Include="Views\Safety\ClosedSafetyConcerns.cshtml" />
+    <Content Include="Views\Inventory\InventoryInput.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

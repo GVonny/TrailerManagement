@@ -39,7 +39,8 @@
                 </tr>
 
                 <tr style="border-style:solid; border-color:#333">
-                    <th colspan="2" id="condition_@s.SafetyConcernGUID">Condition Noted: @s.ConditionNoted</th>
+                    <th id="condition_@s.SafetyConcernGUID">Condition Noted: @s.ConditionNoted</th>
+                    <th id="dateOpened_@s.SafetyConcernGUID" class="text-right">Date Opened: <small>@s.DateOpened</small></th>
                 </tr>
 
                 <tr>
@@ -56,7 +57,8 @@
                 </tr>
 
                 <tr>
-                    <th colspan="2" id="action_@s.SafetyConcernGUID">Corrective Action Measure: <small>@s.CorrectiveActionMeasure</small></th>
+                    <th id="action_@s.SafetyConcernGUID">Corrective Action Measure: <small>@s.CorrectiveActionMeasure</small></th>
+                    <th id="closedDate_@s.SafetyConcernGUID" class="text-right">Date Closed: <small>@s.DateClosed</small></th>
                 </tr>
 
                 <tr class="hidden">

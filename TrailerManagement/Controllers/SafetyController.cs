@@ -222,7 +222,7 @@ namespace TrailerManagement.Controllers
                 {
                     dynamic model = new ExpandoObject();
 
-                    var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenByDescending(c => c.AreaNote).ToList();
+                    var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenBy(c => c.AreaNote).ToList();
                     model.Concerns = concerns;
 
                     var violations = db.CodeViolations.ToList();
@@ -257,7 +257,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult ClosedSafetyAudit()
+        public ActionResult ClosedSafetyConcerns()
         {
             if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
             {
@@ -265,7 +265,7 @@ namespace TrailerManagement.Controllers
                 {
                     dynamic model = new ExpandoObject();
 
-                    var concerns = db.SafetyConcerns.Where(c => c.Status == "CLOSED").ToList();
+                    var concerns = db.SafetyConcerns.Where(c => c.Status == "CLOSED").OrderBy(c => c.DateClosed).ToList();
                     model.Concerns = concerns;
 
                     var violations = db.CodeViolations.ToList();
@@ -334,7 +334,7 @@ namespace TrailerManagement.Controllers
                     SafetyConcern newConcern = new SafetyConcern()
                     {
                         Area = departments,
-                        AreaNote = areaNote,
+                        
                         ConditionNoted = conditionNoted,
                         CorrectiveActionMeasure = correctiveAction,
                         ViolationCount = 1,
@@ -343,7 +343,17 @@ namespace TrailerManagement.Controllers
                         
                         ImagePath = path,
                     };
-                    if(severity == "")
+
+                    if(areaNote == "")
+                    {
+                        newConcern.AreaNote = null;
+                    }
+                    else
+                    {
+                        newConcern.AreaNote = areaNote;
+                    }
+
+                    if (severity == "")
                     {
                         newConcern.Severity = "LOW";
                     }
@@ -443,7 +453,15 @@ namespace TrailerManagement.Controllers
                 {
                     var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcern.SafetyConcernGUID);
                     concern.Area = safetyConcern.Area;
-                    concern.AreaNote = areaNote;
+                    if(areaNote == "")
+                    {
+                        concern.AreaNote = null;
+                    }
+                    else
+                    {
+                        concern.AreaNote = areaNote;
+                    }
+                    
                     concern.ConditionNoted = safetyConcern.ConditionNoted;
                     concern.CorrectiveActionMeasure = safetyConcern.CorrectiveActionMeasure;
                     concern.Severity = safetyConcern.Severity;
