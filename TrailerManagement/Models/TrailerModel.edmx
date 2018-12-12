@@ -10,11 +10,17 @@
             <PropertyRef Name="InventoryLocationGUID" />
           </Key>
           <Property Name="InventoryLocationGUID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="InventoryRowGUID" Type="bigint" />
-          <Property Name="Location" Type="int" />
+          <Property Name="LocationNumber" Type="int" />
+          <Property Name="NumberOfRows" Type="int" />
+        </EntityType>
+        <EntityType Name="ActiveLocationRows">
+          <Key>
+            <PropertyRef Name="InventoryRowGUID" />
+          </Key>
+          <Property Name="InventoryRowGUID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LocationNumber" Type="int" />
           <Property Name="RowNumber" Type="int" />
           <Property Name="NumberOfPartNumbers" Type="int" />
-          <Property Name="PalletCount" Type="int" />
           <Property Name="NumberOfStacks" Type="int" />
         </EntityType>
         <EntityType Name="ActiveTrailerList">
@@ -103,15 +109,14 @@
           <Property Name="DateModified" Type="varchar" MaxLength="15" />
           <Property Name="TrailerLocation" Type="varchar" MaxLength="50" />
         </EntityType>
-        <EntityType Name="InventoryRows">
+        <EntityType Name="InventoryRowStacks">
           <Key>
-            <PropertyRef Name="InventoryRowGUID" />
+            <PropertyRef Name="InventoryRowStackGUID" />
           </Key>
-          <Property Name="InventoryRowGUID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Location" Type="int" />
-          <Property Name="RowNumber" Type="int" />
+          <Property Name="InventoryRowStackGUID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="InventoryRowGUID" Type="bigint" />
           <Property Name="PartNumber" Type="varchar" MaxLength="10" />
-          <Property Name="Quantity" Type="int" />
+          <Property Name="StackQuantity" Type="int" />
         </EntityType>
         <EntityType Name="MasterStacks">
           <Key>
@@ -264,13 +269,14 @@
         </EntityType>
         <EntityContainer Name="TrailerModelStoreContainer">
           <EntitySet Name="ActiveInventoryLocations" EntityType="Self.ActiveInventoryLocations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ActiveLocationRows" EntityType="Self.ActiveLocationRows" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ActiveTrailerList" EntityType="Self.ActiveTrailerList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CodeViolations" EntityType="Self.CodeViolations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CompletedSorts" EntityType="Self.CompletedSorts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CustomersAndVendors" EntityType="Self.CustomersAndVendors" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Departments" EntityType="Self.Departments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InactiveTrailerList" EntityType="Self.InactiveTrailerList" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="InventoryRows" EntityType="Self.InventoryRows" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InventoryRowStacks" EntityType="Self.InventoryRowStacks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MasterStacks" EntityType="Self.MasterStacks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PalletPrices" EntityType="Self.PalletPrices" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PalletTypes" EntityType="Self.PalletTypes" Schema="dbo" store:Type="Tables" />
@@ -342,7 +348,8 @@
           <EntitySet Name="Payouts" EntityType="TrailerModel.Payout" />
           <EntitySet Name="CodeViolations" EntityType="TrailerModel.CodeViolation" />
           <EntitySet Name="ActiveInventoryLocations" EntityType="TrailerModel.ActiveInventoryLocation" />
-          <EntitySet Name="InventoryRows" EntityType="TrailerModel.InventoryRow" />
+          <EntitySet Name="InventoryRowStacks" EntityType="TrailerModel.InventoryRowStack" />
+          <EntitySet Name="ActiveLocationRows" EntityType="TrailerModel.ActiveLocationRow" />
         </EntityContainer>
         <EntityType Name="TrailerList">
           <Key>
@@ -546,22 +553,27 @@
             <PropertyRef Name="InventoryLocationGUID" />
           </Key>
           <Property Name="InventoryLocationGUID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="InventoryRowGUID" Type="Int64" />
-          <Property Name="NumberOfPartNumbers" Type="Int32" />
-          <Property Name="PalletCount" Type="Int32" />
-          <Property Name="NumberOfStacks" Type="Int32" />
-          <Property Name="Location" Type="Int32" />
-          <Property Name="RowNumber" Type="Int32" />
+          <Property Name="LocationNumber" Type="Int32" />
+          <Property Name="NumberOfRows" Type="Int32" />
         </EntityType>
-        <EntityType Name="InventoryRow">
+        <EntityType Name="InventoryRowStack">
+          <Key>
+            <PropertyRef Name="InventoryRowStackGUID" />
+          </Key>
+          <Property Name="InventoryRowStackGUID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InventoryRowGUID" Type="Int64" />
+          <Property Name="PartNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="StackQuantity" Type="Int32" />
+        </EntityType>
+        <EntityType Name="ActiveLocationRow">
           <Key>
             <PropertyRef Name="InventoryRowGUID" />
           </Key>
           <Property Name="InventoryRowGUID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Location" Type="Int32" />
+          <Property Name="LocationNumber" Type="Int32" />
           <Property Name="RowNumber" Type="Int32" />
-          <Property Name="PartNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="Quantity" Type="Int32" />
+          <Property Name="NumberOfPartNumbers" Type="Int32" />
+          <Property Name="NumberOfStacks" Type="Int32" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -823,23 +835,29 @@
           <EntitySetMapping Name="ActiveInventoryLocations">
             <EntityTypeMapping TypeName="TrailerModel.ActiveInventoryLocation">
               <MappingFragment StoreEntitySet="ActiveInventoryLocations">
-                <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
-                <ScalarProperty Name="Location" ColumnName="Location" />
-                <ScalarProperty Name="NumberOfStacks" ColumnName="NumberOfStacks" />
-                <ScalarProperty Name="PalletCount" ColumnName="PalletCount" />
-                <ScalarProperty Name="NumberOfPartNumbers" ColumnName="NumberOfPartNumbers" />
-                <ScalarProperty Name="InventoryRowGUID" ColumnName="InventoryRowGUID" />
+                <ScalarProperty Name="NumberOfRows" ColumnName="NumberOfRows" />
+                <ScalarProperty Name="LocationNumber" ColumnName="LocationNumber" />
                 <ScalarProperty Name="InventoryLocationGUID" ColumnName="InventoryLocationGUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="InventoryRows">
-            <EntityTypeMapping TypeName="TrailerModel.InventoryRow">
-              <MappingFragment StoreEntitySet="InventoryRows">
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <EntitySetMapping Name="InventoryRowStacks">
+            <EntityTypeMapping TypeName="TrailerModel.InventoryRowStack">
+              <MappingFragment StoreEntitySet="InventoryRowStacks">
+                <ScalarProperty Name="StackQuantity" ColumnName="StackQuantity" />
                 <ScalarProperty Name="PartNumber" ColumnName="PartNumber" />
+                <ScalarProperty Name="InventoryRowGUID" ColumnName="InventoryRowGUID" />
+                <ScalarProperty Name="InventoryRowStackGUID" ColumnName="InventoryRowStackGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ActiveLocationRows">
+            <EntityTypeMapping TypeName="TrailerModel.ActiveLocationRow">
+              <MappingFragment StoreEntitySet="ActiveLocationRows">
+                <ScalarProperty Name="NumberOfStacks" ColumnName="NumberOfStacks" />
+                <ScalarProperty Name="NumberOfPartNumbers" ColumnName="NumberOfPartNumbers" />
                 <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
-                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="LocationNumber" ColumnName="LocationNumber" />
                 <ScalarProperty Name="InventoryRowGUID" ColumnName="InventoryRowGUID" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -12,10 +12,11 @@ namespace TrailerManagement.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ActiveInventoryLocation
+    public partial class InventoryRowStack
     {
-        public long InventoryLocationGUID { get; set; }
-        public Nullable<int> LocationNumber { get; set; }
-        public Nullable<int> NumberOfRows { get; set; }
+        public long InventoryRowStackGUID { get; set; }
+        public Nullable<long> InventoryRowGUID { get; set; }
+        public string PartNumber { get; set; }
+        public Nullable<int> StackQuantity { get; set; }
     }
 }

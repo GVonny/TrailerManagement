@@ -1,0 +1,72 @@
+﻿
+@{
+    ViewBag.Title = "InventoryInput";
+    var counter = 1;
+}
+
+<h2>Inventory Input</h2>
+
+<div class="well">
+    @using (Html.BeginForm("AddToRow", "Inventory", FormMethod.Post))
+    {
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label for="partNumbers" class="col-md-1">Part #</label>
+                @Html.DropDownList("partNumbers", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control", @id = "partNumbers" })
+            </div>
+            <div id="stacks">
+                <div class="form-group" id="stack_1">
+                    <label for="stackInput_@counter" class="col-md-1">Stack @counter</label>
+                    <input type="number" placeholder="Stack @counter Quantity" id="stackInput_@counter" name="stackInput_@counter" class="form-control" style="width:150px;"/>
+                </div>
+            </div>
+            <div>
+                <input type="button" class="btn btn-green float-right" value="Add Stack" id="addStack" />
+                <input type="button" class="btn btn-danger hidden float-right" value="Remove Stack" id="removeStack" />
+                <input type="submit" class="btn btn-primary" />
+                <a href="/Inventory/ActiveLocationRows?locationID=@ViewBag.LocationNumber" class="btn btn-warning">Cancel</a>
+            </div>
+        </div>
+
+
+    }
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            var counter = 1;
+            $('#addStack').on('click', function ()
+            {
+                counter++;
+                if (counter > 1)
+                {
+                    $('#removeStack').removeClass('hidden');
+                }
+                $('#stacks').append(
+                    "<div class=\"form-group\" id=\"stack_" + counter + "\">" +
+                    "<label for=\"stackInput_" + counter + "\" class=\"col-md-1\">Stack " + counter + "</label>" +
+                    "<input type =\"number\" placeholder=\"Stack " + counter + " Quantity\" class=\"form-control\" id=\"stackInput_" + counter + "\" name=\"stack_" + counter + "\" style=\"width:150px;\"/>" + 
+                    "</div>"
+                );
+            });
+            
+
+            $('#removeStack').on('click', function ()
+            {
+                $('#stack_' + counter).remove();
+                counter--;
+                if (counter < 1)
+                {
+                    counter = 1;
+                }
+                if (counter == 1)
+                {
+                    $('#removeStack').addClass('hidden');
+                }
+            });
+        });
+    </script>    
+}

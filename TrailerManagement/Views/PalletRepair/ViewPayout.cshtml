@@ -89,7 +89,14 @@
                 <td class="hidden" id="sortGUID">@t.SortGUID</td>
             </tr>
         }
+        
     </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3" class="text-right">Total Price:</td>
+            <td id="totalPrice"></td>
+        </tr>
+    </tfoot>
 </table>
 
 <div class="col-xs-4 float-left">
@@ -494,14 +501,18 @@ else
         $(function ()
         {
             var priceCounter = 0;
+            var totalPrice = 0;
             $('#palletTypes tr').each(function ()
             {
                 var id = this.id;
-
+                
                 if ($('#price_' + id).html() != "" && $('#price_' + id).html() != "0")
                 {
                     var cost = parseFloat($('#price_' + id).html());
+                    var quantity = parseInt($('#quantity_' + id).html());
+                    totalPrice += (cost.toFixed(2) * quantity.toFixed(2));
                     $('#price_' + id).html("$" + cost.toFixed(2));
+                    $('#totalPrice').html("$" + totalPrice.toFixed(2));
                 }
                 else
                 {

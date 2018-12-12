@@ -1,0 +1,57 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Active Locations Rows";
+    var locationNumber = Model.LocationNumber;
+}
+
+<div>
+    <h2 class="float-left">Location @locationNumber Rows</h2>
+    <a href="/Inventory/CreateLocationRow?locationID=@locationNumber" class="btn btn-primary" style="margin-top:20px;margin-left:10px;">Create Row</a>
+    <a href="/Inventory/ActiveInventoryLocations" class="btn btn-primary" style="margin-top:20px;margin-left:10px;">Locations</a>
+</div>
+
+
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr style="background-color:white">
+            <th>Row Number</th>
+            <th>Number of Part Numbers</th>
+            <th>Number of Stacks</th>
+        </tr>
+    </thead>
+    <tbody id="locations">
+        @foreach (ActiveLocationRow r in Model.Rows)
+        {
+            <tr id="@r.InventoryRowGUID">
+                <td id="locationNumber_@r.LocationNumber" class="hidden">@r.LocationNumber</td>
+                <td id="rowNumber_@r.InventoryRowGUID">@r.RowNumber</td>
+                <td id="numberOfParts_@r.InventoryRowGUID">@r.NumberOfPartNumbers</td>
+                <td id="numberOfStacks_@r.InventoryRowGUID">@r.NumberOfStacks</td>
+                @if (r.NumberOfStacks > 0)
+                {
+                    <td><a>edit stacks</a></td>
+                }
+                else
+                {
+                    <td><a href="/Inventory/AddToRow?locationID=@r.LocationNumber&rowNumber=@r.RowNumber">Add Stacks</a></td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('#locations tr').on('click', function ()
+            {
+                console.log(this.id);
+                location.href = "/Inventory/AddToRow?locationID=" + $('#locationNumber_' + this.id).html() + "&rowNumber=" + $('#rowNumber_' + this.id).html();
+            });
+        });
+    </script>
+}

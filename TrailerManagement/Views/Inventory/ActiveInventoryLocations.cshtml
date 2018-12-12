@@ -1,0 +1,44 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "ActiveInventoryLocations";
+}
+
+<div>
+    <h2 class="float-left">Active Inventory Locations</h2>
+    <a href="/Inventory/CreateActiveInventoryLocation" class="btn btn-primary" style="margin-top:20px;margin-left:10px;">Create Location</a>
+</div>
+
+
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr style="background-color:white">
+            <th>Location</th>
+            <th>Number of Rows</th>
+        </tr>
+    </thead>
+    <tbody id="locations">
+        @foreach (ActiveInventoryLocation l in Model)
+        {
+            <tr id="@l.LocationNumber">
+                <td id="locationNumber_@l.LocationNumber">@l.LocationNumber</td>
+                <td id="numberOfStacks_@l.LocationNumber">@l.NumberOfRows</td>
+                <td id="viewRow_@l.LocationNumber"><a href="/Inventory/ActiveLocationRows?locationID=@l.LocationNumber">View Location</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('#locations tr').on('click', function ()
+            {
+                console.log(this.id);
+                location.href = "/Inventory/ActiveLocationRows?locationID=" + this.id;
+            });
+        });
+    </script>
+}
