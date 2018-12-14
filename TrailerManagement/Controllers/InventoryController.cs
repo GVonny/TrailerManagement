@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Ajax.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -122,16 +123,64 @@ namespace TrailerManagement.Controllers
                 var locationID = Convert.ToInt32(fc["locationNumber"]);
                 var rowNumber = Convert.ToInt32(fc["rowNumber"]);
                 var partNumbers = fc["partNumbers"].Split(',');
-                foreach(string part in partNumbers)
-                {
-                    for (var x = 3; x < fc.Count; x++)
-                    {
-                        var key = fc.GetKey(x);
-                        var stackQuantity = Convert.ToInt32(fc[key]);
-                    }
-                }
+                var partNumberCount = partNumbers.Length;
+
+                var location = db.ActiveLocationRows.FirstOrDefault(r => r.LocationNumber == locationID && r.RowNumber == rowNumber);
+                location.NumberOfPartNumbers = partNumberCount;
+                location.NumberOfStacks = 0;
+
+                var row = db.ActiveLocationRows.FirstOrDefault(r => r.LocationNumber == locationID && r.RowNumber == rowNumber);
                 
+                //List<Array> quantities = new List<Array>();
+                for (var x = 3; x < fc.Count; x++)
+                {
+                    var key = fc.GetKey(x);
+                    var stackQuantity = fc[key];
+                    var partNumberKey = Convert.ToInt32(key.Substring(5, 1)) - 1;
+
+                    InventoryRowStack newStack = new InventoryRowStack()
+                    {
+                        InventoryRowGUID = row.InventoryRowGUID,
+                        PartNumber = partNumbers[partNumberKey],
+                        StackQuantity = Convert.ToInt32(stackQuantity),
+                    };
+                    db.InventoryRowStacks.Add(newStack);
+
+                    location.NumberOfStacks++;
+                }
+                db.SaveChanges();
                 return RedirectToAction(actionName: "ActiveLocationRows", controllerName: "Inventory", routeValues: new { locationID });
+            }
+        }
+
+        public ActionResult ViewRowStacks(int rowID)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                dynamic model = new ExpandoObject();
+
+                var location = db.ActiveLocationRows.FirstOrDefault(l => l.InventoryRowGUID == rowID);
+                ViewBag.LocationNumber = location.LocationNumber;
+                ViewBag.RowNumber = location.RowNumber;
+
+                var stacks = db.InventoryRowStacks.Where(p => p.InventoryRowGUID == rowID).ToList();
+                var partNumbers = db.InventoryRowStacks.DistinctBy(p => p.PartNumber).Where(p => p.InventoryRowGUID == rowID).ToList();
+
+                this.ViewData["partNumbers"] = new SelectList(db.PalletTypes.Where(c => c.Type != "SCRAP" && c.Type != "DEDUCTION").OrderBy(c => c.PartNumber), "PartNumber", "PartNumber").ToList();
+
+                model.Stacks = stacks;
+                model.PartNumbers = partNumbers;
+
+
+                var parts = "";
+                foreach (var stack in partNumbers)
+                {
+                    parts += stack.PartNumber + ",";
+                }
+                parts = parts.Substring(0, parts.Length - 1);
+                ViewBag.Parts = parts;
+
+                return View(model);
             }
         }
     }

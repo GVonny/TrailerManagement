@@ -1,0 +1,83 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "View Row Stacks";
+    var parts = ViewBag.Parts;
+    var x = 1;
+    
+}
+
+<h2>View Row Stacks</h2>
+
+<div class="well">
+    @using (Html.BeginForm("AddToRow", "Inventory", FormMethod.Post))
+    {
+        <div class="form-horizontal">
+            <div class="form-group hidden">
+                <label for="locationNumber">Location Number</label>
+                <input type="number" id="locationNumber" name="locationNumber" class="form-control col-md-offset-1" value="@ViewBag.LocationNumber" />
+                <label for="rowNumber">Row Number</label>
+                <input type="number" id="rowNumber" name="rowNumber" class="form-control col-md-offset-1" value="@ViewBag.RowNumber" />
+            </div>
+            <div id="parts">
+                @foreach (var p in Model.PartNumbers)
+                {
+                    var y = 1;
+                    var id = string.Format("partNumber{0}", x);
+                    <div id="part-@x">
+                        <div class="form-group">
+                            <label for="partNumbers" class="col-md-1">Part #</label>
+                            @Html.DropDownList("partNumbers", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control", @id = id, @required = "required" })
+                        </div>
+                        @foreach (var s in Model.Stacks)
+                        {
+                            if (s.PartNumber == p.PartNumber)
+                            {
+                                <div id="part-@y-stacks">
+                                    <div class="form-group" id="@x-@y">
+                                        <label for="part-@x-stack-@y" class="col-md-1">Stack @y</label>
+                                        <input type="number" placeholder="Stack 1 Quantity" value="@s.StackQuantity" name="part-@x-stack-@y" class="form-control" style="width:150px;" />
+                                    </div>
+                                </div>
+                                y++;
+                            }
+                        }
+                        <input type="button" class="btn btn-green add-stack" value="Add Stack" style="margin-left:80px;" />
+                        <input type="button" class="btn btn-danger hidden remove-stack" value="Remove Stack" id="part1Remove" style="margin-right:5px;" />
+                        <br />
+                        <br />
+                    </div>
+                    x++;
+                }
+            </div>
+
+        </div>
+    }
+    <div class="form-group">
+        <div class="col-md-10">
+            <center>
+                <input type="button" class="btn btn-green" value="Add Part" id="addPalletType" style="margin-right:5px;" />
+                <input type="button" class="btn btn-danger" value="Remove Part" id="removePalletType" style="margin-right:5px;" />
+                <input type="submit" class="btn btn-primary float-left" />
+                <a href="/Inventory/ActiveLocationRows?locationID=@ViewBag.LocationNumber" class="btn btn-warning float-left" style="margin-left:5px;">Cancel</a>
+            </center>
+        </div>
+    </div>
+    <br />
+</div>
+
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            var parts = '@parts'.split(',');
+            console.log(parts);
+
+            for (var x = 0; x < parts.length; x++)
+            {
+                $('#partNumber' + (x+1)).val(parts[x]);
+            }
+        });
+    </script>    
+}

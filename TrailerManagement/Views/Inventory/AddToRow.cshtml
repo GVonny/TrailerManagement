@@ -10,28 +10,40 @@
     @using (Html.BeginForm("AddToRow", "Inventory", FormMethod.Post))
     {
     <div class="form-horizontal">
-        <div class="form-group">
+        <div class="form-group hidden">
+            <label for="locationNumber">Location Number</label>
             <input type="number" id="locationNumber" name="locationNumber" class="form-control col-md-offset-1" value="@ViewBag.LocationNumber" />
+            <label for="rowNumber">Row Number</label>
             <input type="number" id="rowNumber" name="rowNumber" class="form-control col-md-offset-1" value="@ViewBag.RowNumber" />
         </div>
-        
-
-        <div class="form-group">
-            <label for="partNumbers" class="col-md-1">Part #</label>
-            @Html.DropDownList("partNumbers", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control", @id = "partNumbers", @required = "required" })
-        </div>
-        <div id="stacks">
-            <div class="form-group" id="stack_1">
-                <label for="stackInput_@counter" class="col-md-1">Stack @counter</label>
-                <input type="number" placeholder="Stack @counter Quantity" id="stackInput_@counter" name="stackInput_@counter" class="form-control" style="width:150px;" />
+        <div id="parts">
+            <div id="part-1">
+                <div class="form-group">
+                    <label for="partNumbers" class="col-md-1">Part #</label>
+                    @Html.DropDownList("partNumbers", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control", @id = "partNumbers", @required = "required" })
+                </div>
+                <div id="part-1-stacks">
+                    <div class="form-group" id="1-1">
+                        <label for="part-1-stack-1" class="col-md-1">Stack 1</label>
+                        <input type="number" placeholder="Stack 1 Quantity" id="" name="part-1-stack-1" class="form-control" style="width:150px;" />
+                    </div>
+                </div>
+                <input type="button" class="btn btn-green add-stack" value="Add Stack" style="margin-left:80px;" />
+                <input type="button" class="btn btn-danger hidden remove-stack" value="Remove Stack" id="part1Remove" style="margin-right:5px;" />
+                <br />
+                <br />
             </div>
         </div>
+        <br />
         <div class="form-group">
             <div class="col-md-10">
-                <input type="button" class="btn btn-green float-right" value="Add Stack" id="addStack" />
-                <input type="button" class="btn btn-danger hidden float-right" value="Remove Stack" id="removeStack" style="margin-right:5px;" />
-                <input type="submit" class="btn btn-primary" />
-                <a href="/Inventory/ActiveLocationRows?locationID=@ViewBag.LocationNumber" class="btn btn-warning">Cancel</a>
+                <center>
+                    <input type="button" class="btn btn-green" value="Add Part" id="addPalletType" style="margin-right:5px;" />
+                    <input type="button" class="btn btn-danger" value="Remove Part" id="removePalletType" style="margin-right:5px;" />
+                    <input type="submit" class="btn btn-primary float-left" />
+                    <a href="/Inventory/ActiveLocationRows?locationID=@ViewBag.LocationNumber" class="btn btn-warning float-left" style="margin-left:5px;">Cancel</a>
+                </center>
+                
             </div>
         </div>
         <div class="col-xs-7">
@@ -41,6 +53,10 @@
 
 
     }
+
+    <div id="hiddenHtml" style="display:none">
+        @Html.DropDownList("partNumbers", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control", @id = "partNumbers", @required = "required" })
+    </div>
 </div>
 
 @section scripts
@@ -48,35 +64,92 @@
     <script>
         $(function ()
         {
-            var counter = 1;
-            $('#addStack').on('click', function ()
+            var palletTypeStackCounters = [1];
+            
+            console.log(palletTypeStackCounters);
+            var typeCounter = 1;
+            $('#addPalletType').on('click', function ()
             {
+                typeCounter++;
+                palletTypeStackCounters.push(1);
+                console.log(palletTypeStackCounters)
+                $('#parts').append(
+                    "<div id=\"part_" + typeCounter + "\">" +
+                        "<div class=\"form-group\">" +
+                            "<label for=\"partNumbers\" class=\"col-md-1\">Part #</label>" +
+                            $('#hiddenHtml').html() +
+                        "</div>" +
+                        "<div id=\"stacks-part_" + typeCounter + "\">" +
+                            "<div class=\"form-group\" id=\"" + typeCounter + palletTypeStackCounters[typeCounter-1] + "\">" +
+                                "<label for=\"part_" + typeCounter + "_stack_1\" class=\"col-md-1\">Stack 1</label>" + 
+                                "<input type=\"number\" placeholder=\"Stack 1 Quantity\" name=\"part_" + typeCounter + "_stack_1\" class=\"form-control\" style=\"width:150px;\" />" +
+                            "</div>" +
+                        "</div>" +
+                        "<input type=\"button\" class=\"btn btn-green add-stack\" value=\"Add Stack\" id=\"\" style=\"margin-left:80px;\" />" +
+                        "<input type=\"button\" class=\"btn btn-danger hidden remove-stack\" value=\"Remove Stack\" id=\"part" + typeCounter + "Remove" + "\" style=\"margin-left:5px;\" />" + 
+                        "<br />" + 
+                        "<br />" + 
+                    "</div>");
+            });
+
+            $('body').on('click', ".add-stack",function (e)
+            {
+                e.preventDefault();
+                var part = this.parentElement.id;
+                var partIndex = parseInt(part.substring(part.length - 1, part.length)) - 1;
+                console.log("parent id: " + part);
+                console.log("array index: " + partIndex);
+
+                var counter = parseInt(palletTypeStackCounters[partIndex]);
                 counter++;
+                console.log("stack count: " + counter);
+                palletTypeStackCounters[partIndex] = counter;
+                
+                console.log(palletTypeStackCounters);
                 if (counter > 1)
                 {
-                    $('#removeStack').removeClass('hidden');
+                    $('#part' + (partIndex+1) + "Remove").removeClass('hidden');
                 }
-                $('#stacks').append(
-                    "<div class=\"form-group\" id=\"stack_" + counter + "\">" +
-                    "<label for=\"stackInput_" + counter + "\" class=\"col-md-1\">Stack " + counter + "</label>" +
-                    "<input type =\"number\" placeholder=\"Stack " + counter + " Quantity\" class=\"form-control\" id=\"stackInput_" + counter + "\" name=\"stack_" + counter + "\" style=\"width:150px;\"/>" + 
+                $('#' + part + "-stacks").append(
+                    "<div class=\"form-group\" id=\"" + (partIndex + 1) + palletTypeStackCounters[partIndex] + "\">" +
+                        "<label for=\"part_" + (partIndex + 1) + "_stack_" + palletTypeStackCounters[partIndex] + "\" class=\"col-md-1\">Stack " + palletTypeStackCounters[partIndex] + "</label>" +
+                    "<input type =\"number\" placeholder=\"Stack " + palletTypeStackCounters[partIndex] + " Quantity\" name=\"part_" + (partIndex + 1) + "_stack_" + palletTypeStackCounters[partIndex] + "\" class=\"form-control\" style=\"width:150px;\"/>" +
                     "</div>"
                 );
             });
             
 
-            $('#removeStack').on('click', function ()
+            $('body').on('click', ".remove-stack",function ()
             {
-                $('#stack_' + counter).remove();
+                var part = this.parentElement.id;
+                var partIndex = parseInt(part.substring(part.length - 1, part.length)) - 1;
+                console.log("parent id: " + part);
+                console.log("array index: " + partIndex);
+                var counter = parseInt(palletTypeStackCounters[partIndex]);
+                
+                console.log("stack count: " + counter);
+
+                
+                var id = '#' + (partIndex + 1) + '_' + counter;
+                console.log(id);
+                $(id).remove();
+                console.log(palletTypeStackCounters);
                 counter--;
+                palletTypeStackCounters[partIndex] = counter;
                 if (counter < 1)
                 {
                     counter = 1;
                 }
                 if (counter == 1)
                 {
-                    $('#removeStack').addClass('hidden');
+                    $('#part' + (partIndex+1) + "Remove").addClass('hidden');
                 }
+            });
+
+            $('#removePalletType').on('click', function ()
+            {
+                $('#part-' + typeCounter).remove();
+                typeCounter--;
             });
         });
     </script>    

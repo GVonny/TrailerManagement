@@ -32,7 +32,7 @@ namespace TrailerManagement.Controllers
                         }
                         else
                         {
-                            codes = codes.Where(c => c.Type.ToLower().Contains(search.ToLower()) || c.SubType.ToLower().Contains(search.ToLower()) && c.Status == "ACTIVE");
+                            codes = codes.Where(c => c.Type.ToLower().Contains(search.ToLower()) || c.SubType.ToLower().Contains(search.ToLower()) && c.Status == "ACTIVE").OrderBy(c => c.OshaCode);
                         }
                     }
                     else

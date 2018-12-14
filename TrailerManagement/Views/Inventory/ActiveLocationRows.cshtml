@@ -29,7 +29,7 @@
                 <td id="numberOfStacks_@r.InventoryRowGUID">@r.NumberOfStacks</td>
                 @if (r.NumberOfStacks > 0)
                 {
-                    <td><a>edit stacks</a></td>
+                    <td><a href="/Inventory/ViewRowStacks?rowID=@r.InventoryRowGUID">edit stacks</a></td>
                 }
                 else
                 {
