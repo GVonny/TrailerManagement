@@ -100,7 +100,7 @@
                         "<div id=\"part-" + numberOfParts + "-stacks\">" +
                             "<div class=\"form-group\" id=\"" + numberOfParts + "-" + totalStacks + "\">" +
                                 "<label for=\"part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"col-md-1\">Stack " + totalStacks + "</label>" +
-                                "<input type=\"number\" placeholder=\"Stack " + numberOfParts + " Quantity\" id=\"part-" + numberOfParts + "-stack-" + totalStacks + "\" name=\"part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"form-control\" style=\"width:150px;\" />" +
+                                "<input type=\"number\" placeholder=\"Stack " + totalStacks + " Quantity\" id=\"part-" + numberOfParts + "-stack-" + totalStacks + "\" name=\"part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"form-control\" style=\"width:150px;\" />" +
                             "</div>" +
                         "</div>" +
                         "<input type=\"button\" class=\"btn btn-green add-stack\" value=\"Add Stack\"style=\"margin-left:80px;\" />" +
@@ -125,8 +125,6 @@
                 if ($('#part-' + partNumberIndex + '-stack-' + maxStackNumberPerPart[partIndex]).val() != "")
                 {
                     totalStacks++;
-                    console.log("number of parts: " + numberOfParts);
-                    console.log("total stacks: " + totalStacks);
                     
                     var partStackCount = stacksPerPart[partIndex];
                     partStackCount++;
@@ -171,7 +169,7 @@
 
                 var id = '#' + partNumberIndex + '-' + maxStackNumberPerPart[partIndex]
                 
-                $('#' + partNumberIndex + '-' + maxStackNumberPerPart[partIndex]).remove();
+                //$('#' + partNumberIndex + '-' + maxStackNumberPerPart[partIndex]).remove();
 
                 var stackCount = maxStackNumberPerPart[partIndex];
                 stackCount--;
@@ -187,7 +185,7 @@
                         }
                     }
                 }
-                maxStackNumberPerPart[partIndex] = stackCount;
+                //maxStackNumberPerPart[partIndex] = stackCount;
 
                 var partStackCount = stacksPerPart[partIndex];
                 partStackCount--;
@@ -207,21 +205,72 @@
                 console.log("max stack per part: " + maxStackNumberPerPart);
                 console.log("stacks per part: " + stacksPerPart);
 
-                stacksPerPart[partIndex] = partStackCount;
+                //stacksPerPart[partIndex] = partStackCount; 
+                
+                
+                $('#' + part).parent().children('div').each(function ()
+                {
+                //    $('#' + this.id).children('div').each(function ()
+                //    {
+                //        var id = this.id;
+                //        if (id != "")
+                //        {
+                //            $('#' + id).children('div').each(function ()
+                //            {
+                //                //console.log(this);
+                //                id = this.id;
+                //                var stackNumber = parseInt(id.substring(id.length - 1, id.length));
+                                
+                //                console.log(stackNumber);
+                //                console.log(stackCount);
+                //                if (stackNumber < stackCount);
+                //                {
+                //                    stackCount = stackNumber;
+                //                    console.log(this)
+                //                }
+                //            });
+                //        }
+                //    })
+                });
             });
 
+            function Print(part)
+            {
+                $('#' + part).parent().children('div').each(function ()
+                {
+                    $('#' + this.id).children('div').each(function ()
+                    {
+                        var id = this.id;
+                        if (id != "")
+                        {
+                            $('#' + id).children('div').each(function ()
+                            {
+                                id = this.id;
+                                if (parseInt(id.substring(id.length - 1, id.length)) > stackCount);
+                                {
+                                    console.log("going to remove this div");
+                                }
+                            });
+                        }
+                    })
+                });
+                return;
+            }
             $('#removePalletType').on('click', function ()
             {
                 var count = $('#part-' + numberOfParts + '-stacks').children().length;
                 totalStacks -= count;
-                $('#part-' + totalStacks).remove();
-                maxStackNumberPerPart.pop();
-                stacksPerPart.pop();
+                $('#part-' + numberOfParts).remove();
+                //maxStackNumberPerPart.pop();
+                //stacksPerPart.pop();
 
+                console.log("");
+                console.log("number of parts: " + numberOfParts);
+                console.log("total stacks: " + totalStacks);
                 console.log("max stack per part: " + maxStackNumberPerPart);
                 console.log("stacks per part: " + stacksPerPart);
 
-                numberOfParts--;
+                //numberOfParts--;
             });
         });
     </script>    
