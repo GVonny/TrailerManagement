@@ -22,6 +22,7 @@
           <Property Name="RowNumber" Type="int" />
           <Property Name="NumberOfPartNumbers" Type="int" />
           <Property Name="NumberOfStacks" Type="int" />
+          <Property Name="PalletCount" Type="int" />
         </EntityType>
         <EntityType Name="ActiveTrailerList">
           <Key>
@@ -574,6 +575,7 @@
           <Property Name="RowNumber" Type="Int32" />
           <Property Name="NumberOfPartNumbers" Type="Int32" />
           <Property Name="NumberOfStacks" Type="Int32" />
+          <Property Name="PalletCount" Type="Int32" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -854,6 +856,7 @@
           <EntitySetMapping Name="ActiveLocationRows">
             <EntityTypeMapping TypeName="TrailerModel.ActiveLocationRow">
               <MappingFragment StoreEntitySet="ActiveLocationRows">
+                <ScalarProperty Name="PalletCount" ColumnName="PalletCount" />
                 <ScalarProperty Name="NumberOfStacks" ColumnName="NumberOfStacks" />
                 <ScalarProperty Name="NumberOfPartNumbers" ColumnName="NumberOfPartNumbers" />
                 <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />

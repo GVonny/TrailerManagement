@@ -8,6 +8,7 @@
     <h2 class="float-left">Location @locationNumber Rows</h2>
     <a href="/Inventory/CreateLocationRow?locationID=@locationNumber" class="btn btn-primary" style="margin-top:20px;margin-left:10px;">Create Row</a>
     <a href="/Inventory/ActiveInventoryLocations" class="btn btn-primary" style="margin-top:20px;margin-left:10px;">Locations</a>
+    <a href="/Inventory/LocationSummary?locationID=@locationNumber" class="btn btn-primary"style="margin-top:20px;margin-left:10px;">Summary</a>
 </div>
 
 
@@ -17,6 +18,7 @@
             <th>Row Number</th>
             <th>Number of Part Numbers</th>
             <th>Number of Stacks</th>
+            <th>Pallet Count</th>
         </tr>
     </thead>
     <tbody id="locations">
@@ -27,9 +29,10 @@
                 <td id="rowNumber_@r.InventoryRowGUID">@r.RowNumber</td>
                 <td id="numberOfParts_@r.InventoryRowGUID">@r.NumberOfPartNumbers</td>
                 <td id="numberOfStacks_@r.InventoryRowGUID">@r.NumberOfStacks</td>
+                <td id="palletCount_@r.InventoryRowGUID" class="text-center">@r.PalletCount</td>
                 @if (r.NumberOfStacks > 0)
                 {
-                    <td><a href="/Inventory/ViewRowStacks?rowID=@r.InventoryRowGUID">edit stacks</a></td>
+                    <td><a href="/Inventory/ViewRowStacks?rowID=@r.InventoryRowGUID">Edit Stacks</a></td>
                 }
                 else
                 {
@@ -49,9 +52,9 @@
         {
             $('#locations tr').on('click', function ()
             {
-                console.log(this.id);
-                location.href = "/Inventory/AddToRow?locationID=" + $('#locationNumber_' + this.id).html() + "&rowNumber=" + $('#rowNumber_' + this.id).html();
-                console.log("/Inventory/AddToRow?locationID=" + $('#locationNumber_' + this.id).html() + "&rowNumber=" + $('#rowNumber_' + this.id).html())
+                //console.log(this.id);
+                //location.href = "/Inventory/AddToRow?locationID=" + $('#locationNumber_' + this.id).html() + "&rowNumber=" + $('#rowNumber_' + this.id).html();
+                //console.log("/Inventory/AddToRow?locationID=" + $('#locationNumber_' + this.id).html() + "&rowNumber=" + $('#rowNumber_' + this.id).html())
             });
         });
     </script>

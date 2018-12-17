@@ -30,7 +30,7 @@ namespace TrailerManagement.Controllers
             using (TrailerEntities db = new TrailerEntities())
             {
                 dynamic model = new ExpandoObject();
-                var rows = db.ActiveLocationRows.Where(r => r.LocationNumber == locationID).ToList();
+                var rows = db.ActiveLocationRows.Where(r => r.LocationNumber == locationID).OrderBy(r => r.RowNumber).ToList();
                 
                 model.Rows = rows;
                 model.LocationNumber = locationID;
@@ -110,8 +110,7 @@ namespace TrailerManagement.Controllers
                 this.ViewData["partNumbers"] = new SelectList(db.PalletTypes.Where(c => c.Type != "SCRAP" && c.Type != "DEDUCTION").OrderBy(c => c.PartNumber), "PartNumber", "PartNumber").ToList();
 
                 return View();
-            }
-                
+            } 
         }
 
         [HttpPost]
@@ -128,10 +127,14 @@ namespace TrailerManagement.Controllers
                 var location = db.ActiveLocationRows.FirstOrDefault(r => r.LocationNumber == locationID && r.RowNumber == rowNumber);
                 location.NumberOfPartNumbers = partNumberCount;
                 location.NumberOfStacks = 0;
+                location.PalletCount = 0;
 
-                var row = db.ActiveLocationRows.FirstOrDefault(r => r.LocationNumber == locationID && r.RowNumber == rowNumber);
+                var stacks = db.InventoryRowStacks.Where(s => s.InventoryRowGUID == location.InventoryRowGUID);
+                foreach(InventoryRowStack stack in stacks)
+                {
+                    db.InventoryRowStacks.Remove(stack);
+                }
                 
-                //List<Array> quantities = new List<Array>();
                 for (var x = 3; x < fc.Count; x++)
                 {
                     var key = fc.GetKey(x);
@@ -140,13 +143,14 @@ namespace TrailerManagement.Controllers
 
                     InventoryRowStack newStack = new InventoryRowStack()
                     {
-                        InventoryRowGUID = row.InventoryRowGUID,
+                        InventoryRowGUID = location.InventoryRowGUID,
                         PartNumber = partNumbers[partNumberKey],
                         StackQuantity = Convert.ToInt32(stackQuantity),
                     };
                     db.InventoryRowStacks.Add(newStack);
 
                     location.NumberOfStacks++;
+                    location.PalletCount += Convert.ToInt32(stackQuantity);
                 }
                 db.SaveChanges();
                 return RedirectToAction(actionName: "ActiveLocationRows", controllerName: "Inventory", routeValues: new { locationID });
@@ -179,6 +183,25 @@ namespace TrailerManagement.Controllers
                 }
                 parts = parts.Substring(0, parts.Length - 1);
                 ViewBag.Parts = parts;
+
+                return View(model);
+            }
+        }
+
+        public ActionResult LocationSummary(int locationID)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var rows = db.ActiveLocationRows.Where(l => l.LocationNumber == locationID);
+                List<Object> stacks = new List<Object>();
+                foreach(var row in rows)
+                {
+                    var stack = db.InventoryRowStacks.Where(s => s.InventoryRowGUID == row.InventoryRowGUID).ToList();
+                    stacks.Add(stack);
+                }
+                dynamic model = new ExpandoObject();
+
+                model.Stacks = stacks;
 
                 return View(model);
             }

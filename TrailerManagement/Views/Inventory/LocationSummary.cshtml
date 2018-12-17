@@ -1,0 +1,57 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Location Summary";
+    var rows = (List<Object>)Model.Stacks;
+    var rowCount = rows.Count;
+    var InventoryRowGUID = 0;
+    var InventoryRowStack = 1;
+    var PartNumber = 2;
+    var StackQuantity = 3;
+    var y = 1;
+
+}
+
+<h2>Location Summary</h2>
+@foreach (var row in Model.Stacks)
+{
+    var stackCount = row.Count;
+    List<String> partNumbers = new List<string>();
+    for(int x = 0; x < stackCount; x++)
+    {
+        if(!partNumbers.Contains(row[x].PartNumber))
+        {
+            partNumbers.Add(row[x].PartNumber);
+        }
+    }
+
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th class="col-xs-1">Row</th>
+                <th class="col-xs-1">Part Number</th>
+                <th class="col-xs-3">Site-Description/Notes</th>
+                <th colspan="100%">Stacks</th>
+            </tr>
+        </thead>
+        @foreach(var part in partNumbers)
+        {
+            <tr>
+                <th>@y</th>
+                <td>@part</td>
+                <td>Description Here</td>
+                @for(var x = 0; x < stackCount; x++)
+                {
+                    if(row[x].PartNumber == part)
+                    {
+                        <td>@row[x].StackQuantity</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                }
+            </tr>
+        }
+    </table>
+    y++;
+}

@@ -19,5 +19,6 @@ namespace TrailerManagement.Models
         public Nullable<int> RowNumber { get; set; }
         public Nullable<int> NumberOfPartNumbers { get; set; }
         public Nullable<int> NumberOfStacks { get; set; }
+        public Nullable<int> PalletCount { get; set; }
     }
 }

@@ -400,6 +400,7 @@
     <Content Include="Views\Inventory\ActiveLocationRows.cshtml" />
     <Content Include="Views\Inventory\CreateLocationRow.cshtml" />
     <Content Include="Views\Inventory\ViewRowStacks.cshtml" />
+    <Content Include="Views\Inventory\LocationSummary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
