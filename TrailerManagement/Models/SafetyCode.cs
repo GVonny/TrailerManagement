@@ -14,7 +14,7 @@ namespace TrailerManagement.Models
     
     public partial class SafetyCode
     {
-        public int SafetyCodeGUID { get; set; }
+        public long SafetyCodeGUID { get; set; }
         public string Type { get; set; }
         public string SubType { get; set; }
         public string OshaCode { get; set; }

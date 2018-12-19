@@ -222,7 +222,7 @@ namespace TrailerManagement.Controllers
                 {
                     dynamic model = new ExpandoObject();
 
-                    var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenBy(c => c.AreaNote).ToList();
+                    var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenBy(c => c.SubArea).ToList();
                     model.Concerns = concerns;
 
                     var violations = db.CodeViolations.ToList();
@@ -247,7 +247,7 @@ namespace TrailerManagement.Controllers
             {
                 dynamic model = new ExpandoObject();
 
-                var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenByDescending(c => c.AreaNote).ToList();
+                var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenByDescending(c => c.SubArea).ToList();
                 model.Concerns = concerns;
 
                 var violations = db.CodeViolations.ToList();
@@ -336,7 +336,7 @@ namespace TrailerManagement.Controllers
                         Area = departments,
                         
                         ConditionNoted = conditionNoted,
-                        CorrectiveActionMeasure = correctiveAction,
+                        CorrectiveAction = correctiveAction,
                         ViolationCount = 1,
                         Status = "OPEN",
                         DateOpened = DateTime.Now.ToString("yyyy-MM-dd"),
@@ -346,11 +346,11 @@ namespace TrailerManagement.Controllers
 
                     if(areaNote == "")
                     {
-                        newConcern.AreaNote = null;
+                        newConcern.SubArea = null;
                     }
                     else
                     {
-                        newConcern.AreaNote = areaNote;
+                        newConcern.SubArea = areaNote;
                     }
 
                     if (severity == "")
@@ -455,15 +455,15 @@ namespace TrailerManagement.Controllers
                     concern.Area = safetyConcern.Area;
                     if(areaNote == "")
                     {
-                        concern.AreaNote = null;
+                        concern.SubArea = null;
                     }
                     else
                     {
-                        concern.AreaNote = areaNote;
+                        concern.SubArea = areaNote;
                     }
                     
                     concern.ConditionNoted = safetyConcern.ConditionNoted;
-                    concern.CorrectiveActionMeasure = safetyConcern.CorrectiveActionMeasure;
+                    concern.CorrectiveAction = safetyConcern.CorrectiveAction;
                     concern.Severity = safetyConcern.Severity;
 
                     var path = "";

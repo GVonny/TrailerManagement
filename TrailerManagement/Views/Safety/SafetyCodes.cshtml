@@ -62,7 +62,14 @@
             $('#codeSearch').on('click', function ()
             {
                 var search = $('#searchString').val();
-                location.href = "/Safety/SafetyCodes?search=" + search;
+                if (search != "")
+                {
+                    location.href = "/Safety/SafetyCodes?search=" + search;
+                }
+                else
+                {
+                    location.href = "/Safety/SafetyCodes";
+                }
             });
 
             var closed = '@closedCodes';

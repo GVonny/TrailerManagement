@@ -16,11 +16,11 @@ namespace TrailerManagement.Models
     {
         public long SafetyConcernGUID { get; set; }
         public string Area { get; set; }
+        public string SubArea { get; set; }
         public string ConditionNoted { get; set; }
-        public string CorrectiveActionMeasure { get; set; }
+        public string CorrectiveAction { get; set; }
         public string Severity { get; set; }
         public string ImagePath { get; set; }
-        public string AreaNote { get; set; }
         public Nullable<int> ViolationCount { get; set; }
         public string Status { get; set; }
         public string DateOpened { get; set; }

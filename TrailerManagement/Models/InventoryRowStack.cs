@@ -18,5 +18,6 @@ namespace TrailerManagement.Models
         public Nullable<long> InventoryRowGUID { get; set; }
         public string PartNumber { get; set; }
         public Nullable<int> StackQuantity { get; set; }
+        public Nullable<int> StackNumber { get; set; }
     }
 }

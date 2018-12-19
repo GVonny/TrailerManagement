@@ -7,53 +7,53 @@
 <div class="well">
     @using (Html.BeginForm("AddToRow", "Inventory", FormMethod.Post))
     {
-    <div class="form-horizontal">
-        <div class="form-group hidden">
-            <label for="locationNumber">Location Number</label>
-            <input type="number" id="locationNumber" name="locationNumber" class="form-control col-md-offset-1" value="@ViewBag.LocationNumber" />
-            <label for="rowNumber">Row Number</label>
-            <input type="number" id="rowNumber" name="rowNumber" class="form-control col-md-offset-1" value="@ViewBag.RowNumber" />
-        </div>
-        <div id="parts">
-            <div id="part-1">
-                <div class="form-group">
-                    <label for="partNumbers" class="col-md-1">Part #</label>
-                    @Html.DropDownList("partNumbers", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control", @id = "partNumbers", @required = "required" })
-                </div>
-                <div id="part-1-stacks">
-                    <div class="form-group" id="1-1">
-                        <label for="part-1-stack-1" class="col-md-1">Stack 1</label>
-                        <input type="number" placeholder="Stack 1 Quantity" id="part-1-stack-1" name="part-1-stack-1" class="form-control" style="width:150px;" />
+        <div class="form-horizontal">
+            <div class="form-group hidden">
+                <label for="locationNumber">Location Number</label>
+                <input type="number" id="locationNumber" name="locationNumber" class="form-control col-md-offset-1" value="@ViewBag.LocationNumber" />
+                <label for="rowNumber">Row Number</label>
+                <input type="number" id="rowNumber" name="rowNumber" class="form-control col-md-offset-1" value="@ViewBag.RowNumber" />
+            </div>
+            <div id="parts">
+                <div id="part-1">
+                    <div id="part-1-stacks">
+                        <div id="part-1-dropdown" class="form-group">
+                            <label for="partNumbers" class="col-md-1">Part #</label>
+                            @Html.DropDownList("partNumbers", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control", @id = "partNumber1", @required = "required" })
+                        </div>
+                        <div id="part-1-stack-1" class="form-group">
+                            <label for="1-1" class="col-md-1">Stack 1</label>
+                            <input type="number" placeholder="Stack 1 Quantity" id="1-1" name="1-1" class="form-control float-left" style="width:150px;" />
+                        </div>
+                    </div>
+                    <div id="part-1-buttons">
+                        <input type="button" class="btn btn-green add-stack" value="Add Stack" style="margin-left:80px;" />
+                        <input type="button" class="btn btn-danger hidden remove-stack" value="Remove Stack" style="margin-right:5px;" />
                     </div>
                 </div>
-                <input type="button" class="btn btn-green add-stack" value="Add Stack" style="margin-left:80px;" />
-                <input type="button" class="btn btn-danger hidden remove-stack" value="Remove Stack" id="part-1-remove" style="margin-right:5px;" />
-                <br />
-                <br />
             </div>
-        </div>
-        <br />
-        <div class="form-group">
-            <div class="col-md-10">
-                <center>
-                    <input type="button" class="btn btn-green" value="Add Part" id="addPalletType" style="margin-right:5px;" />
-                    <input type="button" class="btn btn-danger" value="Remove Part" id="removePalletType" style="margin-right:5px;" />
-                    <input type="submit" class="btn btn-primary float-left" />
-                    <a href="/Inventory/ActiveLocationRows?locationID=@ViewBag.LocationNumber" class="btn btn-warning float-left" style="margin-left:5px;">Cancel</a>
-                </center>
+            <br />
+
+            <div class="form-group">
+                <div class="col-md-10">
+                    <center>
+                        <input type="button" class="btn btn-green" value="New Part" id="addPalletType" style="margin-right:5px;" />
+                        <input type="button" class="btn btn-green" value="Add Split Stack" id="addSplitStack" style="margin-right:5px;" />
+                        <input type="button" class="btn btn-danger" value="Remove Part" id="removePalletType" style="margin-right:5px;" />
+                        <input type="submit" class="btn btn-primary float-left" />
+                        <a href="/Inventory/ActiveLocationRows?locationID=@ViewBag.LocationNumber" class="btn btn-warning float-left" style="margin-left:5px;">Cancel</a>
+                    </center>
+                
+                </div>
+            </div>
+            <div class="col-xs-7">
                 
             </div>
         </div>
-        <div class="col-xs-7">
-            
-        </div>
-    </div>
-
-
     }
 
     <div id="hiddenHtml" style="display:none">
-        @Html.DropDownList("partNumbers", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control", @id = "partNumbers", @required = "required" })
+        @Html.DropDownList("partNumbers", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control", @required = "required" })
     </div>
 </div>
 
@@ -61,217 +61,359 @@
 {
     <script>
         $(function ()
-        {   
+        {
             var numberOfParts = 1;
             var totalStacks = 1;
+            var splitPartCounter = 0;
 
             var stacksPerPart = [];
             var maxStackNumberPerPart = [];
+            var stackTypes = [false];
             stacksPerPart.push(1);
             maxStackNumberPerPart.push(1);
 
-            console.log("");
-            console.log("number of parts: " + numberOfParts);
-            console.log("total stacks: " + totalStacks);
-            console.log("max stack per part: " + maxStackNumberPerPart);
-            console.log("stacks per part: " + stacksPerPart);
-
-
+            Print();
+            
             $('#addPalletType').on('click', function ()
             {
-                numberOfParts++;
-                totalStacks++;
-                maxStackNumberPerPart.push(totalStacks);
-                stacksPerPart.push(1);
-
-                console.log("");
-                console.log("number of parts: " + numberOfParts);
-                console.log("total stacks: " + totalStacks);
-                console.log("max stack per part: " + maxStackNumberPerPart);
-                console.log("stacks per part: " + stacksPerPart);
-                
-
-                $('#parts').append(
-                    "<div id=\"part-" + numberOfParts + "\">" +
-                        "<div class=\"form-group\">" +
-                            "<label for=\"partNumbers\" class=\"col-md-1\">Part #</label>" +
-                            $('#hiddenHtml').html() +
-                        "</div>" +
-                        "<div id=\"part-" + numberOfParts + "-stacks\">" +
-                            "<div class=\"form-group\" id=\"" + numberOfParts + "-" + totalStacks + "\">" +
-                                "<label for=\"part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"col-md-1\">Stack " + totalStacks + "</label>" +
-                                "<input type=\"number\" placeholder=\"Stack " + totalStacks + " Quantity\" id=\"part-" + numberOfParts + "-stack-" + totalStacks + "\" name=\"part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"form-control\" style=\"width:150px;\" />" +
-                            "</div>" +
-                        "</div>" +
-                        "<input type=\"button\" class=\"btn btn-green add-stack\" value=\"Add Stack\"style=\"margin-left:80px;\" />" +
-                        "<input type=\"button\" class=\"btn btn-danger hidden remove-stack\" value=\"Remove Stack\" id=\"part-" + numberOfParts + "-remove" + "\" style=\"margin-left:5px;\" />" + 
-                        "<br />" + 
-                        "<br />" + 
-                    "</div>");
-            });
-
-            $('body').on('click', ".add-stack", function (e)
-            {
-                e.preventDefault();
-                var part = this.parentElement.id;
-                //console.log("parent id: " + part);
-
-                var partNumberIndex = parseInt(part.substring(part.length - 1, part.length));
-                //console.log("part number index: " + partNumberIndex);
-                var partIndex = partNumberIndex - 1;
-                //console.log("part list index: " + partIndex);
-                
-                
-                if ($('#part-' + partNumberIndex + '-stack-' + maxStackNumberPerPart[partIndex]).val() != "")
+                if ($('#' + numberOfParts + '-' + totalStacks).val() != "")
                 {
+                    numberOfParts++;
                     totalStacks++;
-                    
-                    var partStackCount = stacksPerPart[partIndex];
-                    partStackCount++;
-                    stacksPerPart[partIndex] = partStackCount;
-                    maxStackNumberPerPart[partIndex] = totalStacks;
 
-                    console.log("");
-                    console.log("number of parts: " + numberOfParts);
-                    console.log("total stacks: " + totalStacks);
-                    console.log("max stack per part: " + maxStackNumberPerPart);
-                    console.log("stacks per part: " + stacksPerPart);
+                    maxStackNumberPerPart.push(totalStacks);
+                    stacksPerPart.push(1);
+                    stackTypes.push(false);
 
-                    $('#' + part + "-stacks").append(
-                        "<div class=\"form-group\" id=\"" + partNumberIndex + "-" + totalStacks + "\">" +
-                        "<label for=\"part-" + partNumberIndex + "-stack-" + totalStacks + "\" class=\"col-md-1\">Stack " + totalStacks + "</label>" +
-                        "<input type =\"number\" placeholder=\"Stack " + totalStacks + " Quantity\" id=\"part-" + partNumberIndex + "-stack-" + totalStacks + "\" name=\"part-" + partNumberIndex + "-stack-" + totalStacks + "\" class=\"form-control\" style=\"width:150px;\"/>" +
+                    Print();
+
+                    $('#hiddenHtml').children().last().attr('id', "partNumber" + numberOfParts);
+
+                    $('#part-' + $('#parts').children().length + '-buttons').remove();
+                    $('#parts').append(
+                        "<div id=\"part-" + numberOfParts + "\">" +
+                            "<hr style=\"border-color:black\">" +
+                            "<div id=\"part-" + numberOfParts + "-stacks\">" +
+                                "<div id=\"part-" + numberOfParts + "-dropdown-1\" class=\"form-group\">" +
+                                    "<label for=\"partNumbers\" class=\"col-md-1\">Part #</label>" +
+                                    $('#hiddenHtml').html() +
+                                "</div>" +
+                                "<div id=part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"form-group\" >" +
+                                    "<label for=\"" + numberOfParts + '-' + totalStacks + "\" class=\"col-md-1\">Stack " + totalStacks + "</label>" +
+                                    "<input type=\"number\" placeholder=\"Stack " + totalStacks + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control float-left\" style=\"width:150px;\" />" +
+                                "</div>" +
+                            "</div>" +
+                             "<div id=\"part-" + numberOfParts + "-buttons\">" +
+                                "<input type=\"button\" class=\"btn btn-green add-stack\" value=\"Add Stack\" style=\"margin-left:80px;\" />" +
+                                "<input type=\"button\" class=\"btn btn-danger hidden remove-stack\" value=\"Remove Stack\" style=\"margin-left:5px;\" />" +
+                            "</div>" +
                         "</div>"
                     );
-                    if (partStackCount > 1)
-                    {
-                        $('#part-' + (partIndex + 1) + "-remove").removeClass('hidden');
-                    }
                 }
                 else
                 {
-                    console.log("field is empty");
+
                 }
             });
-            
 
-            $('body').on('click', ".remove-stack",function ()
-            {
-                totalStacks--;
-                console.log("");
-                var part = this.parentElement.id;
-                console.log("parent id: " + part);
-
-                var partNumberIndex = parseInt(part.substring(part.length - 1, part.length));
-                console.log("part number index: " + partNumberIndex);
-                var partIndex = partNumberIndex - 1;
-                console.log("part list index: " + partIndex);
-
-                var id = '#' + partNumberIndex + '-' + maxStackNumberPerPart[partIndex]
-                
-                //$('#' + partNumberIndex + '-' + maxStackNumberPerPart[partIndex]).remove();
-
-                var stackCount = maxStackNumberPerPart[partIndex];
-                stackCount--;
-                //maxStackNumberPerPart[partIndex] = stackCount;
-
-                for (var x = 0; x < numberOfParts; x++)
-                {
-                    if (x != partIndex)
-                    {
-                        while (stackCount == maxStackNumberPerPart[x])
-                        {
-                            stackCount--;
-                        }
-                    }
-                }
-                //maxStackNumberPerPart[partIndex] = stackCount;
-
-                var partStackCount = stacksPerPart[partIndex];
-                partStackCount--;
-                
-                if (partStackCount < 1)
-                {
-                    partStackCount = 1;
-                }
-                if (partStackCount == 1)
-                {
-                    $('#part-' + partNumberIndex + "-remove").addClass('hidden');
-                }
-
-                console.log("");
-                console.log("number of parts: " + numberOfParts);
-                console.log("total stacks: " + totalStacks);
-                console.log("max stack per part: " + maxStackNumberPerPart);
-                console.log("stacks per part: " + stacksPerPart);
-
-                //stacksPerPart[partIndex] = partStackCount; 
-                
-                
-                $('#' + part).parent().children('div').each(function ()
-                {
-                //    $('#' + this.id).children('div').each(function ()
-                //    {
-                //        var id = this.id;
-                //        if (id != "")
-                //        {
-                //            $('#' + id).children('div').each(function ()
-                //            {
-                //                //console.log(this);
-                //                id = this.id;
-                //                var stackNumber = parseInt(id.substring(id.length - 1, id.length));
-                                
-                //                console.log(stackNumber);
-                //                console.log(stackCount);
-                //                if (stackNumber < stackCount);
-                //                {
-                //                    stackCount = stackNumber;
-                //                    console.log(this)
-                //                }
-                //            });
-                //        }
-                //    })
-                });
-            });
-
-            function Print(part)
-            {
-                $('#' + part).parent().children('div').each(function ()
-                {
-                    $('#' + this.id).children('div').each(function ()
-                    {
-                        var id = this.id;
-                        if (id != "")
-                        {
-                            $('#' + id).children('div').each(function ()
-                            {
-                                id = this.id;
-                                if (parseInt(id.substring(id.length - 1, id.length)) > stackCount);
-                                {
-                                    console.log("going to remove this div");
-                                }
-                            });
-                        }
-                    })
-                });
-                return;
-            }
             $('#removePalletType').on('click', function ()
             {
-                var count = $('#part-' + numberOfParts + '-stacks').children().length;
-                totalStacks -= count;
+                Print();
                 $('#part-' + numberOfParts).remove();
-                //maxStackNumberPerPart.pop();
-                //stacksPerPart.pop();
+                numberOfParts--;
+                totalStacks--;
+                maxStackNumberPerPart.pop();
+                stacksPerPart.pop();
+                stackTypes.pop();
+                console.log(stackTypes[numberOfParts - 2]);
 
-                console.log("");
+                if (stackTypes[numberOfParts - 2] == true)
+                {
+                    Print();
+                    console.log($('#part-' + numberOfParts));
+                    $('#part-' + numberOfParts).remove();
+
+                    numberOfParts--;
+                    $('#part-' + numberOfParts).append(
+                        "<div id=\"part-" + numberOfParts + "-buttons\">" +
+                        "<input type=\"button\" class=\"btn btn-green next-stack\" value=\"Next Stack\" style=\"margin-left:80px;\" />" +
+                        "<input type=\"button\" class=\"btn btn-danger add-split-part\" value=\"Add Part\" style=\"margin-left:5px;\" />" +
+                        "</div>"
+                    );
+                    Print();
+                }
+                else
+                {
+                    $('#part-' + numberOfParts).append(
+                        "<div id=\"part-" + numberOfParts + "-buttons\">" +
+                        "<input type=\"button\" class=\"btn btn-green add-stack\" value=\"Add Stack\" style=\"margin-left:80px;\" />" +
+                        "<input type=\"button\" class=\"btn btn-danger hidden remove-stack\" value=\"Remove Stack\" style=\"margin-left:5px;\" />" +
+                        "</div>"
+                    );
+                    Print();
+                }
+                
+
+                
+            });
+
+            $('body').on('click', '.add-stack', function ()
+            {
+                console.log('#' + numberOfParts + '-' + totalStacks)
+                console.log($('#' + numberOfParts + '-' + totalStacks).val());
+                if ($('#' + numberOfParts + '-' + totalStacks).val() != "")
+                {
+                    totalStacks++;
+
+                    var grandparent = this.parentElement.parentElement.id;
+                    console.log("grandparent id: " + grandparent);
+
+                    $('#' + grandparent + '-stacks').append(
+                        "<div id=\"part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"form-group\">" +
+                            "<label for=\"" + numberOfParts + '-' + totalStacks + "\" class=\"col-md-1\">Stack " + totalStacks + "</label>" +
+                            "<input type=\"number\" placeholder=\"Stack " + totalStacks + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control float-left\" style=\"width: 150px;\" />" +
+                        "</div>"
+                    );
+
+                    parent = this.parentElement.id;
+                    //console.log("parent id: " + parent);
+                    $('#' + parent).children().last().removeClass('hidden');
+
+
+                    maxStackNumberPerPart[numberOfParts - 1]++;
+                    stacksPerPart[numberOfParts - 1]++;
+                    Print();
+                }
+            });
+
+            $('body').on('click', '.remove-stack', function ()
+            {
+                var grandparent = this.parentElement.parentElement.id;
+                var parent = this.parentElement.id;
+                //console.log("grandparent id: " + grandparent);
+                //console.log("parent id: " + parent);
+
+                //console.log($('#' + grandparent));
+
+                $('#' + grandparent + "-stacks").children().last().remove();
+
+                totalStacks--;
+                maxStackNumberPerPart[numberOfParts - 1]--;
+                stacksPerPart[numberOfParts - 1]--;
+
+                if (stacksPerPart[numberOfParts - 1] == 1)
+                {
+                    $(this).addClass('hidden');
+                }
+
+                Print();
+            });
+
+            $('body').on('click', '.add-split-part', function ()
+            {
+                var greatgrandparent = this.parentElement.parentElement.id;
+                console.log("grandparent id: " + greatgrandparent);
+
+                var greatgreatgrandparent = this.parentElement.parentElement.parentElement.id;
+                console.log("greatgrandparent id: " + greatgrandparent);
+                
+                console.log('#' + (numberOfParts - 1) + '-' + totalStacks + '-' + (splitPartCounter - 1));
+                console.log('#' + numberOfParts + '-' + totalStacks + '-' + splitPartCounter);
+
+                console.log($('#' + (numberOfParts - 1) + '-' + totalStacks + '-' + (splitPartCounter - 1)).val());
+                console.log($('#' + numberOfParts + '-' + totalStacks + '-' + splitPartCounter).val());
+
+                if ($('#' + (numberOfParts - 1) + '-' + totalStacks + '-' + (splitPartCounter - 1)).val() != ""
+                    && $('#' + numberOfParts + '-' + totalStacks + '-' + splitPartCounter).val() != "")
+                {
+                    $('#' + greatgrandparent + '-buttons').remove();
+
+                    numberOfParts++;
+                    splitPartCounter++;
+                    maxStackNumberPerPart.push(totalStacks);
+                    stacksPerPart.push(1);
+                    
+
+                    $('#' + greatgreatgrandparent).append(
+                        "<div id=\"part-" + numberOfParts + "\">" +
+                            "<div id=\"part-" + numberOfParts + "-stacks\">" +
+                                "<div id=\"part-" + numberOfParts + "-dropdown\" class=\"form-group\">" +
+                                    "<label for=\"partNumbers\" class=\"col-md-1\">Part #</label>" +
+                                    $('#hiddenHtml').html() +
+                                "</div>" +
+                                "<div id=part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"form-group\" >" +
+                                    "<label for=\"" + numberOfParts + '-' + totalStacks + "\" class=\"col-md-1\">Stack " + totalStacks + "</label>" +
+                                    "<input type=\"number\" placeholder=\"Part " + splitPartCounter + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + '-' + splitPartCounter + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control float-left\" style=\"width:150px;\" />" +
+                                "</div>" +
+                                "<div id=\"part-" + numberOfParts + "-buttons\">" +
+                                    "<input type=\"button\" class=\"btn btn-green next-stack\" value=\"Next Stack\" style=\"margin-left:80px;\" />" +
+                                    "<input type=\"button\" class=\"btn btn-danger add-split-part\" value=\"Add Part\" style=\"margin-left:5px;\" />" +
+                                    "<input type=\"button\" class=\"btn btn-danger remove-split-part\" value=\"Remove Part\" style=\"margin-left:5px;\" />" +
+                                "</div>" +
+                            "</div>" +
+                        "</div>"
+                    );
+
+                    $(this).parent().remove();
+                    $('#' + greatgrandparent).children('.remove-split-part').removeClass('hidden');
+                    
+                    Print();
+                }
+                
+            });
+
+            $('body').on('click', '.remove-split-part', function ()
+            {
+                var parent = this.parentElement.id;
+                console.log("parent id: " + parent);
+
+                var greatgrandparent = this.parentElement.parentElement.parentElement.id;
+                console.log("greatgrandparent id: " + greatgrandparent);
+
+                $('#' + greatgrandparent).remove();
+
+                splitPartCounter--;
+                numberOfParts--;
+                maxStackNumberPerPart.pop();
+                stacksPerPart.pop();
+
+
+                $('#part-' + numberOfParts + '-stacks').append(
+                    "<div id=\"part-" + numberOfParts + "-buttons\">" +
+                        "<input type=\"button\" class=\"btn btn-green next-stack\" value=\"Next Stack\" style=\"margin-left:80px;\" />" +
+                        "<input type=\"button\" class=\"btn btn-danger add-split-part\" value=\"Add Part\" style=\"margin-left:5px;\" />" +
+                        "<input type=\"button\" class=\"btn btn-danger remove-split-part\" value=\"Remove Part\" style=\"margin-left:5px;\" />" +
+                    "</div>"
+                );
+
+                if (splitPartCounter <= 2)
+                {
+                    console.log($('#part-' + numberOfParts + '-stacks').children());
+                    $('#part-' + numberOfParts + '-stacks').children().last().children('.remove-split-part').addClass('hidden');
+                }
+
+                Print();
+            });
+
+            $('body').on('click', '.next-stack', function ()
+            {
+                var greatgreatgrandparent = this.parentElement.parentElement.parentElement.parentElement.id;
+                //console.log("grandparent id: " + greatgreatgrandparent);
+
+                var greatgrandparent = this.parentElement.parentElement.parentElement.id;
+                //console.log("grandparent id: " + greatgrandparent);
+
+                if ($('#' + (numberOfParts - 1) + '-' + totalStacks + '-' + (splitPartCounter - 1)).val() != ""
+                    && $('#' + numberOfParts + '-' + totalStacks + '-' + splitPartCounter).val() != "")
+                {
+                    numberOfParts++;
+                    totalStacks++;
+
+                    maxStackNumberPerPart.push(totalStacks);
+                    stackTypes.push(false);
+                    stacksPerPart.push(1);
+
+                    Print();
+
+                    $('#hiddenHtml').children().last().attr('id', "partNumber" + numberOfParts);
+
+                    $('#part-' + $('#parts').children().length + '-buttons').remove();
+                    $('#parts').append(
+                        "<div id=\"part-" + numberOfParts + "\">" +
+                        "<hr style=\"border-color:black\">" +
+                        "<div id=\"part-" + numberOfParts + "-stacks\">" +
+                        "<div id=\"part-" + numberOfParts + "-dropdown-1\" class=\"form-group\">" +
+                        "<label for=\"partNumbers\" class=\"col-md-1\">Part #</label>" +
+                        $('#hiddenHtml').html() +
+                        "</div>" +
+                        "<div id=part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"form-group\" >" +
+                        "<label for=\"" + numberOfParts + '-' + totalStacks + "\" class=\"col-md-1\">Stack " + totalStacks + "</label>" +
+                        "<input type=\"number\" placeholder=\"Stack " + totalStacks + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control float-left\" style=\"width:150px;\" />" +
+                        "</div>" +
+                        "</div>" +
+                        "<div id=\"part-" + numberOfParts + "-buttons\">" +
+                        "<input type=\"button\" class=\"btn btn-green add-stack\" value=\"Add Stack\" style=\"margin-left:80px;\" />" +
+                        "<input type=\"button\" class=\"btn btn-danger hidden remove-stack\" value=\"Remove Stack\" style=\"margin-left:5px;\" />" +
+                        "</div>" +
+                        "</div>"
+                    );
+                }
+            });
+
+            $('#addSplitStack').on('click', function ()
+            {
+                if ($('#' + numberOfParts + '-' + totalStacks).val() != "")
+                {
+                    splitPartCounter = 0;
+                    totalStacks++;
+                    numberOfParts++;
+                    maxStackNumberPerPart.push(totalStacks);
+                    stacksPerPart.push(1);
+                    stackTypes.push(true);
+                    splitPartCounter++;
+
+                    $('#hiddenHtml').children().last().attr('id', "partNumber" + numberOfParts);
+
+                    $('#part-' + $('#parts').children().length + '-buttons').remove();
+                    $('#parts').append(
+                        "<div id=\"part-" + numberOfParts + "\">" +
+                            "<hr style=\"border-color:black\">" +
+                            "<div id=\"part-" + numberOfParts + "-stacks\">" +
+                                "<div id=\"part-" + numberOfParts + "-dropdown\" class=\"form-group\">" +
+                                    "<label for=\"partNumbers\" class=\"col-md-1\">Part #</label>" +
+                                    $('#hiddenHtml').html() +
+                                "</div>" +
+                                "<div id=part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"form-group\" >" +
+                                    "<label for=\"" + numberOfParts + '-' + totalStacks + "\" class=\"col-md-1\">Stack " + totalStacks + "</label>" +
+                                    "<input type=\"number\" placeholder=\"Part " + splitPartCounter + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "-1\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control float-left\" style=\"width:150px;\" />" +
+                                "</div>" +
+                            "</div>" +
+                        "</div>"
+                    );
+
+                    numberOfParts++;
+                    $('#hiddenHtml').children().last().attr('id', "partNumber" + numberOfParts);
+                    maxStackNumberPerPart.push(totalStacks);
+                    stacksPerPart.push(1);
+                    splitPartCounter++;
+
+                    $('#parts').append(
+                        "<div id=\"part-" + numberOfParts + "\">" +
+                            "<div id=\"part-" + numberOfParts + "-stacks\">" + 
+                                "<div id=\"part-" + numberOfParts + "-dropdown\" class=\"form-group\">" +
+                                    "<label for=\"partNumbers\" class=\"col-md-1\">Part #</label>" +
+                                    $('#hiddenHtml').html() +
+                                "</div>" +
+                                "<div id=part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"form-group\" >" +
+                                    "<label for=\"" + numberOfParts + '-' + totalStacks + "\" class=\"col-md-1\">Stack " + totalStacks + "</label>" +
+                                    "<input type=\"number\" placeholder=\"Part " + splitPartCounter + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "-2\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control float-left\" style=\"width:150px;\" />" +
+                                "</div>" +
+                            "</div>" + 
+                        "</div>"
+                    );
+
+                    $('#part-' + numberOfParts).append(
+                        "<div id=\"part-" + numberOfParts + "-buttons\">" +
+                            "<input type=\"button\" class=\"btn btn-green next-stack\" value=\"Next Stack\" style=\"margin-left:80px;\" />" +
+                            "<input type=\"button\" class=\"btn btn-danger add-split-part\" value=\"Add Part\" style=\"margin-left:5px;\" />" +
+                            "<input type=\"button\" class=\"btn btn-danger hidden remove-split-part\" value=\"Remove Part\" style=\"margin-left:5px;\" />" +
+                        "</div>"
+                    );
+
+                    Print();
+                }
+            });
+
+            function Print()
+            {
                 console.log("number of parts: " + numberOfParts);
                 console.log("total stacks: " + totalStacks);
                 console.log("max stack per part: " + maxStackNumberPerPart);
                 console.log("stacks per part: " + stacksPerPart);
-
-                //numberOfParts--;
-            });
+                console.log("split count: " + splitPartCounter);
+                console.log("split types: " + stackTypes);
+                console.log("");
+            }
         });
     </script>    
 }

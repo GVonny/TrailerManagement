@@ -76,6 +76,9 @@ namespace TrailerManagement.Controllers
                     {
                         LocationNumber = newRow.LocationNumber,
                         RowNumber = newRow.RowNumber,
+                        NumberOfPartNumbers = 0,
+                        NumberOfStacks = 0,
+                        PalletCount = 0,
                     };
                     db.ActiveLocationRows.Add(row);
                     db.SaveChanges();
@@ -89,12 +92,22 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                ActiveInventoryLocation newLocation = new ActiveInventoryLocation()
+                if(db.ActiveInventoryLocations.Any(l => l.LocationNumber == location.LocationNumber))
                 {
-                    LocationNumber = location.LocationNumber,
-                };
-                db.ActiveInventoryLocations.Add(newLocation);
-                db.SaveChanges();
+                    ModelState.AddModelError("LocationNumber", "Location already exists");
+                    return View();
+                }
+                else
+                {
+                    ActiveInventoryLocation newLocation = new ActiveInventoryLocation()
+                    {
+                        LocationNumber = location.LocationNumber,
+                        NumberOfRows = 0,
+                    };
+                    db.ActiveInventoryLocations.Add(newLocation);
+                    db.SaveChanges();
+                }
+                
                 return RedirectToAction(actionName: "ActiveInventoryLocations", controllerName: "Inventory");
             }
         }
