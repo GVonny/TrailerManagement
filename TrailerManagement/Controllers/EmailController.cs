@@ -70,7 +70,7 @@ namespace TrailerManagement.Controllers
                     day = "0" + day.Substring(0, 1);
                 }
                 var month = currentDate.Substring(0, 2);
-                var year = currentDate.Substring(5, 4);
+                var year = currentDate.Substring(6, 4);
                 payout.DateCompleted = (year + "-" + month + "-" + day);
                 db.SaveChanges();
 

@@ -449,6 +449,12 @@ h1{
         padding-right:25px;
     }
 }
+
+.image-tablet {
+    width: 250px;
+    height: 250px;
+    transform: rotate(90deg);
+}
 @media (max-width: 801px) {
     body {
         margin: 10px;
@@ -510,150 +516,14 @@ h1{
     .col-xs-1 {
         width: 8.33333333%;
     }
-}
-
-@media (max-width: 768px){
-    body {
-        margin: 10px;
+    .col-xs-offset-3 {
+        margin-left: 25%;
     }
 
-    #logo {
-        display: block;
-        margin: 0 auto;
-        padding-top: 20px;
-    }
-
-    #logoText {
-        padding-top: 0px;
-        font-size: 4em;
-        text-align: center;
+    .image-tablet {
+        width: 150px;
+        height: 150px;
+        transform: rotate(90deg);
     }
 }
 
-@media (max-width: 608px) {
-    body {
-        margin: 10px;
-    }
-
-    #logo {
-        display: block;
-        margin: 0 auto;
-        padding-top: 0px;
-    }
-
-    #logoText {
-        padding-top: 0px;
-        font-size: 4em;
-        text-align: center;
-    }
-}
-
-@media (max-width: 580px) {
-    body {
-        margin: 10px;
-    }
-
-    #logo {
-        display: block;
-        margin: 0 auto;
-        padding-top: 0px;
-    }
-
-    #logoText {
-        padding-top: 0px;
-        font-size: 3em;
-        text-align: center;
-    }
-}
-
-@media (max-width: 483px) {
-    body {
-        margin: 10px;
-    }
-
-    #logo {
-        display: block;
-        margin: 0 auto;
-        padding-top: 0px;
-    }
-
-    #logoText {
-        padding-top: 0px;
-        font-size: 3em;
-        text-align: center;
-    }
-}
-
-@media (max-width: 456px) {
-    body {
-        margin: 10px;
-    }
-
-    #logo {
-        display: block;
-        margin: 0 auto;
-        padding-top: 0px;
-    }
-
-    #logoText {
-        padding-top: 0px;
-        font-size: 2.5em;
-        text-align: center;
-    }
-}
-
-@media (max-width: 456px) {
-    body {
-        margin: 10px;
-    }
-
-    #logo {
-        display: block;
-        width:80%;
-        padding-top: 0px;
-    }
-
-    #logoText {
-        padding-top: 0px;
-        font-size: 2.5em;
-        text-align: center;
-    }
-}
-
-@media (max-width: 390px) {
-    body {
-        margin: 10px;
-    }
-
-    #logo {
-        width:80%;
-        padding-top: 0px;
-    }
-
-    .container{
-        width:100%;
-    }
-
-    #logoText {
-        padding-top: 0px;
-        font-size: 2em;
-        text-align: center;
-    }
-}
-
-@media (max-width: 328px) {
-    body {
-        margin: 10px;
-    }
-
-    #logo {
-        width: 80%;
-        padding-top: 0px;
-    }
-
-    #logoText {
-        padding-top: 0px;
-        font-size: 1.5em;
-        text-align: center;
-    }
-}

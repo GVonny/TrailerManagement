@@ -36,20 +36,19 @@
                         @Html.HiddenFor(model => model.SafetyConcernGUID)
 
                         <div class="form-group">
-                            @Html.LabelFor(model => model.Area, "Area:", htmlAttributes: new { @class = "control-label col-md-3" })
-                            <div class="col-md-3">
+                            @Html.LabelFor(model => model.Area, "Area:", htmlAttributes: new { @class = "control-label col-xs-3" })
+                            <div class="col-md-7">
                                 @Html.DropDownListFor(model => model.Area, ViewData["departments"] as List<SelectListItem>, "- - - Areas - - -", htmlAttributes: new { @class = "form-control signin-form" })
                                 @Html.ValidationMessageFor(model => model.Area, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="col-md-4">
+
                                 @Html.EditorFor(model => model.AreaNote, new { htmlAttributes = new { @class = "form-control", placeholder = "Sub Area" } })
                                 @Html.ValidationMessageFor(model => model.AreaNote, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(model => model.ConditionNoted, "Condition Noted:", htmlAttributes: new { @class = "control-label col-md-3" })
-                            <div class="col-md-7">
+                            @Html.LabelFor(model => model.ConditionNoted, "Condition Noted:", htmlAttributes: new { @class = "control-label col-xs-3" })
+                            <div class="col-xs-9">
                                 @Html.EditorFor(model => model.ConditionNoted, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.ConditionNoted, "", new { @class = "text-danger" })
                             </div>
@@ -58,20 +57,21 @@
                         <div class="form-group">
                             <div class="col-xs-3">
                                 <strong class="float-right" style="margin-top:5px; margin-right:-10px;">Codes Violated:</strong>
+                                
                             </div>
-                            <div class="col-xs-7">
+                            <div class="col-xs-9">
                                 @Html.DropDownList("typeSubType", null, "- - - Select Code 1 - - -", htmlAttributes: new { @class = "form-control signin-form", id = "code1" })
                             </div>
                             <br />
                             <br />
-                            <div class="col-xs-offset-3 col-xs-7">
+                            <div class="col-xs-offset-3 col-xs-9">
                                 @Html.DropDownList("typeSubType2", null, "- - - Select Code 2 - - -", htmlAttributes: new { @class = "form-control signin-form", id = "code2" })
                             </div>
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(model => model.CorrectiveActionMeasure, "Corrective Action:", htmlAttributes: new { @class = "control-label col-md-3" })
-                            <div class="col-md-7">
+                            @Html.LabelFor(model => model.CorrectiveActionMeasure, "Corrective Action:", htmlAttributes: new { @class = "control-label col-xs-3" })
+                            <div class="col-xs-9">
                                 @Html.EditorFor(model => model.CorrectiveActionMeasure, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.CorrectiveActionMeasure, "", new { @class = "text-danger" })
                             </div>
@@ -81,7 +81,7 @@
                             <div class="col-xs-3">
                                 <strong class="float-right" style="margin-top:5px; margin-right:-10px;">Severity:</strong>
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-xs-7">
                                 @Html.DropDownList("severity", new List<SelectListItem>
                                 {
                                     new SelectListItem { Text = "LOW", Value = "LOW" },
@@ -97,12 +97,12 @@
                                 <strong class="float-right" style="margin-right:-10px;">Image Upload:</strong>
                             </div>
                             <div class="col-xs-2">
-                                <input type="file" name="ImageFile" id="ImageFile">
+                                <input type="file" name="ImageFile" id="ImageFile" placeholder="Take Picture">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <div class="col-md-offset-3 col-md-7">
+                            <div class="col-xs-12">
                                 <input type="submit" value="Save" class="btn btn-primary float-left" style="margin-right:5px;" />
 
                                 @if (Model.Status == "OPEN")
@@ -126,16 +126,19 @@
                 <br />
                 <div class="text-center">
                     <a href="/SafetyImages/@Model.ImagePath" download>
-                        <img src="/SafetyImages/@Model.ImagePath" height="250" width="250" />
+                        <img src="/SafetyImages/@Model.ImagePath"class="image-tablet"/>
                     </a>
                 </div>
                 <br />
                 <div>
-                    @Html.LabelFor(model => model.ViolationCount, "Times Violated:", htmlAttributes: new { @class = "control-label text-right col-md-6" })
-                    <div class="col-md-4">
-                        @Html.EditorFor(model => model.ViolationCount, new { htmlAttributes = new { @class = "form-control text-right", @disabled = "disabled" } })
-                        @Html.ValidationMessageFor(model => model.Area, "", new { @class = "text-danger" })
-                    </div>
+                    <center>
+                        @Html.LabelFor(model => model.ViolationCount, "Times Violated:", htmlAttributes: new { @class = "control-label" })
+                        <div style="width:50px;">
+                            @Html.EditorFor(model => model.ViolationCount, new { htmlAttributes = new { @class = "form-control text-right", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.Area, "", new { @class = "text-danger" })
+                        </div>
+                    </center>
+                    
                 </div>
             </td>
         </tr>
