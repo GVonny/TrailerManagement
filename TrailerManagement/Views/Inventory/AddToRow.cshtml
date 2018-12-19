@@ -118,42 +118,54 @@
 
             $('#removePalletType').on('click', function ()
             {
-                Print();
-                $('#part-' + numberOfParts).remove();
-                numberOfParts--;
                 totalStacks--;
                 maxStackNumberPerPart.pop();
                 stacksPerPart.pop();
-                stackTypes.pop();
-                console.log(stackTypes[numberOfParts - 2]);
-
-                if (stackTypes[numberOfParts - 2] == true)
+                
+                Print();
+                if (stackTypes[stackTypes.length-1] == true)
                 {
-                    Print();
-                    console.log($('#part-' + numberOfParts));
                     $('#part-' + numberOfParts).remove();
-
                     numberOfParts--;
-                    $('#part-' + numberOfParts).append(
-                        "<div id=\"part-" + numberOfParts + "-buttons\">" +
-                        "<input type=\"button\" class=\"btn btn-green next-stack\" value=\"Next Stack\" style=\"margin-left:80px;\" />" +
-                        "<input type=\"button\" class=\"btn btn-danger add-split-part\" value=\"Add Part\" style=\"margin-left:5px;\" />" +
-                        "</div>"
-                    );
-                    Print();
-                }
-                else
-                {
+                    $('#part-' + numberOfParts).remove();
+                    numberOfParts--;
+                    
                     $('#part-' + numberOfParts).append(
                         "<div id=\"part-" + numberOfParts + "-buttons\">" +
                         "<input type=\"button\" class=\"btn btn-green add-stack\" value=\"Add Stack\" style=\"margin-left:80px;\" />" +
                         "<input type=\"button\" class=\"btn btn-danger hidden remove-stack\" value=\"Remove Stack\" style=\"margin-left:5px;\" />" +
                         "</div>"
                     );
-                    Print();
+                    
                 }
-                
-
+                else
+                {
+                    $('#part-' + numberOfParts).remove();
+                    numberOfParts--;
+                    if (stackTypes[stackTypes.length - 2] == true)
+                    {
+                        $('#part-' + numberOfParts).append(
+                            "<div id=\"part-" + numberOfParts + "-buttons\">" +
+                            "<input type=\"button\" class=\"btn btn-green next-stack\" value=\"Next Stack\" style=\"margin-left:80px;\" />" +
+                            "<input type=\"button\" class=\"btn btn-danger add-split-part\" value=\"Add Part\" style=\"margin-left:5px;\" />" +
+                            "</div>"
+                        );
+                    }
+                    else
+                    {
+                        $('#part-' + numberOfParts).append(
+                            "<div id=\"part-" + numberOfParts + "-buttons\">" +
+                            "<input type=\"button\" class=\"btn btn-green add-stack\" value=\"Add Stack\" style=\"margin-left:80px;\" />" +
+                            "<input type=\"button\" class=\"btn btn-danger hidden remove-stack\" value=\"Remove Stack\" style=\"margin-left:5px;\" />" +
+                            "</div>"
+                        );
+                    }
+                    
+                    
+                    
+                }
+                Print();
+                stackTypes.pop();
                 
             });
 
