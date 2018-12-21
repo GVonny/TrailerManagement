@@ -28,6 +28,7 @@
         <div class="col-xs-3 float-left" style="margin-left:10px;">
             <a href="SortList" class="btn btn-primary">Sort List</a>
             <a href="/Trailer/ActiveTrailerList" class="btn btn-primary" style="margin-left:10px">Active List</a>
+
         </div>
         if (isClosed == true)
         {
@@ -41,17 +42,16 @@
                 }
             </div>
         }
-        <label for="showClosedPayouts" class="float-right" style="margin-top:-20px;">Closed Payouts</label>
-        <input type="checkbox" class="float-right" id="showClosedPayouts" name="showClosedPayouts" style="margin-top:-15px;">
+        <input type="button" class="btn btn-primary float-right" id="showClosedPayouts" name="showClosedPayouts" value="Open Payouts" style="margin-top:-35px;margin-bottom:5px;"/>
     }
     else
     {
         <div class="col-xs-3" style="margin-right:-0px;margin-top:20px;">
             <a href="SortList" class="btn btn-primary" style="margin-top:15px; margin-left:25px;">Sort List</a>
             <a href="/Trailer/ActiveTrailerList" class="btn btn-primary" style="margin-top:15px; margin-left:10px">Active List</a>
+
         </div>
-        <label for="showClosedPayouts" class="float-right" style="margin-top:65px;">Closed Payouts</label>
-        <input type="checkbox" class="float-right" id="showClosedPayouts" name="showClosedPayouts" style="margin-top:70px;">
+        <input type="button" class="btn btn-primary float-right" id="showClosedPayouts" name="showClosedPayouts" value="Closed Payouts" style="margin-top:40px;" />
     }
 
 
@@ -179,6 +179,7 @@
     <script>
         $(function ()
         {
+            $('#showClosedPayouts').removeAttr('disabled', 'disabled');
             var sortID;
             $('#payouts').on('click', '.product-row', function ()
             {
@@ -210,22 +211,18 @@
             });
 
             var isClosed = '@isClosed';
-            if (isClosed == "True")
-            {
-                $('#showClosedPayouts').attr('checked', 'checked');
-            }
 
-            $('#showClosedPayouts').change(function ()
+            $('#showClosedPayouts').on('click', function ()
             {
-                if ($(this).is(':checked'))
-                {
-                    location.href = "/PalletRepair/PayoutList?status=CLOSED";
-                }
-                else
+                if (isClosed == "True")
                 {
                     location.href = "/PalletRepair/PayoutList";
                 }
-            });
+                else
+                {
+                    location.href = "/PalletRepair/PayoutList?status=CLOSED";
+                }
+            })
 
             $('#updateAdditionalInfo').on('click', function ()
             {
