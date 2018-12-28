@@ -151,20 +151,26 @@ namespace TrailerManagement.Controllers
                 for (var x = 3; x < fc.Count; x++)
                 {
                     var key = fc.GetKey(x);
-                    var stackQuantity = fc[key];
-                    var partNumberKey = Convert.ToInt32(key.Substring(5, 1)) - 1;
+                    var partIndex = Convert.ToInt32(key.Substring(0, 1)) - 1;
+                    var stackNumber = Convert.ToInt32(key.Substring(key.Length - 1, 1));
+
+                    var quantity = Convert.ToInt32(fc[key]);
+                    location.PalletCount += quantity;
 
                     InventoryRowStack newStack = new InventoryRowStack()
                     {
                         InventoryRowGUID = location.InventoryRowGUID,
-                        PartNumber = partNumbers[partNumberKey],
-                        StackQuantity = Convert.ToInt32(stackQuantity),
+                        PartNumber = partNumbers[partIndex],
+                        StackQuantity = quantity,
+                        StackNumber = stackNumber,
                     };
-                    db.InventoryRowStacks.Add(newStack);
 
-                    location.NumberOfStacks++;
-                    location.PalletCount += Convert.ToInt32(stackQuantity);
+                    db.InventoryRowStacks.Add(newStack);
                 }
+
+                var totalStacks = Convert.ToInt32(fc.GetKey(fc.Count - 1).Substring(2, 1));
+                location.NumberOfStacks = totalStacks;
+
                 db.SaveChanges();
                 return RedirectToAction(actionName: "ActiveLocationRows", controllerName: "Inventory", routeValues: new { locationID });
             }
