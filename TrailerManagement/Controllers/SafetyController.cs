@@ -214,17 +214,37 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult SafetyAudit()
+        public ActionResult SafetyAudit(string area)
         {
             if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
                     dynamic model = new ExpandoObject();
+                    var concerns = from x in db.SafetyConcerns select x;
 
-                    var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenBy(c => c.SubArea).ToList();
-                    model.Concerns = concerns;
 
+                    List<string> distinctAreas = new List<string>();
+                    var areas = concerns.DistinctBy(a => a.Area).OrderBy(a => a.Area);
+                    foreach(var a in areas)
+                    {
+                        distinctAreas.Add(a.Area);
+                    }
+
+                    model.Areas = distinctAreas.ToList();
+
+                    if (area != null)
+                    {
+                        model.Area = area;
+                        concerns = concerns.Where(c => c.Status == "OPEN" && c.Area == area).OrderBy(c => c.Area).ThenBy(c => c.SubArea);
+                    }
+                    else
+                    {
+                        model.Area = "";
+                        concerns = concerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenBy(c => c.SubArea);
+                    }
+
+                    model.Concerns = concerns.ToList();
                     var violations = db.CodeViolations.ToList();
                     model.Violations = violations;
 
@@ -364,7 +384,7 @@ namespace TrailerManagement.Controllers
                     db.SafetyConcerns.Add(newConcern);
                     db.SaveChanges();
 
-                    if(typeSubType != null)
+                    if(typeSubType != "")
                     {
                         var violation = db.SafetyCodes.FirstOrDefault(d => d.TypeSubType == typeSubType);
                         CodeViolation newViolation = new CodeViolation()
@@ -377,7 +397,7 @@ namespace TrailerManagement.Controllers
                         };
                         db.CodeViolations.Add(newViolation);
                     }
-                    if (typeSubType2 != null)
+                    if (typeSubType2 != "")
                     {
                         var violation = db.SafetyCodes.FirstOrDefault(d => d.TypeSubType == typeSubType2);
                         CodeViolation newViolation = new CodeViolation()
@@ -445,7 +465,7 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditSafetyConcern([Bind(Include = "SafetyConcernGUID,Area,ConditionNoted,CorrectiveActionMeasure,Severity")] SafetyConcern safetyConcern, string typeSubType, string typeSubType2, HttpPostedFileBase ImageFile, string areaNote)
+        public ActionResult EditSafetyConcern([Bind(Include = "SafetyConcernGUID,Area,SubArea,ConditionNoted,CorrectiveAction,Severity")] SafetyConcern safetyConcern, string typeSubType, string typeSubType2, HttpPostedFileBase ImageFile)
         {
             if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
             {
@@ -453,13 +473,13 @@ namespace TrailerManagement.Controllers
                 {
                     var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcern.SafetyConcernGUID);
                     concern.Area = safetyConcern.Area;
-                    if(areaNote == "")
+                    if(safetyConcern.SubArea == "")
                     {
                         concern.SubArea = null;
                     }
                     else
                     {
-                        concern.SubArea = areaNote;
+                        concern.SubArea = safetyConcern.SubArea;
                     }
                     
                     concern.ConditionNoted = safetyConcern.ConditionNoted;

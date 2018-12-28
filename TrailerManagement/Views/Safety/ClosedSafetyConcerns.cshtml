@@ -17,8 +17,8 @@
             <tbody id="concerns">
                 <tr>
                     <th id="area_@s.SafetyConcernGUID">
-                        Area: @s.Area @if (s.AreaNote != "" && s.AreaNote != null)
-                        {<span> - @s.AreaNote</span>}
+                        Area: @s.Area @if (s.SubArea != "" && s.SubArea != null)
+                        {<span> - @s.SubArea</span>}
                     </th>
 
                     <th class="text-right col-xs-3">
@@ -57,7 +57,7 @@
                 </tr>
 
                 <tr>
-                    <th id="action_@s.SafetyConcernGUID">Corrective Action Measure: <small>@s.CorrectiveActionMeasure</small></th>
+                    <th id="action_@s.SafetyConcernGUID">Corrective Action Measure: <small>@s.CorrectiveAction</small></th>
                     <th id="closedDate_@s.SafetyConcernGUID" class="text-right">Date Closed: <small>@s.DateClosed</small></th>
                 </tr>
 

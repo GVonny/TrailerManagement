@@ -1,6 +1,8 @@
 ﻿@using TrailerManagement.Models;
 @{
     ViewBag.Title = "Safety Audit";
+    List<string> areas = (List<string>)Model.Areas;
+    var area = Model.Area;
 }
 <br class="no-print" />
 
@@ -10,11 +12,18 @@
 
 <h3><strong class="col-xs-12 text-center">Safety Audit Report. <span id="date"></span></strong></h3>
 
-<span class="float-left" style="margin-top:5px;">
-    <a href="AddSafetyConcern" class="btn btn-primary no-print">Add Concern</a>
-    <a class="no-print btn btn-primary" href="~/Safety/ViewSafetyAuditPDF">View as PDF</a>
-    <a href="/Safety/ClosedSafetyConcerns" class="btn btn-primary no-print">Closed Concerns</a>
-</span>
+<div style="margin-top:5px;">
+    <div class="float-left">
+        <a href="AddSafetyConcern" class="btn btn-primary no-print">Add Concern</a>
+        <a class="no-print btn btn-primary" href="~/Safety/ViewSafetyAuditPDF">View as PDF</a>
+        <a href="/Safety/ClosedSafetyConcerns" class="btn btn-primary no-print">Closed Concerns</a>
+    </div>
+    <div class="float-right">
+        @Html.DropDownList("areas", new SelectList(areas), " - - - All Concerns - - - ", htmlAttributes: new { @class = "form-control col-md-3 float-right" })
+    </div>
+
+    
+</div>
 <br />
 <br />
 <br class="no-print"/>
@@ -28,9 +37,9 @@
             <tbody id="concerns">
                 <tr>
                     <th id="area_@s.SafetyConcernGUID">Area: @s.Area 
-                        @if (s.AreaNote != "" && s.AreaNote != null)
+                        @if (s.SubArea != "" && s.SubArea != null)
                         {
-                            <span> - @s.AreaNote</span>
+                            <span> - @s.SubArea</span>
                         }
                     </th>
 
@@ -47,7 +56,7 @@
                     </th>
 
                     <td rowspan="4" width="250">
-                        <img src="~/SafetyImages/@s.ImagePath" height="250" width="250" style="margin:-8px;transform:rotate(90deg)"/>
+                        <img src="~/SafetyImages/@s.ImagePath" height="250" width="250" style="margin:-8px;"/>
                     </td>
                 </tr>
 
@@ -69,7 +78,7 @@
                 </tr>
 
                 <tr>
-                    <th colspan="2" id="action_@s.SafetyConcernGUID">Corrective Action Measure: <small>@s.CorrectiveActionMeasure</small></th>
+                    <th colspan="2" id="action_@s.SafetyConcernGUID">Corrective Action Measure: <small>@s.CorrectiveAction</small></th>
                 </tr>
 
                 <tr class="hidden">
@@ -117,6 +126,13 @@
     <script>
         $(function ()
         {
+            var area = '@area';
+            
+            if (area != '')
+            {
+                $('#areas').val(area);
+            }
+
             $('table th').on('click', function ()
             {
                 var id = this.parentElement.parentElement.parentElement.id;
@@ -126,13 +142,32 @@
             $('table').each(function ()
             {
                 var id = this.id;
-                var count = $('#violationCount_' + id).html()
+                var count = $('#violationCount_' + id).html();
                 var violationCount = parseInt(count);
                 if (violationCount > 1)
                 {
                     $('#condition_' + id).addClass('redBackground');
                 }
+                var severity = $('#severity_' + id).html();
+                if (severity == "HIGH")
+                {
+                    $('#condition_' + id).addClass('redBackground');
+                }
             });
+
+            $('#areas').on('change', function ()
+            {
+                var area = $('#areas').val();
+                console.log(area);
+                if (area != "")
+                {
+                    location.href = "/Safety/SafetyAudit?area=" + area;
+                }
+                else
+                {
+                    location.href = "/Safety/SafetyAudit";
+                }
+            })
 
             var date = new Date();
             var month = date.getMonth();

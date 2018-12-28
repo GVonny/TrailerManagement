@@ -2,7 +2,7 @@
     ViewBag.Title = "Inventory Input";
 }
 
-<h2>Inventory Input</h2>
+<h2>Location: @ViewBag.LocationNumber - @ViewBag.RowNumber</h2>
 
 <div class="well">
     @using (Html.BeginForm("AddToRow", "Inventory", FormMethod.Post))
