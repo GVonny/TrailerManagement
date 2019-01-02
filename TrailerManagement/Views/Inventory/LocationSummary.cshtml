@@ -2,14 +2,7 @@
 @{
     ViewBag.Title = "Location Summary";
     var rows = (List<Object>)Model.Stacks;
-    var rowCount = rows.Count;
-    var runningTotalStacks = 0;
-    var InventoryRowGUID = 0;
-    var InventoryRowStack = 1;
-    var PartNumber = 2;
-    var StackQuantity = 3;
-    var y = 1;
-
+    var rowCount = 1;
 }
 
 <h2>Location Summary</h2>
@@ -30,39 +23,39 @@
     <table class="table table-responsive">
         <thead>
             <tr>
-                <th class="col-xs-1">Row</th>
-                <th class="col-xs-1">Part Number</th>
-                <th class="col-xs-3">Site-Description/Notes</th>
+                <th class="col-xs-1" style="background-color:white">Row</th>
+                <th class="col-xs-1" style="background-color:white">Part Number</th>
+                <th class="col-xs-3" style="background-color:white">Site-Description/Notes</th>
                 @for (var x = 1; x <= maxStackNumber; x++)
                 {
-                    <th>Stack @x</th>
+                    <th class="text-center" style="background-color:white">Stack @x</th>
                 }
             </tr>
         </thead>
-
-
         <tbody>
             @foreach (var part in partNumbers)
             {
+                int[] stacks = new int[maxStackNumber];
                 <tr>
-                    <th>@y</th>
+                    <th>@rowCount</th>
                     <td>@part</td>
                     <td>Description Here</td>
                     
-                </tr>
-            }
-        </tbody>
-        @*@
-            {
-                <tr>
-                    <th>@y</th>
-                    <td>@part</td>
-                    <td>Description Here</td>
-                    @for(var x = 0; x < totalInputs; x++)
+                    @foreach(var stack in row)
                     {
-                        if(row[x].PartNumber == part)
+                        if(stack.PartNumber == part)
                         {
-                            <td>@row[x].StackQuantity</td>
+                            stacks[stack.StackNumber - 1] = stack.StackQuantity;
+                        }
+                    }
+
+                    @for(int x = 0; x < stacks.Length; x++)
+                    {
+                        if(stacks[x] != 0)
+                        {
+                            <td class="text-center">
+                                @stacks[x]
+                            </td>
                         }
                         else
                         {
@@ -70,7 +63,8 @@
                         }
                     }
                 </tr>
-            }*@
+            }
+        </tbody>
     </table>
-    y++;
+    rowCount++;
 }

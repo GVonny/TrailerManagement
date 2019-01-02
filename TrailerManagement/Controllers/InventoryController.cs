@@ -135,10 +135,18 @@ namespace TrailerManagement.Controllers
                 var locationID = Convert.ToInt32(fc["locationNumber"]);
                 var rowNumber = Convert.ToInt32(fc["rowNumber"]);
                 var partNumbers = fc["partNumbers"].Split(',');
-                var partNumberCount = partNumbers.Length;
-
+                
+                List<string> uniquePartNumbers = new List<string>();
+                foreach(var part in partNumbers)
+                {
+                    if(!uniquePartNumbers.Contains(part))
+                    {
+                        uniquePartNumbers.Add(part);
+                    }
+                }
+                
                 var location = db.ActiveLocationRows.FirstOrDefault(r => r.LocationNumber == locationID && r.RowNumber == rowNumber);
-                location.NumberOfPartNumbers = partNumberCount;
+                location.NumberOfPartNumbers = uniquePartNumbers.Count;
                 location.NumberOfStacks = 0;
                 location.PalletCount = 0;
 
@@ -215,7 +223,7 @@ namespace TrailerManagement.Controllers
                 List<Object> stacks = new List<Object>();
                 foreach(var row in rows)
                 {
-                    var stack = db.InventoryRowStacks.Where(s => s.InventoryRowGUID == row.InventoryRowGUID).ToList();
+                    var stack = db.InventoryRowStacks.Where(s => s.InventoryRowGUID == row.InventoryRowGUID).OrderBy(s => s.StackNumber).ToList();
                     stacks.Add(stack);
                 }
                 dynamic model = new ExpandoObject();
