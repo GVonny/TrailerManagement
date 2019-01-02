@@ -33,7 +33,7 @@
                         }
                     </th>
 
-                    <td rowspan="4" width="250" style="transform:rotate(90deg)!important;">
+                    <td rowspan="4" width="250">
                         <img src="~/SafetyImages/@s.ImagePath" height="250" width="250" style="margin:-7px;"/>
                     </td>
                 </tr>
@@ -42,7 +42,7 @@
                     <th colspan="2" id="condition_@s.SafetyConcernGUID">Condition Noted: @s.ConditionNoted</th>
                 </tr>
 
-                <tr>
+                <tr style="height:50%;">
                     <th colspan="2" id="violation_@s.SafetyConcernGUID">
                         <strong>Code Violation:</strong>
                         @foreach (CodeViolation c in Model.Violations)

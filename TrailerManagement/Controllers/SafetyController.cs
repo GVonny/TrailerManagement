@@ -351,6 +351,15 @@ namespace TrailerManagement.Controllers
                         }
                     }
 
+                    if (!conditionNoted.EndsWith("."))
+                    {
+                        conditionNoted += ".";
+                    }
+                    if (!correctiveAction.EndsWith("."))
+                    {
+                        correctiveAction += ".";
+                    }
+
                     SafetyConcern newConcern = new SafetyConcern()
                     {
                         Area = departments,
@@ -482,7 +491,15 @@ namespace TrailerManagement.Controllers
                         concern.SubArea = safetyConcern.SubArea;
                     }
                     
+                    if(!safetyConcern.ConditionNoted.EndsWith("."))
+                    {
+                        safetyConcern.ConditionNoted += ".";
+                    }
                     concern.ConditionNoted = safetyConcern.ConditionNoted;
+                    if (!safetyConcern.CorrectiveAction.EndsWith("."))
+                    {
+                        safetyConcern.CorrectiveAction += ".";
+                    }
                     concern.CorrectiveAction = safetyConcern.CorrectiveAction;
                     concern.Severity = safetyConcern.Severity;
 
