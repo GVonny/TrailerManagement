@@ -21,15 +21,14 @@
         }
     }
     
-    <table class="table table-responsive" >
+    <table class="" >
         <thead>
             <tr>
                 <th colspan="100%" class="text-center" style="background-color:white">Row @rowCount</th>
             </tr>
-            <tr style="border-top-style:solid; border-top-color:#333">
-                @*<th class="col-xs-1" style="background-color:white">Row</th>*@
+            <tr style="border-top-style:solid; border-top-color:#333" id="top">
                 <th class="col-xs-1" style="background-color:white">Part Number</th>
-                <th class="col-xs-3" style="background-color:white">Site-Description/Notes</th>
+                <th class="col-xs-2" style="background-color:white">Site-Description/Notes</th>
                 @for (var x = 1; x <= maxStackNumber; x++)
                 {
                     <th class="text-center" style="background-color:white">Stack @x</th>
@@ -39,23 +38,25 @@
         <tbody id="@rowCount">
             @foreach (var part in partNumbers)
             {
+                int palletQuantity = 0;
                 int[] stacks = new int[maxStackNumber];
+                
                 <tr>
-                    @*<th>@rowCount</th>*@
                     <td>@part</td>
-                    <td>Description Here</td>
-                    
-                    @foreach(var stack in row)
+
+                    @foreach (var stack in row)
                     {
-                        if(stack.PartNumber == part)
+                        if (stack.PartNumber == part)
                         {
                             stacks[stack.StackNumber - 1] = stack.StackQuantity;
+                            palletQuantity += stack.StackQuantity;
                         }
                     }
+                    <td class="text-center">@palletQuantity</td>
 
-                    @for(int x = 0; x < stacks.Length; x++)
+                    @for (int x = 0; x < stacks.Length; x++)
                     {
-                        if(stacks[x] != 0)
+                        if (stacks[x] != 0)
                         {
                             <td class="text-center">
                                 @stacks[x]
@@ -70,8 +71,10 @@
             }
         </tbody>
     </table>
+    <br />
     rowCount++;
 }
+
 
 @section scripts
 {
