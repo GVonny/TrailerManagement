@@ -38,11 +38,11 @@ namespace TrailerManagement.Models
         public virtual DbSet<CustomersAndVendor> CustomersAndVendors { get; set; }
         public virtual DbSet<SortList> SortLists { get; set; }
         public virtual DbSet<Payout> Payouts { get; set; }
-        public virtual DbSet<ActiveInventoryLocation> ActiveInventoryLocations { get; set; }
         public virtual DbSet<InventoryRowStack> InventoryRowStacks { get; set; }
-        public virtual DbSet<ActiveLocationRow> ActiveLocationRows { get; set; }
         public virtual DbSet<SafetyConcern> SafetyConcerns { get; set; }
         public virtual DbSet<CodeViolation> CodeViolations { get; set; }
         public virtual DbSet<SafetyCode> SafetyCodes { get; set; }
+        public virtual DbSet<ActiveInventoryLocation> ActiveInventoryLocations { get; set; }
+        public virtual DbSet<ActiveLocationRow> ActiveLocationRows { get; set; }
     }
 }

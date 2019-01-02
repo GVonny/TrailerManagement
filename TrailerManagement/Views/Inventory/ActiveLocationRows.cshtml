@@ -16,8 +16,8 @@
     <thead>
         <tr style="background-color:white">
             <th>Row Number</th>
-            <th>Number of Part Numbers</th>
-            <th>Number of Stacks</th>
+            <th class="text-center">Number of Part Numbers</th>
+            <th class="text-center">Number of Stacks</th>
             <th class="text-center">Pallet Count</th>
         </tr>
     </thead>
@@ -27,8 +27,8 @@
             <tr id="@r.InventoryRowGUID">
                 <td id="locationNumber_@r.InventoryRowGUID" class="hidden">@r.LocationNumber</td>
                 <td id="rowNumber_@r.InventoryRowGUID">@r.RowNumber</td>
-                <td id="numberOfParts_@r.InventoryRowGUID">@r.NumberOfPartNumbers</td>
-                <td id="numberOfStacks_@r.InventoryRowGUID">@r.NumberOfStacks</td>
+                <td id="numberOfParts_@r.InventoryRowGUID" class="text-center">@r.NumberOfPartNumbers</td>
+                <td id="numberOfStacks_@r.InventoryRowGUID" class="text-center">@r.NumberOfStacks</td>
                 <td id="palletCount_@r.InventoryRowGUID" class="text-center">@r.PalletCount</td>
                 @if (r.NumberOfStacks < 0)
                 {
@@ -36,7 +36,7 @@
                 }
                 else
                 {
-                    <td><a href="/Inventory/AddToRow?locationID=@r.LocationNumber&rowNumber=@r.RowNumber">Add Stacks</a></td>
+                    <td><a href="/Inventory/AddToRow?locationID=@r.LocationNumber&rowNumber=@r.RowNumber">Input Stacks</a></td>
                 }
             </tr>
         }

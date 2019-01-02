@@ -10,7 +10,7 @@
         <div class="form-horizontal">
             <div class="form-group hidden">
                 <label for="locationNumber">Location Number</label>
-                <input type="number" id="locationNumber" name="locationNumber" class="form-control col-md-offset-1" value="@ViewBag.LocationNumber" />
+                <input type="text" id="locationNumber" name="locationNumber" class="form-control col-md-offset-1" value="@ViewBag.LocationNumber" />
                 <label for="rowNumber">Row Number</label>
                 <input type="number" id="rowNumber" name="rowNumber" class="form-control col-md-offset-1" value="@ViewBag.RowNumber" />
             </div>
@@ -68,8 +68,8 @@
             var partIndex = 0;
             var partsList = [];
             new Part(false);
-            //PrintList();
-            //Print();
+            PrintList();
+            Print();
             
             $('#removePalletType').on('click', function ()
             {
@@ -157,10 +157,17 @@
                     //console.log("checking input: " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]);
 
                     if ($('#' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1) + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "" &&
-                        $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "")
+                        $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "" &&
+                        $('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1)).val() != "" &&
+                        $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).val() != "")
                     {
                         //console.log("field " + (partsList[partsList.length - 1]["MaxPartNumber"] - 1) + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is filled");
                         //console.log("field " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is filled");
+
+                        $('#' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1) + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'lightgrey');
+                        $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'lightgrey');
+                        $('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1)).css('border-color', 'lightgrey');
+                        $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'lightgrey');
 
                         totalStacks++;
                         numberOfParts++;
@@ -216,16 +223,37 @@
                             //console.log("field " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is empty");
                             $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'red');
                         }
+
+                        if ($('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).val() != "")
+                        {
+                            $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'lightgrey');
+                        }
+                        else
+                        {
+                            $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'red');
+                        }
+
+                        console.log("checking partNumber" + (partsList[partsList.length - 1]["MaxPartNumber"] - 1));
+                        if ($('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1)).val() != "")
+                        {
+                            $('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1)).css('border-color', 'lightgrey');
+                        }
+                        else
+                        {
+                            $('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1)).css('border-color', 'red');
+                        }
                     }
                 }
                 else
                 {
                     //console.log("checking input: " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]);
 
-                    if ($('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "")
+                    if ($('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "" &&
+                        $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).val() != "")
                     {
                         //console.log("field " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is filled");
                         $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'lightgrey');
+                        $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'lightgrey')
                         totalStacks++;
                         numberOfParts++;
 
@@ -259,7 +287,24 @@
                     else
                     {
                         //console.log("field " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is empty");
-                        $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'red');
+                        if ($('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() == "")
+                        {
+                            $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'red');
+                        }
+                        else
+                        {
+                            $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'lightgrey');
+                        }
+
+
+                        if ($('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).val() == "")
+                        {
+                            $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'red');
+                        }
+                        else
+                        {
+                            $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'lightgrey');
+                        }
                     }
                 }
 
@@ -276,7 +321,8 @@
             {
                 
                 //console.log("checking input: " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]);
-                if ($('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "")
+                if ($('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "" &&
+                    $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).val() != "")
                 {
                     //console.log("field " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is filled");
                     $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'lightgrey');
@@ -303,11 +349,33 @@
                     //parent = 'part-' + numberOfParts + '-buttons'
                     $('#' + parent).children('.remove-stack').removeClass('hidden');
                     $(this).parent().children('.split-first-stack').addClass('hidden');
+
+                    if ($('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).val() != "")
+                    {
+                        $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'lightgrey');
+                    }
                 }
                 else
                 {
                     //console.log("field " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is empty");
-                    $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'red');
+                    if ($('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() == "")
+                    {
+                        $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'red');
+                    }
+                    else
+                    {
+                        $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'lightgrey');
+                    }
+                    
+                    
+                    if ($('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).val() == "")
+                    {
+                        $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'red');
+                    }
+                    else
+                    {
+                        $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'lightgrey');
+                    }
                 }
                 //PrintList();
                 //Print();
@@ -344,17 +412,26 @@
                 //console.log("checking input: " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]);
 
                 if ($('#' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1) + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "" &&
-                    $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "")
+                    $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "" &&
+                    $('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1)).val() != "" &&
+                    $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).val() != "")
                 {
                     //console.log("field " + (partsList[partsList.length - 1]["MaxPartNumber"] - 1) + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is filled");
                     //console.log("field " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is filled");
 
                     $('#' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1) + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'lightgrey');
                     $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'lightgrey');
+
+                    for (var x = 0; x < partsList[partsList.length - 1]["MaxPartNumber"]; x++)
+                    {
+                        $('#' + (partsList[partsList.length - 1]["MaxPartNumber"] - x) + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'lightgrey');
+                        $('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - x)).css('border-color', 'lightgrey');
+                    }
                     
                     partsList[partsList.length - 1]["NumberOfParts"]++;
                     partsList[partsList.length - 1]["MaxPartNumber"]++;
                     numberOfParts++;
+                    $('#hiddenHtml').children('select').attr('id', "partNumber" + numberOfParts);
 
                     if (partsList[partsList.length - 1]["PartIndex"] == 1)
                     {
@@ -428,6 +505,25 @@
                         console.log("field " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is empty");
                         $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'red');
                     }
+                    console.log("checking partNumber" + (partsList[partsList.length - 1]["MaxPartNumber"]));
+                    if ($('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).val() != "")
+                    {
+                        $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'lightgrey');
+                    }
+                    else
+                    {
+                        $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'red');
+                    }
+
+                    console.log("checking partNumber" + (partsList[partsList.length - 1]["MaxPartNumber"] - 1));
+                    if ($('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1)).val() != "")
+                    {
+                        $('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1)).css('border-color', 'lightgrey');
+                    }
+                    else
+                    {
+                        $('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1)).css('border-color', 'red');
+                    }
                 }
 
                 PrintList();
@@ -482,7 +578,9 @@
                 //console.log("checking input: " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]);
 
                 if ($('#' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1) + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "" &&
-                    $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "")
+                    $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "" &&
+                    $('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1)).val() != "" &&
+                    $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).val() != "")
                 {
                     //console.log("field " + (partsList[partsList.length - 1]["MaxPartNumber"] - 1) + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is filled");
                     //console.log("field " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is filled");
@@ -490,6 +588,7 @@
                     for (var x = 0; x < partsList[partsList.length - 1]["MaxPartNumber"]; x++)
                     {
                         $('#' + (partsList[partsList.length - 1]["MaxPartNumber"] - x) + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'lightgrey');
+                        $('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - x)).css('border-color', 'lightgrey');
                     }
 
                     totalStacks++;
@@ -542,6 +641,25 @@
                         console.log("field " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is empty");
                         $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'red');
                     }
+
+                    if ($('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).val() != "")
+                    {
+                        $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'lightgrey');
+                    }
+                    else
+                    {
+                        $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'red');
+                    }
+
+                    console.log("checking partNumber" + (partsList[partsList.length - 1]["MaxPartNumber"] - 1));
+                    if ($('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1)).val() != "")
+                    {
+                        $('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1)).css('border-color', 'lightgrey');
+                    }
+                    else
+                    {
+                        $('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1)).css('border-color', 'red');
+                    }
                 }
                 
                 if (partsList.length > 1)
@@ -556,16 +674,20 @@
             $('body').on('click', '.split-first-stack', function ()
             {
                 //console.log("checking input: " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]);
-                if ($('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "")
+                if ($('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "" && 
+                    $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).val() != "")
                 {
 
                     //console.log("field " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is filled");
                     $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'lightgrey');
+                    $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'lightgrey');
 
                     partsList[partsList.length - 1]["NumberOfParts"]++;
                     partsList[partsList.length - 1]["MaxPartNumber"]++;
                     partsList[partsList.length - 1]["IsSplitStack"] = true;
                     numberOfParts++;
+
+                    $('#hiddenHtml').children('select').attr('id', "partNumber" + numberOfParts);
 
                     $(this).parent().remove();
 
@@ -592,7 +714,24 @@
                 else
                 {
                     //console.log("field " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is empty");
-                    $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'red');
+                    if ($('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() == "")
+                    {
+                        $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'red');
+                    }
+                    else
+                    {
+                        $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'lightgrey');
+                    }
+
+
+                    if ($('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).val() == "")
+                    {
+                        $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'red');
+                    }
+                    else
+                    {
+                        $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'lightgrey');
+                    }
                 }
 
                 //PrintList();
@@ -635,13 +774,17 @@
                     //console.log("checking input: " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]);
 
                     if ($('#' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1) + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "" &&
-                        $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "")
+                        $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "" &&
+                        $('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1)).val() != "" &&
+                        $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).val() != "")
                     {
                         //console.log("field " + (partsList[partsList.length - 1]["MaxPartNumber"] - 1) + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is filled");
                         //console.log("field " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is filled");
 
                         $('#' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1) + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'lightgrey');
                         $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'lightgrey');
+                        $('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1)).css('border-color', 'lightgrey');
+                        $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'lightgrey');
 
                         numberOfParts++;
                         totalStacks++;
@@ -718,16 +861,37 @@
                             //console.log("field " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is empty");
                             $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'red');
                         }
+
+                        if ($('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).val() != "")
+                        {
+                            $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'lightgrey');
+                        }
+                        else
+                        {
+                            $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'red');
+                        }
+
+                        console.log("checking partNumber" + (partsList[partsList.length - 1]["MaxPartNumber"] - 1));
+                        if ($('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1)).val() != "")
+                        {
+                            $('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1)).css('border-color', 'lightgrey');
+                        }
+                        else
+                        {
+                            $('#partNumber' + (partsList[partsList.length - 1]["MaxPartNumber"] - 1)).css('border-color', 'red');
+                        }
                     }
                 }
                 else
                 {
                     console.log("part before is not split");
                     console.log("checking input: " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]);
-                    if ($('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "")
+                    if ($('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() != "" &&
+                        $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).val() != "")
                     {
                         console.log("field " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is filled");
                         $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'lightgrey');
+                        $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'lightgrey');
                         
                         numberOfParts++;
                         totalStacks++;
@@ -784,8 +948,25 @@
                     }
                     else
                     {
-                        console.log("field " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is empty");
-                        $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'red');
+                        //console.log("field " + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"] + " is empty");
+                        if ($('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).val() == "")
+                        {
+                            $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'red');
+                        }
+                        else
+                        {
+                            $('#' + partsList[partsList.length - 1]["MaxPartNumber"] + '-' + partsList[partsList.length - 1]["MaxStackNumber"]).css('border-color', 'lightgrey');
+                        }
+
+
+                        if ($('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).val() == "")
+                        {
+                            $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'red');
+                        }
+                        else
+                        {
+                            $('#partNumber' + partsList[partsList.length - 1]["MaxPartNumber"]).css('border-color', 'lightgrey');
+                        }
                     }
                 }
 

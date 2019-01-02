@@ -25,7 +25,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult ActiveLocationRows(int locationID)
+        public ActionResult ActiveLocationRows(string locationID)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
@@ -39,7 +39,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult CreateLocationRow(int locationID)
+        public ActionResult CreateLocationRow(string locationID)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
@@ -111,9 +111,8 @@ namespace TrailerManagement.Controllers
                 return RedirectToAction(actionName: "ActiveInventoryLocations", controllerName: "Inventory");
             }
         }
-
-
-        public ActionResult AddToRow(int locationID, int rowNumber)
+        
+        public ActionResult AddToRow(string locationID, int rowNumber)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
@@ -132,7 +131,7 @@ namespace TrailerManagement.Controllers
             using (TrailerEntities db = new TrailerEntities())
             {
                 string[] input = fc.AllKeys;
-                var locationID = Convert.ToInt32(fc["locationNumber"]);
+                var locationID = fc["locationNumber"];
                 var rowNumber = Convert.ToInt32(fc["rowNumber"]);
                 var partNumbers = fc["partNumbers"].Split(',');
                 
@@ -159,8 +158,9 @@ namespace TrailerManagement.Controllers
                 for (var x = 3; x < fc.Count; x++)
                 {
                     var key = fc.GetKey(x);
-                    var partIndex = Convert.ToInt32(key.Substring(0, 1)) - 1;
-                    var stackNumber = Convert.ToInt32(key.Substring(key.Length - 1, 1));
+                    var dashIndex = Convert.ToInt32(key.IndexOf('-'));
+                    var partIndex = Convert.ToInt32(key.Substring(0, dashIndex)) - 1;
+                    var stackNumber = Convert.ToInt32(key.Substring((dashIndex + 1), (key.Length - 1 - dashIndex)));
 
                     var quantity = Convert.ToInt32(fc[key]);
                     location.PalletCount += quantity;
@@ -175,8 +175,9 @@ namespace TrailerManagement.Controllers
 
                     db.InventoryRowStacks.Add(newStack);
                 }
-
-                var totalStacks = Convert.ToInt32(fc.GetKey(fc.Count - 1).Substring(2, 1));
+                var lastStack = fc.GetKey(fc.Count - 1);
+                var lastDashIndex = lastStack.IndexOf('-');
+                var totalStacks = Convert.ToInt32(fc.GetKey(fc.Count - 1).Substring(lastDashIndex + 1, (lastStack.Length - 1 - lastDashIndex)));
                 location.NumberOfStacks = totalStacks;
 
                 db.SaveChanges();
@@ -215,7 +216,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult LocationSummary(int locationID)
+        public ActionResult LocationSummary(string locationID)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
@@ -229,6 +230,7 @@ namespace TrailerManagement.Controllers
                 dynamic model = new ExpandoObject();
 
                 model.Stacks = stacks;
+                model.LocationID = locationID;
 
                 return View(model);
             }

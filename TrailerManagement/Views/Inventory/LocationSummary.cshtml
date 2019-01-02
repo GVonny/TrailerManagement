@@ -3,9 +3,10 @@
     ViewBag.Title = "Location Summary";
     var rows = (List<Object>)Model.Stacks;
     var rowCount = 1;
+    var location = Model.LocationID;
 }
 
-<h2>Location Summary</h2>
+<h2>Location @location Summary</h2>
 @foreach (var row in Model.Stacks)
 {
     var totalInputs = row.Count;
@@ -20,10 +21,13 @@
         }
     }
     
-    <table class="table table-responsive">
+    <table class="table table-responsive" >
         <thead>
             <tr>
-                <th class="col-xs-1" style="background-color:white">Row</th>
+                <th colspan="100%" class="text-center" style="background-color:white">Row @rowCount</th>
+            </tr>
+            <tr style="border-top-style:solid; border-top-color:#333">
+                @*<th class="col-xs-1" style="background-color:white">Row</th>*@
                 <th class="col-xs-1" style="background-color:white">Part Number</th>
                 <th class="col-xs-3" style="background-color:white">Site-Description/Notes</th>
                 @for (var x = 1; x <= maxStackNumber; x++)
@@ -32,12 +36,12 @@
                 }
             </tr>
         </thead>
-        <tbody>
+        <tbody id="@rowCount">
             @foreach (var part in partNumbers)
             {
                 int[] stacks = new int[maxStackNumber];
                 <tr>
-                    <th>@rowCount</th>
+                    @*<th>@rowCount</th>*@
                     <td>@part</td>
                     <td>Description Here</td>
                     
@@ -67,4 +71,20 @@
         </tbody>
     </table>
     rowCount++;
+}
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('table tbody').each(function ()
+            {
+                var id = this.id;
+                console.log(id);
+                console.log(this.childElementCount);
+                //$('#row_' + id).attr('rowspan', this.childElementCount)
+            })
+        })
+    </script>    
 }

@@ -15,7 +15,7 @@ namespace TrailerManagement.Models
     public partial class ActiveInventoryLocation
     {
         public long InventoryLocationGUID { get; set; }
-        public Nullable<int> LocationNumber { get; set; }
+        public string LocationNumber { get; set; }
         public Nullable<int> NumberOfRows { get; set; }
     }
 }
