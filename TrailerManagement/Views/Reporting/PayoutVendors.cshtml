@@ -1,0 +1,42 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Payout Vendors";
+}
+
+<h2>Payout Info By Vendor</h2>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Vendor</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var payout in Model)
+        {
+            <tr id="@payout">
+                @if (payout == "")
+                {
+                    <td>No Vendor</td>
+                }
+                else
+                {
+                    <td>@payout</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('table tr').on('click', function ()
+            {
+                location.href = "/PalletRepair/PayoutInfoByVendor?vendor=" + this.id;
+            });
+        });
+    </script>
+}

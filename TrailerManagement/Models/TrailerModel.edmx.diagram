@@ -24,6 +24,9 @@
         <EntityTypeShape EntityType="TrailerModel.SafetyCode" Width="1.5" PointX="10.125" PointY="8.125" />
         <EntityTypeShape EntityType="TrailerModel.ActiveInventoryLocation" Width="1.875" PointX="0.625" PointY="8.25" />
         <EntityTypeShape EntityType="TrailerModel.ActiveLocationRow" Width="2" PointX="2.625" PointY="8.25" />
+        <EntityTypeShape EntityType="TrailerModel.SortListTest" Width="1.875" PointX="2.75" PointY="11.75" />
+        <EntityTypeShape EntityType="TrailerModel.MasterStacksBackup" Width="1.875" PointX="0.75" PointY="11.75" />
+        <EntityTypeShape EntityType="TrailerModel.PayoutsBackup" Width="1.875" PointX="4.75" PointY="11.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

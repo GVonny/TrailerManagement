@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -144,6 +145,35 @@ namespace TrailerManagement.Controllers
                     }
                     return View(trailer.ToList());
                 }
+            }
+        }
+
+        public ActionResult PayoutVendors()
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var payouts = db.Payouts.Select(p => p.Vendor).Distinct().ToList();
+                return View(payouts);
+            }
+        }
+
+        public ActionResult PayoutInfoByVendor(string vendor)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                dynamic model = new ExpandoObject();
+
+                var stacks = db.CompletedSorts.Where(s => s.Vendor == vendor);
+
+                var uniqueSortIDs = db.CompletedSorts.Select(u => u.SortGUID).Distinct().ToList();
+
+                var payouts = db.Payouts.Where(p => p.Vendor == vendor);
+
+                model.Stacks = stacks.ToList();
+                model.SortIDs = uniqueSortIDs;
+                model.Payouts = payouts.ToList();
+
+                return View(model);
             }
         }
     }

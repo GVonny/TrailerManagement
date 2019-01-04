@@ -126,6 +126,86 @@ namespace TrailerManagement.Controllers
             }
         }
 
+        public ActionResult SortListTest(string status)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                dynamic model = new ExpandoObject();
+                var trailers = from x in db.SortListTests select x;
+                switch (status)
+                {
+                    case "CLOSED":
+                    {
+                        trailers = trailers.Where(t => t.Status == "CLOSED");
+                        ViewBag.Closed = true;
+                        break;
+                    }
+                    default:
+                    {
+                        trailers = trailers.Where(t => t.Status == "OPEN" || t.Status == "NEW");
+                        break;
+                    }
+                }
+
+                this.ViewData["Vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
+
+                model.Trailers = trailers.OrderByDescending(t => t.Status).ThenByDescending(t => t.DateArrived).ThenBy(t => t.Customer).ToList();
+                return View(model);
+            }
+            
+        }
+
+        public ActionResult SortTrailerTest(int sortID, int? stackNumber, int? numberOfPeople, bool? imageUploaded)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var trailer = db.SortLists.Find(sortID);
+                trailer.Status = "OPEN";
+                trailer.SortChoice = "STACK";
+                db.SaveChanges();
+
+                if (stackNumber != null)
+                {
+                    ViewBag.StackNumber = stackNumber;
+                }
+                else if (trailer.MaxStackNumber != null)
+                {
+                    ViewBag.StackNumber = trailer.MaxStackNumber + 1;
+                }
+                else
+                {
+                    //sort for trailer has not started yet
+                    ViewBag.StackNumber = 1;
+                }
+
+                if (numberOfPeople != null)
+                {
+                    ViewBag.NumberOfPeople = numberOfPeople;
+                }
+
+                if (imageUploaded == null)
+                {
+                    ViewBag.ImageUploaded = false;
+                }
+                else
+                {
+                    ViewBag.ImageUploaded = true;
+                }
+
+                var vendor = db.CustomersAndVendors.FirstOrDefault(v => v.Name == trailer.Vendor);
+
+                dynamic model = new ExpandoObject();
+                model.Trailer = trailer;
+                model.Vendor = vendor;
+
+                this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.PartNumber != "50-0140" && c.PartNumber != "50-0001" && c.PartNumber != "50-0004" && c.Type != "SCRAP" && c.Type != "DEDUCTION").OrderBy(c => c.Description), "PartNumber", "Description").ToList();
+
+                this.ViewData["scrapTypes"] = new SelectList(db.PalletTypes.Where(c => c.Description.ToLower().Contains("scrap")).OrderByDescending(c => c.PartNumber), "PartNumber", "Description").ToList();
+
+                return View(model);
+            }
+        }
+
         public ActionResult SortStacks(int sortID)
         {
             if (Session["username"] == null)
@@ -1631,6 +1711,31 @@ namespace TrailerManagement.Controllers
             else
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+        }
+
+
+        public void ClearEmptyPayouts()
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var stacks = db.MasterStacks.Select(s => s.SortGUID).Distinct().ToList();
+                var temp = stacks.OrderBy(s => s).ToList();
+
+                var payouts = db.PayoutsBackups.ToList();
+
+
+                var counter = 0;
+                foreach (var payout in payouts)
+                {
+                    if (!stacks.Contains(payout.SortGUID))
+                    {
+                        db.PayoutsBackups.Remove(payout);
+                        counter++;
+                    }
+                }
+                var test = "";
+                //db.SaveChanges();
             }
         }
     }

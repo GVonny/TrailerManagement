@@ -234,6 +234,9 @@
     <Compile Include="Models\MasterStack.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\MasterStacksBackup.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\PalletPrice.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
@@ -241,6 +244,9 @@
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Payout.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PayoutsBackup.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SafetyCode.cs">
@@ -254,6 +260,9 @@
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SortList.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SortListTest.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TrailerList.cs">
@@ -401,6 +410,9 @@
     <Content Include="Views\Inventory\CreateLocationRow.cshtml" />
     <Content Include="Views\Inventory\ViewRowStacks.cshtml" />
     <Content Include="Views\Inventory\LocationSummary.cshtml" />
+    <Content Include="Views\PalletRepair\SortListTest.cshtml" />
+    <Content Include="Views\Reporting\PayoutVendors.cshtml" />
+    <Content Include="Views\Reporting\PayoutInfoByVendor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,287 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Sort List";
+    var isClosed = ViewBag.Closed;
+}
+
+<h2 class="float-left">Sort List</h2>
+
+@if (Convert.ToInt32(Session["permission"]) >= 40)
+{
+    <a href="PayoutList" class="btn btn-primary float-left" style="margin-top:20px; margin-left:10px">Payout List</a>
+    <a href="/Trailer/ActiveTrailerList" class="btn btn-primary" style="margin-top:20px; margin-left:10px">Active List</a>
+}
+<a href="CreateSort" class="btn btn-primary float-left" style="margin-top:20px; margin-left:10px">Add Trailer</a>
+@if (Convert.ToInt32(Session["permission"]) > 30)
+{
+    <div class="float-right">
+        <label for="showClosedSorts">Show Closed Sorts</label>
+        <input type="checkbox" id="showClosedSorts" name="showClosedSorts" style="margin-top:40px">
+    </div>
+}
+
+
+<br />
+
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr class="font-md">
+            <th>Trailer Number</th>
+            <th>Received From</th>
+            <th>Load Status</th>
+            <th>Sort Type</th>
+            <th>Date Arrived</th>
+        </tr>
+    </thead>
+    <tbody id="removals">
+        @foreach (SortListTest t in Model.Trailers)
+        {
+            <tr class="product-row" id="@t.SortGUID">
+                <td id="trailerNumber_@t.SortGUID">@t.TrailerNumber</td>
+                <td id="customer_@t.SortGUID">@t.Customer</td>
+                <td class="hidden" id="vendor_@t.SortGUID">@t.Vendor</td>
+                <td id="loadStatus_@t.SortGUID">@t.LoadStatus</td>
+                <td id="sortType_@t.SortGUID">@t.SortType</td>
+                <td id="dateArrived_@t.SortGUID">@t.DateArrived</td>
+                @if (Convert.ToInt32(Session["permission"]) > 30)
+                {
+                    if (t.Status == "NEW")
+                    {
+                        <td id="remove_@t.SortGUID"><a href="/PalletRepair/RemoveSort?sortID=@t.SortGUID">remove</a></td>
+                    }
+                }
+                @if (t.Status == "OPEN" || t.Status == "CLOSED")
+                {
+                    <td id="status_@t.SortGUID">@t.Status</td>
+                }
+
+
+                <td id="numberOfPeopleToStart_@t.SortGUID" class="hidden">@t.NumberOfPeopleToStart</td>
+                <td id="maxStackNumber_@t.SortGUID" class="hidden">@t.MaxStackNumber</td>
+
+                <td class="hidden" id="sortChoice_@t.SortGUID">@t.SortChoice</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Date Modal -->
+<div id="updateDateModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                <p><strong>Arrival date is not present, you must update it to continue</strong></p>
+            </div>
+            <div class="modal-body">
+                <strong>Date Arrived</strong>
+                <input type="date" class="datepicker" id="arrivalDate">
+                <input type="checkbox" id="today" class="col-md-offset-3" />&nbsp;Arrived today?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                <button type="button" class="btn btn-primary hidden" id="updateDate" data-dismiss="modal" data-toggle="modal">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- People Modal -->
+<div id="additionalInfoModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Additional Info for <span id="vendorName"></span></h2>
+
+                @using (Html.BeginForm("CreateSortImage", "PalletRepair", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="modal-body">
+                            <div class="form-group hidden">
+                                <input type="number" class="form-control" id="sortID" name="sortID">
+                                <br>
+                            </div>
+                            <div class="form-group">
+                                <strong>Vendor Confirmation</strong>
+                                @Html.DropDownList("Vendors", null, "- - - If vendor is not in list, leave blank - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "vendors", @name = "vendor" })
+                                <br>
+                            </div>
+                            <div class="form-group">
+                                <strong>Number of people working on trailer:</strong>
+                                <input type="number" class="form-control" id="numberOfPeople" name="peopleOnTrailer" placeholder="Required" required>
+                                <br>
+                            </div>
+                            <div class="form-group">
+                                <strong>Initial Image Upload</strong>
+                                <input type="file" name="ImageFile" id="ImageFile">
+                            </div>
+                            <div class="form-group">
+                                <strong>Image Note</strong>
+                                <input type="text" class="form-control" id="notes" name="notes">
+                            </div>
+                            <br>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <input type="submit" value="Continue" id="stackSort" name="sortType" class="btn btn-primary" />
+                                @*<input type="submit" value="Bulk Sort" id="bulkSort" name="sortType" class="btn btn-primary" />*@
+                                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('#arrivalDate').on('change', function ()
+            {
+                $('#updateDate').removeClass('hidden');
+            });
+
+            var id;
+            $('#removals').on('click', '.product-row', function ()
+            {
+                //id = sortID
+                id = this.id;
+                location.href = "/PalletRepair/SortTrailerTest?sortID=" + id + "&numberOfPeople=1";
+            });
+
+            $('#removals').on('click', '.closed-row', function ()
+            {
+                id = this.id;
+                location.href = "/PalletRepair/SortConfirmation?sortID=" + id;
+            });
+
+            $('#updateDate').on('click', function ()
+            {
+                var date = $('#arrivalDate').val();
+                $('#today').prop('checked', false);
+                location.href = "/PalletRepair/UpdateArrivalDate?sortID=" + id + "&date=" + date;
+            });
+
+            $('#removals tr').each(function ()
+            {
+                var id = this.id;
+                var date = $('#dateArrived_' + id).html();
+                if (date == "")
+                {
+                    $('#dateArrived_' + id).html("Hasn't arrived yet");
+                }
+
+                var maxStackNumber = $('#maxStackNumber_' + id).html();
+                if (maxStackNumber != "" && maxStackNumber >= 1)
+                {
+                    $('#status_' + id).removeClass('hidden');
+                }
+            });
+
+            $('#today').change(function ()
+            {
+                if ($(this).is(':checked'))
+                {
+                    $('#arrivalDate').val(getCurrentDate());
+                    $('#updateDate').removeClass('hidden');
+                }
+                else
+                {
+                    $('#arrivalDate').val("");
+                    $('#updateDate').addClass('hidden');
+                }
+            });
+
+            var isClosed = '@isClosed';
+            if (isClosed == "True")
+            {
+                $('#showClosedSorts').attr('checked', 'checked');
+            }
+
+            $('#showClosedSorts').change(function ()
+            {
+                if ($(this).is(':checked'))
+                {
+                    location.href = "/PalletRepair/SortList?status=CLOSED";
+                }
+                else
+                {
+                    location.href = "/PalletRepair/SortList";
+                }
+            });
+
+            var numberOfPeople = "";
+            $('#numberOfPeople').on('change', function ()
+            {
+                numberOfPeople = $('#numberOfPeople').val();
+            });
+
+            function getCurrentDate()
+            {
+                var currentDate = new Date().toString();
+                var currentMonth = currentDate.substring(4, 7);
+                var currentDay = currentDate.substring(8, 10);
+                var currentYear = currentDate.substring(11, 15);
+
+                //converts month abreviation to month number
+                switch (currentMonth)
+                {
+                    case "Jan":
+                        currentMonth = "01";
+                        break;
+                    case "Feb":
+                        currentMonth = "02";
+                        break;
+                    case "Mar":
+                        currentMonth = "03";
+                        break;
+                    case "Apr":
+                        currentMonth = "04";
+                        break;
+                    case "May":
+                        currentMonth = "05";
+                        break;
+                    case "Jun":
+                        currentMonth = "06";
+                        break;
+                    case "Jul":
+                        currentMonth = "07";
+                        break;
+                    case "Aug":
+                        currentMonth = "08";
+                        break;
+                    case "Sep":
+                        currentMonth = "09";
+                        break;
+                    case "Oct":
+                        currentMonth = "10";
+                        break;
+                    case "Nov":
+                        currentMonth = "11";
+                        break;
+                    case "Dec":
+                        currentMonth = "12";
+                        break;
+                }
+
+                currentDate = (currentYear + "-" + currentMonth + "-" + currentDay);
+                return currentDate;
+            }
+        });
+    </script>
+}

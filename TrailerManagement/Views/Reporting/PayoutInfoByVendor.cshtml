@@ -1,0 +1,17 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Payout Info By Vendor";
+}
+
+<h2>Payout Info By Vendor</h2>
+
+@foreach(Payout payout in Model.Payouts)
+{
+    <table>
+        <thead>
+            <tr>
+                <th>@payout.DateArrived</th>
+            </tr>
+        </thead>
+    </table>
+}
