@@ -4,6 +4,10 @@
     padding-bottom: 20px;
 }
 
+th {
+    background-color:white;
+}
+
 .footer {
     position: fixed;
     left: 0;

@@ -413,6 +413,7 @@
     <Content Include="Views\PalletRepair\SortListTest.cshtml" />
     <Content Include="Views\Reporting\PayoutVendors.cshtml" />
     <Content Include="Views\Reporting\PayoutInfoByVendor.cshtml" />
+    <Content Include="Views\Reporting\PayoutInfoByPart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

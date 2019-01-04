@@ -270,6 +270,7 @@
           <Property Name="TimeToSort" Type="float" />
           <Property Name="Status" Type="varchar" MaxLength="15" />
           <Property Name="SortChoice" Type="varchar" MaxLength="10" />
+          <Property Name="DateCompleted" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="SortListTest">
           <Key>
@@ -550,6 +551,7 @@
           <Property Name="TimeToSort" Type="Double" />
           <Property Name="Status" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="SortChoice" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="DateCompleted" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Payout">
           <Key>
@@ -870,6 +872,7 @@
           <EntitySetMapping Name="SortLists">
             <EntityTypeMapping TypeName="TrailerModel.SortList">
               <MappingFragment StoreEntitySet="SortList">
+                <ScalarProperty Name="DateCompleted" ColumnName="DateCompleted" />
                 <ScalarProperty Name="SortChoice" ColumnName="SortChoice" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="TimeToSort" ColumnName="TimeToSort" />

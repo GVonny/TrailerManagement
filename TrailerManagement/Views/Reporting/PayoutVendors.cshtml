@@ -15,14 +15,9 @@
         @foreach (var payout in Model)
         {
             <tr id="@payout">
-                @if (payout == "")
-                {
-                    <td>No Vendor</td>
-                }
-                else
-                {
-                    <td>@payout</td>
-                }
+                <td>@payout</td>
+                <td><a href="/Reporting/PayoutInfoByVendor?vendor=@payout">By Date</a></td>
+                <td><a href="/Reporting/PayoutInfoByPart?vendor=@payout">By Part</a></td>
             </tr>
         }
     </tbody>
@@ -35,7 +30,7 @@
         {
             $('table tr').on('click', function ()
             {
-                location.href = "/PalletRepair/PayoutInfoByVendor?vendor=" + this.id;
+                //location.href = "/Reporting/PayoutInfoByVendor?vendor=" + this.id;
             });
         });
     </script>

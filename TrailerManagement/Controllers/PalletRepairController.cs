@@ -1713,30 +1713,5 @@ namespace TrailerManagement.Controllers
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
             }
         }
-
-
-        public void ClearEmptyPayouts()
-        {
-            using (TrailerEntities db = new TrailerEntities())
-            {
-                var stacks = db.MasterStacks.Select(s => s.SortGUID).Distinct().ToList();
-                var temp = stacks.OrderBy(s => s).ToList();
-
-                var payouts = db.PayoutsBackups.ToList();
-
-
-                var counter = 0;
-                foreach (var payout in payouts)
-                {
-                    if (!stacks.Contains(payout.SortGUID))
-                    {
-                        db.PayoutsBackups.Remove(payout);
-                        counter++;
-                    }
-                }
-                var test = "";
-                //db.SaveChanges();
-            }
-        }
     }
 }

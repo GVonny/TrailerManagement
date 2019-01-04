@@ -1,17 +1,59 @@
 ﻿@using TrailerManagement.Models;
 @{
-    ViewBag.Title = "Payout Info By Vendor";
+    var vendor = ViewBag.Vendor;
+    ViewBag.Title = "Payout Info for " + vendor;
 }
 
-<h2>Payout Info By Vendor</h2>
+<h2>Payout Info for @vendor</h2>
 
-@foreach(Payout payout in Model.Payouts)
+@foreach (Payout payout in Model.Payouts)
 {
-    <table>
+    <table class="table">
         <thead>
             <tr>
-                <th>@payout.DateArrived</th>
+                <th colspan="2">@payout.DateCompleted</th>
+                <th class="col-xs-2">Quantity</th>
+                <th class="col-xs-2">Price</th>
             </tr>
         </thead>
+        <tbody id="@payout.PayoutGUID">
+            @foreach(CompletedSort stack in Model.Stacks)
+            {
+                if(stack.SortGUID == payout.SortGUID)
+                {
+                    <tr>
+                        <td id="partNumber_@payout.PayoutGUID">@stack.PartNumber</td>
+                        <td class="col-xs-6">@stack.Description</td>
+                        <td id="quantity_@payout.PayoutGUID">@stack.Quantity</td>
+                        <td id="price_@payout.PayoutGUID" class="price">@stack.Cost</td>
+                    </tr>
+                }
+            }
+        </tbody>
     </table>
+}
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('.price').each(function ()
+            {
+                var id = this.id;
+                var price = this.innerHTML;
+
+                if (price != "")
+                {
+                    price = parseFloat(price);
+                    price = "$" + price.toFixed(2);
+                }
+                else
+                {
+                    price = "$0.00";
+                }
+                $(this).html(price);
+            })
+        });
+    </script>    
 }

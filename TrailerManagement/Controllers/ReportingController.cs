@@ -152,7 +152,7 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                var payouts = db.Payouts.Select(p => p.Vendor).Distinct().ToList();
+                var payouts = db.Payouts.Where(p => p.Vendor != "").Select(p => p.Vendor).Distinct().ToList();
                 return View(payouts);
             }
         }
@@ -163,17 +163,97 @@ namespace TrailerManagement.Controllers
             {
                 dynamic model = new ExpandoObject();
 
-                var stacks = db.CompletedSorts.Where(s => s.Vendor == vendor);
+                ViewBag.Vendor = vendor;
 
-                var uniqueSortIDs = db.CompletedSorts.Select(u => u.SortGUID).Distinct().ToList();
+                var stacks = db.CompletedSorts.Where(s => s.Vendor == vendor).OrderBy(s => s.SortGUID).ThenBy(s => s.PartNumber).ThenByDescending(s => s.Quantity);
 
-                var payouts = db.Payouts.Where(p => p.Vendor == vendor);
+                var payouts = db.Payouts.Where(p => p.Vendor == vendor).OrderBy(p => p.DateCompleted);
 
                 model.Stacks = stacks.ToList();
-                model.SortIDs = uniqueSortIDs;
                 model.Payouts = payouts.ToList();
 
                 return View(model);
+            }
+        }
+
+        public ActionResult PayoutInfoByPart(string vendor, string startDate, string endDate)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                dynamic model = new ExpandoObject();
+                ViewBag.Vendor = vendor;
+
+                if (startDate == null && endDate == null)
+                {
+                    model.Quantities = "";
+                    model.Parts = "";
+                    return View();
+                }
+                else
+                {
+                    var year = Convert.ToInt32(startDate.Substring(0, 4));
+                    var month = Convert.ToInt32(startDate.Substring(5, 2));
+                    var day = Convert.ToInt32(startDate.Substring(8, 2));
+
+                    var beginningDate = new DateTime(year, month, day);
+                    year = Convert.ToInt32(endDate.Substring(0, 4));
+                    month = Convert.ToInt32(endDate.Substring(5, 2));
+                    day = Convert.ToInt32(endDate.Substring(8, 2));
+
+                    var endingDate = new DateTime(year, month, day);
+
+                    var sorts = db.SortLists.Where(s => s.Vendor == vendor);
+
+                    List<Int32> sortIDs = new List<int>();
+
+                    foreach(SortList sort in sorts)
+                    {
+                        var date = sort.DateCompleted;
+                        year = Convert.ToInt32(date.Substring(0, 4));
+                        month = Convert.ToInt32(date.Substring(5, 2));
+                        day = Convert.ToInt32(date.Substring(8, 2));
+
+                        DateTime dateCompleted = new DateTime(year, month, day);
+
+                        if(dateCompleted > beginningDate && dateCompleted < endingDate)
+                        {
+                            sortIDs.Add(Convert.ToInt32(sort.SortGUID));
+                        }
+                    }
+
+                    List<Object> completeStacks = new List<Object>();
+
+                    foreach(Int32 sortID in sortIDs)
+                    {
+                        var stacks = db.CompletedSorts.Where(s => s.Vendor == vendor && s.SortGUID == sortID).ToList();
+                        completeStacks.Add(stacks);
+                    }
+
+                    List<string> uniqueParts = new List<string>();//db.CompletedSorts.Where(u => u.Vendor == vendor).OrderBy(u => u.PartNumber).Select(u => u.PartNumber).Distinct().ToList();
+                    foreach (CompletedSort stack in completeStacks)
+                    {
+                        if(!uniqueParts.Contains(stack.PartNumber))
+                        {
+                            uniqueParts.Add(stack.PartNumber);
+                        }
+                    }
+                    
+                    int[] quantities = new int[uniqueParts.Count];
+                    foreach (CompletedSort stack in completeStacks)
+                    {
+                        if (uniqueParts.Contains(stack.PartNumber))
+                        {
+                            var index = uniqueParts.IndexOf(stack.PartNumber);
+                            quantities[index] += Convert.ToInt32(stack.Quantity);
+                        }
+                    }
+
+
+                    model.Quantities = quantities;
+                    model.Parts = uniqueParts;
+
+                    return View(model);
+                }
             }
         }
     }

@@ -46,10 +46,25 @@ namespace TrailerManagement.Controllers
                 message.BodyEncoding = UTF8Encoding.UTF8;
                 //uncomment to send emails to nancy
                 client.Send(message);
-
+                
                 if (sortedTrailer != null)
                 {
                     sortedTrailer.Status = "CLOSED";
+
+                    var date = DateTime.Now;
+                    var day = date.Day.ToString();
+                    if (day.Length == 1)
+                    {
+                        day = "0" + day;
+                    }
+                    var month = date.Month.ToString();
+                    if (month.Length == 1)
+                    {
+                        month = "0" + month;
+                    }
+                    var year = date.Year;
+                    sortedTrailer.DateCompleted = (year + "-" + month + "-" + day);
+
                     db.SaveChanges();
                 }
 
@@ -64,13 +79,18 @@ namespace TrailerManagement.Controllers
                 var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
                 DateTime date = DateTime.Now;
                 var currentDate = date.ToString();
-                var day = currentDate.Substring(3, 2);
-                if(day.Contains('/'))
+                
+                var day = date.Day.ToString();
+                if(day.Length == 1)
                 {
-                    day = "0" + day.Substring(0, 1);
+                    day = "0" + day;
                 }
-                var month = currentDate.Substring(0, 2);
-                var year = currentDate.Substring(6, 4);
+                var month = date.Month.ToString();
+                if (month.Length == 1)
+                {
+                    month = "0" + month;
+                }
+                var year = date.Year;
                 payout.DateCompleted = (year + "-" + month + "-" + day);
                 db.SaveChanges();
 

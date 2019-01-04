@@ -1,0 +1,81 @@
+﻿@{
+    ViewBag.Title = "Payout Inf By Part";
+    var counter = 0;
+    var vendor = ViewBag.Vendor;
+}
+
+
+
+@if (Model != null)
+{
+    <h2>Payout Info By Part</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Part Number</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var part in Model.Parts)
+            {
+                <tr>
+                    <td>@part</td>
+                    <td>@Model.Quantities[counter]</td>
+                </tr>
+                counter++;
+            }
+        </tbody>
+    </table>
+}
+
+
+<div id="dateFilter" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Select a start and end date</h2>
+            </div>
+            <div class="modal-body">
+                <form action="PayoutInfoByPart" id="dateForm">
+                    <input type="text" name="vendor" class="hidden" value="@vendor" />
+                    <strong>Start Date</strong>
+                    <input type="date" name="startDate" class="datepicker" id="startDate">
+                    <strong>Start Date</strong>
+                    <input type="date" name="endDate" class="datepicker" id="endDate">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a href="/Reporting/PayoutVendors" class="btn btn-warning">Cancel</a>
+                <button type="button" class="btn btn-primary" id="submit" data-dismiss="modal" data-toggle="modal">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('#dateFilter').modal();
+
+            $('#submit').on('click', function ()
+            {
+                var startDate = new Date($('#startDate').val());
+                console.log(startDate);
+                var endDate = new Date($('#endDate').val());
+                console.log(endDate);
+
+                if (startDate < endDate)
+                {
+                    $('#dateForm').submit();
+                }
+
+            });
+        })
+    </script>
+}
