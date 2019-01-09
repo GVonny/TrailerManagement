@@ -4,14 +4,7 @@
 
 <div class="row">
     <img src="~/Content/logo.png" class="col-md-4" id="logo" />
-    @if (Convert.ToInt32(Session["department"]) != 4500)
-    {
-        <h1 id="logoText">Trailer Management</h1>
-    }
-    else
-    {
-        <h1 id="logoText">Safety - HR</h1>
-    }
+    <h1 id="logoText">@Session["departmentName"]</h1>
 
 </div>
 <br />

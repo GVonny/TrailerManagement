@@ -229,6 +229,11 @@ namespace TrailerManagement.Controllers
                         Session["username"] = user.Username;
                         Session["permission"] = user.Permission;
                         Session["department"] = user.Department;
+
+                        var num = Convert.ToInt32(user.Department);
+                        var department = db.Departments.FirstOrDefault(d => d.DepartmentNumber == num);
+                        Session["departmentName"] = department.DepartmentName;
+
                         Session["name"] = user.FirstName;
                         Session["userID"] = user.UserGUID;
                         Session.Timeout = 60;

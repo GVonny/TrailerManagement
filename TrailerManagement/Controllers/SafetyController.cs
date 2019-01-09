@@ -651,5 +651,15 @@ namespace TrailerManagement.Controllers
             var report = new ActionAsPdf("SafetyAuditPDF"); //{ FileName = "SafetyAudit - " + date + ".pdf" };
             return report;
         }
+
+        public ActionResult ManagerDashboard(string area)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var concerns = db.SafetyConcerns.Where(c => c.Area == Session["department"].ToString() && c.Status == "OPEN").ToList();
+
+                return View(concerns);
+            }
+        }
     }
 }
