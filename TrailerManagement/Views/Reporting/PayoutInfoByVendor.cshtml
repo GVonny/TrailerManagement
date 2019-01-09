@@ -4,7 +4,8 @@
     ViewBag.Title = "Payout Info for " + vendor;
 }
 
-<h2>Payout Info for @vendor</h2>
+<h2 class="float-left">Payout Info for @vendor</h2>
+<a href="/Reporting/PayoutVendors" class="btn btn-warning float-left" style="margin-top:20px;margin-left:5px;">Vendor List</a>
 
 @foreach (Payout payout in Model.Payouts)
 {

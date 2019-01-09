@@ -2,13 +2,16 @@
     ViewBag.Title = "Payout Inf By Part";
     var counter = 0;
     var vendor = ViewBag.Vendor;
+    var isData = ViewBag.Data;
+    var startDate = ViewBag.StartDate;
+    var endDate = ViewBag.EndDate;
 }
 
 
 
 @if (Model != null)
 {
-    <h2>Payout Info By Part</h2>
+    <h2>Pallets Recieved by Part for @vendor (@startDate - @endDate)</h2>
     <table class="table">
         <thead>
             <tr>
@@ -28,6 +31,7 @@
         </tbody>
     </table>
 }
+<a href="/Reporting/PayoutVendors" class="hidden btn btn-warning" id="vendorListLink">Vendor List</a>
 
 
 <div id="dateFilter" class="modal fade modal-spacing" tabindex="-1" role="dialog">
@@ -61,7 +65,19 @@
     <script>
         $(function ()
         {
-            $('#dateFilter').modal();
+            var isModel = '@isData';
+            console.log(isModel);
+
+            if (isModel != "True")
+            {
+                $('#dateFilter').modal();
+            }
+            else
+            {
+                $('#vendorListLink').removeClass('hidden');
+            }
+
+            
 
             $('#submit').on('click', function ()
             {

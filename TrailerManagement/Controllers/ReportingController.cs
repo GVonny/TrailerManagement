@@ -185,6 +185,7 @@ namespace TrailerManagement.Controllers
 
                 if (startDate == null && endDate == null)
                 {
+                    ViewBag.Data = false;
                     model.Quantities = "";
                     model.Parts = "";
                     return View();
@@ -201,6 +202,10 @@ namespace TrailerManagement.Controllers
                     day = Convert.ToInt32(endDate.Substring(8, 2));
 
                     var endingDate = new DateTime(year, month, day);
+
+
+                    ViewBag.StartDate = beginningDate.ToString("MM/dd/yyyy");
+                    ViewBag.EndDate = endingDate.ToString("MM/dd/yyyy");
 
                     var sorts = db.SortLists.Where(s => s.Vendor == vendor);
 
@@ -221,38 +226,52 @@ namespace TrailerManagement.Controllers
                         }
                     }
 
-                    List<Object> completeStacks = new List<Object>();
+                    List<CompletedSort> completeStacks = new List<CompletedSort>();
 
                     foreach(Int32 sortID in sortIDs)
                     {
                         var stacks = db.CompletedSorts.Where(s => s.Vendor == vendor && s.SortGUID == sortID).ToList();
-                        completeStacks.Add(stacks);
-                    }
-
-                    List<string> uniqueParts = new List<string>();//db.CompletedSorts.Where(u => u.Vendor == vendor).OrderBy(u => u.PartNumber).Select(u => u.PartNumber).Distinct().ToList();
-                    foreach (CompletedSort stack in completeStacks)
-                    {
-                        if(!uniqueParts.Contains(stack.PartNumber))
+                        foreach(CompletedSort stack in stacks)
                         {
-                            uniqueParts.Add(stack.PartNumber);
-                        }
-                    }
-                    
-                    int[] quantities = new int[uniqueParts.Count];
-                    foreach (CompletedSort stack in completeStacks)
-                    {
-                        if (uniqueParts.Contains(stack.PartNumber))
-                        {
-                            var index = uniqueParts.IndexOf(stack.PartNumber);
-                            quantities[index] += Convert.ToInt32(stack.Quantity);
+                            completeStacks.Add(stack);
                         }
                     }
 
+                    List<string> uniqueParts = new List<string>();
+                    //db.CompletedSorts.Where(u => u.Vendor == vendor).OrderBy(u => u.PartNumber).Select(u => u.PartNumber).Distinct().ToList();
+                    if(completeStacks.Count > 1)
+                    {
+                        foreach (CompletedSort stack in completeStacks)
+                        {
+                            if (!uniqueParts.Contains(stack.PartNumber))
+                            {
+                                uniqueParts.Add(stack.PartNumber);
+                            }
+                        }
 
-                    model.Quantities = quantities;
-                    model.Parts = uniqueParts;
+                        int[] quantities = new int[uniqueParts.Count];
+                        foreach (CompletedSort stack in completeStacks)
+                        {
+                            if (uniqueParts.Contains(stack.PartNumber))
+                            {
+                                var index = uniqueParts.IndexOf(stack.PartNumber);
+                                quantities[index] += Convert.ToInt32(stack.Quantity);
+                            }
+                        }
+                        
+                        model.Quantities = quantities;
+                        model.Parts = uniqueParts;
+                        ViewBag.Data = true;
 
-                    return View(model);
+                        return View(model);
+                    }
+                    else
+                    {
+                        ViewBag.Data = false;
+                        model.Quantities = "";
+                        model.Parts = "";
+                        return View();
+                    }
                 }
             }
         }
