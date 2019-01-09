@@ -798,27 +798,27 @@ namespace TrailerManagement.Controllers
 
                 if(trailerNumber != "")
                 {
-                    payout.TrailerNumber = trailerNumber;
+                    payout.TrailerNumber = trailerNumber.ToUpper();
                 }
                 if(invoiceNumber != "")
                 {
-                    payout.InvoiceNumber = invoiceNumber;
+                    payout.InvoiceNumber = invoiceNumber.ToUpper();
                 }
                 if(billOfLading != "")
                 {
-                    payout.BillOfLading = billOfLading;
+                    payout.BillOfLading = billOfLading.ToUpper();
                 }
                 if(packingListNumber != "")
                 {
-                    payout.PackingListNumber = packingListNumber;
+                    payout.PackingListNumber = packingListNumber.ToUpper();
                 }
                 if(purchaseOrderNumber != "")
                 {
-                    payout.PurchaseOrderNumber = purchaseOrderNumber;
+                    payout.PurchaseOrderNumber = purchaseOrderNumber.ToUpper();
                 }
                 if(palletOrderNumber != "")
                 {
-                    payout.OrderNumber = palletOrderNumber;
+                    payout.OrderNumber = palletOrderNumber.ToUpper();
                 }
                 db.SaveChanges();
                 return RedirectToAction(actionName: "ViewPayout", controllerName: "PalletRepair", routeValues: new { sortID });

@@ -18,6 +18,8 @@
             violation2 = violations[1].ToString();
             break;
     }
+
+    var area = ViewBag.Area;
 }
 
 <h2>Edit Safety Concern</h2>
@@ -107,7 +109,15 @@
 
                                 @if (Model.Status == "OPEN")
                                 {
-                                    <a href="SafetyAudit" class="btn btn-warning float-left">Cancel</a>
+                                    if (area != "")
+                                    {
+                                        <a href="SafetyAudit?area=@area" class="btn btn-warning float-left">Cancel</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="SafetyAudit" class="btn btn-warning float-left">Cancel</a>
+                                    }
+
                                     <input type="button" class="btn float-right btn-green" value="&nbsp;Fixed" id="markClosed">
                                     <a href="/Safety/RepeatSafetyConcern?safetyConcernID=@Model.SafetyConcernGUID" class="btn btn-danger float-right" id="notFixed" style="margin-right:5px">&nbsp;Not Fixed</a>
                                 }

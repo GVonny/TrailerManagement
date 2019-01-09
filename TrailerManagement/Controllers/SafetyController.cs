@@ -304,13 +304,15 @@ namespace TrailerManagement.Controllers
             }
         }
         
-        public ActionResult AddSafetyConcern()
+        public ActionResult AddSafetyConcern(string area)
         {
             if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
                     var codes = db.SafetyCodes.OrderBy(c => c.TypeSubType).ToList();
+
+                    ViewBag.Area = area;
 
                     this.ViewData["typeSubType"] = new SelectList(codes, "TypeSubType", "TypeSubType");
                     this.ViewData["typeSubType2"] = new SelectList(codes, "TypeSubType", "TypeSubType");
@@ -421,7 +423,7 @@ namespace TrailerManagement.Controllers
                     }
 
                     db.SaveChanges();
-                    return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety");
+                    return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety", routeValues: new { area = departments });
                 }   
             }
             else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
@@ -441,6 +443,7 @@ namespace TrailerManagement.Controllers
                 using (TrailerEntities db = new TrailerEntities())
                 {
                     var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcernID);
+                    ViewBag.Area = concern.Area;
 
                     var violations = db.CodeViolations.Where(v => v.SafetyConcernGUID == safetyConcernID);
 
@@ -559,7 +562,7 @@ namespace TrailerManagement.Controllers
                     }
                     db.SaveChanges();
 
-                    return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety");
+                    return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety", routeValues: new { area = safetyConcern.Area });
                 }
             }
             else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
