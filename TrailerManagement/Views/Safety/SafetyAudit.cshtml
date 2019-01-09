@@ -83,6 +83,7 @@
 
                 <tr class="hidden">
                     <th id="severity_@s.SafetyConcernGUID">@s.Severity</th>
+                    <th id="fixed_@s.SafetyConcernGUID">@s.SupposedlyFixed</th>
                 </tr>
             </tbody>
         </table>
@@ -136,7 +137,7 @@
             $('table th').on('click', function ()
             {
                 var id = this.parentElement.parentElement.parentElement.id;
-                location.href = "/Safety/EditSafetyConcern?safetyConcernID=" + id;
+                location.href = "/Safety/EditSafetyConcern?safetyConcernID=" + id; 
             });
 
             $('table').each(function ()
@@ -152,6 +153,11 @@
                 if (severity == "HIGH")
                 {
                     $('#condition_' + id).addClass('redBackground');
+                }
+                var isFixed = $('#fixed_' + id).html();
+                if (isFixed == "True")
+                {
+                    $('#condition_' + id).css('background-color','green');
                 }
             });
 

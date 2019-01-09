@@ -201,6 +201,7 @@
     <script>
         $(function ()
         {
+            console.log('@area');
             $('#markClosed').on('click', function ()
             {
                 $('#closeModal').modal();
@@ -212,7 +213,6 @@
             });
 
             var length = parseInt('@violations.Count');
-            console.log(length);
 
             if (@count == 1)
             {

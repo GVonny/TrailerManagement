@@ -240,6 +240,7 @@
           <Property Name="Status" Type="varchar" MaxLength="10" />
           <Property Name="DateOpened" Type="varchar" MaxLength="10" />
           <Property Name="DateClosed" Type="varchar" MaxLength="10" />
+          <Property Name="SupposedlyFixed" Type="bit" />
         </EntityType>
         <EntityType Name="SortImages">
           <Key>
@@ -597,6 +598,7 @@
           <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="DateOpened" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="DateClosed" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="SupposedlyFixed" Type="Boolean" />
         </EntityType>
         <EntityType Name="CodeViolation">
           <Key>
@@ -923,6 +925,7 @@
           <EntitySetMapping Name="SafetyConcerns">
             <EntityTypeMapping TypeName="TrailerModel.SafetyConcern">
               <MappingFragment StoreEntitySet="SafetyConcerns">
+                <ScalarProperty Name="SupposedlyFixed" ColumnName="SupposedlyFixed" />
                 <ScalarProperty Name="DateClosed" ColumnName="DateClosed" />
                 <ScalarProperty Name="DateOpened" ColumnName="DateOpened" />
                 <ScalarProperty Name="Status" ColumnName="Status" />

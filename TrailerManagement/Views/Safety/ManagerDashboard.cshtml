@@ -1,22 +1,91 @@
 ﻿@using TrailerManagement.Models;
 @{
-    ViewBag.Title = "ManagerDashboard";
+    ViewBag.Title = "Manager Dashboard";
 }
 
-<h2>Manager Dashboard</h2>
+<h2>@Session["departmentName"] Safety Concerns</h2>
 
-<table>
-    <thead>
-        <tr>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(SafetyConcern concern in Model)
+@foreach (SafetyConcern s in Model)
+{
+    var path = s.ImagePath.Replace("%20", " ");
+    <div>
+        <table class="table table-responsive" id="@s.SafetyConcernGUID" style="border-style:solid;border-color:#333;border-top-color:#333!important">
+            <tbody id="@s.SafetyConcernGUID">
+                <tr>
+                    <th id="area_@s.SafetyConcernGUID">
+                        Area: @s.Area
+                        @if (s.SubArea != "" && s.SubArea != null)
+                        {
+                            <span> - @s.SubArea</span>
+                        }
+                    </th>
+
+                    <th class="text-right col-xs-3">
+                        <span>Repeat Violation: </span><span id="violationCount_@s.SafetyConcernGUID">@s.ViolationCount</span>
+                        @if (s.ViolationCount > 1)
+                        {
+                            <span> times</span>
+                        }
+                        else
+                        {
+                            <span> time</span>
+                        }
+                    </th>
+
+                    <td rowspan="3" width="250">
+                        <img src="~/SafetyImages/@s.ImagePath" height="250" width="250" style="margin:-8px;" />
+                    </td>
+                </tr>
+
+                <tr style="border-style:solid; border-color:#333">
+                    <th colspan="2" id="condition_@s.SafetyConcernGUID">Condition Noted: @s.ConditionNoted</th>
+                </tr>
+
+                <tr style="height:20px;">
+                    <th colspan="2" id="action_@s.SafetyConcernGUID">Corrective Action Measure: <small>@s.CorrectiveAction</small></th>
+                </tr>
+
+                <tr class="hidden">
+                    <th id="severity_@s.SafetyConcernGUID">@s.Severity</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}
+
+<!-- Close Modal -->
+<div id="closeModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                Are you sure you want to close this safety concern?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                <a href="CloseSafetyConcern?safetyConcernID=" id="closeLink" class="btn btn-primary float-right">Close</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
         {
-            <tr>
+            $('table th').on('click', function ()
+            {
+                $('#closeLink').attr('href', "MarkConcernAsFixed?safetyConcernID=" + this.parentElement.parentElement.id);
+                $('#closeModal').modal();
+                console.log(this.parentElement.parentElement.id);
 
-            </tr>
-        }
-    </tbody>
-</table>
+            });
+        });
+    </script>    
+}

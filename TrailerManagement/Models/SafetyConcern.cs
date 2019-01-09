@@ -25,5 +25,6 @@ namespace TrailerManagement.Models
         public string Status { get; set; }
         public string DateOpened { get; set; }
         public string DateClosed { get; set; }
+        public Nullable<bool> SupposedlyFixed { get; set; }
     }
 }

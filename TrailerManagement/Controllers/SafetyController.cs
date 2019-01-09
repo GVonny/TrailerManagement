@@ -353,11 +353,11 @@ namespace TrailerManagement.Controllers
                         }
                     }
 
-                    if (!conditionNoted.EndsWith("."))
+                    if (!conditionNoted.EndsWith(".") && conditionNoted != "")
                     {
                         conditionNoted += ".";
                     }
-                    if (!correctiveAction.EndsWith("."))
+                    if (!correctiveAction.EndsWith(".") && correctiveAction != "")
                     {
                         correctiveAction += ".";
                     }
@@ -652,13 +652,55 @@ namespace TrailerManagement.Controllers
             return report;
         }
 
-        public ActionResult ManagerDashboard(string area)
+        public ActionResult ManagerDashboard()
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                var concerns = db.SafetyConcerns.Where(c => c.Area == Session["department"].ToString() && c.Status == "OPEN").ToList();
+                if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
+                {
+                    dynamic model = new ExpandoObject();
 
-                return View(concerns);
+                    //var concerns = from x in db.SafetyConcerns select x;
+                    //concerns = concerns.Where(c => c.Status == "OPEN" && c.Area == area).OrderBy(c => c.Area).ThenBy(c => c.SubArea);
+
+                    var department = Session["departmentName"].ToString();
+                    if (department == "Admin")
+                    {
+                        var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenBy(c => c.SubArea).ToList();
+                        return View(concerns);
+                    }
+                    else
+                    {
+                        var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN" && c.Area == department).ToList();
+                        return View(concerns);
+                    }
+                }
+                else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
+                {
+                    return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+                }
+                else
+                {
+                    return RedirectToAction(actionName: "SignIn", controllerName: "Users");
+                }
+
+
+                //model.Concerns = concerns.ToList();
+                //var violations = db.CodeViolations.ToList();
+                //model.Violations = violations;
+
+
+            }
+        }
+
+        public ActionResult MarkConcernAsFixed(int safetyConcernID)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcernID);
+                concern.SupposedlyFixed = true;
+                db.SaveChanges();
+                return RedirectToAction(actionName: "ManagerDashboard", controllerName: "Safety");
             }
         }
     }

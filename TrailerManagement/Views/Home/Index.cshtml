@@ -114,6 +114,11 @@
             </div>
         </fieldset>
     }
+    @if (Convert.ToInt32(Session["permission"]) > 30)
+    {
+        <a href="/Safety/ManagerDashboard?area=@Session["departmentName"]">Dashboard</a>
+    }
+
 </div>
 <br />
 
