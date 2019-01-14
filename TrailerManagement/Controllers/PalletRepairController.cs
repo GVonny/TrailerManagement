@@ -155,11 +155,11 @@ namespace TrailerManagement.Controllers
             
         }
 
-        public ActionResult SortTrailerTest(int sortID, int? stackNumber, int? numberOfPeople, bool? imageUploaded)
+        public ActionResult SortTrailerLayout(int sortID, int? stackNumber, int? numberOfPeople, bool? imageUploaded)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                var trailer = db.SortLists.Find(sortID);
+                var trailer = db.SortListTests.Find(sortID);
                 trailer.Status = "OPEN";
                 trailer.SortChoice = "STACK";
                 db.SaveChanges();
@@ -195,6 +195,7 @@ namespace TrailerManagement.Controllers
                 var vendor = db.CustomersAndVendors.FirstOrDefault(v => v.Name == trailer.Vendor);
 
                 dynamic model = new ExpandoObject();
+
                 model.Trailer = trailer;
                 model.Vendor = vendor;
 
@@ -203,6 +204,118 @@ namespace TrailerManagement.Controllers
                 this.ViewData["scrapTypes"] = new SelectList(db.PalletTypes.Where(c => c.Description.ToLower().Contains("scrap")).OrderByDescending(c => c.PartNumber), "PartNumber", "Description").ToList();
 
                 return View(model);
+            }
+        }
+
+        public ActionResult SortTrailerTest(int sortID, int? stackNumber, int? numberOfPeople, bool? imageUploaded)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var trailer = db.SortListTests.Find(sortID);
+                trailer.Status = "OPEN";
+                trailer.SortChoice = "STACK";
+                db.SaveChanges();
+
+                if (stackNumber != null)
+                {
+                    ViewBag.StackNumber = stackNumber;
+                }
+                else if (trailer.MaxStackNumber != null)
+                {
+                    ViewBag.StackNumber = trailer.MaxStackNumber + 1;
+                }
+                else
+                {
+                    //sort for trailer has not started yet
+                    ViewBag.StackNumber = 1;
+                }
+
+                if (numberOfPeople != null)
+                {
+                    ViewBag.NumberOfPeople = numberOfPeople;
+                }
+
+                if (imageUploaded == null)
+                {
+                    ViewBag.ImageUploaded = false;
+                }
+                else
+                {
+                    ViewBag.ImageUploaded = true;
+                }
+
+                var vendor = db.CustomersAndVendors.FirstOrDefault(v => v.Name == trailer.Vendor);
+
+                dynamic model = new ExpandoObject();
+
+                model.Trailer = trailer;
+                model.Vendor = vendor;
+
+                this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.PartNumber != "50-0140" && c.PartNumber != "50-0001" && c.PartNumber != "50-0004" && c.Type != "SCRAP" && c.Type != "DEDUCTION").OrderBy(c => c.Description), "PartNumber", "Description").ToList();
+
+                this.ViewData["scrapTypes"] = new SelectList(db.PalletTypes.Where(c => c.Description.ToLower().Contains("scrap")).OrderByDescending(c => c.PartNumber), "PartNumber", "Description").ToList();
+
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult CreateStackTest(FormCollection fc)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var sortID = Convert.ToInt32(fc["sortID"]);
+                var stackNumber = Convert.ToInt32(fc["stackNumber"]);
+                var stackSize = Convert.ToInt32(fc["stackSize"]);
+                var numberOfPeople = Convert.ToInt32(fc["numberOfPeople"]);
+                var timeOnStack = Convert.ToDouble(fc["timeOnStack"]);
+
+                var trailer = db.SortListTests.FirstOrDefault(t => t.SortGUID == sortID);
+                trailer.MaxStackNumber = stackNumber;
+                if (trailer.TimeToSort == null)
+                {
+                    trailer.TimeToSort = timeOnStack;
+                }
+                else
+                {
+                    trailer.TimeToSort += timeOnStack;
+                }
+
+                var stacks = db.MasterStacks.Where(t => t.SortGUID == trailer.SortGUID && t.StackNumber == stackNumber);
+                if (stacks != null)
+                {
+                    foreach (MasterStack stack in stacks)
+                    {
+                        db.MasterStacks.Remove(stack);
+                    }
+                }
+                
+                for(int x = 4; x < fc.Count; x++)
+                {
+                    var key = fc.GetKey(x);
+                    var part = fc[key].Split(',');
+
+                    var pallet = db.PalletTypes.FirstOrDefault(p => p.PartNumber == key);
+
+                    if (part[0] != "")
+                    {
+                        MasterStack stack = new MasterStack()
+                        {
+                            SortGUID = sortID,
+                            StackNumber = stackNumber,
+                            PartNumber = pallet.PartNumber,
+                            Description = pallet.Description.ToString(),
+                            Quantity = Convert.ToInt32(part[0]),
+                            PeopleOnStack = numberOfPeople,
+                            UserSignedIn = Session["name"].ToString(),
+                            PalletNote = part[1],
+                        };
+
+                        db.MasterStacks.Add(stack);
+                    }
+                }
+                db.SaveChanges();
+                return View();
             }
         }
 
