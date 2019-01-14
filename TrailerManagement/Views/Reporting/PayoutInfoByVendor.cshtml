@@ -2,6 +2,7 @@
 @{
     var vendor = ViewBag.Vendor;
     ViewBag.Title = "Payout Info for " + vendor;
+    List<int> sortIDs = Model.SortIDs;
 }
 
 <h2 class="float-left">Payout Info for @vendor</h2>
@@ -12,7 +13,14 @@
     <table class="table">
         <thead>
             <tr>
-                <th colspan="2">@payout.DateCompleted</th>
+                @for (int x = 0; x < sortIDs.Count; x++)
+                {
+                    if (sortIDs[x] == payout.SortGUID)
+                    {
+                        <th colspan="2">Data Inputed By: @Model.Users[x] on @payout.DateCompleted and took <span class="unload-time">@Model.Times[x]</span> minutes</th>
+                    }
+                }
+                @*<th colspan="2">@payout.DateCompleted</th>*@
                 <th class="col-xs-2">Quantity</th>
                 <th class="col-xs-2">Price</th>
             </tr>
@@ -54,7 +62,14 @@
                     price = "$0.00";
                 }
                 $(this).html(price);
-            })
+            });
+
+            $('.unload-time').each(function ()
+            {
+                var time = parseFloat($(this).html());
+                time = (time / 60).toFixed(2);
+                $(this).html(time);
+            });
         });
     </script>    
 }

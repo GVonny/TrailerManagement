@@ -11,12 +11,20 @@
 
 @if (Model != null)
 {
-    <h2>Pallets Recieved by Part for @vendor (@startDate - @endDate)</h2>
+    <div>
+        <input type="button" value="Change Filter" id="changeDates" class="float-right btn btn-primary" />
+        <h2>Pallets Recieved by Part for @vendor (@startDate - @endDate)</h2>
+
+    </div>
+    
     <table class="table">
         <thead>
             <tr>
                 <th>Part Number</th>
                 <th>Quantity</th>
+                <th>Total Paid</th>
+                <th>Average Price</th>
+                <th>Last Price Paid</th>
             </tr>
         </thead>
         <tbody>
@@ -25,6 +33,9 @@
                 <tr>
                     <td>@part</td>
                     <td>@Model.Quantities[counter]</td>
+                    <td class="total-paid">@Model.TotalCost[counter]</td>
+                    <td class="average-cost">@Model.AverageCost[counter]</td>
+                    <td class="last-cost">@Model.LastCosts[counter]</td>
                 </tr>
                 counter++;
             }
@@ -45,14 +56,15 @@
             </div>
             <div class="modal-body">
                 <form action="PayoutInfoByPart" id="dateForm">
-                    <input type="text" name="vendor" class="hidden" value="@vendor" />
+                    <input type="text" name="vendor" class="hidden" value="@vendor"/>
                     <strong>Start Date</strong>
-                    <input type="date" name="startDate" class="datepicker" id="startDate">
+                    <input type="date" name="startDate" class="datepicker" id="startDate" required>
                     <strong>Start Date</strong>
-                    <input type="date" name="endDate" class="datepicker" id="endDate">
+                    <input type="date" name="endDate" class="datepicker" id="endDate" required>
                 </form>
             </div>
             <div class="modal-footer">
+                <span style="color:red" id="error" class="float-left"></span>
                 <a href="/Reporting/PayoutVendors" class="btn btn-warning">Cancel</a>
                 <button type="button" class="btn btn-primary" id="submit" data-dismiss="modal" data-toggle="modal">Continue</button>
             </div>
@@ -66,9 +78,13 @@
         $(function ()
         {
             var isModel = '@isData';
-            console.log(isModel);
 
-            if (isModel != "True")
+            if (isModel == "False")
+            {
+                $('#error').html("No results found");
+                $('#dateFilter').modal();
+            }
+            else if (isModel == "first")
             {
                 $('#dateFilter').modal();
             }
@@ -77,7 +93,28 @@
                 $('#vendorListLink').removeClass('hidden');
             }
 
-            
+            $('.total-paid').each(function ()
+            {
+                var cost = parseFloat($(this).html());
+                $(this).html("$" + cost.toFixed(2));
+            });
+
+            $('.average-cost').each(function ()
+            {
+                var cost = parseFloat($(this).html());
+                $(this).html("$" + cost.toFixed(2));
+            });
+
+            $('.last-cost').each(function ()
+            {
+                var cost = parseFloat($(this).html());
+                $(this).html("$" + cost.toFixed(2));
+            });
+
+            $('#changeDates').on('click', function ()
+            {
+                $('#dateFilter').modal();
+            })
 
             $('#submit').on('click', function ()
             {

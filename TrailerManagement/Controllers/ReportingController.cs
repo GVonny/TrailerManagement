@@ -167,10 +167,25 @@ namespace TrailerManagement.Controllers
 
                 var stacks = db.CompletedSorts.Where(s => s.Vendor == vendor).OrderBy(s => s.SortGUID).ThenBy(s => s.PartNumber).ThenByDescending(s => s.Quantity);
 
-                var payouts = db.Payouts.Where(p => p.Vendor == vendor).OrderBy(p => p.DateCompleted);
+                var payouts = db.Payouts.Where(p => p.Vendor == vendor).OrderBy(p => p.DateCompleted).ToList();
 
+                List<String> users = new List<string>();
+                List<int> sortIDs = new List<int>();
+                List<double> unloadTimes = new List<double>();
+                foreach(Payout payout in payouts)
+                {
+                    var sort = db.MasterStacks.Where(s => s.SortGUID == payout.SortGUID).ToList().Last();
+                    var user = sort.UserSignedIn;
+                    unloadTimes.Add(Convert.ToDouble(payout.TimeToSort));
+                    sortIDs.Add(Convert.ToInt32(sort.SortGUID));
+                    users.Add(user);
+                }
+
+                model.Users = users;
+                model.Times = unloadTimes;
+                model.SortIDs = sortIDs;
                 model.Stacks = stacks.ToList();
-                model.Payouts = payouts.ToList();
+                model.Payouts = payouts;
 
                 return View(model);
             }
@@ -180,12 +195,17 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
+                if(vendor.Contains("@"))
+                {
+                    vendor = vendor.Replace('@', '&');
+                }
+
                 dynamic model = new ExpandoObject();
                 ViewBag.Vendor = vendor;
 
                 if (startDate == null && endDate == null)
                 {
-                    ViewBag.Data = false;
+                    ViewBag.Data = "first";
                     model.Quantities = "";
                     model.Parts = "";
                     return View();
@@ -239,7 +259,7 @@ namespace TrailerManagement.Controllers
 
                     List<string> uniqueParts = new List<string>();
                     //db.CompletedSorts.Where(u => u.Vendor == vendor).OrderBy(u => u.PartNumber).Select(u => u.PartNumber).Distinct().ToList();
-                    if(completeStacks.Count > 1)
+                    if(completeStacks.Count >= 1)
                     {
                         foreach (CompletedSort stack in completeStacks)
                         {
@@ -249,16 +269,57 @@ namespace TrailerManagement.Controllers
                             }
                         }
 
+                        double[] lastCosts = new double[uniqueParts.Count];
+                        for(int x = 0; x < uniqueParts.Count; x++)
+                        {
+                            var partNumber = uniqueParts[x];
+                            var part = completeStacks.Where(p => p.PartNumber == partNumber && p.Vendor == vendor).Last();
+                            if(part.Cost == null)
+                            {
+                                lastCosts[x] = 0;
+                            }
+                            else
+                            {
+                                lastCosts[x] = Convert.ToDouble(part.Cost);
+                            }
+                        }
+
                         int[] quantities = new int[uniqueParts.Count];
+                        int[] averageCount = new int[uniqueParts.Count];
+
+                        double[] addedTotalCosts = new double[uniqueParts.Count];
+                        double[] totalCosts = new double[uniqueParts.Count];
+
                         foreach (CompletedSort stack in completeStacks)
                         {
                             if (uniqueParts.Contains(stack.PartNumber))
                             {
                                 var index = uniqueParts.IndexOf(stack.PartNumber);
                                 quantities[index] += Convert.ToInt32(stack.Quantity);
+                                totalCosts[index] += (Convert.ToInt32(stack.Quantity) * Convert.ToDouble(stack.Cost));
+
+                                if (stack.Cost == null)
+                                {
+                                    addedTotalCosts[index] += 0;
+                                }
+                                else
+                                {
+                                    addedTotalCosts[index] += Convert.ToDouble(stack.Cost);
+                                }
+                                averageCount[index]++;
                             }
                         }
                         
+                        double[] averageCosts = new double[uniqueParts.Count];
+                        for (int x = 0; x < averageCosts.Length; x++)
+                        {
+                            averageCosts[x] = addedTotalCosts[x] / averageCount[x];
+                        }
+
+
+                        model.LastCosts = lastCosts;
+                        model.TotalCost = totalCosts;
+                        model.AverageCost = averageCosts;
                         model.Quantities = quantities;
                         model.Parts = uniqueParts;
                         ViewBag.Data = true;

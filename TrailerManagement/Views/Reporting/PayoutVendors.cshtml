@@ -12,12 +12,25 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var payout in Model)
+        @foreach (var vendor in Model)
         {
-            <tr id="@payout">
-                <td>@payout</td>
-                <td><a href="/Reporting/PayoutInfoByVendor?vendor=@payout">By Date</a></td>
-                <td><a href="/Reporting/PayoutInfoByPart?vendor=@payout">By Part</a></td>
+            var newVendor = "";
+            <tr id="@vendor">
+                <td>@vendor</td>
+                <td class="col-xs-2">
+                    <a href="/Reporting/PayoutInfoByVendor?vendor=@vendor">By Date</a> 
+                    <b>|</b> 
+                    
+                    @if(vendor.Contains("&"))
+                    {
+                        newVendor = vendor.Replace('&', '@');
+                    }
+                    else
+                    {
+                        newVendor = vendor;
+                    }
+                    <a href="/Reporting/PayoutInfoByPart?vendor=@newVendor" id="@newVendor" class="vendor-link">By Part</a>
+                </td>
             </tr>
         }
     </tbody>
@@ -28,10 +41,6 @@
     <script>
         $(function ()
         {
-            $('table tr').on('click', function ()
-            {
-                //location.href = "/Reporting/PayoutInfoByVendor?vendor=" + this.id;
-            });
         });
     </script>
 }
