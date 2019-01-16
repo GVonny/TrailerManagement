@@ -233,12 +233,6 @@
     <Compile Include="Models\MasterStack.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\MasterStacksBackup.cs">
-      <DependentUpon>TrailerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\MasterStacksTest.cs">
-      <DependentUpon>TrailerModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\PalletPrice.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
@@ -246,9 +240,6 @@
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Payout.cs">
-      <DependentUpon>TrailerModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\PayoutsBackup.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SafetyCode.cs">

@@ -68,7 +68,7 @@
                 </div>
                 <div class="col-xs-2">
                     <input type="button" value="-" class="btn" id="subtractPerson" style="background-color:darkmagenta; color:white" tabindex="-1">
-                </div
+                </div>
             </div>
         </div>
 
@@ -112,7 +112,7 @@
                 <div class="col-xs-7" id="palletType4TypeInput">
                     <strong>Extra Pallet Type 1:</strong>
                     @Html.DropDownList("palletTypes", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form drop-down", @id = "extraPalletType1" })
-                    <input type="number" id="extraPalletType1Quantity" class="form-control quantity" placeholder="Extra Pallet Type Quantity">
+                    <input type="number" id="extraPalletType1Quantity" class="form-control quantity extra-quantity" placeholder="Extra Pallet Type Quantity">
                     <input type="text" id="extraPalletType1Notes" class="form-control" placeholder="Leave a note for Nancy?" tabindex="-1">
                     <br />
                 </div>
@@ -292,8 +292,13 @@
         $('.stackNumber').html(stackNumber);
         $('#stackNumber').val(stackNumber);
 
-        $('.all-done').on('click', function ()
+        $('.all-done, .nextStack').on('click', function ()
         {
+            var option = $(this).attr('class');
+            if (option.indexOf("nextStack") > -1)
+            {
+                console.log(option);
+            }
             $('#numberOfPeople').removeAttr('disabled', 'disabled');
             var stackSize = $('#stackSize').val();
             var inputQuantity = [];
@@ -310,15 +315,60 @@
                 total += parseInt(inputQuantity[x]);
             }
 
+            var allFilled = true;
+            var filledProgress = [];
+            $('.extra-quantity').each(function ()
+            {
+                if ($(this).val() != "")
+                {
+                    if ($(this).parent().children('select').val() != "")
+                    {
+                        filledProgress.push(true);
+                    }
+                    else
+                    {
+                        $(this).parent().children('select').css('border-color', 'red');
+
+                        filledProgress.push(false);
+                    }
+                }
+            });
+            for (var x = 0; x < filledProgress.length; x++)
+            {
+                if (filledProgress[x] == false)
+                {
+                    allFilled = false;
+                    break;
+                }
+            }
+
             if ($('#stackSize').val() != "" && (stackSize == total))
             {
+                $('#stackSize').css('border-color', 'lightgrey');
+                $('.quantity').each(function ()
+                {
+                    $(this).css('border-color', 'lightgrey');
+                })
                 $('select').each(function ()
                 {
                     $(this).attr('disabled', 'disabled');
                 });
                 calculateTimeOnPage();
-                $('#stackInput').append("<input type=\"text\" name=\"allDone\">");
-                $('#stackInput').submit();
+                
+                console.log(allFilled);
+                if (allFilled)
+                {
+                    if (option.indexOf("nextStack") > -1)
+                    {
+                        $('#stackInput').append("<input type=\"text\" name=\"nextStack\">");
+                    }
+                    else if (option.indexOf("all-done") > -1)
+                    {
+                        $('#stackInput').append("<input type=\"text\" name=\"allDone\">");
+                    }
+                    
+                    $('#stackInput').submit();
+                }
             }
             else
             {
@@ -340,53 +390,53 @@
             }
         });
 
-        $('.nextStack').on('click', function ()
-        {
-            $('#numberOfPeople').removeAttr('disabled', 'disabled');
-            var stackSize = $('#stackSize').val();
-            var inputQuantity = [];
-            var total = 0;
-            $('.quantity').each(function ()
-            {
-                if ($(this).val() != "")
-                {
-                    inputQuantity.push($(this).val());
-                }
-            });
-            for (var x = 0; x < inputQuantity.length; x++)
-            {
-                total += parseInt(inputQuantity[x]);
-            }
+        //$('.nextStack').on('click', function ()
+        //{
+        //    $('#numberOfPeople').removeAttr('disabled', 'disabled');
+        //    var stackSize = $('#stackSize').val();
+        //    var inputQuantity = [];
+        //    var total = 0;
+        //    $('.quantity').each(function ()
+        //    {
+        //        if ($(this).val() != "")
+        //        {
+        //            inputQuantity.push($(this).val());
+        //        }
+        //    });
+        //    for (var x = 0; x < inputQuantity.length; x++)
+        //    {
+        //        total += parseInt(inputQuantity[x]);
+        //    }
 
-            if ($('#stackSize').val() != "" && (stackSize == total))
-            {
-                $('select').each(function ()
-                {
-                    $(this).attr('disabled', 'disabled');
-                });
-                calculateTimeOnPage();
-                $('#stackInput').append("<input type=\"text\" name=\"nextStack\">");
-                $('#stackInput').submit();
-            }
-            else
-            {
-                if ($('#stackSize').val() == "")
-                {
-                    $('#stackSize').css('border-color', 'red');
-                }
-                else
-                {
-                    $('.quantity').each(function ()
-                    {
-                        if ($(this).val() != "")
-                        {
-                            $(this).css('border-color', 'red');
-                        }
-                    })
-                    $('#errorModal').modal();
-                }
-            }
-        });
+        //    if ($('#stackSize').val() != "" && (stackSize == total))
+        //    {
+        //        $('select').each(function ()
+        //        {
+        //            $(this).attr('disabled', 'disabled');
+        //        });
+        //        calculateTimeOnPage();
+        //        $('#stackInput').append("<input type=\"text\" name=\"nextStack\">");
+        //        $('#stackInput').submit();
+        //    }
+        //    else
+        //    {
+        //        if ($('#stackSize').val() == "")
+        //        {
+        //            $('#stackSize').css('border-color', 'red');
+        //        }
+        //        else
+        //        {
+        //            $('.quantity').each(function ()
+        //            {
+        //                if ($(this).val() != "")
+        //                {
+        //                    $(this).css('border-color', 'red');
+        //                }
+        //            })
+        //            $('#errorModal').modal();
+        //        }
+        //    }
+        //});
 
         $('body').on('click', '.clear-scrap-inputs', function ()
         {
@@ -421,7 +471,7 @@
                     "<div class=\"col-xs-7\" id=\"palletType" + (extraPalletTypes + 3) + "TypeInput\">" +
                     "<strong>Extra Pallet Type " + extraPalletTypes + ":</strong>" +
                     $('#dropDownList').html() +
-                    "<input type=\"number\" id=\"extraPalletType" + extraPalletTypes + "Quantity\" class=\"form-control quantity\" placeholder=\"Extra Pallet Type Quantity\">" +
+                    "<input type=\"number\" id=\"extraPalletType" + extraPalletTypes + "Quantity\" class=\"form-control quantity extra-quantity\" placeholder=\"Extra Pallet Type Quantity\">" +
                     "<input type=\"text\" id=\"extraPalletType" + extraPalletTypes + "Notes\" class=\"form-control\" placeholder=\"Leave a note for Nancy?\" tabindex=\"-1\">" +
                     "<br />" +
                     "</div>" +
@@ -536,37 +586,6 @@
         {
             $('#numberOfPeople').val(numberOfPeople);
         }
-
-        
-        
-        var countMatches = false;
-        $('#finish').on('click', function ()
-        {
-            calculateTimeOnPage();
-            createStack();
-            if ($('#stackSize').val() == "")
-            {
-                location.href = "/PalletRepair/SortConfirmation?sortID=" + '@trailer.SortGUID';
-            }
-            else if (countMatches)
-            {
-                location.href = "/PalletRepair/CreateNewStack?sortID=" + '@trailer.SortGUID' + "&stackNumber=" + stackNumber + "&partNumbers=" + partNumbers.substring(0, partNumbers.length - 1) + "&quantities=" + palletQuantities.substring(0, palletQuantities.length - 1) + "&numberOfPeople=" + $('#numberOfPeople').val() + "&notes=" + palletNotes.substring(0, palletNotes.length - 1) + "&allDone=true&timeOnStack=" + seconds;
-            }
-        });
-
-        $('#finish2').on('click', function ()
-        {
-            calculateTimeOnPage();
-            createStack();
-            if ($('#stackSize').val() == "")
-            {
-                location.href = "/PalletRepair/SortConfirmation?sortID=" + '@trailer.SortGUID';
-            }
-            else if (countMatches)
-            {
-                location.href = "/PalletRepair/CreateNewStack?sortID=" + '@trailer.SortGUID' + "&stackNumber=" + stackNumber + "&partNumbers=" + partNumbers.substring(0, partNumbers.length - 1) + "&quantities=" + palletQuantities.substring(0, palletQuantities.length - 1) + "&numberOfPeople=" + $('#numberOfPeople').val() + "&user=" + $('#user').html() + "&notes=" + palletNotes.substring(0, palletNotes.length - 1) + "&allDone=true&timeOnStack=" + seconds ;
-            }
-        });
         
         $('#currentDate').html(getCurrentDate());
         

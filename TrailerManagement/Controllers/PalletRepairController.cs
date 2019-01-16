@@ -222,7 +222,7 @@ namespace TrailerManagement.Controllers
                 var numberOfPeople = Convert.ToInt32(fc["numberOfPeople"]);
                 var timeOnStack = Convert.ToDouble(fc["timeOnStack"]);
 
-                var trailer = db.SortListTests.FirstOrDefault(t => t.SortGUID == sortID);
+                var trailer = db.SortLists.FirstOrDefault(t => t.SortGUID == sortID);
                 trailer.MaxStackNumber = stackNumber;
                 if (trailer.TimeToSort == null)
                 {
@@ -251,7 +251,7 @@ namespace TrailerManagement.Controllers
 
                     if (part[0] != "")
                     {
-                        MasterStacksTest stack = new MasterStacksTest
+                        MasterStack stack = new MasterStack
                         {
                             SortGUID = sortID,
                             StackNumber = stackNumber,
@@ -263,14 +263,14 @@ namespace TrailerManagement.Controllers
                             PalletNote = part[1],
                         };
                         
-                        db.MasterStacksTests.Add(stack);
+                        db.MasterStacks.Add(stack);
                     }
                 }
 
                 var customPallet = fc["customPallet"].Split(',');
                 if(customPallet[0] != "")
                 {
-                    MasterStacksTest newStack = new MasterStacksTest
+                    MasterStack newStack = new MasterStack
                     {
                         SortGUID = sortID,
                         StackNumber = stackNumber,
@@ -281,7 +281,7 @@ namespace TrailerManagement.Controllers
                         UserSignedIn = Session["name"].ToString(),
                         PalletNote = customPallet[3],
                     };
-                    db.MasterStacksTests.Add(newStack);
+                    db.MasterStacks.Add(newStack);
                 }
                 db.SaveChanges();
 

@@ -45,8 +45,5 @@ namespace TrailerManagement.Models
         public virtual DbSet<ActiveInventoryLocation> ActiveInventoryLocations { get; set; }
         public virtual DbSet<ActiveLocationRow> ActiveLocationRows { get; set; }
         public virtual DbSet<SortListTest> SortListTests { get; set; }
-        public virtual DbSet<MasterStacksBackup> MasterStacksBackups { get; set; }
-        public virtual DbSet<PayoutsBackup> PayoutsBackups { get; set; }
-        public virtual DbSet<MasterStacksTest> MasterStacksTests { get; set; }
     }
 }
