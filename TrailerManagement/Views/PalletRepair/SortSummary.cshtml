@@ -140,6 +140,7 @@
 
                 $('#editModal').modal();
             });
+
             $('.splitLink').on('click', function ()
             {
                 editID = $(this).data("id");
@@ -147,10 +148,10 @@
                 $('#originalQuantity').html($('#quantity_' + editID).html());
                 $('#splitModal').modal();
             });
+
             $('.undoSplitLink').on('click', function ()
             {
                 editID = $(this).data("id");
-                //console.log("/PalletRepair/UndoSortSplit?stackID=" + editID);
                 location.href = "/PalletRepair/UndoSortSplit?stackID=" + editID;
             });
 
@@ -164,7 +165,6 @@
                 {
                     $('#errorModal').modal();
                 }
-                //console.log("/PalletRepair/SplitSortPalletType?sortID=" + $('#sortID').html() + "stackNumber=" + $('#stackNumber_' + editID).html() + "&newQuantity=" + $('#splitQuantity').val() + "&newPartNumber=" + $('#newPalletTypeInput').val() + "&oldPartNumber=" + $('#partNumber').html() + "&note=" + $('#splitNote').val());
             });
 
             $('#newQuantity').on('change', function ()
@@ -187,7 +187,6 @@
 
             $('#finish').on('click', function ()
             {
-                //do something here where it creates a completed sort record
                 var sortID = '@sort.SortGUID';
                 location.href = "/PalletRepair/CompleteSort?sortID=" + sortID;
             });
@@ -195,7 +194,6 @@
             $('#stacks tr').each(function ()
             {
                 var stackID = this.id;
-                //console.log(parseInt($('#stackNumber_' + stackID).html()));
                 var stackNumber = (parseInt($('#stackNumber_' + stackID).html()));
                 if (stackNumber % 2 != 1)
                 {

@@ -211,7 +211,6 @@
     <Compile Include="Models\CreateInactiveTrailer.cs" />
     <Compile Include="Models\CreatePalletPrice.cs" />
     <Compile Include="Models\CreatePalletType.cs" />
-    <Compile Include="Models\CreateSort.cs" />
     <Compile Include="Models\CreateSortImage.cs" />
     <Compile Include="Models\CreateTrailer.cs" />
     <Compile Include="Models\CreateUser.cs" />

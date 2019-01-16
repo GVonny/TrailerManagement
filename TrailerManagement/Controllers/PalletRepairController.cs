@@ -64,6 +64,7 @@ namespace TrailerManagement.Controllers
             }
         }
        
+        //remove this method
         public ActionResult SortTrailer(int sortID, int? stackNumber, int? numberOfPeople, bool? imageUploaded)
         {
             if (Session["username"] == null)
@@ -126,6 +127,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
+        //remove this method
         public ActionResult SortListTest(string status)
         {
             using (TrailerEntities db = new TrailerEntities())
@@ -155,6 +157,7 @@ namespace TrailerManagement.Controllers
             
         }
 
+        //rename to SortTrailer
         public ActionResult SortTrailerTest(int sortID, int? stackNumber, int? numberOfPeople, bool? imageUploaded)
         {
             using (TrailerEntities db = new TrailerEntities())
@@ -207,6 +210,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
+        //rename to CreateNewStack
         [HttpPost]
         public ActionResult CreateStackTest(FormCollection fc)
         {
@@ -326,6 +330,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
+        //remove this method
         public ActionResult CreateNewStack(int sortID, int stackNumber, string partNumbers, string quantities, int numberOfPeople, string notes, Boolean? allDone, double timeOnStack)
         {
             using (TrailerEntities db = new TrailerEntities())
