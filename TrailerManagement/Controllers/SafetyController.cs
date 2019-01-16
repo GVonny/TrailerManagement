@@ -267,7 +267,7 @@ namespace TrailerManagement.Controllers
             {
                 dynamic model = new ExpandoObject();
 
-                var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenByDescending(c => c.SubArea).ToList();
+                var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenBy(c => c.SubArea).ToList();
                 model.Concerns = concerns;
 
                 var violations = db.CodeViolations.ToList();

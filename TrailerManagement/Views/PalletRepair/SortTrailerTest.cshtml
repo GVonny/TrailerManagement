@@ -32,7 +32,7 @@
         <div class="form-top-buttons">
             <input type="button" value="Next Stack" class="btn btn-primary col-xs-3 nextStack" />
             <a href="/PalletRepair/SortList" value="Finish Later" class="btn btn-danger col-xs-3">Finish Later</a>
-            <input type="button" value="All Done" class="btn btn-warning float-right col-xs-3" id="finish2" />
+            <input type="button" value="All Done" class="btn btn-warning float-right col-xs-3 all-done"/>
             <button type="button" id="hideKeyboard" class="btn btn-primary float-right col-xs-3 btn-green"><span class="fa fa-keyboard-o"></span>&nbsp;Hide Keyboard</button>
         </div>
 
@@ -155,16 +155,13 @@
                 <input type="text" id="customPalletNote" name="customPallet" class="form-control" placeholder="Leave a note for Nancy?"><br>
             </div>
         </div>
-
-
-
-
     </form>
+
     <div class="form-bottom-buttons">
         <input type="button" value="Next Stack" name="nextStack" class="btn btn-primary col-xs-3 nextStack" />
         <a href="/PalletRepair/SortListTest" value="Finish Later" class="btn btn-danger col-xs-3" id="finishLater">Finish Later</a>
         <a class="btn btn-primary col-xs-3 btn-green" href="/PalletRepair/SortSummary?sortID=@trailer.SortGUID">Sort Summary</a>
-        <input type="button" value="All Done" class="btn btn-warning float-right col-xs-3" id="finish" />
+        <input type="button" value="All Done" class="btn btn-warning float-right col-xs-3 all-done" />
         <br>
         <br>
     </div>
@@ -268,7 +265,6 @@
     <script>
     $(function ()
     {
-
         var timeOnLoad = new Date();
         var seconds;
         function calculateTimeOnPage()
@@ -295,7 +291,7 @@
         $('.stackNumber').html(stackNumber);
         $('#stackNumber').val(stackNumber);
 
-        $('.nextStack').on('click', function ()
+        $('.all-done').on('click', function ()
         {
             $('#numberOfPeople').removeAttr('disabled', 'disabled');
             var stackSize = $('#stackSize').val();
@@ -312,11 +308,6 @@
             {
                 total += parseInt(inputQuantity[x]);
             }
-            console.log("total: " + total);
-            console.log(total);
-            console.log("====");
-            console.log(stackSize);
-            console.log(inputQuantity);
 
             if ($('#stackSize').val() != "" && (stackSize == total))
             {
@@ -325,7 +316,7 @@
                     $(this).attr('disabled', 'disabled');
                 });
                 calculateTimeOnPage();
-                $('#stackInput').append("nextStack");
+                $('#stackInput').append("<input type=\"text\" name=\"allDone\">");
                 $('#stackInput').submit();
             }
             else
@@ -345,7 +336,54 @@
                     })
                     $('#errorModal').modal();
                 }
-                
+            }
+        });
+
+        $('.nextStack').on('click', function ()
+        {
+            $('#numberOfPeople').removeAttr('disabled', 'disabled');
+            var stackSize = $('#stackSize').val();
+            var inputQuantity = [];
+            var total = 0;
+            $('.quantity').each(function ()
+            {
+                if ($(this).val() != "")
+                {
+                    inputQuantity.push($(this).val());
+                }
+            });
+            for (var x = 0; x < inputQuantity.length; x++)
+            {
+                total += parseInt(inputQuantity[x]);
+            }
+
+            if ($('#stackSize').val() != "" && (stackSize == total))
+            {
+                $('select').each(function ()
+                {
+                    $(this).attr('disabled', 'disabled');
+                });
+                calculateTimeOnPage();
+                $('#stackInput').append("<input type=\"text\" name=\"nextStack\">");
+                $('#stackInput').submit();
+            }
+            else
+            {
+                if ($('#stackSize').val() == "")
+                {
+                    $('#stackSize').css('border-color', 'red');
+                }
+                else
+                {
+                    $('.quantity').each(function ()
+                    {
+                        if ($(this).val() != "")
+                        {
+                            $(this).css('border-color', 'red');
+                        }
+                    })
+                    $('#errorModal').modal();
+                }
             }
         });
 
