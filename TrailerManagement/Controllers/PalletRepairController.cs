@@ -290,7 +290,7 @@ namespace TrailerManagement.Controllers
                     }
                 }
                 
-                for(int x = 4; x < fc.Count; x++)
+                for(int x = 5; x < fc.Count - 1; x++)
                 {
                     var key = fc.GetKey(x);
                     var part = fc[key].Split(',');
@@ -299,7 +299,7 @@ namespace TrailerManagement.Controllers
 
                     if (part[0] != "")
                     {
-                        MasterStack stack = new MasterStack()
+                        MasterStacksTest stack = new MasterStacksTest
                         {
                             SortGUID = sortID,
                             StackNumber = stackNumber,
@@ -310,12 +310,31 @@ namespace TrailerManagement.Controllers
                             UserSignedIn = Session["name"].ToString(),
                             PalletNote = part[1],
                         };
-
-                        db.MasterStacks.Add(stack);
+                        
+                        db.MasterStacksTests.Add(stack);
                     }
                 }
+
+                var customPallet = fc["customPallet"].Split(',');
+                if(customPallet[0] != "")
+                {
+                    MasterStacksTest newStack = new MasterStacksTest
+                    {
+                        SortGUID = sortID,
+                        StackNumber = stackNumber,
+                        PartNumber = "CUSTOM",
+                        Description = "CUSTOM - " + customPallet[0] + " X " + customPallet[1],
+                        Quantity = Convert.ToInt32(customPallet[2]),
+                        PeopleOnStack = numberOfPeople,
+                        UserSignedIn = Session["name"].ToString(),
+                        PalletNote = customPallet[3],
+                    };
+                    db.MasterStacksTests.Add(newStack);
+                }
+
                 db.SaveChanges();
-                return View();
+                stackNumber++;
+                return RedirectToAction(actionName:"SortTrailerTest", controllerName:"PalletRepair", routeValues: new { sortID, stackNumber, numberOfPeople });
             }
         }
 

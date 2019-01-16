@@ -36,6 +36,7 @@
             <button type="button" id="hideKeyboard" class="btn btn-primary float-right col-xs-3 btn-green"><span class="fa fa-keyboard-o"></span>&nbsp;Hide Keyboard</button>
         </div>
 
+        <input type="text" id="timeOnStack" class="form-control hidden" name="timeOnStack" />
         <input type="number" value="@trailer.SortGUID" class="form-control hidden" id="sortID" name="sortID" />
 
         <!-- Stack Number -->
@@ -110,7 +111,7 @@
                 <div class="col-xs-7" id="palletType4TypeInput">
                     <strong>Extra Pallet Type 1:</strong>
                     @Html.DropDownList("palletTypes", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form drop-down", @id = "extraPalletType1" })
-                    <input type="number" id="extraPalletType1Quantity" class="form-control" placeholder="Extra Pallet Type Quantity">
+                    <input type="number" id="extraPalletType1Quantity" class="form-control quantity" placeholder="Extra Pallet Type Quantity">
                     <input type="text" id="extraPalletType1Notes" class="form-control" placeholder="Leave a note for Nancy?" tabindex="-1">
                     <br />
                 </div>
@@ -120,15 +121,48 @@
                 </div>
             </div>
         </div>
-        
 
-        <input type="text" id="timeOnStack" name="timeOnStack"/>
-        
+        <!-- Scrap -->
+        <div class="form-group" id="palletTypeScrap">
+            <div class="col-xs-7">
+                <strong>Scrap:</strong>
+                @Html.DropDownList("scrapTypes", null, htmlAttributes: new { @class = "form-control signin-form", @id = "scrapTypes" })
+                <input type="number" id="scrapQuantity" class="form-control quantity" name="SCRAP-ONLY" placeholder="SCRAP-ONLY - Quantity">
+                <input type="text" id="scrapNotes" class="form-control" name="SCRAP-ONLY" placeholder="Leave a note for Nancy?">
+            </div>
+            <div class="col-xs-5">
+                <button type="button" class="btn btn-danger clear-scrap-inputs" style="margin-top:30px"><h4>Clear Scrap</h4></button>
+            </div>
+        </div>
+
+        <!-- Custom Pallet Size -->
+        <strong>Custom Pallet:</strong>
+        <div class="form-group" id="customPalletType">
+            <div class="col-xs-2">
+                <strong>Length:</strong>
+                <input type="number" id="customLength" name="customPallet" class="form-control">
+            </div>
+            <div class="col-xs-2">
+                <strong>Width:</strong>
+                <input type="number" id="customWidth" name="customPallet" class="form-control">
+            </div>
+            <div class="col-xs-2">
+                <strong>Quantity:</strong>
+                <input type="number" id="customPalletQuantity" name="customPallet" class="form-control quantity"><br>
+            </div>
+            <div class="col-xs-5">
+                <strong>Note</strong>
+                <input type="text" id="customPalletNote" name="customPallet" class="form-control" placeholder="Leave a note for Nancy?"><br>
+            </div>
+        </div>
+
+
+
+
     </form>
     <div class="form-bottom-buttons">
-        @*change col-xs-4 to 3*@
-        <input type="button" value="Next Stack" class="btn btn-primary col-xs-3 nextStack" />
-        <a href="/PalletRepair/SortList" value="Finish Later" class="btn btn-danger col-xs-3" id="finishLater">Finish Later</a>
+        <input type="button" value="Next Stack" name="nextStack" class="btn btn-primary col-xs-3 nextStack" />
+        <a href="/PalletRepair/SortListTest" value="Finish Later" class="btn btn-danger col-xs-3" id="finishLater">Finish Later</a>
         <a class="btn btn-primary col-xs-3 btn-green" href="/PalletRepair/SortSummary?sortID=@trailer.SortGUID">Sort Summary</a>
         <input type="button" value="All Done" class="btn btn-warning float-right col-xs-3" id="finish" />
         <br>
@@ -264,19 +298,62 @@
         $('.nextStack').on('click', function ()
         {
             $('#numberOfPeople').removeAttr('disabled', 'disabled');
-            if ($('#stackSize').val() != "")
+            var stackSize = $('#stackSize').val();
+            var inputQuantity = [];
+            var total = 0;
+            $('.quantity').each(function ()
+            {
+                if ($(this).val() != "")
+                {
+                    inputQuantity.push($(this).val());
+                }
+            });
+            for (var x = 0; x < inputQuantity.length; x++)
+            {
+                total += parseInt(inputQuantity[x]);
+            }
+            console.log("total: " + total);
+            console.log(total);
+            console.log("====");
+            console.log(stackSize);
+            console.log(inputQuantity);
+
+            if ($('#stackSize').val() != "" && (stackSize == total))
             {
                 $('select').each(function ()
                 {
                     $(this).attr('disabled', 'disabled');
-                })
+                });
                 calculateTimeOnPage();
+                $('#stackInput').append("nextStack");
                 $('#stackInput').submit();
             }
             else
             {
-                $('#stackSize').css('border-color', 'red');
+                if ($('#stackSize').val() == "")
+                {
+                    $('#stackSize').css('border-color', 'red');
+                }
+                else
+                {
+                    $('.quantity').each(function ()
+                    {
+                        if ($(this).val() != "")
+                        {
+                            $(this).css('border-color', 'red');
+                        }
+                    })
+                    $('#errorModal').modal();
+                }
+                
             }
+        });
+
+        $('body').on('click', '.clear-scrap-inputs', function ()
+        {
+            $('#scrapTypes').val($('#scrapTypes option:first').val());
+            $('#scrapQuantity').val("").attr('placeholder','SCRAP-ONLY - Quantity');
+            $('#scrapNotes').val("");
         });
 
         $('body').on('click','.add-pallet-type', function ()
@@ -296,15 +373,16 @@
             {
                 $('#extraPalletType' + extraPalletTypes).css('border-color', 'lightgrey');
                 $('#extraPalletType' + extraPalletTypes + 'Quantity').css('border-color', 'lightgrey');
-                $(this).remove();
+                $(this).parent().remove();
                 extraPalletTypes++;
+                console.log(extraPalletTypes);
                 $('#dropDownList').children('select').attr('id', "extraPalletType" + extraPalletTypes);
                 $('#extraPalletTypes').append(
                     "<div class=\"form-group\" id=\"palletType" + (extraPalletTypes + 3) + "\">" +
                     "<div class=\"col-xs-7\" id=\"palletType" + (extraPalletTypes + 3) + "TypeInput\">" +
                     "<strong>Extra Pallet Type " + extraPalletTypes + ":</strong>" +
                     $('#dropDownList').html() +
-                    "<input type=\"number\" id=\"extraPalletType" + extraPalletTypes + "Quantity\" class=\"form-control\" placeholder=\"Extra Pallet Type Quantity\">" +
+                    "<input type=\"number\" id=\"extraPalletType" + extraPalletTypes + "Quantity\" class=\"form-control quantity\" placeholder=\"Extra Pallet Type Quantity\">" +
                     "<input type=\"text\" id=\"extraPalletType" + extraPalletTypes + "Notes\" class=\"form-control\" placeholder=\"Leave a note for Nancy?\" tabindex=\"-1\">" +
                     "<br />" +
                     "</div>" +
@@ -322,11 +400,26 @@
         $('body').on('click', '.remove-pallet-type', function ()
         {
             extraPalletTypes--;
+            console.log(extraPalletTypes);
+            $(this).parent().parent().remove();
             if (extraPalletTypes == 1)
             {
-                $('#firstExtraPalletType').append("<button type=\"button\" class=\"btn btn-primary btn-green add-pallet-type\" style=\"margin-top:30px;margin-right:5px\" tabindex=\"-1\"><h4>Add Another Type</h4></button>")
+                $('#palletType4').append("<div class=\"col-xs-5\">" +
+                    "<br />" +
+                    "<button type=\"button\" class=\"btn btn-primary btn-green add-pallet-type\" style=\"margin-top:30px;margin-right:5px\" tabindex=\"-1\"><h4>Add Another Type</h4></button>" +
+                    "</div>")
             }
-            $(this).parent().parent().remove();
+            else
+            {
+                console.log($('#extraPalletTypes').children().last());
+                $('#extraPalletTypes').children().last().append("<div class=\"col-xs-5\">" +
+                    "<br />" +
+                    "<button type=\"button\" class=\"btn btn-primary btn-green add-pallet-type\" style=\"margin-top:30px;margin-right:5px\" tabindex=\"-1\"><h4>Add Another Type</h4></button>" +
+                    "<button type=\"button\" class=\"btn btn-primary btn-danger remove-pallet-type\" style=\"margin-top:30px\" tabindex=\"-1\"><h4>Remove Type</h4></button>" +
+                    "</div>"
+                );
+            }
+           
         });
         
         var extraPalletTypes = 1;
@@ -336,6 +429,13 @@
             $('#' + palletType + 'Quantity').attr('placeholder', "(" + $('#' + palletType).val() + ") - Quantity");
             $('#' + palletType + 'Quantity').attr('name', $('#' + palletType).val());
             $('#' + palletType + 'Notes').attr('name', $('#' + palletType).val());
+        });
+
+        $('#scrapTypes').on('change', function ()
+        {
+            $('#scrapQuantity').attr('placeholder', $("#scrapTypes").val() + " - Quantity");
+            $('#scrapQuantity').attr('name', $('#scrapTypes').val());
+            $('#scrapNotes').attr('name', $('#scrapTypes').val());
         });
 
         $('#yes').on('click', function ()
@@ -431,130 +531,23 @@
         
         $('#currentDate').html(getCurrentDate());
         
-        if ($('#showPalletType5').is(':checked'))
-        {
-            $('#palletType5').removeClass('hidden');
-            $('#showPalletType4').attr('disabled', 'disabled');
-        }
-        else
-        {
-            $('#palletType5').addClass('hidden');
-            $('#showPalletType4').removeAttr('disabled', 'disabled');
-        }
-
-        $('#showPalletType5').change(function ()
-        {
-            if ($(this).is(':checked'))
-            {
-                $('#palletType5').removeClass('hidden');
-                $('#showPalletType4').attr('disabled', 'disabled');
-            }
-            else
-            {
-                $('#palletType5').addClass('hidden');
-                $('#showPalletType4').removeAttr('disabled', 'disabled');
-            }
-        });
-
-        if ($('#showPalletType6').is(':checked'))
-        {
-            $('#palletType6').removeClass('hidden');
-            $('#showPalletType5').attr('disabled', 'disabled');
-        }
-        else
-        {
-            $('#palletType6').addClass('hidden');
-            $('#showPalletType5').removeAttr('disabled', 'disabled');
-        }
-
-        $('#showPalletType6').change(function ()
-        {
-            if ($(this).is(':checked'))
-            {
-                $('#palletType6').removeClass('hidden');
-                $('#showPalletType5').attr('disabled', 'disabled');
-            }
-            else
-            {
-                $('#palletType6').addClass('hidden');
-                $('#showPalletType5').removeAttr('disabled', 'disabled');
-            }
-        });
-
-        if ($('#showPalletType7').is(':checked'))
-        {
-            $('#palletType7').removeClass('hidden');
-            $('#showPalletType6').attr('disabled', 'disabled');
-        }
-        else
-        {
-            $('#palletType7').addClass('hidden');
-            $('#showPalletType6').removeAttr('disabled', 'disabled');
-        }
-
-        $('#showPalletType7').change(function ()
-        {
-            if ($(this).is(':checked'))
-            {
-                $('#palletType7').removeClass('hidden');
-                $('#showPalletType6').attr('disabled', 'disabled');
-            }
-            else
-            {
-                $('#palletType7').addClass('hidden');
-                $('#showPalletType6').removeAttr('disabled', 'disabled');
-            }
-        });
-
         function getCurrentDate()
         {
-            var currentDate = new Date().toString();
-            var currentMonth = currentDate.substring(4, 7);
-            var currentDay = currentDate.substring(8, 10);
-            var currentYear = currentDate.substring(11, 15);
-
-            //converts month abreviation to month number
-            switch (currentMonth)
+            var currentDate = new Date();
+            var currentMonth = currentDate.getMonth() + 1;
+            if (currentMonth.toString().length == 1)
             {
-                case "Jan":
-                    currentMonth = "01";
-                    break;
-                case "Feb":
-                    currentMonth = "02";
-                    break;
-                case "Mar":
-                    currentMonth = "03";
-                    break;
-                case "Apr":
-                    currentMonth = "04";
-                    break;
-                case "May":
-                    currentMonth = "05";
-                    break;
-                case "Jun":
-                    currentMonth = "06";
-                    break;
-                case "Jul":
-                    currentMonth = "07";
-                    break;
-                case "Aug":
-                    currentMonth = "08";
-                    break;
-                case "Sep":
-                    currentMonth = "09";
-                    break;
-                case "Oct":
-                    currentMonth = "10";
-                    break;
-                case "Nov":
-                    currentMonth = "11";
-                    break;
-                case "Dec":
-                    currentMonth = "12";
-                    break;
+                currentMonth = "0" + currentMonth;
             }
-
+            var currentDay = currentDate.getDate();
+            if (currentDay.toString().length == 1)
+            {
+                currentDay = "0" + currentDay;
+            }
+            var currentYear = currentDate.getFullYear();
+            
             currentDate = (currentYear + "-" + currentMonth + "-" + currentDay);
+            console.log(currentDate);
             return currentDate;
         }
     });

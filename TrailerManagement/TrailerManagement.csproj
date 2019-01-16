@@ -237,6 +237,9 @@
     <Compile Include="Models\MasterStacksBackup.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\MasterStacksTest.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\PalletPrice.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>

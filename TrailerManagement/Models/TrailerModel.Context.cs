@@ -47,5 +47,6 @@ namespace TrailerManagement.Models
         public virtual DbSet<SortListTest> SortListTests { get; set; }
         public virtual DbSet<MasterStacksBackup> MasterStacksBackups { get; set; }
         public virtual DbSet<PayoutsBackup> PayoutsBackups { get; set; }
+        public virtual DbSet<MasterStacksTest> MasterStacksTests { get; set; }
     }
 }

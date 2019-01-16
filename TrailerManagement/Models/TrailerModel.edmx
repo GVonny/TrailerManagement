@@ -152,6 +152,22 @@
           <Property Name="IsSplit" Type="bit" />
           <Property Name="SplitFrom" Type="varchar" MaxLength="25" />
         </EntityType>
+        <EntityType Name="MasterStacksTest">
+          <Key>
+            <PropertyRef Name="StackGUID" />
+          </Key>
+          <Property Name="StackGUID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SortGUID" Type="bigint" />
+          <Property Name="StackNumber" Type="int" />
+          <Property Name="PartNumber" Type="varchar" MaxLength="25" />
+          <Property Name="Description" Type="varchar(max)" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="PeopleOnStack" Type="int" />
+          <Property Name="UserSignedIn" Type="varchar" MaxLength="20" />
+          <Property Name="PalletNote" Type="varchar(max)" />
+          <Property Name="IsSplit" Type="bit" />
+          <Property Name="SplitFrom" Type="varchar" MaxLength="25" />
+        </EntityType>
         <EntityType Name="PalletPrices">
           <Key>
             <PropertyRef Name="PalletPriceGUID" />
@@ -336,6 +352,7 @@
           <EntitySet Name="InventoryRowStacks" EntityType="Self.InventoryRowStacks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MasterStacks" EntityType="Self.MasterStacks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MasterStacksBackup" EntityType="Self.MasterStacksBackup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MasterStacksTest" EntityType="Self.MasterStacksTest" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PalletPrices" EntityType="Self.PalletPrices" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PalletTypes" EntityType="Self.PalletTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payouts" EntityType="Self.Payouts" Schema="dbo" store:Type="Tables" />
@@ -413,6 +430,7 @@
           <EntitySet Name="SortListTests" EntityType="TrailerModel.SortListTest" />
           <EntitySet Name="MasterStacksBackups" EntityType="TrailerModel.MasterStacksBackup" />
           <EntitySet Name="PayoutsBackups" EntityType="TrailerModel.PayoutsBackup" />
+          <EntitySet Name="MasterStacksTests" EntityType="TrailerModel.MasterStacksTest" />
         </EntityContainer>
         <EntityType Name="TrailerList">
           <Key>
@@ -694,6 +712,22 @@
           <Property Name="DateArrived" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="TimeToSort" Type="Double" />
           <Property Name="DateCompleted" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="MasterStacksTest">
+          <Key>
+            <PropertyRef Name="StackGUID" />
+          </Key>
+          <Property Name="StackGUID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SortGUID" Type="Int64" />
+          <Property Name="StackNumber" Type="Int32" />
+          <Property Name="PartNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="PeopleOnStack" Type="Int32" />
+          <Property Name="UserSignedIn" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PalletNote" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="IsSplit" Type="Boolean" />
+          <Property Name="SplitFrom" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1039,6 +1073,23 @@
                 <ScalarProperty Name="TrailerNumber" ColumnName="TrailerNumber" />
                 <ScalarProperty Name="SortGUID" ColumnName="SortGUID" />
                 <ScalarProperty Name="PayoutGUID" ColumnName="PayoutGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MasterStacksTests">
+            <EntityTypeMapping TypeName="TrailerModel.MasterStacksTest">
+              <MappingFragment StoreEntitySet="MasterStacksTest">
+                <ScalarProperty Name="SplitFrom" ColumnName="SplitFrom" />
+                <ScalarProperty Name="IsSplit" ColumnName="IsSplit" />
+                <ScalarProperty Name="PalletNote" ColumnName="PalletNote" />
+                <ScalarProperty Name="UserSignedIn" ColumnName="UserSignedIn" />
+                <ScalarProperty Name="PeopleOnStack" ColumnName="PeopleOnStack" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="PartNumber" ColumnName="PartNumber" />
+                <ScalarProperty Name="StackNumber" ColumnName="StackNumber" />
+                <ScalarProperty Name="SortGUID" ColumnName="SortGUID" />
+                <ScalarProperty Name="StackGUID" ColumnName="StackGUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
