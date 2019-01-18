@@ -369,7 +369,7 @@
     <Content Include="Views\Error\InsufficientPermissions.cshtml" />
     <Content Include="Views\Reporting\InsuranceInfo.cshtml" />
     <Content Include="Views\Reporting\ActiveListReporting.cshtml" />
-    <Content Include="Views\PalletRepair\SortTrailer.cshtml" />
+    <Content Include="Views\PalletRepair\SortTrailerTest.cshtml" />
     <Content Include="Views\PalletRepair\SortConfirmation.cshtml" />
     <Content Include="Views\PalletRepair\PayoutList.cshtml" />
     <Content Include="Views\PalletRepair\ViewPayout.cshtml" />
@@ -408,7 +408,7 @@
     <Content Include="Views\Reporting\PayoutInfoByVendor.cshtml" />
     <Content Include="Views\Reporting\PayoutInfoByPart.cshtml" />
     <Content Include="Views\Safety\ManagerDashboard.cshtml" />
-    <Content Include="Views\PalletRepair\SortTrailerTest.cshtml" />
+    <Content Include="Views\PalletRepair\SortTrailer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

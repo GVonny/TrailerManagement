@@ -63,8 +63,7 @@ namespace TrailerManagement.Controllers
                 return RedirectToAction(actionName: "SortList", controllerName: "PalletRepair");
             }
         }
-       
-        //remove this method
+        
         public ActionResult SortTrailer(int sortID, int? stackNumber, int? numberOfPeople, bool? imageUploaded)
         {
             if (Session["username"] == null)
@@ -99,7 +98,7 @@ namespace TrailerManagement.Controllers
                         ViewBag.NumberOfPeople = numberOfPeople;
                     }
 
-                    if(imageUploaded == null)
+                    if (imageUploaded == null)
                     {
                         ViewBag.ImageUploaded = false;
                     }
@@ -126,93 +125,9 @@ namespace TrailerManagement.Controllers
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
             }
         }
-
-        //remove this method
-        public ActionResult SortListTest(string status)
-        {
-            using (TrailerEntities db = new TrailerEntities())
-            {
-                dynamic model = new ExpandoObject();
-                var trailers = from x in db.SortListTests select x;
-                switch (status)
-                {
-                    case "CLOSED":
-                    {
-                        trailers = trailers.Where(t => t.Status == "CLOSED");
-                        ViewBag.Closed = true;
-                        break;
-                    }
-                    default:
-                    {
-                        trailers = trailers.Where(t => t.Status == "OPEN" || t.Status == "NEW");
-                        break;
-                    }
-                }
-
-                this.ViewData["Vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
-
-                model.Trailers = trailers.OrderByDescending(t => t.Status).ThenByDescending(t => t.DateArrived).ThenBy(t => t.Customer).ToList();
-                return View(model);
-            }
-            
-        }
-
-        //rename to SortTrailer
-        public ActionResult SortTrailerTest(int sortID, int? stackNumber, int? numberOfPeople, bool? imageUploaded)
-        {
-            using (TrailerEntities db = new TrailerEntities())
-            {
-                var trailer = db.SortListTests.Find(sortID);
-                trailer.Status = "OPEN";
-                trailer.SortChoice = "STACK";
-                db.SaveChanges();
-
-                if (stackNumber != null)
-                {
-                    ViewBag.StackNumber = stackNumber;
-                }
-                else if (trailer.MaxStackNumber != null)
-                {
-                    ViewBag.StackNumber = trailer.MaxStackNumber + 1;
-                }
-                else
-                {
-                    //sort for trailer has not started yet
-                    ViewBag.StackNumber = 1;
-                }
-
-                if (numberOfPeople != null)
-                {
-                    ViewBag.NumberOfPeople = numberOfPeople;
-                }
-
-                if (imageUploaded == null)
-                {
-                    ViewBag.ImageUploaded = false;
-                }
-                else
-                {
-                    ViewBag.ImageUploaded = true;
-                }
-
-                var vendor = db.CustomersAndVendors.FirstOrDefault(v => v.Name == trailer.Vendor);
-
-                dynamic model = new ExpandoObject();
-
-                model.Trailer = trailer;
-                model.Vendor = vendor;
-
-                this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.PartNumber != "50-0140" && c.PartNumber != "50-0001" && c.PartNumber != "50-0004" && c.Type != "SCRAP" && c.Type != "DEDUCTION").OrderBy(c => c.Description), "PartNumber", "Description").ToList();
-
-                this.ViewData["scrapTypes"] = new SelectList(db.PalletTypes.Where(c => c.Description.ToLower().Contains("scrap")).OrderByDescending(c => c.PartNumber), "PartNumber", "Description").ToList();
-
-                return View(model);
-            }
-        }
-
-        //rename to CreateNewStack
+        
         [HttpPost]
-        public ActionResult CreateStackTest(FormCollection fc)
+        public ActionResult CreateNewStack(FormCollection fc)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
@@ -233,7 +148,7 @@ namespace TrailerManagement.Controllers
                     trailer.TimeToSort += timeOnStack;
                 }
 
-                var stacks = db.MasterStacks.Where(t => t.SortGUID == trailer.SortGUID && t.StackNumber == stackNumber);
+                var stacks = db.MasterStacks.Where(t => t.SortGUID == sortID && t.StackNumber == stackNumber);
                 if (stacks != null)
                 {
                     foreach (MasterStack stack in stacks)
@@ -241,8 +156,8 @@ namespace TrailerManagement.Controllers
                         db.MasterStacks.Remove(stack);
                     }
                 }
-                
-                for(int x = 5; x < fc.Count - 2; x++)
+
+                for (int x = 5; x < fc.Count - 2; x++)
                 {
                     var key = fc.GetKey(x);
                     var part = fc[key].Split(',');
@@ -260,8 +175,15 @@ namespace TrailerManagement.Controllers
                             Quantity = Convert.ToInt32(part[0]),
                             PeopleOnStack = numberOfPeople,
                             UserSignedIn = Session["name"].ToString(),
-                            PalletNote = part[1],
                         };
+                        if(part[1] == "")
+                        {
+                            stack.PalletNote = null;
+                        }
+                        else
+                        {
+                            stack.PalletNote = part[1];
+                        }
                         
                         db.MasterStacks.Add(stack);
                     }
@@ -279,8 +201,16 @@ namespace TrailerManagement.Controllers
                         Quantity = Convert.ToInt32(customPallet[2]),
                         PeopleOnStack = numberOfPeople,
                         UserSignedIn = Session["name"].ToString(),
-                        PalletNote = customPallet[3],
                     };
+                    if (customPallet[3] == "")
+                    {
+                        newStack.PalletNote = null;
+                    }
+                    else
+                    {
+                        newStack.PalletNote = customPallet[3];
+                    }
+
                     db.MasterStacks.Add(newStack);
                 }
                 db.SaveChanges();
@@ -327,96 +257,6 @@ namespace TrailerManagement.Controllers
             else
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
-            }
-        }
-
-        //remove this method
-        public ActionResult CreateNewStack(int sortID, int stackNumber, string partNumbers, string quantities, int numberOfPeople, string notes, Boolean? allDone, double timeOnStack)
-        {
-            using (TrailerEntities db = new TrailerEntities())
-            {
-                var trailer = db.SortLists.Find(sortID);
-                trailer.MaxStackNumber = stackNumber;
-                if(trailer.TimeToSort == null)
-                {
-                    trailer.TimeToSort = timeOnStack;
-                }
-                else
-                {
-                    trailer.TimeToSort += timeOnStack;
-                }
-                
-                string[] palletTypes = partNumbers.Split('|');
-                string[] palletQuantities = quantities.Split('|');
-                string[] palletNotes = notes.Split('|');
-
-                //loops through as many different types were in each stack
-                for (int x = 0; x < palletTypes.Length; x++)
-                {
-                    //check to see if values under entered stack number already exists
-                    var stacks = db.MasterStacks.Where(t => t.SortGUID == trailer.SortGUID && t.StackNumber == stackNumber);
-                    //if so removes all values under stack number to allow for new values to override old stack info
-                    if (stacks != null)
-                    {
-                        foreach (MasterStack stack in stacks)
-                        {
-                            db.MasterStacks.Remove(stack);
-                        }
-                    }
-
-                    var palletType = palletTypes[x];
-
-                    if (palletNotes[x] == "-")
-                    {
-                        palletNotes[x] = null;
-                    }
-
-                    PalletType pallet;
-                    if (!palletType.Contains('x'))
-                    {
-                        pallet = db.PalletTypes.FirstOrDefault(p => p.PartNumber == palletType);
-                        
-                        MasterStack newStack = new MasterStack
-                        {
-                            SortGUID = sortID,
-                            StackNumber = stackNumber,
-                            PartNumber = pallet.PartNumber.ToString(),
-                            Description = pallet.Description.ToString(),
-                            Quantity = Convert.ToInt32(palletQuantities[x]),
-                            PeopleOnStack = numberOfPeople,
-                            UserSignedIn = Session["name"].ToString(),
-                            PalletNote = palletNotes[x],
-                        };
-
-                        db.MasterStacks.Add(newStack);
-                    }
-                    else
-                    {
-                        MasterStack newStack = new MasterStack
-                        {
-                            SortGUID = sortID,
-                            StackNumber = stackNumber,
-                            PartNumber = palletType,
-                            Description = "CUSTOM",
-                            Quantity = Convert.ToInt32(palletQuantities[x]),
-                            PeopleOnStack = numberOfPeople,
-                            UserSignedIn = Session["name"].ToString(),
-                            PalletNote = palletNotes[x],
-                        };
-                        db.MasterStacks.Add(newStack);
-                    }
-                }
-                db.SaveChanges();
-                stackNumber++;
-
-                if(allDone != null && allDone == true)
-                {
-                    return RedirectToAction(actionName: "SortConfirmation", controllerName: "PalletRepair", routeValues: new { sortID });
-                }
-                else
-                {
-                    return RedirectToAction(actionName: "SortTrailer", controllerName: "PalletRepair", routeValues: new { sortID, stackNumber, numberOfPeople });
-                }
             }
         }
 
@@ -482,6 +322,7 @@ namespace TrailerManagement.Controllers
                     model.Trailer = trailer.ToList();
 
                     var stackNumber = trailer.Max(t => t.StackNumber);
+                    stackNumber++;
 
                     this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "DEDUCTION" && c.Type != "SCRAP").OrderBy(c => c.Description), "PartNumber", "Description").ToList();
 
@@ -1841,6 +1682,91 @@ namespace TrailerManagement.Controllers
             else
             {
                 return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
+            }
+        }
+
+        //Testing
+
+        //keep for testing
+        public ActionResult SortListTest(string status)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                dynamic model = new ExpandoObject();
+                var trailers = from x in db.SortListTests select x;
+                switch (status)
+                {
+                    case "CLOSED":
+                    {
+                        trailers = trailers.Where(t => t.Status == "CLOSED");
+                        ViewBag.Closed = true;
+                        break;
+                    }
+                    default:
+                    {
+                        trailers = trailers.Where(t => t.Status == "OPEN" || t.Status == "NEW");
+                        break;
+                    }
+                }
+
+                this.ViewData["Vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
+
+                model.Trailers = trailers.OrderByDescending(t => t.Status).ThenByDescending(t => t.DateArrived).ThenBy(t => t.Customer).ToList();
+                return View(model);
+            }
+
+        }
+
+        //keep for testing
+        public ActionResult SortTrailerTest(int sortID, int? stackNumber, int? numberOfPeople, bool? imageUploaded)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var trailer = db.SortListTests.Find(sortID);
+                trailer.Status = "OPEN";
+                trailer.SortChoice = "STACK";
+                db.SaveChanges();
+
+                if (stackNumber != null)
+                {
+                    ViewBag.StackNumber = stackNumber;
+                }
+                else if (trailer.MaxStackNumber != null)
+                {
+                    ViewBag.StackNumber = trailer.MaxStackNumber + 1;
+                }
+                else
+                {
+                    //sort for trailer has not started yet
+                    ViewBag.StackNumber = 1;
+                }
+
+                if (numberOfPeople != null)
+                {
+                    ViewBag.NumberOfPeople = numberOfPeople;
+                }
+
+                if (imageUploaded == null)
+                {
+                    ViewBag.ImageUploaded = false;
+                }
+                else
+                {
+                    ViewBag.ImageUploaded = true;
+                }
+
+                var vendor = db.CustomersAndVendors.FirstOrDefault(v => v.Name == trailer.Vendor);
+
+                dynamic model = new ExpandoObject();
+
+                model.Trailer = trailer;
+                model.Vendor = vendor;
+
+                this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.PartNumber != "50-0140" && c.PartNumber != "50-0001" && c.PartNumber != "50-0004" && c.Type != "SCRAP" && c.Type != "DEDUCTION").OrderBy(c => c.Description), "PartNumber", "Description").ToList();
+
+                this.ViewData["scrapTypes"] = new SelectList(db.PalletTypes.Where(c => c.Description.ToLower().Contains("scrap")).OrderByDescending(c => c.PartNumber), "PartNumber", "Description").ToList();
+
+                return View(model);
             }
         }
     }

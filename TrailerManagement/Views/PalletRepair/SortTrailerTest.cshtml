@@ -28,11 +28,11 @@
 <h2>Sort Sheet</h2>
 
 <div class="well">
-    <form method="post" action="CreateStackTest" class="form-horizontal" id="stackInput">
+    <form method="post" action="CreateNewStack" class="form-horizontal" id="stackInput">
         <div class="form-top-buttons">
             <input type="button" value="Next Stack" class="btn btn-primary col-xs-3 nextStack" />
             <a href="/PalletRepair/SortList" value="Finish Later" class="btn btn-danger col-xs-3">Finish Later</a>
-            <input type="button" value="All Done" class="btn btn-warning float-right col-xs-3 all-done"/>
+            <input type="button" value="All Done" class="btn btn-warning float-right col-xs-3 all-done" />
             <button type="button" id="hideKeyboard" class="btn btn-primary float-right col-xs-3 btn-green"><span class="fa fa-keyboard-o"></span>&nbsp;Hide Keyboard</button>
         </div>
 
@@ -169,7 +169,7 @@
 </div>
 
 <div id="dropDownList" class="hidden">
-    @Html.DropDownList("palletTypes", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form", @id="hiddenList" })
+    @Html.DropDownList("palletTypes", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "hiddenList" })
 </div>
 
 <!-- Error Modal -->
@@ -354,7 +354,7 @@
                     $(this).attr('disabled', 'disabled');
                 });
                 calculateTimeOnPage();
-                
+
                 console.log(allFilled);
                 if (allFilled)
                 {
@@ -366,7 +366,7 @@
                     {
                         $('#stackInput').append("<input type=\"text\" name=\"allDone\">");
                     }
-                    
+
                     $('#stackInput').submit();
                 }
             }
@@ -389,54 +389,6 @@
                 }
             }
         });
-
-        //$('.nextStack').on('click', function ()
-        //{
-        //    $('#numberOfPeople').removeAttr('disabled', 'disabled');
-        //    var stackSize = $('#stackSize').val();
-        //    var inputQuantity = [];
-        //    var total = 0;
-        //    $('.quantity').each(function ()
-        //    {
-        //        if ($(this).val() != "")
-        //        {
-        //            inputQuantity.push($(this).val());
-        //        }
-        //    });
-        //    for (var x = 0; x < inputQuantity.length; x++)
-        //    {
-        //        total += parseInt(inputQuantity[x]);
-        //    }
-
-        //    if ($('#stackSize').val() != "" && (stackSize == total))
-        //    {
-        //        $('select').each(function ()
-        //        {
-        //            $(this).attr('disabled', 'disabled');
-        //        });
-        //        calculateTimeOnPage();
-        //        $('#stackInput').append("<input type=\"text\" name=\"nextStack\">");
-        //        $('#stackInput').submit();
-        //    }
-        //    else
-        //    {
-        //        if ($('#stackSize').val() == "")
-        //        {
-        //            $('#stackSize').css('border-color', 'red');
-        //        }
-        //        else
-        //        {
-        //            $('.quantity').each(function ()
-        //            {
-        //                if ($(this).val() != "")
-        //                {
-        //                    $(this).css('border-color', 'red');
-        //                }
-        //            })
-        //            $('#errorModal').modal();
-        //        }
-        //    }
-        //});
 
         $('body').on('click', '.clear-scrap-inputs', function ()
         {
@@ -483,7 +435,7 @@
                     "</div>"
                 );
             }
-            
+
         });
 
         $('body').on('click', '.remove-pallet-type', function ()
@@ -508,9 +460,9 @@
                     "</div>"
                 );
             }
-           
+
         });
-        
+
         var extraPalletTypes = 1;
         $('body').on('change', 'select', function ()
         {
@@ -586,9 +538,9 @@
         {
             $('#numberOfPeople').val(numberOfPeople);
         }
-        
+
         $('#currentDate').html(getCurrentDate());
-        
+
         function getCurrentDate()
         {
             var currentDate = new Date();
@@ -603,7 +555,7 @@
                 currentDay = "0" + currentDay;
             }
             var currentYear = currentDate.getFullYear();
-            
+
             currentDate = (currentYear + "-" + currentMonth + "-" + currentDay);
             console.log(currentDate);
             return currentDate;
