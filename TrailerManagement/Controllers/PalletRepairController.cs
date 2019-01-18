@@ -720,7 +720,8 @@ namespace TrailerManagement.Controllers
                     var payouts = from x in db.Payouts select x;
                     var oneWeek = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd");
 
-                    Session["startsWith"] = ""; 
+                    Session["startsWith"] = "";
+                    List<string> startingLetters = new List<string>();
                     switch (status)
                     {
                         case "CLOSED":
@@ -735,6 +736,19 @@ namespace TrailerManagement.Controllers
                             {
                                 payouts = payouts.Where(p => p.Status == "CLOSED").OrderByDescending(p => p.DateCompleted).ThenBy(p => p.Vendor);
                             }
+                            var closedPayouts = db.Payouts.Where(p => p.Status == "CLOSED").OrderBy(p => p.Vendor);
+                            
+                            foreach (Payout payout in closedPayouts)
+                            {
+                                if (payout.Vendor != "" && payout.Vendor != null)
+                                {
+                                    var startingLetter = payout.Vendor.Substring(0, 1);
+                                    if (!startingLetters.Contains(startingLetter))
+                                    {
+                                        startingLetters.Add(startingLetter);
+                                    }
+                                }
+                            }
                             ViewBag.Closed = true;
                             break;
                         }
@@ -745,19 +759,7 @@ namespace TrailerManagement.Controllers
                         }
                     }
 
-                    var closedPayouts = db.Payouts.Where(p => p.Status == "CLOSED").OrderBy(p => p.Vendor);
-                    List<string> startingLetters = new List<string>();
-                    foreach(Payout payout in closedPayouts)
-                    {
-                        if(payout.Vendor != "")
-                        {
-                            var startingLetter = payout.Vendor.Substring(0, 1);
-                            if (!startingLetters.Contains(startingLetter))
-                            {
-                                startingLetters.Add(startingLetter);
-                            }
-                        }
-                    }
+                    
 
                     this.ViewData["Vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
 
@@ -843,8 +845,15 @@ namespace TrailerManagement.Controllers
                 model.Notes = notes.ToList();
 
                 var stacks = db.MasterStacks.Where(u => u.SortGUID == sortID).ToList();
-                var user = stacks.Last().UserSignedIn;
-                model.User = user;
+                if(stacks.Count > 0)
+                {
+                    var user = stacks.Last().UserSignedIn;
+                    model.User = user;
+                }
+                else
+                {
+                    model.User = null;
+                }
 
                 this.ViewData["deductionTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type == "DEDUCTION").OrderBy(c => c.PartNumber), "PartNumber", "PartNumber").ToList();
                 this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "DEDUCTION").OrderBy(c => c.Description), "PartNumber", "Description").ToList();
@@ -897,25 +906,49 @@ namespace TrailerManagement.Controllers
                 {
                     payout.TrailerNumber = trailerNumber.ToUpper();
                 }
+                else
+                {
+                    payout.TrailerNumber = trailerNumber;
+                }
                 if(invoiceNumber != "")
                 {
                     payout.InvoiceNumber = invoiceNumber.ToUpper();
                 }
-                if(billOfLading != "")
+                else
+                {
+                    payout.InvoiceNumber = invoiceNumber;
+                }
+                if (billOfLading != "")
                 {
                     payout.BillOfLading = billOfLading.ToUpper();
                 }
-                if(packingListNumber != "")
+                else
+                {
+                    payout.BillOfLading = billOfLading;
+                }
+                if (packingListNumber != "")
                 {
                     payout.PackingListNumber = packingListNumber.ToUpper();
                 }
-                if(purchaseOrderNumber != "")
+                else
+                {
+                    payout.PackingListNumber = packingListNumber;
+                }
+                if (purchaseOrderNumber != "")
                 {
                     payout.PurchaseOrderNumber = purchaseOrderNumber.ToUpper();
                 }
-                if(palletOrderNumber != "")
+                else
+                {
+                    payout.PurchaseOrderNumber = purchaseOrderNumber;
+                }
+                if (palletOrderNumber != "")
                 {
                     payout.OrderNumber = palletOrderNumber.ToUpper();
+                }
+                else
+                {
+                    payout.OrderNumber = palletOrderNumber;
                 }
                 db.SaveChanges();
                 return RedirectToAction(actionName: "ViewPayout", controllerName: "PalletRepair", routeValues: new { sortID });
