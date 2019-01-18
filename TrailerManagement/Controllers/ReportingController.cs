@@ -152,7 +152,7 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                var payouts = db.Payouts.Where(p => p.Vendor != "").Select(p => p.Vendor).Distinct().ToList();
+                var payouts = db.Payouts.Where(p => p.Vendor != "" && p.Vendor != null).Select(p => p.Vendor).Distinct().ToList();
                 return View(payouts);
             }
         }
@@ -162,6 +162,11 @@ namespace TrailerManagement.Controllers
             using (TrailerEntities db = new TrailerEntities())
             {
                 dynamic model = new ExpandoObject();
+
+                if(vendor.Contains("@"))
+                {
+                    vendor = vendor.Replace('@', '&');
+                }
 
                 ViewBag.Vendor = vendor;
 
@@ -174,11 +179,16 @@ namespace TrailerManagement.Controllers
                 List<double> unloadTimes = new List<double>();
                 foreach(Payout payout in payouts)
                 {
-                    var sort = db.MasterStacks.Where(s => s.SortGUID == payout.SortGUID).ToList().Last();
-                    var user = sort.UserSignedIn;
-                    unloadTimes.Add(Convert.ToDouble(payout.TimeToSort));
-                    sortIDs.Add(Convert.ToInt32(sort.SortGUID));
-                    users.Add(user);
+                    var sort = db.MasterStacks.Where(s => s.SortGUID == payout.SortGUID).ToList();
+                    if(sort.Count > 0)
+                    {
+                        var stack = sort.Last();
+                        var user = stack.UserSignedIn;
+                        unloadTimes.Add(Convert.ToDouble(payout.TimeToSort));
+                        sortIDs.Add(Convert.ToInt32(stack.SortGUID));
+                        users.Add(user);
+                    }
+                    
                 }
 
                 model.Users = users;

@@ -318,10 +318,10 @@ namespace TrailerManagement.Controllers
                 {
                     dynamic model = new ExpandoObject();
 
-                    var trailer = db.MasterStacks.Where(t => t.SortGUID == sortID).OrderBy(t => t.StackNumber);
-                    model.Trailer = trailer.ToList();
+                    var stacks = db.MasterStacks.Where(t => t.SortGUID == sortID).OrderBy(t => t.StackNumber);
+                    model.Trailer = stacks.ToList();
 
-                    var stackNumber = trailer.Max(t => t.StackNumber);
+                    var stackNumber = stacks.Max(t => t.StackNumber);
                     stackNumber++;
 
                     this.ViewData["palletTypes"] = new SelectList(db.PalletTypes.Where(c => c.Type != "DEDUCTION" && c.Type != "SCRAP").OrderBy(c => c.Description), "PartNumber", "Description").ToList();

@@ -66,7 +66,7 @@
             <div class="modal-footer">
                 <span style="color:red" id="error" class="float-left"></span>
                 <a href="/Reporting/PayoutVendors" class="btn btn-warning">Cancel</a>
-                <button type="button" class="btn btn-primary" id="submit" data-dismiss="modal" data-toggle="modal">Continue</button>
+                <button type="button" class="btn btn-primary" id="submit" >Continue</button>
             </div>
         </div>
     </div>
@@ -123,9 +123,16 @@
                 var endDate = new Date($('#endDate').val());
                 console.log(endDate);
 
-                if (startDate < endDate)
+                if (startDate < endDate && (startDate != "Invalid Date" && endDate != "Invalid Date"))
                 {
                     $('#dateForm').submit();
+                }
+                else
+                {
+                    $('#submit').removeAttr('data-toggle').removeAttr('data-dismiss');
+
+                    $('#error').html("No results found - Please select start and end dates");
+                    $('#dateFilter').modal();
                 }
 
             });

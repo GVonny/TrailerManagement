@@ -18,10 +18,7 @@
             <tr id="@vendor">
                 <td>@vendor</td>
                 <td class="col-xs-2">
-                    <a href="/Reporting/PayoutInfoByVendor?vendor=@vendor">By Date</a> 
-                    <b>|</b> 
-                    
-                    @if(vendor.Contains("&"))
+                    @if (vendor.Contains("&"))
                     {
                         newVendor = vendor.Replace('&', '@');
                     }
@@ -29,6 +26,8 @@
                     {
                         newVendor = vendor;
                     }
+                    <a href="/Reporting/PayoutInfoByVendor?vendor=@newVendor">By Date</a>
+                    <b>|</b>
                     <a href="/Reporting/PayoutInfoByPart?vendor=@newVendor" id="@newVendor" class="vendor-link">By Part</a>
                 </td>
             </tr>
