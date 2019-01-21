@@ -281,7 +281,7 @@
         imageUploaded = imageUploaded.toLowerCase();
         if (imageUploaded == "false")
         {
-            //$('#pictureModal').modal();
+            $('#pictureModal').modal();
         }
         else
         {
@@ -295,10 +295,7 @@
         $('.all-done, .nextStack').on('click', function ()
         {
             var option = $(this).attr('class');
-            if (option.indexOf("nextStack") > -1)
-            {
-                console.log(option);
-            }
+            
             $('#numberOfPeople').removeAttr('disabled', 'disabled');
             var stackSize = $('#stackSize').val();
             var inputQuantity = [];
@@ -342,6 +339,42 @@
                 }
             }
 
+            if (option.indexOf("all-done") > -1)
+            {
+                if ($('#stackSize').val() != "")
+                {
+                    $('.quantity').each(function ()
+                    {
+                        if ($(this).val() != "")
+                        {
+                            submit(stackSize, total, allFilled, option);
+                        }
+                        else
+                        {
+                            $('#errorModal').modal();
+                        }
+                    });
+                }
+                else
+                {
+                    $('select').each(function ()
+                    {
+                        $(this).attr('disabled', 'disabled');
+                    });
+                    calculateTimeOnPage();
+                    $('#stackSize').val(0);
+                    $('#stackInput').append("<input type=\"text\" name=\"allDone\">");
+                    $('#stackInput').submit();
+                }
+            }
+            else
+            {
+                submit(stackSize, total, allFilled, option);
+            }
+        });
+
+        function submit(stackSize, total, allFilled, option)
+        {
             if ($('#stackSize').val() != "" && (stackSize == total))
             {
                 $('#stackSize').css('border-color', 'lightgrey');
@@ -349,13 +382,9 @@
                 {
                     $(this).css('border-color', 'lightgrey');
                 })
-                $('select').each(function ()
-                {
-                    $(this).attr('disabled', 'disabled');
-                });
+
                 calculateTimeOnPage();
-                
-                console.log(allFilled);
+
                 if (allFilled)
                 {
                     if (option.indexOf("nextStack") > -1)
@@ -366,7 +395,10 @@
                     {
                         $('#stackInput').append("<input type=\"text\" name=\"allDone\">");
                     }
-                    
+                    $('select').each(function ()
+                    {
+                        $(this).attr('disabled', 'disabled');
+                    });
                     $('#stackInput').submit();
                 }
             }
@@ -384,11 +416,11 @@
                         {
                             $(this).css('border-color', 'red');
                         }
-                    })
+                    });
                     $('#errorModal').modal();
                 }
             }
-        });
+        }
 
         $('body').on('click', '.clear-scrap-inputs', function ()
         {

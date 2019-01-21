@@ -34,7 +34,7 @@
         </tr>
     </thead>
     <tbody id="removals">
-        @foreach (SortListTest t in Model.Trailers)
+        @foreach (SortList t in Model.Trailers)
         {
             <tr class="product-row" id="@t.SortGUID">
                 <td id="trailerNumber_@t.SortGUID">@t.TrailerNumber</td>
@@ -159,9 +159,43 @@
             var id;
             $('#removals').on('click', '.product-row', function ()
             {
-                //id = sortID
                 id = this.id;
-                location.href = "/PalletRepair/SortTrailerTest?sortID=" + id + "&numberOfPeople=1";
+                var dateArrived = $('#dateArrived_' + id).html();
+                if (dateArrived.indexOf('-') != -1)
+                {
+                    if ($('#numberOfPeopleToStart_' + id).html() == "")
+                    {
+                        $('#sortID').val(id);
+
+                        var vendor = $('#customer_' + id).html();
+                        $('#vendorName').html(vendor);
+                        $('#additionalInfoModal').modal();
+                        var vendor = $('#vendor_' + id).html();
+                        vendor = vendor.replace("&amp;", '&');
+                        $('#vendors').val(vendor);
+                    }
+                    else
+                    {
+                        var status = $('#status_' + id).html();
+                        if (status == "CLOSED")
+                        {
+                            location.href = "/PalletRepair/CompleteSortSummary?sortID=" + id;
+                        }
+                        else if ($('#sortChoice_' + id).html() == "STACK")
+                        {
+                            location.href = "/PalletRepair/SortTrailer?sortID=" + id + "&numberOfPeople=" + $('#numberOfPeopleToStart_' + id).html();
+                        }
+                        else if ($('#sortChoice_' + id).html() == "BULK")
+                        {
+                            location.href = "/PalletRepair/SortStacks?sortID=" + id;
+                        }
+                    }
+                }
+                else
+                {
+                    $('#updateDateModal').modal();
+                    $('#today').prop('checked', false);
+                }
             });
 
             $('#removals').on('click', '.closed-row', function ()

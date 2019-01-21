@@ -137,89 +137,94 @@ namespace TrailerManagement.Controllers
                 var numberOfPeople = Convert.ToInt32(fc["numberOfPeople"]);
                 var timeOnStack = Convert.ToDouble(fc["timeOnStack"]);
 
-                var trailer = db.SortLists.FirstOrDefault(t => t.SortGUID == sortID);
-                trailer.MaxStackNumber = stackNumber;
-                if (trailer.TimeToSort == null)
+                if(stackSize > 0)
                 {
-                    trailer.TimeToSort = timeOnStack;
-                }
-                else
-                {
-                    trailer.TimeToSort += timeOnStack;
-                }
-
-                var stacks = db.MasterStacks.Where(t => t.SortGUID == sortID && t.StackNumber == stackNumber);
-                if (stacks != null)
-                {
-                    foreach (MasterStack stack in stacks)
+                    var trailer = db.SortLists.FirstOrDefault(t => t.SortGUID == sortID);
+                    trailer.MaxStackNumber = stackNumber;
+                    if (trailer.TimeToSort == null)
                     {
-                        db.MasterStacks.Remove(stack);
-                    }
-                }
-
-                for (int x = 5; x < fc.Count - 2; x++)
-                {
-                    var key = fc.GetKey(x);
-                    var part = fc[key].Split(',');
-
-                    var pallet = db.PalletTypes.FirstOrDefault(p => p.PartNumber == key);
-
-                    if (part[0] != "")
-                    {
-                        MasterStack stack = new MasterStack
-                        {
-                            SortGUID = sortID,
-                            StackNumber = stackNumber,
-                            PartNumber = pallet.PartNumber,
-                            Description = pallet.Description.ToString(),
-                            Quantity = Convert.ToInt32(part[0]),
-                            PeopleOnStack = numberOfPeople,
-                            UserSignedIn = Session["name"].ToString(),
-                        };
-                        if(part[1] == "")
-                        {
-                            stack.PalletNote = null;
-                        }
-                        else
-                        {
-                            stack.PalletNote = part[1];
-                        }
-                        
-                        db.MasterStacks.Add(stack);
-                    }
-                }
-
-                var customPallet = fc["customPallet"].Split(',');
-                if(customPallet[0] != "")
-                {
-                    MasterStack newStack = new MasterStack
-                    {
-                        SortGUID = sortID,
-                        StackNumber = stackNumber,
-                        PartNumber = "CUSTOM",
-                        Description = "CUSTOM - " + customPallet[0] + " X " + customPallet[1],
-                        Quantity = Convert.ToInt32(customPallet[2]),
-                        PeopleOnStack = numberOfPeople,
-                        UserSignedIn = Session["name"].ToString(),
-                    };
-                    if (customPallet[3] == "")
-                    {
-                        newStack.PalletNote = null;
+                        trailer.TimeToSort = timeOnStack;
                     }
                     else
                     {
-                        newStack.PalletNote = customPallet[3];
+                        trailer.TimeToSort += timeOnStack;
                     }
 
-                    db.MasterStacks.Add(newStack);
+                    var stacks = db.MasterStacks.Where(t => t.SortGUID == sortID && t.StackNumber == stackNumber).ToList();
+                    if (stacks.Count > 0)
+                    {
+                        foreach (MasterStack stack in stacks)
+                        {
+                            db.MasterStacks.Remove(stack);
+                        }
+                    }
+
+                    for (int x = 5; x < fc.Count - 2; x++)
+                    {
+                        var key = fc.GetKey(x);
+                        var part = fc[key].Split(',');
+
+                        var pallet = db.PalletTypes.FirstOrDefault(p => p.PartNumber == key);
+
+                        if (part[0] != "")
+                        {
+                            MasterStack stack = new MasterStack
+                            {
+                                SortGUID = sortID,
+                                StackNumber = stackNumber,
+                                PartNumber = pallet.PartNumber,
+                                Description = pallet.Description.ToString(),
+                                Quantity = Convert.ToInt32(part[0]),
+                                PeopleOnStack = numberOfPeople,
+                                UserSignedIn = Session["name"].ToString(),
+                            };
+                            if (part[1] == "")
+                            {
+                                stack.PalletNote = null;
+                            }
+                            else
+                            {
+                                stack.PalletNote = part[1];
+                            }
+
+                            db.MasterStacks.Add(stack);
+                        }
+                    }
+
+                    var customPallet = fc["customPallet"].Split(',');
+                    if (customPallet[0] != "")
+                    {
+                        MasterStack newStack = new MasterStack
+                        {
+                            SortGUID = sortID,
+                            StackNumber = stackNumber,
+                            PartNumber = "CUSTOM",
+                            Description = "CUSTOM - " + customPallet[0] + " X " + customPallet[1],
+                            Quantity = Convert.ToInt32(customPallet[2]),
+                            PeopleOnStack = numberOfPeople,
+                            UserSignedIn = Session["name"].ToString(),
+                        };
+                        if (customPallet[3] == "")
+                        {
+                            newStack.PalletNote = null;
+                        }
+                        else
+                        {
+                            newStack.PalletNote = customPallet[3];
+                        }
+
+                        db.MasterStacks.Add(newStack);
+                    }
+                    db.SaveChanges();
                 }
-                db.SaveChanges();
+
+                
 
                 var returnType = fc.GetKey(fc.Count - 1);
                 if (returnType == "nextStack")
                 {
                     stackNumber++;
-                    return RedirectToAction(actionName: "SortTrailerTest", controllerName: "PalletRepair", routeValues: new { sortID, stackNumber, numberOfPeople });
+                    return RedirectToAction(actionName: "SortTrailer", controllerName: "PalletRepair", routeValues: new { sortID, stackNumber, numberOfPeople });
                 }
                 else
                 {
