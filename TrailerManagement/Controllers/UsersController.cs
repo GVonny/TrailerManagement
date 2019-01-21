@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Dynamic;
 using System.Linq;
 using System.Web.Mvc;
 using TrailerManagement.Models;
@@ -96,7 +97,14 @@ namespace TrailerManagement.Controllers
                             user = user.OrderBy(t => t.Username);
                             break;
                         }
-                        return View(user.ToList());
+
+                        dynamic model = new ExpandoObject();
+                        var departments = db.Departments.ToList();
+                        model.Departments = departments;
+                        model.Users = user.ToList();
+
+
+                        return View(model);
                     }
                 }
             }

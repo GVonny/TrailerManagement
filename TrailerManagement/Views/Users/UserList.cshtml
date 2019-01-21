@@ -1,6 +1,7 @@
 ﻿@using TrailerManagement.Models;
 @{
     ViewBag.Title = "User List";
+    var departments = Model.Departments;
 }
 
 <br />
@@ -31,15 +32,22 @@
         </thead>
     }
     <tbody id="users">
-        @foreach (User u in Model)
+        @foreach (User u in Model.Users)
         {
-            <tr class="product-row" id="@u.UserGUID">
-                <td id="firstName_@u.UserGUID">@u.FirstName</td>
-                <td id="username_@u.UserGUID">@u.Username</td>
-                <td class="text-center" id="password_@u.UserGUID">@u.Password</td>
-                <td id="department_@u.UserGUID">@u.Department</td>
-                <td class="text-center" id="permission_@u.UserGUID">@u.Permission</td>
-            </tr>
+        <tr class="product-row" id="@u.UserGUID">
+            <td id="firstName_@u.UserGUID">@u.FirstName</td>
+            <td id="username_@u.UserGUID">@u.Username</td>
+            <td class="text-center" id="password_@u.UserGUID">@u.Password</td>
+
+            @foreach (Department department in departments)
+            {
+                if (Convert.ToInt32(u.Department) == department.DepartmentNumber)
+                {
+                    <td id="department_@u.UserGUID" class="department">@department.DepartmentName</td>
+                }
+            }
+            <td class="text-center" id="permission_@u.UserGUID">@u.Permission</td>
+        </tr>
         }
     </tbody>
 </table>
