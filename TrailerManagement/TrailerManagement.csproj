@@ -409,6 +409,7 @@
     <Content Include="Views\Reporting\PayoutInfoByPart.cshtml" />
     <Content Include="Views\Safety\ManagerDashboard.cshtml" />
     <Content Include="Views\PalletRepair\SortTrailer.cshtml" />
+    <Content Include="Views\Reporting\PartsRecievedByDate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

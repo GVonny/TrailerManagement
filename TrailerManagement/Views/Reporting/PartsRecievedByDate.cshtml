@@ -1,0 +1,101 @@
+﻿
+@{
+    ViewBag.Title = "Parts Recieved By Date";
+    var isData = ViewBag.Data;
+    var counter = 0;
+}
+
+@if (Model != null)
+{
+    <div>
+        <input type="button" id="newDate" class="float-right btn btn-warning" value="Change Date" />
+        <h2>Parts Recieved on @ViewBag.Date</h2>
+
+    </div>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Part Number</th>
+                <th>Quantity</th>
+                <th>Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var part in Model.Parts)
+            {
+                <tr>
+                    <td>@part</td>
+                    <td>@Model.Quantities[counter]</td>
+                    <td class="cost">@Model.Prices[counter]</td>
+                </tr>
+                counter++;
+            }
+        </tbody>
+    </table>
+}
+
+
+
+<div id="dateFilter" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Select date</h2>
+            </div>
+            <div class="modal-body">
+                <form action="PartsRecievedByDate" id="dateForm">
+                    <strong>Date</strong>
+                    <input type="date" name="date" class="datepicker" id="date" required>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <span style="color:red" id="error" class="float-left"></span>
+                <a href="/Home/Index" class="btn btn-warning">Cancel</a>
+                <button type="button" class="btn btn-primary" id="submit">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            var isModel = '@isData';
+
+            if (isModel == "False")
+            {
+                $('#error').html("No results found");
+                $('#dateFilter').modal();
+            }
+            else if (isModel == "first")
+            {
+                $('#dateFilter').modal();
+            }
+
+            $('#submit').on('click', function ()
+            {
+                $('#dateForm').submit();
+            });
+
+            $('#newDate').on('click', function ()
+            {
+                $('#dateFilter').modal();
+            });
+
+            $('.cost').each(function ()
+            {
+                var cost = parseFloat($(this).html());
+                cost = cost.toFixed(2);
+                $(this).html("$" + cost);
+
+            });
+        });
+    </script>
+}

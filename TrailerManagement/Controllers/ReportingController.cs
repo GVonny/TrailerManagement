@@ -21,9 +21,9 @@ namespace TrailerManagement.Controllers
                 {
                     return RedirectToAction(actionName: "SignIn", controllerName: "Users");
                 }
-                if (Session["name"].ToString() != "Bruce" && Session["name"].ToString() != "Grant")
+                if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_ADMIN)
                 {
-                    return RedirectToAction(actionName: "Index", controllerName: "Home");
+                    return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
                 }
                 var trailer = from x in db.TrailerLists select x;
 
@@ -343,6 +343,88 @@ namespace TrailerManagement.Controllers
                         model.Parts = "";
                         return View();
                     }
+                }
+            }
+        }
+
+        public ActionResult PartsRecievedByDate(string date)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                dynamic model = new ExpandoObject();
+                if (date == null || date == "")
+                {
+                    ViewBag.Data = "first";
+                    model.Quantities = "";
+                    model.Parts = "";
+                    return View();
+                }
+               
+                var sorts = db.SortLists.Where(s => s.DateCompleted == date).ToList();
+
+                var year = Convert.ToInt32(date.Substring(0, 4));
+                var month = Convert.ToInt32(date.Substring(5, 2));
+                var day = Convert.ToInt32(date.Substring(8, 2));
+
+                DateTime reportDate = new DateTime(year, month, day);
+                
+                List<CompletedSort> completeStacks = new List<CompletedSort>();
+                foreach (SortList sort in sorts)
+                {
+                    var stacks = db.CompletedSorts.Where(s => s.SortGUID == sort.SortGUID && s.PartNumber != "DEDUCTION").OrderBy(s => s.PartNumber).ToList();
+                    foreach (CompletedSort stack in stacks)
+                    {
+                        completeStacks.Add(stack);
+                    }
+                }
+                var sortedStacks = completeStacks.OrderBy(s => s.PartNumber).ToList();
+                List<string> uniqueParts = new List<string>();
+                //db.CompletedSorts.Where(u => u.Vendor == vendor).OrderBy(u => u.PartNumber).Select(u => u.PartNumber).Distinct().ToList();
+                if (completeStacks.Count >= 1)
+                {
+                    foreach (CompletedSort stack in sortedStacks)
+                    {
+                        if (!uniqueParts.Contains(stack.PartNumber))
+                        {
+                            uniqueParts.Add(stack.PartNumber);
+                        }
+                    }
+
+                    int[] quantities = new int[uniqueParts.Count];
+                    double[] prices = new double[uniqueParts.Count];
+
+                    foreach (CompletedSort stack in sortedStacks)
+                    {
+                        if (uniqueParts.Contains(stack.PartNumber))
+                        {
+                            var index = uniqueParts.IndexOf(stack.PartNumber);
+                            quantities[index] += Convert.ToInt32(stack.Quantity);
+                            var vendor = stack.Vendor;
+                            var partNumber = stack.PartNumber;
+                            var quantity = Convert.ToDouble(stack.Quantity);
+
+                            var price = db.PalletPrices.Where(p => p.VendorName == vendor && p.PartNumber == partNumber).FirstOrDefault();
+                            if(price != null)
+                            {
+                                var purchasePrice = Convert.ToDouble(price.PurchasePrice);
+                                var cost = (purchasePrice * quantity);
+                                prices[index] += cost;
+                            }
+                        }
+                    }
+                    model.Quantities = quantities;
+                    model.Parts = uniqueParts;
+                    model.Prices = prices;
+                    ViewBag.Data = true;
+                    ViewBag.Date = reportDate.ToString("MM-dd-yyyy");
+                    return View(model);
+                }
+                else
+                {
+                    ViewBag.Data = false;
+                    model.Quantities = "";
+                    model.Parts = "";
+                    return View();
                 }
             }
         }

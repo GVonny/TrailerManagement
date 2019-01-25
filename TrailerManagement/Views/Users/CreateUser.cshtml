@@ -47,13 +47,26 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.Permission, "Permission", htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-3">
-                    @Html.DropDownList("Permission", new List<SelectListItem>
+                    @if (Convert.ToInt32(Session["permission"]) < 50)
                     {
-                       new SelectListItem { Text = "Employee", Value = "10" },
-                       new SelectListItem { Text = "Driver", Value = "20"},
-                       new SelectListItem { Text = "Edit", Value = "30" },
-                       new SelectListItem { Text = "Admin", Value = "40" },
-                    }, htmlAttributes: new { @class = "form-control signin-form" })
+                        @Html.DropDownList("Permission", new List<SelectListItem>
+                        {
+                            new SelectListItem { Text = "Driver", Value = "20"},
+                            new SelectListItem { Text = "Employee", Value = "30" },
+                            new SelectListItem { Text = "Manager", Value = "40"},
+                        },"- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form" })
+                    }
+                    else
+                    {
+                        @Html.DropDownList("Permission", new List<SelectListItem>
+                        {
+                            new SelectListItem { Text = "Driver", Value = "20"},
+                            new SelectListItem { Text = "Employee", Value = "30" },
+                            new SelectListItem { Text = "Manager", Value = "40"},
+                            new SelectListItem { Text = "Admin", Value = "50" },
+                        }, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form" })
+                    }
+
                 </div>
             </div>
             <!-- Submit -->
@@ -67,54 +80,4 @@
     </form>
 </div>
 
-<div>
-    <h3>Permission Levels</h3>
-    <div class="row">
-        <div class="col-xs-3">
-            <h4>Admin</h4>
-            <ul>
-                <li>Create Users</li>
-                <li>Modify Users</li>
-                <li>Create Trailers</li>
-                <li>Modify Trailers</li>
-                <ul>
-                    <li>Active</li>
-                    <li>Master</li>
-                    <li>Inactive</li>
-                </ul>
-                <li>Add Trailers to Active</li>
-                <li>Remove Trailers from Active</li>
-                <li>Move Trailers to Inactive</li>
-                <li>Modify Account Info</li>
-            </ul>
-        </div>
-        <div class="col-xs-3">
-            <h4>Edit</h4>
-            <ul>
-                <li>Modify Trailers</li>
-                <ul>
-                    <li>Active</li>
-                    <li>Master</li>
-                    <li>Inactive</li>
-                </ul>
-                <li>Modify Account Info</li>
-            </ul>
-        </div>
-        <div class="col-xs-3">
-            <h4>Driver</h4>
-            <ul>
-                <li>Modify Trailers</li>
-                <ul>
-                    <li>Active</li>
-                </ul>
-                <li>Modify Account Info</li>
-            </ul>
-        </div>
-        <div class="col-xs-3">
-            <h4>Employee</h4>
-            <ul>
-                <li>View Active Trailer List</li>
-            </ul>
-        </div>
-    </div>
-</div>
+

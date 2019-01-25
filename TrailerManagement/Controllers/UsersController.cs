@@ -18,7 +18,7 @@ namespace TrailerManagement.Controllers
             }
             else
             {
-                if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_ADMIN)
+                if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_MANAGER)
                 {
                     return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
                 }
@@ -65,7 +65,7 @@ namespace TrailerManagement.Controllers
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
-                    if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_ADMIN)
+                    if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_MANAGER)
                     {
                         return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
                     }
@@ -78,7 +78,7 @@ namespace TrailerManagement.Controllers
                         var department = Session["department"].ToString();
                         if(!department.Equals("10000"))
                         {
-                            user = user.Where(t => t.Permission != constant.PERMISSION_ADMIN.ToString() && t.Department.Equals(department));
+                            user = user.Where(t => t.Permission != constant.PERMISSION_MANAGER.ToString() && t.Department.Equals(department));
                         }
                         
 
@@ -123,7 +123,7 @@ namespace TrailerManagement.Controllers
                     this.ViewData["departments"] = new SelectList(db.Departments, "DepartmentNumber", "DepartmentName").ToList();
 
                     var user = db.Users.Find(id);
-                    if (user.UserGUID != Convert.ToInt32(Session["userID"]) && (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_ADMIN))
+                    if (user.UserGUID != Convert.ToInt32(Session["userID"]) && (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_MANAGER))
                     {
                         return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
                     }
@@ -284,7 +284,7 @@ namespace TrailerManagement.Controllers
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
-                    if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_ADMIN)
+                    if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_MANAGER)
                     {
                         return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
                     }

@@ -479,7 +479,7 @@ namespace TrailerManagement.Controllers
         [HttpPost]
         public ActionResult EditSafetyConcern([Bind(Include = "SafetyConcernGUID,Area,SubArea,ConditionNoted,CorrectiveAction,Severity")] SafetyConcern safetyConcern, string typeSubType, string typeSubType2, HttpPostedFileBase ImageFile)
         {
-            if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000))
+            if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
@@ -493,35 +493,42 @@ namespace TrailerManagement.Controllers
                     {
                         concern.SubArea = safetyConcern.SubArea;
                     }
-                    
-                    if(!safetyConcern.ConditionNoted.EndsWith("."))
-                    {
-                        safetyConcern.ConditionNoted += ".";
-                    }
-                    concern.ConditionNoted = safetyConcern.ConditionNoted;
-                    if (!safetyConcern.CorrectiveAction.EndsWith("."))
-                    {
-                        safetyConcern.CorrectiveAction += ".";
-                    }
-                    concern.CorrectiveAction = safetyConcern.CorrectiveAction;
-                    concern.Severity = safetyConcern.Severity;
 
-                    var path = "";
+                    if (safetyConcern.ConditionNoted != null)
+                    {
+                        if (!safetyConcern.ConditionNoted.EndsWith("."))
+                        {
+                            safetyConcern.ConditionNoted += ".";
+                        }
+                    
+                        concern.ConditionNoted = safetyConcern.ConditionNoted;
+                    }
+                    if (safetyConcern.CorrectiveAction != null)
+                    {
+                        if (!safetyConcern.CorrectiveAction.EndsWith("."))
+                        {
+                            safetyConcern.CorrectiveAction += ".";
+                        }
+                    
+                        concern.CorrectiveAction = safetyConcern.CorrectiveAction;
+                    }
+                    
+                    concern.Severity = safetyConcern.Severity;
+                    
                     if (ImageFile != null)
                     {
                         if (ImageFile.ContentLength > 0)
                         {
                             var extension = Path.GetExtension(ImageFile.FileName);
                             var fullPath = Server.MapPath("~/SafetyImages/") + concern.Area + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
-                            path = concern.Area + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+                            var path = concern.Area + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
 
                             var oldPath = Server.MapPath("~/SafetyImages/" + concern.ImagePath);
                             if(System.IO.File.Exists(oldPath))
                             {
                                 System.IO.File.Delete(oldPath);
                             }
-
-
+                            
                             ImageFile.SaveAs(fullPath);
                             concern.ImagePath = path;
                         }
@@ -656,7 +663,7 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                if (Session["username"] != null && (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
+                if (Session["username"] != null)
                 {
                     dynamic model = new ExpandoObject();
 
@@ -671,25 +678,14 @@ namespace TrailerManagement.Controllers
                     }
                     else
                     {
-                        var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN" && c.Area == department).ToList();
+                        var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN" && c.Area == department && c.SupposedlyFixed != true).ToList();
                         return View(concerns);
                     }
-                }
-                else if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN)
-                {
-                    return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
                 }
                 else
                 {
                     return RedirectToAction(actionName: "SignIn", controllerName: "Users");
                 }
-
-
-                //model.Concerns = concerns.ToList();
-                //var violations = db.CodeViolations.ToList();
-                //model.Violations = violations;
-
-
             }
         }
 

@@ -135,7 +135,7 @@ namespace TrailerManagement.Controllers
             }
             else
             {
-                if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_ADMIN)
+                if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_MANAGER)
                 {
                     return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
                 }
@@ -205,7 +205,7 @@ namespace TrailerManagement.Controllers
             }
             else
             {
-                if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_ADMIN)
+                if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_MANAGER)
                 {
                     return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
                 }
@@ -374,7 +374,7 @@ namespace TrailerManagement.Controllers
             }
             else
             {
-                if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_ADMIN)
+                if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_MANAGER)
                 {
                     return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
                 }
@@ -444,7 +444,7 @@ namespace TrailerManagement.Controllers
                 }
                 else
                 {
-                    if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_ADMIN)
+                    if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_MANAGER)
                     {
                         return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
                     }
@@ -592,7 +592,7 @@ namespace TrailerManagement.Controllers
             }
             else
             {
-                if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_ADMIN)
+                if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_MANAGER)
                 {
                     return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
                 }
@@ -617,7 +617,7 @@ namespace TrailerManagement.Controllers
             }
             else
             {
-                if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_ADMIN)
+                if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_MANAGER)
                 {
                     return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
                 }
@@ -648,7 +648,7 @@ namespace TrailerManagement.Controllers
             }
             else
             {
-                if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_ADMIN)
+                if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_MANAGER)
                 {
                     return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
                 }

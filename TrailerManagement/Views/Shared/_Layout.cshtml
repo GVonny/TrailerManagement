@@ -86,7 +86,7 @@
                                     Reports<span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    @if (Convert.ToInt32(Session["permission"]) > 30)
+                                    @if (Convert.ToInt32(Session["permission"]) > 40)
                                     {
                                         <li><a href="~/Reporting/InsuranceInfo">Insurance Info</a></li>
                                         <li role="separator" class="divider"></li>
@@ -94,6 +94,8 @@
                                     <li><a href="~/Reporting/ActiveListReporting">Active List Reporting</a></li>
                                     <li role="separator" class="divider"></li>
                                     <li><a href="~/Reporting/PayoutVendors">Payout Info by Vendor</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="~/Reporting/PartsRecievedByDate">Parts Recieved by Date</a></li>
                                 </ul>
                             </li>
                         }

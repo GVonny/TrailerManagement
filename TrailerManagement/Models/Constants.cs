@@ -9,6 +9,7 @@ namespace TrailerManagement.Models
     {
         //PERMISSIONS
         public int PERMISSION_ADMIN { get; }
+        public int PERMISSION_MANAGER { get; }
         public int PERMISSION_EDIT { get; }
         public int PERMISSION_DRIVER { get; }
         public int PERMISSION_VIEW { get; }
@@ -38,7 +39,8 @@ namespace TrailerManagement.Models
         
         public Constants()
         {
-            PERMISSION_ADMIN = 40;
+            PERMISSION_ADMIN = 50;
+            PERMISSION_MANAGER = 40;
             PERMISSION_EDIT = 30;
             PERMISSION_DRIVER = 20;
             PERMISSION_VIEW = 10;

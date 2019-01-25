@@ -10,7 +10,8 @@
 <br />
 
 <div>
-    @if (Convert.ToInt32(Session["permission"]) > 10 && (Convert.ToInt32(Session["department"]) != 4500 && (Convert.ToInt32(Session["department"]) != 2100 || Convert.ToInt32(Session["permission"]) > 30)))
+    <!-- Trailer Lists -->
+    @if (Convert.ToInt32(Session["permission"]) > 30 && (Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000))
     {
         <fieldset>
             <legend>Trailers</legend>
@@ -18,7 +19,7 @@
                     <h2>Active List</h2>
                     <p><a href="~/Trailer/ActiveTrailerList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
                 </div>
-            @if (Convert.ToInt32(Session["permission"]) > 30 && (Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 10000))
+            @if (Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 10000)
             {
                 <div class="col-xs-3">
                     <h2>Master List</h2>
@@ -36,7 +37,9 @@
         </fieldset>
     }
 </div>
+<br />
 <div>
+    <!-- Pallet Repair -->
     @if (Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000)
     {
         <fieldset>
@@ -67,7 +70,9 @@
         </fieldset>
     }
 </div>
+<br />
 <div>
+    <!-- Safety / HR-->
     @if (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000)
     {
         <fieldset>
@@ -91,7 +96,22 @@
         </fieldset>
     }
 </div>
+<br />
 <div>
+    @if (Convert.ToInt32(Session["permission"]) >= 40)
+    {
+    <fieldset>
+        <legend>Safety</legend>
+        <div class="col-xs-3">
+            <h2>Safety Dashboard</h2>
+            <a href="/Safety/ManagerDashboard?area=@Session["departmentName"]" class="btn btn-primary btn-default">Continue &raquo;</a>
+        </div>
+    </fieldset>
+    }
+</div>
+<br />
+<div>
+    <!-- Users -->
     @if (Convert.ToInt32(Session["permission"]) > 30)
     {
         <fieldset>
@@ -114,11 +134,7 @@
             </div>
         </fieldset>
     }
-    @if (Convert.ToInt32(Session["permission"]) > 30)
-    {
-        <a href="/Safety/ManagerDashboard?area=@Session["departmentName"]">Dashboard</a>
-    }
+    
 
 </div>
-<br />
 

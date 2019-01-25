@@ -35,6 +35,10 @@
                     <td rowspan="3" width="250">
                         <img src="~/SafetyImages/@s.ImagePath" height="250" width="250" style="margin:-8px;" />
                     </td>
+                    <td class="col-xs-2" rowspan="3">
+                        <span class="text-center"><h4>Issue fixed?</h4></span>
+                        <center><input type="button" class="issue-fixed btn btn-primary" value="Click Me" /></center>
+                    </td>
                 </tr>
 
                 <tr style="border-style:solid; border-color:#333">
@@ -64,11 +68,11 @@
                 <h2 class="modal-title">Alert!</h2>
             </div>
             <div class="modal-body" id="confirmText">
-                Are you sure you want to close this safety concern?
+                By closing this safety concern, it alerts Carlos for the next safety inspection. Are you sure this issue has been fixed?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
-                <a href="CloseSafetyConcern?safetyConcernID=" id="closeLink" class="btn btn-primary float-right">Close</a>
+                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">No</button>
+                <a href="CloseSafetyConcern?safetyConcernID=" id="closeLink" class="btn btn-primary float-right">Yes</a>
             </div>
         </div>
     </div>
@@ -81,10 +85,17 @@
         {
             $('table th').on('click', function ()
             {
+                //$('#closeLink').attr('href', "MarkConcernAsFixed?safetyConcernID=" + this.parentElement.parentElement.id);
+                //$('#closeModal').modal();
+                //console.log(this.parentElement.parentElement.id);
+
+            });
+
+            $('body').on('click', '.issue-fixed', function ()
+            {
                 $('#closeLink').attr('href', "MarkConcernAsFixed?safetyConcernID=" + this.parentElement.parentElement.id);
                 $('#closeModal').modal();
                 console.log(this.parentElement.parentElement.id);
-
             });
         });
     </script>    

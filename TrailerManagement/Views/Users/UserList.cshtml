@@ -26,7 +26,7 @@
                 <th>Name</th>
                 <th>Username</th>
                 <th class="text-center">Password</th>
-                <th>Department</th>
+                <th class="text-center">Department</th>
                 <th class="text-center">Permission</th>
             </tr>
         </thead>
@@ -43,7 +43,7 @@
             {
                 if (Convert.ToInt32(u.Department) == department.DepartmentNumber)
                 {
-                    <td id="department_@u.UserGUID" class="department">@department.DepartmentName</td>
+                    <td id="department_@u.UserGUID" class="department text-center">@department.DepartmentName</td>
                 }
             }
             <td class="text-center" id="permission_@u.UserGUID">@u.Permission</td>
@@ -76,20 +76,17 @@
                 var permission = $('#permission_' + userID).html();
                 switch (permission)
                 {
-                    case "10":
-                        permission = "Employee";
-                        break;
                     case "20":
                         permission = "Driver";
                         break;
                     case "30":
-                        permission = "Edit";
+                        permission = "Employee";
                         break;
                     case "40":
-                        permission = "Admin";
+                        permission = "Manager";
                         break;
                     case "50":
-                        permission = "Creator";
+                        permission = "Admin";
                         break;
                 }
                 $('#password_' + userID).html(dotPassword);
