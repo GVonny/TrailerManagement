@@ -222,31 +222,53 @@ namespace TrailerManagement.Controllers
                 }
                 else
                 {
-                    var year = Convert.ToInt32(startDate.Substring(0, 4));
-                    var month = Convert.ToInt32(startDate.Substring(5, 2));
-                    var day = Convert.ToInt32(startDate.Substring(8, 2));
+                    var browser = Request.Browser.Type;
 
-                    var beginningDate = new DateTime(year, month, day);
-                    year = Convert.ToInt32(endDate.Substring(0, 4));
-                    month = Convert.ToInt32(endDate.Substring(5, 2));
-                    day = Convert.ToInt32(endDate.Substring(8, 2));
+                    DateTime beginningDate;
+                    DateTime endingDate;
 
-                    var endingDate = new DateTime(year, month, day);
+                    if(browser.Contains("InternetExplorer"))
+                    {
+                        var month = startDate.Substring(0, 2);
+                        var day = startDate.Substring(3, 2);
+                        var year = startDate.Substring(6, 4);
 
+                        beginningDate = new DateTime(Convert.ToInt32(year), Convert.ToInt32(month), Convert.ToInt32(day));
 
-                    ViewBag.StartDate = beginningDate.ToString("MM/dd/yyyy");
-                    ViewBag.EndDate = endingDate.ToString("MM/dd/yyyy");
+                        month = endDate.Substring(0, 2);
+                        day = endDate.Substring(3, 2);
+                        year = endDate.Substring(6, 4);
 
-                    var sorts = db.SortLists.Where(s => s.Vendor == vendor);
+                        endingDate = new DateTime(Convert.ToInt32(year), Convert.ToInt32(month), Convert.ToInt32(day));
+
+                        ViewBag.StartDate = beginningDate.ToString("MM/dd/yyyy");
+                        ViewBag.EndDate = endingDate.ToString("MM/dd/yyyy");
+                    }
+                    else
+                    {
+                        var year = Convert.ToInt32(startDate.Substring(0, 4));
+                        var month = Convert.ToInt32(startDate.Substring(5, 2));
+                        var day = Convert.ToInt32(startDate.Substring(8, 2));
+
+                        beginningDate = new DateTime(year, month, day);
+                        year = Convert.ToInt32(endDate.Substring(0, 4));
+                        month = Convert.ToInt32(endDate.Substring(5, 2));
+                        day = Convert.ToInt32(endDate.Substring(8, 2));
+                        endingDate = new DateTime(year, month, day);
+
+                        ViewBag.StartDate = beginningDate.ToString("MM/dd/yyyy");
+                        ViewBag.EndDate = endingDate.ToString("MM/dd/yyyy");
+                    }
+                    var sorts = db.SortLists.Where(s => s.Vendor == vendor && s.Status == "CLOSED").ToList();
 
                     List<Int32> sortIDs = new List<int>();
 
                     foreach(SortList sort in sorts)
                     {
                         var date = sort.DateCompleted;
-                        year = Convert.ToInt32(date.Substring(0, 4));
-                        month = Convert.ToInt32(date.Substring(5, 2));
-                        day = Convert.ToInt32(date.Substring(8, 2));
+                        var year = Convert.ToInt32(date.Substring(0, 4));
+                        var month = Convert.ToInt32(date.Substring(5, 2));
+                        var day = Convert.ToInt32(date.Substring(8, 2));
 
                         DateTime dateCompleted = new DateTime(year, month, day);
 
@@ -359,14 +381,30 @@ namespace TrailerManagement.Controllers
                     model.Parts = "";
                     return View();
                 }
+
+                var month = "";
+                var day = "";
+                var year = "";
+                var browser = Request.Browser.Type;
+
+                if (Request.Browser.Type.Contains("InternetExplorer"))
+                {
+                    month = date.Substring(0, 2);
+                    day = date.Substring(3, 2);
+                    year = date.Substring(6, 4);
+                    
+                    date = (year.ToString() + '-' + month.ToString() + '-' + day.ToString());
+                }
+                else
+                {
+                    year = date.Substring(0, 4);
+                    month = date.Substring(5, 2);
+                    day = date.Substring(8, 2);
+                }
                
                 var sorts = db.SortLists.Where(s => s.DateCompleted == date).ToList();
-
-                var year = Convert.ToInt32(date.Substring(0, 4));
-                var month = Convert.ToInt32(date.Substring(5, 2));
-                var day = Convert.ToInt32(date.Substring(8, 2));
-
-                DateTime reportDate = new DateTime(year, month, day);
+                
+                DateTime reportDate = new DateTime(Convert.ToInt32(year), Convert.ToInt32(month), Convert.ToInt32(day));
                 
                 List<CompletedSort> completeStacks = new List<CompletedSort>();
                 foreach (SortList sort in sorts)

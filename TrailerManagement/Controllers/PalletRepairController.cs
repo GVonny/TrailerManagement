@@ -58,6 +58,7 @@ namespace TrailerManagement.Controllers
             using (TrailerEntities db = new TrailerEntities())
             {
                 var sort = db.SortLists.FirstOrDefault(s => s.SortGUID == sortID);
+                sort.DateCompleted = DateTime.Now.ToString("yyyy-MM-dd");
                 db.SortLists.Remove(sort);
                 db.SaveChanges();
                 return RedirectToAction(actionName: "SortList", controllerName: "PalletRepair");
@@ -508,7 +509,7 @@ namespace TrailerManagement.Controllers
 
                 //uncomment to change the status of active trailers when sort is complete
                 var activeTrailerEdit = db.ActiveTrailerLists.FirstOrDefault(a => a.TrailerNumber == sort.TrailerNumber);
-                if (activeTrailerEdit != null)
+                if (activeTrailerEdit != null && activeTrailerEdit.LoadStatus == constant.TRAILER_STATUS_NEED_EMPTY)
                 {
                     activeTrailerEdit.TrailerStatus = constant.TRAILER_STATUS_EMPTY;
                     activeTrailerEdit.LoadStatus = "";

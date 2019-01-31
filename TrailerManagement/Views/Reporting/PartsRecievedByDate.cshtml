@@ -3,6 +3,7 @@
     ViewBag.Title = "Parts Recieved By Date";
     var isData = ViewBag.Data;
     var counter = 0;
+    var browser = Request.Browser.Type;
 }
 
 @if (Model != null)
@@ -49,8 +50,16 @@
             </div>
             <div class="modal-body">
                 <form action="PartsRecievedByDate" id="dateForm">
-                    <strong>Date</strong>
-                    <input type="date" name="date" class="datepicker" id="date" required>
+                    @if (browser.ToLower().Equals("internetexplorer11"))
+                    {
+                        <strong>Date (mm/dd/yyyy)</strong>
+                        <input type="text" name="date" class="datepicker" id="date" placeholder="mm/dd/yyyy" required>
+                    }
+                    else
+                    {
+                        <strong>Date</strong>
+                        <input type="date" name="date" class="datepicker" id="date" required>
+                    }
                 </form>
             </div>
             <div class="modal-footer">
@@ -67,7 +76,9 @@
     <script>
         $(function ()
         {
+
             var isModel = '@isData';
+            console.log(isModel);
 
             if (isModel == "False")
             {

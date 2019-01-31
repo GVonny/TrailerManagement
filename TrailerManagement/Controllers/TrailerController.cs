@@ -528,8 +528,7 @@ namespace TrailerManagement.Controllers
             {
                 ActiveTrailerList trailer = db.ActiveTrailerLists.Find(id);
                 TrailerList trailerEdit = db.TrailerLists.FirstOrDefault(t => t.TrailerNumber == UpdatedTrailer.TrailerNumber);
-
-                //remove comments to copy information when trailer "NEED EMPTY"
+                
                 if (trailer.TrailerStatus != constant.TRAILER_STATUS_NEED_EMPTY && UpdatedTrailer.TrailerStatus == constant.TRAILER_STATUS_NEED_EMPTY)
                 {
                     SortList newSort = new SortList()
@@ -543,19 +542,6 @@ namespace TrailerManagement.Controllers
                         Status = "NEW",
                     };
                     db.SortLists.Add(newSort);
-                }
-                
-                if(UpdatedTrailer.TrailerStatus != constant.TRAILER_STATUS_NEED_EMPTY)
-                {
-                    var sorts = db.SortLists.Where(t => t.TrailerNumber == UpdatedTrailer.TrailerNumber);
-                    
-                    if(sorts != null)
-                    {
-                        foreach (SortList sort in sorts)
-                        {
-                            sort.Status = "CLOSED";
-                        }
-                    }
                 }
 
                 trailerEdit.TrailerLocation = UpdatedTrailer.TrailerLocation;

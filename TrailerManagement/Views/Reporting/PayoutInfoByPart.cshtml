@@ -5,8 +5,10 @@
     var isData = ViewBag.Data;
     var startDate = ViewBag.StartDate;
     var endDate = ViewBag.EndDate;
+    var browser = Request.Browser.Type;
 }
-
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 
 @if (Model != null)
@@ -16,7 +18,7 @@
         <h2>Pallets Recieved by Part for @vendor (@startDate - @endDate)</h2>
 
     </div>
-    
+
     <table class="table">
         <thead>
             <tr>
@@ -56,17 +58,27 @@
             </div>
             <div class="modal-body">
                 <form action="PayoutInfoByPart" id="dateForm">
-                    <input type="text" name="vendor" class="hidden" value="@vendor"/>
-                    <strong>Start Date</strong>
-                    <input type="date" name="startDate" class="datepicker" id="startDate" required>
-                    <strong>Start Date</strong>
-                    <input type="date" name="endDate" class="datepicker" id="endDate" required>
+                    <input type="text" name="vendor" class="hidden" value="@vendor" />
+                    @if (browser.ToLower().Equals("internetexplorer11"))
+                    {
+                        <strong>Start Date (mm/dd/yyyy)</strong>
+                        <input type="text" name="startDate" class="datepicker" placeholder="mm/dd/yyyy" id="startDate" required>
+                        <strong>Start Date (mm/dd/yyyy)</strong>
+                        <input type="text" name="endDate" class="datepicker" placeholder="mm/dd/yyyy" id="endDate" required>
+                    }
+                    else
+                    {
+                        <strong>Start Date</strong>
+                        <input type="date" name="startDate" class="datepicker" id="startDate" required>
+                        <strong>Start Date</strong>
+                        <input type="date" name="endDate" class="datepicker" id="endDate" required>
+                    }
                 </form>
             </div>
             <div class="modal-footer">
                 <span style="color:red" id="error" class="float-left"></span>
                 <a href="/Reporting/PayoutVendors" class="btn btn-warning">Cancel</a>
-                <button type="button" class="btn btn-primary" id="submit" >Continue</button>
+                <button type="button" class="btn btn-primary" id="submit">Continue</button>
             </div>
         </div>
     </div>
@@ -77,6 +89,9 @@
     <script>
         $(function ()
         {
+            var browser = '@browser';
+            
+
             var isModel = '@isData';
 
             if (isModel == "False")
