@@ -16,7 +16,14 @@
     <tbody>
         <tr class="font-md">
             <td rowspan="6" class="col-xs-8 text-center">
-                <h2 id="header"></h2>
+                @if (payout.VendorNumber == null || payout.VendorNumber == 0)
+                {
+                    <h2 id="">@payout.Vendor</h2>
+                }
+                else
+                {
+                    <h2 id="">@payout.Vendor - @payout.VendorNumber</h2>
+                }
                 <br>
             </td>
             <td>
@@ -106,17 +113,6 @@
     <script>
         $(function ()
         {
-            var vendor = '@payout.Vendor';
-            var vendorNumber = '@payout.VendorNumber';
-            if (vendorNumber == "")
-            {
-                $('#header').html(vendor);
-            }
-            else
-            {
-                $('#header').html(vendor + " - " + '@payout.VendorNumber');
-            }
-
             var grandTotal = 0;
             $('#palletTypes tr').each(function ()
             {
@@ -133,15 +129,12 @@
                     cost = 0;
                     $('#price_' + id).html("$0.00");
                 }
-
                 
-
                 var total = 0;
 
                 var quantity = $('#quantity_' + id).html()
                 total = cost * parseFloat(quantity);
-
-
+                
                 var partNumber = $('#partNumber_' + id).html();
                 if (partNumber == "DEDUCTION")
                 {

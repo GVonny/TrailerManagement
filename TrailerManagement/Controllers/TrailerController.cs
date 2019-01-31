@@ -217,7 +217,7 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateTrailer([Bind(Include = "TrailerNumber,DOTDate,Status,Leased,InsuranceCard,Insured,Title,PlateNumber,VinNumber,Manufacturer,ManufactureYear,TrailerLocation,TrailerLength,Issues,DateModified")] CreateTrailer createTrailer)
+        public ActionResult CreateTrailer([Bind(Include = "TrailerNumber,DOTDate,TrailerStatus,Leased,InsuranceCard,Insured,Title,PlateNumber,VinNumber,Manufacturer,ManufactureYear,TrailerLocation,TrailerLength,Issues,DateModified")] TrailerList createTrailer)
         {
             //add new trailer to database
             using (TrailerEntities db = new TrailerEntities())
@@ -225,7 +225,24 @@ namespace TrailerManagement.Controllers
                 if (ModelState.IsValid)
                 {
                     //create trailer
-                    TrailerList trailer = createTrailer.MapToTruck();
+                    TrailerList trailer = new TrailerList()
+                    {
+                        TrailerNumber = createTrailer.TrailerNumber,
+                        DOTDate = createTrailer.DOTDate,
+                        TrailerStatus = createTrailer.TrailerStatus,
+                        Leased = createTrailer.Leased,
+                        InsuranceCard = createTrailer.InsuranceCard,
+                        Insured = createTrailer.Insured,
+                        Title = createTrailer.Title,
+                        PlateNumber = createTrailer.PlateNumber,
+                        VinNumber = createTrailer.VinNumber,
+                        Manufacturer = createTrailer.Manufacturer,
+                        ManufactureYear = createTrailer.ManufactureYear,
+                        TrailerLocation = createTrailer.TrailerLocation,
+                        TrailerLength = createTrailer.TrailerLength,
+                        Issues = createTrailer.Issues,
+                        DateModified = createTrailer.DateModified
+                    };
 
                     //check to make sure trailer number does not exist already
                     if (db.TrailerLists.Any(t => t.TrailerNumber == trailer.TrailerNumber))
@@ -234,11 +251,12 @@ namespace TrailerManagement.Controllers
                         ModelState.AddModelError("TrailerNumber", "Trailer number already exists");
                         return View();
                     }
-                    if(createTrailer.TrailerNumber.Contains(" "))
+                    if (createTrailer.TrailerNumber.Contains(" "))
                     {
                         ModelState.AddModelError("TrailerNumber", "Trailer number must not contain any spaces");
                         return View();
                     }
+
                     db.TrailerLists.Add(trailer);
                     db.SaveChanges();
                     return RedirectToAction(actionName: "TrailerList", controllerName: "Trailer");
@@ -265,32 +283,14 @@ namespace TrailerManagement.Controllers
                     {
                         TrailerList trailer = db.TrailerLists.Find(id);
                         
-                        EditTrailer trailerEdit = new EditTrailer()
-                        {
-                            TrailerNumber = trailer.TrailerNumber,
-                            DOTDate = trailer.DOTDate,
-                            Status = trailer.TrailerStatus,
-                            Leased = trailer.Leased,
-                            InsuranceCard = trailer.InsuranceCard,
-                            Insured = trailer.Insured,
-                            Title = trailer.Title,
-                            PlateNumber = trailer.PlateNumber,
-                            VinNumber = trailer.VinNumber,
-                            Manufacturer = trailer.Manufacturer,
-                            ManufactureYear = trailer.ManufactureYear,
-                            TrailerLocation = trailer.TrailerLocation,
-                            TrailerLength = trailer.TrailerLength,
-                            Issues = trailer.Issues,
-                            DateModified = trailer.DateModified
-                        };
-                        return View(trailerEdit);
+                        return View(trailer);
                     }
                 }
             }
         }
 
         [HttpPost]
-        public ActionResult EditTrailer([Bind(Include = "TrailerNumber,DOTDate,Status,Leased,InsuranceCard,Insured,Title,PlateNumber,VinNumber,Manufacturer,ManufactureYear,TrailerLocation,TrailerLength,Issues,DateModified")]EditTrailer UpdatedTrailer, string id)
+        public ActionResult EditTrailer([Bind(Include = "TrailerNumber,DOTDate,TrailerStatus,Leased,InsuranceCard,Insured,Title,PlateNumber,VinNumber,Manufacturer,ManufactureYear,TrailerLocation,TrailerLength,Issues,DateModified")]TrailerList UpdatedTrailer, string id)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
@@ -304,7 +304,7 @@ namespace TrailerManagement.Controllers
                 catch{}
 
                 trailer.DOTDate = UpdatedTrailer.DOTDate;
-                trailer.TrailerStatus = UpdatedTrailer.Status;
+                trailer.TrailerStatus = UpdatedTrailer.TrailerStatus;
                 trailer.Leased = UpdatedTrailer.Leased;
                 trailer.InsuranceCard = UpdatedTrailer.InsuranceCard;
                 trailer.Insured = UpdatedTrailer.Insured;
@@ -341,11 +341,11 @@ namespace TrailerManagement.Controllers
                     {
                         TrailerList trailer = db.TrailerLists.Find(id);
 
-                        CreateInactiveTrailer trailerEdit = new CreateInactiveTrailer()
+                        InactiveTrailerList trailerEdit = new InactiveTrailerList()
                         {
                             TrailerNumber = trailer.TrailerNumber,
                             DOTDate = trailer.DOTDate,
-                            Status = trailer.TrailerStatus,
+                            TrailerStatus = trailer.TrailerStatus,
                             Leased = trailer.Leased,
                             InsuranceCard = trailer.InsuranceCard,
                             Insured = trailer.Insured,
@@ -358,7 +358,7 @@ namespace TrailerManagement.Controllers
                             Issues = trailer.Issues,
                             DateModified = trailer.DateModified
                         };
-                        db.InactiveTrailerLists.Add(trailerEdit.MapToTruck());
+                        db.InactiveTrailerLists.Add(trailerEdit);
                         db.SaveChanges();
                         return RedirectToAction(actionName: "RemoveFromMasterList/" + id, controllerName: "Trailer");
                     }
@@ -384,31 +384,14 @@ namespace TrailerManagement.Controllers
                     {
                         InactiveTrailerList trailer = db.InactiveTrailerLists.Find(id);
                         
-                        EditInactiveTrailer trailerEdit = new EditInactiveTrailer()
-                        {
-                            TrailerNumber = trailer.TrailerNumber,
-                            DOTDate = trailer.DOTDate,
-                            Status = trailer.TrailerStatus,
-                            Leased = trailer.Leased,
-                            InsuranceCard = trailer.InsuranceCard,
-                            Insured = trailer.Insured,
-                            Title = trailer.Title,
-                            PlateNumber = trailer.PlateNumber,
-                            VinNumber = trailer.VinNumber,
-                            Manufacturer = trailer.Manufacturer,
-                            ManufactureYear = trailer.ManufactureYear,
-                            TrailerLength = trailer.TrailerLength,
-                            Issues = trailer.Issues,
-                            DateModified = trailer.DateModified
-                        };
-                        return View(trailerEdit);
+                        return View(trailer);
                     }
                 }
             }
         }
 
         [HttpPost]
-        public ActionResult EditInactiveTrailer([Bind(Include = "TrailerNumber,DOTDate,Status,Leased,InsuranceCard,Insured,Title,PlateNumber,VinNumber,Manufacturer,ManufactureYear,TrailerLength,Issues,Tags,DateModified")]EditInactiveTrailer UpdatedTrailer, int id)
+        public ActionResult EditInactiveTrailer([Bind(Include = "TrailerNumber,DOTDate,TrailerStatus,Leased,InsuranceCard,Insured,Title,PlateNumber,VinNumber,Manufacturer,ManufactureYear,TrailerLength,Issues,Tags,DateModified")]InactiveTrailerList UpdatedTrailer, int id)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
@@ -416,7 +399,7 @@ namespace TrailerManagement.Controllers
                 
                 trailer.TrailerNumber = UpdatedTrailer.TrailerNumber;
                 trailer.DOTDate = UpdatedTrailer.DOTDate;
-                trailer.TrailerStatus = UpdatedTrailer.Status;
+                trailer.TrailerStatus = UpdatedTrailer.TrailerStatus;
                 trailer.Leased = UpdatedTrailer.Leased;
                 trailer.InsuranceCard = UpdatedTrailer.InsuranceCard;
                 trailer.Insured = UpdatedTrailer.Insured;
@@ -462,13 +445,13 @@ namespace TrailerManagement.Controllers
                             else
                             {
                                 //create active trailer with only 3 fields to copy information, the rest is inputted by user
-                                CreateActiveTrailer trailerEdit = new CreateActiveTrailer()
+                                ActiveTrailerList trailerEdit = new ActiveTrailerList()
                                 {
                                     TrailerNumber = trailer.TrailerNumber,
                                     TrailerLocation = trailer.TrailerLocation,
                                     DateModified = trailer.DateModified,
                                 };
-                                db.ActiveTrailerLists.Add(trailerEdit.MapToTruck());
+                                db.ActiveTrailerLists.Add(trailerEdit);
                                 db.SaveChanges();
                                 return RedirectToAction(actionName: "ActiveTrailerList", controllerName: "Trailer");
                             }
@@ -500,29 +483,15 @@ namespace TrailerManagement.Controllers
                     using (TrailerEntities db = new TrailerEntities())
                     {
                         ActiveTrailerList trailer = db.ActiveTrailerLists.Find(id);
-
-                        EditActiveTrailer trailerEdit = new EditActiveTrailer()
-                        {
-                            TrailerNumber = trailer.TrailerNumber,
-                            TrailerStatus = trailer.TrailerStatus,
-                            LoadStatus = trailer.LoadStatus,
-                            Customer = trailer.Customer,
-                            OrderDate = trailer.OrderDate,
-                            OrderNumber = trailer.OrderNumber,
-                            LocationStatus = trailer.LocationStatus,
-                            TrailerLocation = trailer.TrailerLocation,
-                            Notes = trailer.Notes,
-                            Tags = trailer.Tags,
-                            DateModified = trailer.DateModified,
-                        };
-                        return View(trailerEdit);
+                        
+                        return View(trailer);
                     }
                 }
             }
         }
 
         [HttpPost]
-        public ActionResult EditActiveTrailer([Bind(Include = "TrailerNumber,TrailerStatus,LoadStatus,Customer,OrderDate,OrderNumber,LocationStatus,TrailerLocation,Notes,Tags,DateModified")]EditActiveTrailer UpdatedTrailer, string id)
+        public ActionResult EditActiveTrailer([Bind(Include = "TrailerNumber,TrailerStatus,LoadStatus,Customer,OrderDate,OrderNumber,LocationStatus,TrailerLocation,Notes,Tags,DateModified")]ActiveTrailerList UpdatedTrailer, string id)
         {
             using (TrailerEntities db = new TrailerEntities())
             {

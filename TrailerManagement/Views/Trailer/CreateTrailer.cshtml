@@ -1,5 +1,5 @@
-﻿@using TrailerManagement.Models;
-@model TrailerManagement.Models.CreateTrailer
+﻿
+@model TrailerManagement.Models.TrailerList
 @{
     ViewBag.Title = "Create Trailer";
 }
@@ -32,10 +32,10 @@
         </div>
         <!-- Trailer Status -->
         <div class="form-group">
-            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.TrailerStatus, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-3">
-                @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control", placeholder = "Trailer Status" } })
-                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.TrailerStatus, new { htmlAttributes = new { @class = "form-control", placeholder = "Trailer Status" } })
+                @Html.ValidationMessageFor(model => model.TrailerStatus, "", new { @class = "text-danger" })
             </div>
         </div>
         <!-- Lease Info -->
