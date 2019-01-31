@@ -199,6 +199,9 @@
     <Compile Include="Models\ActiveTrailerList.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\AssignedConcern.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\CodeViolation.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
@@ -316,6 +319,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Browsers\qt.browser" />
     <EntityDeploy Include="Models\TrailerModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>TrailerModel.Designer.cs</LastGenOutput>
@@ -323,7 +327,6 @@
     <Content Include="Models\TrailerModel.edmx.diagram">
       <DependentUpon>TrailerModel.edmx</DependentUpon>
     </Content>
-    <Content Include="App_Browsers\qt.browser" />
     <None Include="Properties\PublishProfiles\WebDeploy.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

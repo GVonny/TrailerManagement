@@ -25,25 +25,26 @@ namespace TrailerManagement.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<ActiveTrailerList> ActiveTrailerLists { get; set; }
-        public virtual DbSet<InactiveTrailerList> InactiveTrailerLists { get; set; }
-        public virtual DbSet<TrailerList> TrailerLists { get; set; }
-        public virtual DbSet<Department> Departments { get; set; }
-        public virtual DbSet<SortImage> SortImages { get; set; }
-        public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<PalletPrice> PalletPrices { get; set; }
-        public virtual DbSet<MasterStack> MasterStacks { get; set; }
-        public virtual DbSet<CompletedSort> CompletedSorts { get; set; }
-        public virtual DbSet<PalletType> PalletTypes { get; set; }
-        public virtual DbSet<CustomersAndVendor> CustomersAndVendors { get; set; }
-        public virtual DbSet<SortList> SortLists { get; set; }
-        public virtual DbSet<Payout> Payouts { get; set; }
-        public virtual DbSet<InventoryRowStack> InventoryRowStacks { get; set; }
-        public virtual DbSet<SafetyConcern> SafetyConcerns { get; set; }
-        public virtual DbSet<CodeViolation> CodeViolations { get; set; }
-        public virtual DbSet<SafetyCode> SafetyCodes { get; set; }
         public virtual DbSet<ActiveInventoryLocation> ActiveInventoryLocations { get; set; }
         public virtual DbSet<ActiveLocationRow> ActiveLocationRows { get; set; }
+        public virtual DbSet<ActiveTrailerList> ActiveTrailerLists { get; set; }
+        public virtual DbSet<AssignedConcern> AssignedConcerns { get; set; }
+        public virtual DbSet<CodeViolation> CodeViolations { get; set; }
+        public virtual DbSet<CompletedSort> CompletedSorts { get; set; }
+        public virtual DbSet<CustomersAndVendor> CustomersAndVendors { get; set; }
+        public virtual DbSet<Department> Departments { get; set; }
+        public virtual DbSet<InactiveTrailerList> InactiveTrailerLists { get; set; }
+        public virtual DbSet<InventoryRowStack> InventoryRowStacks { get; set; }
+        public virtual DbSet<MasterStack> MasterStacks { get; set; }
+        public virtual DbSet<PalletPrice> PalletPrices { get; set; }
+        public virtual DbSet<PalletType> PalletTypes { get; set; }
+        public virtual DbSet<Payout> Payouts { get; set; }
+        public virtual DbSet<SafetyCode> SafetyCodes { get; set; }
+        public virtual DbSet<SafetyConcern> SafetyConcerns { get; set; }
+        public virtual DbSet<SortImage> SortImages { get; set; }
+        public virtual DbSet<SortList> SortLists { get; set; }
         public virtual DbSet<SortListTest> SortListTests { get; set; }
+        public virtual DbSet<TrailerList> TrailerLists { get; set; }
+        public virtual DbSet<User> Users { get; set; }
     }
 }
