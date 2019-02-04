@@ -477,7 +477,7 @@ namespace TrailerManagement.Controllers
             {
                 var trailers = db.ActiveTrailerLists.OrderBy(t => t.TrailerStatus).ToList();
 
-                var filePath = "C:/Users/Grant.Vonhaden/Documents/ActiveList.csv";
+                var filePath = Server.MapPath("~/Reports/") + "ActiveList.csv";
                 using (StreamWriter writer = new StreamWriter(filePath))
                 {
                     writer.WriteLine("Trailer Number,Trailer Status,Load Status,Customer,Location Status,TrailerLocaion,Notes,Tags,Date Modified");
