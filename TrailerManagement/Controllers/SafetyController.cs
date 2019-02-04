@@ -613,6 +613,7 @@ namespace TrailerManagement.Controllers
                 {
                     var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcernID);
                     concern.ViolationCount++;
+                    concern.SupposedlyFixed = false;
                     db.SaveChanges();
                     return RedirectToAction(actionName: "SafetyAudit", controllerName: "Safety");
                 }
@@ -678,7 +679,7 @@ namespace TrailerManagement.Controllers
                     }
                     else
                     {
-                        var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN" && c.Area == department && c.SupposedlyFixed != true).ToList();
+                        var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN" && c.Area == department && c.SupposedlyFixed != true).OrderBy(c => c.ViolationCount).ToList();
                         return View(concerns);
                     }
                 }

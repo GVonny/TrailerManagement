@@ -257,9 +257,9 @@ a.special {
     list-style-type: none;
     text-align: right;
     padding-top: 15px;
+    padding-right:10px;
     font-size: 1.25em;
     color: lightgray;
-    display:block;
     float:right;
 }
 

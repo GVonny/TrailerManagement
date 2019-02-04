@@ -101,7 +101,7 @@
                                 </ul>
                             </li>
                         }
-                        @if (Convert.ToInt32(Session["permission"]) > 20)
+                        @*@if (Convert.ToInt32(Session["permission"]) > 20)
                         {
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -123,16 +123,16 @@
                                     <li><a href="~/Users/SignOut">Sign Out</a></li>
                                 </ul>
                             </li>
-                        }
+                        }*@
                     </ul>
                     @if (Session["username"] != null)
                     {
-                        <ul class="user">
-                            <li><a href="~/Users/SignOut">[Sign Out]</a></li>
-                        </ul>
-                        <ul class="user">
-                            <li>Welcome, @Session["name"].ToString()</li>
-                        </ul>
+                        <span class="user">
+                            <a href="~/Users/SignOut">[Sign Out]</a>
+                        </span>
+                        <span class="user">
+                            Welcome, @Session["name"].ToString()
+                        </span>
                     }
                 </div>
             </div>

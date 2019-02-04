@@ -9,7 +9,7 @@
 {
     var path = s.ImagePath.Replace("%20", " ");
     <div>
-        <table class="table table-responsive" id="@s.SafetyConcernGUID" style="border-style:solid;border-color:#333;border-top-color:#333!important">
+        <table class="table table-responsive" style="border-style:solid;border-color:#333;border-top-color:#333!important">
             <tbody id="@s.SafetyConcernGUID">
                 <tr>
                     <th id="area_@s.SafetyConcernGUID">
@@ -37,7 +37,9 @@
                     </td>
                     <td class="col-xs-2" rowspan="3">
                         <span class="text-center"><h4>Issue fixed?</h4></span>
-                        <center><input type="button" class="issue-fixed btn btn-primary" value="Click Me" /></center>
+                        <center>
+                            <input type="button" class="issue-fixed btn btn-primary" value="Click Me" />
+                        </center>
                     </td>
                 </tr>
 
@@ -72,7 +74,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">No</button>
-                <a href="CloseSafetyConcern?safetyConcernID=" id="closeLink" class="btn btn-primary float-right">Yes</a>
+                <a id="closeLink" class="btn btn-primary float-right">Yes</a>
             </div>
         </div>
     </div>
@@ -83,19 +85,11 @@
     <script>
         $(function ()
         {
-            $('table th').on('click', function ()
-            {
-                //$('#closeLink').attr('href', "MarkConcernAsFixed?safetyConcernID=" + this.parentElement.parentElement.id);
-                //$('#closeModal').modal();
-                //console.log(this.parentElement.parentElement.id);
-
-            });
-
             $('body').on('click', '.issue-fixed', function ()
             {
-                $('#closeLink').attr('href', "MarkConcernAsFixed?safetyConcernID=" + this.parentElement.parentElement.id);
+                console.log(this.parentElement.parentElement.parentElement.parentElement.id);
+                $('#closeLink').attr('href', ("MarkConcernAsFixed?safetyConcernID=" + this.parentElement.parentElement.parentElement.parentElement.id));
                 $('#closeModal').modal();
-                console.log(this.parentElement.parentElement.id);
             });
         });
     </script>    

@@ -157,6 +157,7 @@
                 var isFixed = $('#fixed_' + id).html();
                 if (isFixed == "True")
                 {
+                    $('#condition_' + id).removeClass('redBackground');
                     $('#condition_' + id).css('background-color','green');
                 }
             });
