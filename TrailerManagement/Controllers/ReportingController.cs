@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using TrailerManagement.Models;
@@ -517,7 +520,24 @@ namespace TrailerManagement.Controllers
                                          trailer.DateModified);
                     }
                 }
-                
+
+                SmtpClient client = new SmtpClient("smtp.outlook.com", 587);
+                client.EnableSsl = true;
+                client.Timeout = 100000;
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.UseDefaultCredentials = false;
+                client.Credentials = new NetworkCredential("grant.vonhaden@palletusa.com", Properties.Settings.Default.EmailPassword);
+
+                string body = "Attached is the current Active Trailer Board in an excell file.";
+
+
+                MailMessage message = new MailMessage("grant.vonhaden@palletusa.com", "janice.vonhaden@palletusa.com", "Active List Report", body);
+
+                message.Attachments.Add(new Attachment(filePath));
+                message.IsBodyHtml = true;
+                message.BodyEncoding = UTF8Encoding.UTF8;
+                client.Send(message);
+
                 return View();
             }
         }
