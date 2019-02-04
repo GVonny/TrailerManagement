@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="TrailerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="TrailerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ActiveInventoryLocations">
           <Key>
             <PropertyRef Name="InventoryLocationGUID" />
@@ -183,6 +183,7 @@
           <Property Name="DateArrived" Type="varchar" MaxLength="10" />
           <Property Name="TimeToSort" Type="float" />
           <Property Name="DateCompleted" Type="varchar" MaxLength="10" />
+          <Property Name="AccountingNote" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="SafetyCodes">
           <Key>
@@ -296,17 +297,6 @@
           <Property Name="Permission" Type="varchar" MaxLength="20" />
           <Property Name="Email" Type="varchar" MaxLength="20" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'TrailerManagement.dbo.VenderTrailers' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="VenderTrailers">
-          <Property Name="TrailerNumber" Type="varchar" MaxLength="20" />
-          <Property Name="Vendor" Type="varchar" MaxLength="50" />
-          <Property Name="DateDropped" Type="varchar" MaxLength="10" />
-          <Property Name="DateSorted" Type="varchar" MaxLength="10" />
-          <Property Name="DatePickedUp" Type="varchar" MaxLength="10" />
-          <Property Name="Notes" Type="varchar" MaxLength="255" />
-          <Property Name="NeedSorting" Type="varchar" MaxLength="10" />
-        </EntityType>-->
         <EntityContainer Name="TrailerModelStoreContainer">
           <EntitySet Name="ActiveInventoryLocations" EntityType="Self.ActiveInventoryLocations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ActiveLocationRows" EntityType="Self.ActiveLocationRows" Schema="dbo" store:Type="Tables" />
@@ -330,8 +320,7 @@ warning 6013: The table/view 'TrailerManagement.dbo.VenderTrailers' does not hav
           <EntitySet Name="TrailerList" EntityType="Self.TrailerList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="TrailerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -513,6 +502,7 @@ warning 6013: The table/view 'TrailerManagement.dbo.VenderTrailers' does not hav
           <Property Name="DateArrived" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="TimeToSort" Type="Double" />
           <Property Name="DateCompleted" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="AccountingNote" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="SafetyCode">
           <Key>
@@ -831,6 +821,7 @@ warning 6013: The table/view 'TrailerManagement.dbo.VenderTrailers' does not hav
           <EntitySetMapping Name="Payouts">
             <EntityTypeMapping TypeName="TrailerModel.Payout">
               <MappingFragment StoreEntitySet="Payouts">
+                <ScalarProperty Name="AccountingNote" ColumnName="AccountingNote" />
                 <ScalarProperty Name="PayoutGUID" ColumnName="PayoutGUID" />
                 <ScalarProperty Name="SortGUID" ColumnName="SortGUID" />
                 <ScalarProperty Name="TrailerNumber" ColumnName="TrailerNumber" />

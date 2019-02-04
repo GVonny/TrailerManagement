@@ -28,5 +28,6 @@ namespace TrailerManagement.Models
         public string DateArrived { get; set; }
         public Nullable<double> TimeToSort { get; set; }
         public string DateCompleted { get; set; }
+        public string AccountingNote { get; set; }
     }
 }

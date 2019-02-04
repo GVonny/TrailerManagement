@@ -217,6 +217,7 @@
     <Compile Include="Models\CustomersAndVendor.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DailyTrailerLog.cs" />
     <Compile Include="Models\Department.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
@@ -448,9 +449,11 @@
     <Content Include="Views\Safety\ManagerDashboard.cshtml" />
     <Content Include="Views\PalletRepair\SortTrailer.cshtml" />
     <Content Include="Views\Reporting\PartsRecievedByDate.cshtml" />
+    <Content Include="Views\Reporting\ActiveTrailerListFileReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Reports\" />
     <Folder Include="SafetyImages\" />
     <Folder Include="SortImages\" />
   </ItemGroup>

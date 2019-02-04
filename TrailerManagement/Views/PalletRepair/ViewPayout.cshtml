@@ -1,7 +1,7 @@
 ﻿@using TrailerManagement.Models;
 @{
     ViewBag.Title = "Payout";
-    var payout = Model.Payout;
+    Payout payout = Model.Payout;
     var vendor = Model.Vendor;
     var isCompleted = Model.IsCompleted;
     var user = Model.User;
@@ -10,6 +10,7 @@
 <br>
 <input type="button" id="showAdditionalInfoModal" value="Update Payout Info" class="btn btn-primary" />
 <input type="button" id="showUpdatePayoutVendorModal" value="Update Vendor" class="btn btn-primary" />
+<input type="button" id="updateAccountingNote" value="Update Accounting Note" class="btn btn-primary" />
 
 <span class="float-right"><h3>Unloaded by: @user </h3></span>
 
@@ -497,6 +498,30 @@ else
         </div>
     </div>
 </div>
+<!-- Accounting Note Modal-->
+<div id="accountingNote" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Update Accounting Note</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                <p>This note will be visible to who ever prints the payout.</p>
+                <form action="UpdateAccountingNote" id="accountingForm">
+                    <input type="number" name="sortID" class="hidden" value="@payout.SortGUID" />
+                    <input type="text" name="note" class="form-control" placeholder="Accounting Note"/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="updateNote" data-dismiss="modal" data-toggle="modal">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section scripts
 {
@@ -609,6 +634,16 @@ else
                 {
                     $('#finishPayoutConfirmationModal').modal();
                 }
+            });
+
+            $('#updateAccountingNote').on('click', function ()
+            {
+                $('#accountingNote').modal();
+            });
+
+            $('#updateNote').on('click', function ()
+            {
+                $('#accountingForm').submit();
             });
 
             $('#confirmFinishPayout').on('click', function ()

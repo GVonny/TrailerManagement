@@ -729,6 +729,53 @@ namespace TrailerManagement.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult AddPhotosToPayout(int sortID, HttpPostedFileBase ImageFile, string photoNote)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                if (ImageFile != null)
+                {
+                    var trailer = db.SortLists.FirstOrDefault(t => t.SortGUID == sortID);
+                    if (ImageFile.ContentLength > 0)
+                    {
+                        var extension = Path.GetExtension(ImageFile.FileName);
+                        var fullPath = Server.MapPath("~/SortImages/") + trailer.Vendor.ToString() + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+                        var path = trailer.Vendor + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+
+                        ImageFile.SaveAs(fullPath);
+
+                        SortImage initialImage = new SortImage()
+                        {
+                            SortGUID = sortID,
+                            StackNumber = 0,
+                            TakenBy = Session["name"].ToString(),
+                            Notes = photoNote,
+                            ImagePath = path,
+                            DateTaken = DateTime.Now.ToString("yyyy-MM-dd"),
+                        };
+                        db.SortImages.Add(initialImage);
+                    }
+                }
+                db.SaveChanges();
+            }
+            return RedirectToAction(actionName: "ViewPayout", controllerName: "PalletRepair", routeValues: new { sortID, isCompleted = true });
+        }
+
+        public ActionResult UpdateAccountingNote(int sortID, string note)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
+                
+                payout.AccountingNote = note;
+
+                
+                db.SaveChanges();
+                return RedirectToAction(actionName: "ViewPayout", controllerName: "PalletRepair", routeValues: new { sortID });
+            }
+        }
+
         //UPDATE LIST INFO
 
         public ActionResult UpdateArrivalDate(int sortID, string date)

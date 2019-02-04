@@ -92,6 +92,21 @@
     </tfoot>
 </table>
 
+<div id="accountingNote" class="no-print">
+    <h4>
+        Notes regarding this payout:
+        @if (payout.AccountingNote == null || payout.AccountingNote == "")
+        {
+            <span>NONE</span>
+        }
+        else
+        {
+            @payout.AccountingNote
+        }
+    </h4>
+</div>
+
+
 <a class="no-print btn btn-primary" href="javascript:window.print()">Click to Print This Page</a>
 @if (Session["username"] != null)
 {
@@ -105,7 +120,37 @@
     }
 
     <a class="no-print btn btn-danger" href="/PalletRepair/ViewPayout?sortID=@payout.SortGUID&isCompleted=true">Edit Payout</a>
+    <a class="btn btn-green" id="addPhotos">Add Photos</a>
 }
+
+    <div id="uploadPhotos" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h2 class="modal-title">Add photo to closed payout</h2>
+                </div>
+                <div class="modal-body">
+                    @using (Html.BeginForm("AddPhotosToPayout", "PalletRepair", FormMethod.Post, new { enctype = "multipart/form-data", id = "photoForm" }))
+                    {
+                        <input type="number" class="hidden" name="sortID" value="@payout.SortGUID" />
+                        <input type="file" name="ImageFile" id="ImageFile" placeholder="Take Picture" style="display:inline-block;width:auto">
+                        <label for="photo-1">Note:</label>
+                        <input type="text" name="photoNote" class="float-right form-control" style="display:inline-block;width:auto" />
+                    }
+                    <br />
+                </div>
+                <div class="modal-footer">
+                    @*<button type="button" class="btn btn-danger float-left" id="addAnotherPhoto">Add Another Photo</button>
+                    <button type="button" class="btn btn-danger float-left hidden" id="removePhoto">Remove Photo</button>*@
+                    <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="upload" data-dismiss="modal" data-toggle="modal">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 @section scripts
@@ -113,6 +158,53 @@
     <script>
         $(function ()
         {
+            $('#upload').on('click', function ()
+            {
+                $('#photoForm').submit();
+            })
+            
+            var photoCount = 1;
+            $('#addPhotos').on('click', function ()
+            {
+                $('#uploadPhotos').modal();
+            });
+
+            $('#addAnotherPhoto').on('click', function ()
+            {
+                var photo = $('#photoForm').children().last().children('input[type=file]').val();
+                console.log(photo);
+                if (photo != "")
+                {
+                    photoCount++;
+                    $('#photoForm').append(
+                        "<div class=\"form-group\">" +
+                        "<input type=\"file\" name=\"photo-" + photoCount + "\" class=\"col-xs-7 float-left\" style=\"display:inline-block\" />" +
+                        "<label for=\"photo-" + photoCount + "\">Note:</label>" +
+                        "<input type=\"text\" name=\"photo-" + photoCount + "\" class=\"float-right form-control\" style=\"display:inline-block;width:auto\" />" +
+                        "</div>"
+                    );
+
+                    if (photoCount > 1)
+                    {
+                        $('#removePhoto').removeClass('hidden');
+                    }
+                }
+
+            });
+
+            $('#removePhoto').on('click', function ()
+            {
+                if (photoCount > 1)
+                {
+                    $('#photoForm').children().last().remove();
+                    photoCount--;
+                }
+                if (photoCount == 1)
+                {
+                    $(this).addClass('hidden');
+                }
+            });
+
             var grandTotal = 0;
             $('#palletTypes tr').each(function ()
             {

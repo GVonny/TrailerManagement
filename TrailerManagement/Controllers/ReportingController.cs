@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -464,6 +465,60 @@ namespace TrailerManagement.Controllers
                     model.Parts = "";
                     return View();
                 }
+            }
+        }
+
+        public ActionResult ActiveTrailerListFileReport()
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var trailers = db.ActiveTrailerLists.OrderBy(t => t.TrailerStatus).ToList();
+
+                var filePath = "C:/Users/Grant.Vonhaden/Documents/ActiveList.csv";
+                using (StreamWriter writer = new StreamWriter(filePath))
+                {
+                    writer.WriteLine("Trailer Number,Trailer Status,Load Status,Customer,Location Status,TrailerLocaion,Notes,Tags,Date Modified");
+                    foreach (ActiveTrailerList trailer in trailers)
+                    {
+                        var trailerStatus = trailer.TrailerStatus;
+                        switch(trailerStatus)
+                        {
+                            case "1":
+                                trailerStatus = "NEED EMPTY";
+                                break;
+                            case "2":
+                                trailerStatus = "READY TO ROLL";
+                                break;
+                            case "3":
+                                trailerStatus = "LOADING";
+                                break;
+                            case "4":
+                                trailerStatus = "EMPTY";
+                                break;
+                            case "5":
+                                trailerStatus = "NEED WORK";
+                                break;
+                            case "6":
+                                trailerStatus = "IN TRANSIT";
+                                break;
+                            case "7":
+                                trailerStatus = "DELIVERED";
+                                break;
+                        }
+
+                        writer.WriteLine(trailer.TrailerNumber + ", " +
+                                         trailerStatus + ", " +
+                                         trailer.LoadStatus + ", " +
+                                         trailer.Customer + ", " +
+                                         trailer.LocationStatus + ", " +
+                                         trailer.TrailerLocation + ", " +
+                                         trailer.Notes + ", " +
+                                         trailer.Tags + ", " +
+                                         trailer.DateModified);
+                    }
+                }
+                
+                return View();
             }
         }
     }

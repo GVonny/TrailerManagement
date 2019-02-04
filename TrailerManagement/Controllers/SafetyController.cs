@@ -236,12 +236,12 @@ namespace TrailerManagement.Controllers
                     if (area != null)
                     {
                         model.Area = area;
-                        concerns = concerns.Where(c => c.Status == "OPEN" && c.Area == area).OrderBy(c => c.Area).ThenBy(c => c.SubArea);
+                        concerns = concerns.Where(c => c.Status == "OPEN" && c.Area == area).OrderBy(c => c.Area).ThenByDescending(c => c.ViolationCount).ThenBy(c => c.SubArea);
                     }
                     else
                     {
                         model.Area = "";
-                        concerns = concerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenBy(c => c.SubArea);
+                        concerns = concerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenByDescending(c => c.ViolationCount).ThenBy(c => c.SubArea);
                     }
 
                     model.Concerns = concerns.ToList();
@@ -267,7 +267,7 @@ namespace TrailerManagement.Controllers
             {
                 dynamic model = new ExpandoObject();
 
-                var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenBy(c => c.SubArea).ToList();
+                var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenByDescending(c => c.ViolationCount).ThenBy(c => c.SubArea).ToList();
                 model.Concerns = concerns;
 
                 var violations = db.CodeViolations.ToList();
@@ -285,7 +285,7 @@ namespace TrailerManagement.Controllers
                 {
                     dynamic model = new ExpandoObject();
 
-                    var concerns = db.SafetyConcerns.Where(c => c.Status == "CLOSED").OrderBy(c => c.DateClosed).ToList();
+                    var concerns = db.SafetyConcerns.Where(c => c.Status == "CLOSED").OrderByDescending(c => c.DateClosed).ToList();
                     model.Concerns = concerns;
 
                     var violations = db.CodeViolations.ToList();
@@ -636,6 +636,7 @@ namespace TrailerManagement.Controllers
                 {
                     var concern = db.SafetyConcerns.FirstOrDefault(c => c.SafetyConcernGUID == safetyConcernID);
                     concern.Status = "OPEN";
+                    concern.SupposedlyFixed = false;
                     concern.ViolationCount++;
                     concern.DateClosed = null;
                     concern.DateOpened = DateTime.Now.ToString("yyyy-MM-dd");
@@ -674,7 +675,7 @@ namespace TrailerManagement.Controllers
                     var department = Session["departmentName"].ToString();
                     if (department == "Admin")
                     {
-                        var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN").OrderBy(c => c.Area).ThenBy(c => c.SubArea).ToList();
+                        var concerns = db.SafetyConcerns.Where(c => c.Status == "OPEN" && c.SupposedlyFixed != true).OrderBy(c => c.Area).ThenByDescending(c => c.ViolationCount).ThenBy(c => c.SubArea).ToList();
                         return View(concerns);
                     }
                     else
