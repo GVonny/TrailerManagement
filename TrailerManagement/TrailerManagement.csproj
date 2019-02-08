@@ -454,9 +454,14 @@
     <Content Include="Views\PalletRepair\SortTrailer.cshtml" />
     <Content Include="Views\Reporting\PartsRecievedByDate.cshtml" />
     <Content Include="Views\Reporting\ActiveTrailerListFileReport.cshtml" />
+    <Content Include="Views\Reporting\PartsReceivedBetweenDates.cshtml" />
+    <Content Include="Views\Reporting\PartsByVendorBetweenDates.cshtml" />
+    <Content Include="Views\Reporting\PayoutInfoFileReport.cshtml" />
+    <Content Include="Views\Reporting\FileAlreadyOpen.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Reports\" />
     <Folder Include="SafetyImages\" />
     <Folder Include="SortImages\" />
   </ItemGroup>

@@ -1,0 +1,65 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "PartsByVendorBetweenDates";
+    var counter = 0;
+    PalletType part = Model.Part;
+}
+
+<div>
+    <input type="button" value="Change Part" class="btn btn-primary float-right" id="changePart"/>
+    <h2>@part.PartNumber received by Vendor (@ViewBag.StartDate - @ViewBag.EndDate)</h2>
+
+</div>
+
+
+@foreach(var vendor in Model.Vendors)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Vendor</th>
+                <th>Part #</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Total Paid</th>
+                <th>Average $</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@vendor</td>
+                <td class="col-xs-1">@part.PartNumber</td>
+                <td class="col-xs-3">@part.Description</td>
+                <td class="col-xs-1">@Model.Quantity[counter]</td>
+                <td class="total-paid col-xs-1">@Model.TotalCost[counter]</td>
+                <td class="average-cost col-xs-1">@Model.AverageCost[counter]</td>
+            </tr>
+        </tbody>
+    </table>
+    counter++;
+}
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('.total-paid').each(function ()
+            {
+                var cost = parseFloat($(this).html());
+                $(this).html("$" + cost.toFixed(2));
+            });
+
+            $('.average-cost').each(function ()
+            {
+                var cost = parseFloat($(this).html());
+                $(this).html("$" + cost.toFixed(2));
+            });
+
+            $('#changePart').on('click', function ()
+            {
+                history.back();
+            });
+        });
+    </script>    
+}

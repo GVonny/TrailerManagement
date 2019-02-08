@@ -17,7 +17,7 @@
                 <strong>Company Name:</strong>
             </div>
             <div class="col-md-4">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Name" } })
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Name without commas" } })
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -116,7 +116,7 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-primary" />
-                <a href="/PalletRepair/CustomersAndVendors" class="btn btn-warning">Cancel</a>
+                <a href="/PalletRepair/CustomersAndVendors?startsWith=ALL" class="btn btn-warning">Cancel</a>
             </div>
         </div>
     </div>

@@ -352,7 +352,7 @@ namespace TrailerManagement.Controllers
                             averageCosts[x] = addedTotalCosts[x] / averageCount[x];
                         }
 
-
+                        model.SortIDs = sortIDs;
                         model.LastCosts = lastCosts;
                         model.TotalCost = totalCosts;
                         model.AverageCost = averageCosts;
@@ -471,6 +471,276 @@ namespace TrailerManagement.Controllers
             }
         }
 
+        public ActionResult PartsReceivedBetweenDates(string startDate, string endDate)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                dynamic model = new ExpandoObject();
+                if (startDate == null && endDate == null)
+                {
+                    ViewBag.Data = "first";
+                    model.Quantities = "";
+                    model.Parts = "";
+                    return View();
+                }
+                else
+                {
+                    var browser = Request.Browser.Type;
+
+                    DateTime beginningDate;
+                    DateTime endingDate;
+
+                    if (browser.Contains("InternetExplorer"))
+                    {
+                        var month = startDate.Substring(0, 2);
+                        var day = startDate.Substring(3, 2);
+                        var year = startDate.Substring(6, 4);
+
+                        beginningDate = new DateTime(Convert.ToInt32(year), Convert.ToInt32(month), Convert.ToInt32(day));
+
+                        month = endDate.Substring(0, 2);
+                        day = endDate.Substring(3, 2);
+                        year = endDate.Substring(6, 4);
+
+                        endingDate = new DateTime(Convert.ToInt32(year), Convert.ToInt32(month), Convert.ToInt32(day));
+
+                        ViewBag.StartDate = beginningDate.ToString("MM/dd/yyyy");
+                        ViewBag.EndDate = endingDate.ToString("MM/dd/yyyy");
+                    }
+                    else
+                    {
+                        var year = Convert.ToInt32(startDate.Substring(0, 4));
+                        var month = Convert.ToInt32(startDate.Substring(5, 2));
+                        var day = Convert.ToInt32(startDate.Substring(8, 2));
+
+                        beginningDate = new DateTime(year, month, day);
+                        year = Convert.ToInt32(endDate.Substring(0, 4));
+                        month = Convert.ToInt32(endDate.Substring(5, 2));
+                        day = Convert.ToInt32(endDate.Substring(8, 2));
+                        endingDate = new DateTime(year, month, day);
+
+                        ViewBag.StartDate = beginningDate.ToString("MM/dd/yyyy");
+                        ViewBag.EndDate = endingDate.ToString("MM/dd/yyyy");
+                    }
+
+                    var sorts = db.SortLists.Where(s => s.Status == "CLOSED").ToList();
+
+                    List<Int32> sortIDs = new List<int>();
+
+                    foreach (SortList sort in sorts)
+                    {
+                        var date = sort.DateCompleted;
+                        var year = Convert.ToInt32(date.Substring(0, 4));
+                        var month = Convert.ToInt32(date.Substring(5, 2));
+                        var day = Convert.ToInt32(date.Substring(8, 2));
+
+                        DateTime dateCompleted = new DateTime(year, month, day);
+
+                        if (dateCompleted > beginningDate && dateCompleted < endingDate)
+                        {
+                            sortIDs.Add(Convert.ToInt32(sort.SortGUID));
+                        }
+                    }
+
+                    List<CompletedSort> completeStacks = new List<CompletedSort>();
+
+                    foreach (Int32 sortID in sortIDs)
+                    {
+                        var stacks = db.CompletedSorts.Where(s => s.SortGUID == sortID && s.PartNumber != "DEDUCTION").ToList();
+                        foreach (CompletedSort stack in stacks)
+                        {
+                            completeStacks.Add(stack);
+                        }
+                    }
+                    List<string> uniqueParts = new List<string>();
+                    if (completeStacks.Count > 1)
+                    {
+                        foreach (CompletedSort stack in completeStacks)
+                        {
+                            if (!uniqueParts.Contains(stack.PartNumber))
+                            {
+                                uniqueParts.Add(stack.PartNumber);
+                            }
+                        }
+
+                        uniqueParts = uniqueParts.OrderBy(u => u).ToList();
+
+                        List<String> descriptions = new List<string>();
+                        foreach(var part in uniqueParts)
+                        {
+                            var partMaster = db.PalletTypes.FirstOrDefault(p => p.PartNumber == part);
+                            if(partMaster != null)
+                            {
+                                descriptions.Add(partMaster.Description);
+                            }
+                            else
+                            {
+                                descriptions.Add("CUSTOM");
+                            }
+                            
+                        }
+
+                        int[] quantities = new int[uniqueParts.Count];
+                        int[] averageCount = new int[uniqueParts.Count];
+
+                        double[] addedTotalCosts = new double[uniqueParts.Count];
+                        double[] totalCosts = new double[uniqueParts.Count];
+
+                        foreach (CompletedSort stack in completeStacks)
+                        {
+                            if (uniqueParts.Contains(stack.PartNumber))
+                            {
+                                var index = uniqueParts.IndexOf(stack.PartNumber);
+                                quantities[index] += Convert.ToInt32(stack.Quantity);
+                                totalCosts[index] += (Convert.ToInt32(stack.Quantity) * Convert.ToDouble(stack.Cost));
+
+                                if (stack.Cost == null)
+                                {
+                                    addedTotalCosts[index] += 0;
+                                }
+                                else
+                                {
+                                    addedTotalCosts[index] += Convert.ToDouble(stack.Cost);
+                                }
+                                averageCount[index]++;
+                            }
+                        }
+
+                        double[] averageCosts = new double[uniqueParts.Count];
+                        for (int x = 0; x < averageCosts.Length; x++)
+                        {
+                            averageCosts[x] = addedTotalCosts[x] / averageCount[x];
+                        }
+
+
+                        model.Descriptions = descriptions;
+                        model.TotalCost = totalCosts;
+                        model.AverageCost = averageCosts;
+                        model.Quantities = quantities;
+                        model.Parts = uniqueParts;
+                        ViewBag.Data = true;
+
+                        return View(model);
+                    }
+                    else
+                    {
+                        ViewBag.Data = false;
+                        model.Quantities = "";
+                        model.Parts = "";
+                        return View();
+                    }
+                }
+            }
+        }
+
+        public ActionResult PartsByVendorBetweenDates(string startDate, string endDate, string partNumber)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                dynamic model = new ExpandoObject();
+
+                PalletType part = db.PalletTypes.FirstOrDefault(p => p.PartNumber == partNumber);
+
+                DateTime beginningDate;
+                DateTime endingDate;
+                
+                var month = startDate.Substring(0, 2);
+                var day = startDate.Substring(3, 2);
+                var year = startDate.Substring(6, 4);
+
+                beginningDate = new DateTime(Convert.ToInt32(year), Convert.ToInt32(month), Convert.ToInt32(day));
+
+                month = endDate.Substring(0, 2);
+                day = endDate.Substring(3, 2);
+                year = endDate.Substring(6, 4);
+
+                endingDate = new DateTime(Convert.ToInt32(year), Convert.ToInt32(month), Convert.ToInt32(day));
+
+                ViewBag.StartDate = beginningDate.ToString("MM/dd/yyyy");
+                ViewBag.EndDate = endingDate.ToString("MM/dd/yyyy");
+
+                var sorts = db.SortLists.Where(s => s.Status == "CLOSED").ToList();
+
+                List<Int32> sortIDs = new List<int>();
+
+                foreach (SortList sort in sorts)
+                {
+                    var date = sort.DateCompleted;
+                    year = date.Substring(0, 4);
+                    month = date.Substring(5, 2);
+                    day = date.Substring(8, 2);
+
+                    DateTime dateCompleted = new DateTime(Convert.ToInt32(year), Convert.ToInt32(month), Convert.ToInt32(day));
+
+                    if (dateCompleted > beginningDate && dateCompleted < endingDate)
+                    {
+                        sortIDs.Add(Convert.ToInt32(sort.SortGUID));
+                    }
+                }
+
+                List<CompletedSort> completeStacks = new List<CompletedSort>();
+
+                foreach (Int32 sortID in sortIDs)
+                {
+                    var stacks = db.CompletedSorts.Where(s => s.PartNumber == partNumber && s.SortGUID == sortID && (s.Vendor != "" && s.Vendor != null)).ToList();
+                    foreach (CompletedSort stack in stacks)
+                    {
+                        completeStacks.Add(stack);
+                    }
+                }
+
+                completeStacks = completeStacks.OrderBy(c => c.Vendor).ToList();
+
+                List<String> uniqueVendors = new List<string>();
+                
+
+                foreach (CompletedSort stack in completeStacks)
+                {
+                    if(!uniqueVendors.Contains(stack.Vendor))
+                    {
+                        uniqueVendors.Add(stack.Vendor);
+                    }
+                }
+
+                int[] quantities = new int[uniqueVendors.Count];
+                int[] averageCount = new int[uniqueVendors.Count];
+
+                double[] addedTotalCosts = new double[uniqueVendors.Count];
+                double[] totalCosts = new double[uniqueVendors.Count];
+                
+                foreach (CompletedSort stack in completeStacks)
+                {
+                    var index = uniqueVendors.IndexOf(stack.Vendor);
+                    quantities[index] += Convert.ToInt32(stack.Quantity);
+                    totalCosts[index] += (Convert.ToInt32(stack.Quantity) * Convert.ToDouble(stack.Cost));
+
+                    if (stack.Cost == null)
+                    {
+                        addedTotalCosts[index] += 0;
+                    }
+                    else
+                    {
+                        addedTotalCosts[index] += Convert.ToDouble(stack.Cost);
+                    }
+                    averageCount[index]++;
+                }
+
+                double[] averageCosts = new double[uniqueVendors.Count];
+                for (int x = 0; x < averageCosts.Length; x++)
+                {
+                    averageCosts[x] = addedTotalCosts[x] / averageCount[x];
+                }
+
+                model.Vendors = uniqueVendors;
+                model.Part = part;
+                model.Quantity = quantities;
+                model.TotalCost = totalCosts;
+                model.AverageCost = averageCosts;
+
+                return View(model);
+            }
+        }
+
         public ActionResult ActiveTrailerListFileReport()
         {
             using (TrailerEntities db = new TrailerEntities())
@@ -540,6 +810,76 @@ namespace TrailerManagement.Controllers
 
                 return View();
             }
+        }
+
+        public ActionResult PayoutInfoFileReport()
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                dynamic model = new ExpandoObject();
+
+                var payouts = db.Payouts.Where(p => p.Status == "CLOSED" && (p.Vendor != "" && p.Vendor != null)).OrderBy(p => p.Vendor).ThenBy(p => p.DateCompleted).ToList();
+
+                var filePath = Server.MapPath("~/Reports/") + "Payouts.csv";
+
+                List<Object> stacksByPayout = new List<Object>();
+
+                try
+                {
+                    using (StreamWriter writer = new StreamWriter(filePath))
+                    {
+                        writer.WriteLine("Vendor,Vendor Number,Date,Part Number,Quantity,Description,Price,Total");
+                        foreach (Payout payout in payouts)
+                        {
+                            var stacks = db.CompletedSorts.Where(s => s.SortGUID == payout.SortGUID).ToList();
+                            foreach (CompletedSort stack in stacks)
+                            {
+                                double total;
+                                double cost;
+                                if (stack.Cost != null)
+                                {
+                                    cost = Convert.ToDouble(stack.Cost);
+                                    total = Convert.ToDouble(stack.Quantity * cost);
+                                }
+                                else
+                                {
+                                    cost = 0;
+                                    total = 0;
+                                }
+
+                                writer.WriteLine(payout.Vendor + "," + payout.VendorNumber + "," + payout.DateCompleted + "," + stack.PartNumber + "," + stack.Quantity + "," + stack.Description + ",$" + cost + ",$" + total);
+                            }
+                        }
+                    }
+
+                    SmtpClient client = new SmtpClient("smtp.outlook.com", 587);
+                    client.EnableSsl = true;
+                    client.Timeout = 100000;
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.UseDefaultCredentials = false;
+                    client.Credentials = new NetworkCredential("grant.vonhaden@palletusa.com", Properties.Settings.Default.EmailPassword);
+
+                    string body = "Attached is the list of all Payout info in an excell file.";
+
+
+                    MailMessage message = new MailMessage("grant.vonhaden@palletusa.com", "janice.vonhaden@palletusa.com", "Payout Report", body);
+
+                    message.Attachments.Add(new Attachment(filePath));
+                    message.IsBodyHtml = true;
+                    message.BodyEncoding = UTF8Encoding.UTF8;
+                    client.Send(message);
+                }
+                catch(Exception ex)
+                {
+                }
+
+                return View();
+            }
+        }
+
+        public ActionResult FileAlreadyOpen()
+        {
+            return View();
         }
     }
 }
