@@ -79,14 +79,14 @@
                             </li>
                         }
 
-                        @if (Convert.ToInt32(Session["permission"]) > 20 )
+                        @if (Convert.ToInt32(Session["permission"]) > 20 && (Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 10000))
                         {
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                     Reports<span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    @if (Convert.ToInt32(Session["permission"]) > 40 && (Convert.ToInt32(Session["department"]) >= 10000))
+                                    @if (Convert.ToInt32(Session["permission"]) > 40 && (Convert.ToInt32(Session["department"]) == 10000))
                                     {
                                         <li><a href="~/Reporting/InsuranceInfo">Insurance Info</a></li>
                                         <li role="separator" class="divider"></li>

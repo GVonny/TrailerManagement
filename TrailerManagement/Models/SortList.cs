@@ -28,5 +28,6 @@ namespace TrailerManagement.Models
         public string Status { get; set; }
         public string SortChoice { get; set; }
         public string DateCompleted { get; set; }
+        public string ArrivalNote { get; set; }
     }
 }

@@ -230,13 +230,28 @@ namespace TrailerManagement.Controllers
                     {
                         distinctAreas.Add(a.Area);
                     }
+                    distinctAreas.Add("Fixed Concerns");
+                    distinctAreas.Add("Not Fixed Concerns");
 
                     model.Areas = distinctAreas.ToList();
 
                     if (area != null)
                     {
-                        model.Area = area;
-                        concerns = concerns.Where(c => c.Status == "OPEN" && c.Area == area).OrderBy(c => c.Area).ThenByDescending(c => c.ViolationCount).ThenBy(c => c.SubArea);
+                        if(area == "Fixed Concerns")
+                        {
+                            concerns = concerns.Where(c => c.SupposedlyFixed == true).OrderBy(c => c.Area).ThenByDescending(c => c.ViolationCount).ThenBy(c => c.SubArea);
+                            model.Area = "";
+                        }
+                        else if(area == "Not Fixed Concerns")
+                        {
+                            concerns = concerns.Where(c => c.SupposedlyFixed == false).OrderBy(c => c.Area).ThenByDescending(c => c.ViolationCount).ThenBy(c => c.SubArea);
+                            model.Area = "";
+                        }
+                        else
+                        {
+                            model.Area = area;
+                            concerns = concerns.Where(c => c.Status == "OPEN" && c.Area == area).OrderBy(c => c.Area).ThenByDescending(c => c.ViolationCount).ThenBy(c => c.SubArea);
+                        }
                     }
                     else
                     {

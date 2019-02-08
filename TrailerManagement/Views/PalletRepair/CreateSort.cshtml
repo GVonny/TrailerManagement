@@ -75,6 +75,15 @@
                 </div>
             </div>
 
+            <div class="form-group" id="arrivalNote">
+                <div class="col-xs-3 text-right">
+                    <strong>Note</strong>
+                </div>
+                <div class="col-xs-4">
+                    <input type="text" name="note" class="form-control">
+                </div>
+            </div>
+
             <!-- Sumbit -->
             <div class="form-group">
                 <div class="col-xs-offset-3 col-md-10">
@@ -97,6 +106,7 @@
                 {
                     $('#dateArrived').val("");
                     $('#dateArrived').attr('disabled', 'disabled');
+                    $('#arrivalNote').removeClass('hidden');
                 }
                 else
                 {

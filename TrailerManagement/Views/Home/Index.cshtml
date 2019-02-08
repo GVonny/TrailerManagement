@@ -98,7 +98,7 @@
 </div>
 <br />
 <div>
-    @if (Convert.ToInt32(Session["permission"]) >= 40)
+    @if (Convert.ToInt32(Session["permission"]) >= 40 && Convert.ToInt32(Session["department"]) != 4500)
     {
     <fieldset>
         <legend>Safety</legend>

@@ -244,6 +244,7 @@
           <Property Name="Status" Type="varchar" MaxLength="15" />
           <Property Name="SortChoice" Type="varchar" MaxLength="10" />
           <Property Name="DateCompleted" Type="varchar" MaxLength="10" />
+          <Property Name="ArrivalNote" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="SortListTest">
           <Key>
@@ -563,6 +564,7 @@
           <Property Name="Status" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="SortChoice" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="DateCompleted" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ArrivalNote" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="SortListTest">
           <Key>
@@ -886,6 +888,7 @@
           <EntitySetMapping Name="SortLists">
             <EntityTypeMapping TypeName="TrailerModel.SortList">
               <MappingFragment StoreEntitySet="SortList">
+                <ScalarProperty Name="ArrivalNote" ColumnName="ArrivalNote" />
                 <ScalarProperty Name="SortGUID" ColumnName="SortGUID" />
                 <ScalarProperty Name="TrailerNumber" ColumnName="TrailerNumber" />
                 <ScalarProperty Name="Customer" ColumnName="Customer" />

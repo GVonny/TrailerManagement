@@ -26,41 +26,47 @@
 <table class="table table-hover table-responsive">
     <thead>
         <tr class="font-md">
-            <th>Trailer Number</th>
+            <th class="col-xs-1">Trailer Number</th>
             <th>Received From</th>
             <th>Load Status</th>
             <th>Sort Type</th>
             <th>Date Arrived</th>
+            <th>Note</th>
         </tr>
     </thead>
     <tbody id="removals">
         @foreach (SortList t in Model.Trailers)
         {
-            <tr class="product-row" id="@t.SortGUID">
-                <td id="trailerNumber_@t.SortGUID">@t.TrailerNumber</td>
-                <td id="customer_@t.SortGUID">@t.Customer</td>
-                <td class="hidden" id="vendor_@t.SortGUID">@t.Vendor</td>
-                <td id="loadStatus_@t.SortGUID">@t.LoadStatus</td>
-                <td id="sortType_@t.SortGUID">@t.SortType</td>
-                <td id="dateArrived_@t.SortGUID">@t.DateArrived</td>
-                @if (Convert.ToInt32(Session["permission"]) > 30)
+        <tr class="product-row" id="@t.SortGUID">
+            <td id="trailerNumber_@t.SortGUID">@t.TrailerNumber</td>
+            <td id="customer_@t.SortGUID">@t.Customer</td>
+            <td class="hidden" id="vendor_@t.SortGUID">@t.Vendor</td>
+            <td id="loadStatus_@t.SortGUID">@t.LoadStatus</td>
+            <td id="sortType_@t.SortGUID">@t.SortType</td>
+            <td id="dateArrived_@t.SortGUID">@t.DateArrived</td>
+            <td>
+                @t.ArrivalNote
+            </td>
+            @if (Convert.ToInt32(Session["permission"]) > 30)
+            {
+                if (t.Status == "NEW")
                 {
-                    if (t.Status == "NEW")
-                    {
-                        <td id="remove_@t.SortGUID"><a href="/PalletRepair/RemoveSort?sortID=@t.SortGUID">Close Sort</a></td>
-                    }
+                    <td id="remove_@t.SortGUID"><a href="/PalletRepair/RemoveSort?sortID=@t.SortGUID">Close Sort</a></td>
                 }
-                @if (t.Status == "OPEN" || t.Status == "CLOSED")
-                {
-                    <td id="status_@t.SortGUID">@t.Status</td>
-                }
+            }
+            @if (t.Status == "OPEN" || t.Status == "CLOSED")
+            {
+                <td id="status_@t.SortGUID">@t.Status</td>
+            }
 
 
-                <td id="numberOfPeopleToStart_@t.SortGUID" class="hidden">@t.NumberOfPeopleToStart</td>
-                <td id="maxStackNumber_@t.SortGUID" class="hidden">@t.MaxStackNumber</td>
 
-                <td class="hidden" id="sortChoice_@t.SortGUID">@t.SortChoice</td>
-            </tr>
+
+            <td id="numberOfPeopleToStart_@t.SortGUID" class="hidden">@t.NumberOfPeopleToStart</td>
+            <td id="maxStackNumber_@t.SortGUID" class="hidden">@t.MaxStackNumber</td>
+
+            <td class="hidden" id="sortChoice_@t.SortGUID">@t.SortChoice</td>
+        </tr>
         }
     </tbody>
 </table>

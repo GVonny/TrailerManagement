@@ -21,7 +21,8 @@
                     </th>
 
                     <th class="text-right col-xs-3">
-                        <span>Repeat Violation: </span><span id="violationCount_@s.SafetyConcernGUID">@s.ViolationCount</span>
+                        <span>Repeat Violation: </span>
+                        <span id="violationCount_@s.SafetyConcernGUID" class="count">@s.ViolationCount</span>
                         @if (s.ViolationCount > 1)
                         {
                             <span> times</span>
@@ -90,6 +91,15 @@
                 console.log(this.parentElement.parentElement.parentElement.parentElement.id);
                 $('#closeLink').attr('href', ("MarkConcernAsFixed?safetyConcernID=" + this.parentElement.parentElement.parentElement.parentElement.id));
                 $('#closeModal').modal();
+            });
+
+            $('.count').each(function ()
+            {
+                var count = parseInt($(this).html());
+                if (count > 1)
+                {
+                    $(this).parent().css('background-color', 'red');
+                }
             });
         });
     </script>    
