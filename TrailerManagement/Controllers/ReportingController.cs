@@ -799,9 +799,11 @@ namespace TrailerManagement.Controllers
                 client.Credentials = new NetworkCredential("grant.vonhaden@palletusa.com", Properties.Settings.Default.EmailPassword);
 
                 string body = "Attached is the current Active Trailer Board in an excell file.";
+                var username = Session["username"].ToString();
+                var user = db.Users.FirstOrDefault(u => u.Username == username);
+                var email = user.Email;
 
-
-                MailMessage message = new MailMessage("grant.vonhaden@palletusa.com", "janice.vonhaden@palletusa.com", "Active List Report", body);
+                MailMessage message = new MailMessage("grant.vonhaden@palletusa.com", email, "Active List Report", body);
 
                 message.Attachments.Add(new Attachment(filePath));
                 message.IsBodyHtml = true;

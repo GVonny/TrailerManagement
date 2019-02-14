@@ -296,7 +296,7 @@
           <Property Name="FirstName" Type="varchar" MaxLength="20" />
           <Property Name="Department" Type="varchar" MaxLength="20" />
           <Property Name="Permission" Type="varchar" MaxLength="20" />
-          <Property Name="Email" Type="varchar" MaxLength="20" />
+          <Property Name="Email" Type="varchar(max)" />
         </EntityType>
         <EntityContainer Name="TrailerModelStoreContainer">
           <EntitySet Name="ActiveInventoryLocations" EntityType="Self.ActiveInventoryLocations" Schema="dbo" store:Type="Tables" />
@@ -616,7 +616,7 @@
           <Property Name="FirstName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="Department" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="Permission" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Email" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityContainer Name="TrailerEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="ActiveInventoryLocations" EntityType="Self.ActiveInventoryLocation" />

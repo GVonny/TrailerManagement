@@ -511,7 +511,7 @@ namespace TrailerManagement.Controllers
 
                 //uncomment to change the status of active trailers when sort is complete
                 var activeTrailerEdit = db.ActiveTrailerLists.FirstOrDefault(a => a.TrailerNumber == sort.TrailerNumber);
-                if (activeTrailerEdit != null)
+                if (activeTrailerEdit != null && activeTrailerEdit.TrailerStatus == constant.TRAILER_STATUS_NEED_EMPTY)
                 {
                     activeTrailerEdit.TrailerStatus = constant.TRAILER_STATUS_EMPTY;
                     activeTrailerEdit.LoadStatus = "";
@@ -1293,18 +1293,27 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                var trailerNumberTemp = trailerNumber;
+                var trailerNumberTemp = trailerNumber.ToUpper();
                 if(trailerNumberTemp.Contains("USA"))
                 {
                     var spaceIndex = trailerNumberTemp.IndexOf(" ");
                     if(spaceIndex > 0)
                     {
-
+                        trailerNumberTemp = trailerNumberTemp.Substring(0, spaceIndex) + trailerNumberTemp.Substring(spaceIndex + 1);
                     }
+                }
+                else if(trailerNumberTemp.Contains("FLAT"))
+                {
+                    var fIndex = trailerNumberTemp.IndexOf("F");
+                    if (fIndex > 0)
+                    {
+                        trailerNumberTemp = trailerNumberTemp.Substring(0, fIndex) + '-' + trailerNumberTemp.Substring(fIndex);
+                    }
+
                 }
                 SortList sort = new SortList();
                 {
-                    sort.TrailerNumber = trailerNumber;
+                    sort.TrailerNumber = trailerNumberTemp;
                     sort.Vendor = vendors;
                     sort.Customer = vendors;
                     sort.OrderNumber = orderNumber;

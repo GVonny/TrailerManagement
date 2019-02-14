@@ -79,7 +79,7 @@
                             </li>
                         }
 
-                        @if (Convert.ToInt32(Session["permission"]) > 20 && (Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 10000))
+                        @if (Convert.ToInt32(Session["permission"]) > 20 && (Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000))
                         {
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -89,14 +89,14 @@
                                     @if (Convert.ToInt32(Session["permission"]) > 40 && (Convert.ToInt32(Session["department"]) == 10000))
                                     {
                                         <li><a href="~/Reporting/InsuranceInfo">Insurance Info</a></li>
+
                                         <li role="separator" class="divider"></li>
-                                        <li role="separator" class="divider"></li>
-                                        <li><a href="~/Reporting/PayoutVendors">Payout Info by Vendor</a></li>
-                                        <li><a href="~/Reporting/PartsRecievedByDate">Parts Recieved by Date</a></li>
-                                        <li><a href="~/Reporting/PartsReceivedBetweenDates">Parts Received Between Dates</a></li>
-                                        <li role="separator" class="divider"></li>
-                                        <li role="separator" class="divider"></li>
+
                                     }
+                                    <li><a href="~/Reporting/PayoutVendors">Payout Info by Vendor</a></li>
+                                    <li><a href="~/Reporting/PartsRecievedByDate">Parts Recieved by Date</a></li>
+                                    <li><a href="~/Reporting/PartsReceivedBetweenDates">Parts Received Between Dates</a></li>
+                                    <li role="separator" class="divider"></li>
                                     <li><a href="~/Reporting/ActiveListReporting">Active List Reporting</a></li>
                                     <li role="separator" class="divider"></li>
                                     <li><a href="~/Reporting/ActiveTrailerListFileReport">Run Active List Report</a></li>
