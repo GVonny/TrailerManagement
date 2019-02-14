@@ -213,19 +213,13 @@
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Constants.cs" />
-    <Compile Include="Models\CreateCompany.cs" />
-    <Compile Include="Models\CreatePalletPrice.cs" />
-    <Compile Include="Models\CreatePalletType.cs" />
     <Compile Include="Models\CreateSortImage.cs" />
-    <Compile Include="Models\CreateUser.cs" />
     <Compile Include="Models\CustomersAndVendor.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DailyTrailerLog.cs" />
     <Compile Include="Models\Department.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\EditUser.cs" />
     <Compile Include="Models\InactiveTrailerList.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>

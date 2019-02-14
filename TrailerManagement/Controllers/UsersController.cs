@@ -34,13 +34,21 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateUser([Bind(Include = "Username,Password,Department,Permission,FirstName")] CreateUser createUser)
+        public ActionResult CreateUser([Bind(Include = "Username,Password,Department,Permission,FirstName")] User createUser)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
                 if (ModelState.IsValid)
                 {
-                    User newUser = createUser.MapToUser();
+                    User newUser = new User()
+                    {
+                        Username = createUser.Username,
+                        Password = createUser.Password,
+                        Department = createUser.Department,
+                        Permission = createUser.Permission,
+                        FirstName = createUser.FirstName,
+                        Email = createUser.Email
+                    };
 
                     if (db.Users.Any(u => u.Username == newUser.Username))
                     {
@@ -130,23 +138,15 @@ namespace TrailerManagement.Controllers
                     else
                     {
                         user = db.Users.Find(id);
-
-                        EditUser userEdit = new EditUser()
-                        {
-                            Username = user.Username,
-                            Password = user.Password,
-                            Department = user.Department,
-                            Permission = user.Permission,
-                            FirstName = user.FirstName
-                        };
-                        return View(userEdit);
+                        
+                        return View(user);
                     }
                 }
             }
         }
 
         [HttpPost]
-        public ActionResult EditUser([Bind(Include = "Username,Password,Department,Permission,FirstName")] EditUser updatedUser, int id)
+        public ActionResult EditUser([Bind(Include = "Username,Password,Department,Permission,FirstName")] User updatedUser, int id)
         {
             using (TrailerEntities db = new TrailerEntities())
             {

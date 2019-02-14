@@ -1,4 +1,4 @@
-﻿@model TrailerManagement.Models.EditUser
+﻿@model TrailerManagement.Models.User
 @{
     ViewBag.Title = "Edit User";
 }
@@ -47,8 +47,16 @@
             <div class="form-group hidden" id="department">
                 @Html.LabelFor(model => model.Department, htmlAttributes: new { @class = "control-label col-xs-2" })
                 <div class="col-xs-6">
-                    @Html.DropDownListFor(model => model.Department, ViewData["departments"] as List<SelectListItem>, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form"})
+                    @Html.DropDownListFor(model => model.Department, ViewData["departments"] as List<SelectListItem>, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form" })
                     @Html.ValidationMessageFor(model => model.Department, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <!-- Email -->
+            <div class="form-group hidden" id="email">
+                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-xs-2" })
+                <div class="col-xs-6">
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Name", id = "firstName" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                 </div>
             </div>
             <!-- Permission -->
@@ -64,7 +72,7 @@
                     }, htmlAttributes: new { @class = "form-control signin-form"})
                 </div>
             </div>
-            
+
 
             <!-- Submit -->
             <div class="form-group">
@@ -123,6 +131,7 @@
                 $('#department').removeClass('hidden');
                 $('#permission').removeClass('hidden');
                 $('#firstname').removeClass('hidden');
+                $('#email').removeClass('hidden');
             }
 
             //remove user button click to show confirmation modal

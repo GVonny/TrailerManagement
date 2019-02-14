@@ -1375,13 +1375,38 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateCompany([Bind(Include = "CustomerNumber,VendorNumber,Name,Type,SortType,EmailAddresses")] CreateCompany createCompany)
+        public ActionResult CreateCompany([Bind(Include = "CustomerNumber,VendorNumber,Name,Type,SortType,EmailAddresses,SortTypeDescription,PhoneNumber,ContactName,PayoutDescription")] CustomersAndVendor createCompany)
         {
             if(ModelState.IsValid)
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {
-                    db.CustomersAndVendors.Add(createCompany.MapToCompany());
+                    CustomersAndVendor company = new CustomersAndVendor()
+                    {
+                        CustomerNumber = createCompany.CustomerNumber,
+                        VendorNumber = createCompany.VendorNumber,
+                        Name = createCompany.Name.ToUpper(),
+                        SortType = createCompany.SortType,
+                        EmailAddresses = createCompany.EmailAddresses,
+                        SortTypeDescription = createCompany.SortTypeDescription,
+                        PhoneNumber = createCompany.PhoneNumber,
+                        ContactName = createCompany.ContactName,
+                        PayoutDescription = createCompany.PayoutDescription,
+                    };
+
+                    if (createCompany.VendorNumber == null && createCompany.CustomerNumber != null)
+                    {
+                        company.Type = "Customer Only";
+                    }
+                    else if (createCompany.CustomerNumber == null && createCompany.VendorNumber != null)
+                    {
+                        company.Type = "Vendor Only";
+                    }
+                    else if (createCompany.CustomerNumber != null && createCompany.VendorNumber != null)
+                    {
+                        company.Type = "Customer/Vendor";
+                    }
+                    db.CustomersAndVendors.Add(company);
                     db.SaveChanges();
                 }
                 return RedirectToAction(actionName: "CustomersAndVendors", controllerName: "PalletRepair", routeValues: new { startsWith = "ALL" });
@@ -1414,7 +1439,7 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditCompany([Bind(Include = "CustomerNumber,VendorNumber,Name,SortType,EmailAddresses,SortTypeDescription,PayoutDescription")] CustomersAndVendor editCompany, int id)
+        public ActionResult EditCompany([Bind(Include = "CustomerNumber,VendorNumber,Name,Type,SortType,EmailAddresses,SortTypeDescription,PhoneNumber,ContactName,PayoutDescription")] CustomersAndVendor editCompany, int id)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
@@ -1511,13 +1536,22 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreatePalletType([Bind(Include ="PartNumber,Description,Type,TagsRequired,PutAwayLocation")] CreatePalletType palletType)
+        public ActionResult CreatePalletType([Bind(Include ="PartNumber,Description,Type,TagsRequired,PutAwayLocation")] PalletType palletType)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
                 if(ModelState.IsValid)
                 {
-                    db.PalletTypes.Add(palletType.MapToType());
+                    PalletType newPalletType = new PalletType()
+                    {
+                        PartNumber = palletType.PartNumber,
+                        Description = palletType.PartNumber,
+                        Type = palletType.Type,
+                        TagsRequired = palletType.TagsRequired,
+                        PutAwayLocation = palletType.PutAwayLocation,
+                        Status = "ACTIVE",
+                    };
+                    db.PalletTypes.Add(newPalletType);
                     db.SaveChanges();
                     return RedirectToAction(actionName: "PalletTypes", controllerName: "PalletRepair");
                 }
@@ -1659,7 +1693,7 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreatePalletPrice([Bind(Include ="VendorNumber,VendorName,PartNumber,Description,PurchasePrice")]CreatePalletPrice newPreset)
+        public ActionResult CreatePalletPrice([Bind(Include ="VendorNumber,VendorName,PartNumber,Description,PurchasePrice")]PalletPrice newPreset)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
@@ -1678,7 +1712,15 @@ namespace TrailerManagement.Controllers
                     newPreset.VendorNumber = vendor.VendorNumber;
                     newPreset.Description = palletType.Description;
 
-                    db.PalletPrices.Add(newPreset.MapToPrice());
+                    PalletPrice newPrice = new PalletPrice()
+                    {
+                        VendorNumber = newPreset.VendorNumber,
+                        VendorName = newPreset.VendorName,
+                        PartNumber = newPreset.PartNumber,
+                        Description = newPreset.Description,
+                        PurchasePrice = newPreset.PurchasePrice,
+                    };
+                    db.PalletPrices.Add(newPrice);
                     db.SaveChanges();
 
                     return RedirectToAction(actionName: "PalletPrices", controllerName: "PalletRepair", routeValues: new { startsWith = "ALL" });
