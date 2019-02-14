@@ -28,7 +28,6 @@ namespace TrailerManagement.Models
         public virtual DbSet<ActiveInventoryLocation> ActiveInventoryLocations { get; set; }
         public virtual DbSet<ActiveLocationRow> ActiveLocationRows { get; set; }
         public virtual DbSet<ActiveTrailerList> ActiveTrailerLists { get; set; }
-        public virtual DbSet<AssignedConcern> AssignedConcerns { get; set; }
         public virtual DbSet<CodeViolation> CodeViolations { get; set; }
         public virtual DbSet<CompletedSort> CompletedSorts { get; set; }
         public virtual DbSet<CustomersAndVendor> CustomersAndVendors { get; set; }
@@ -47,5 +46,6 @@ namespace TrailerManagement.Models
         public virtual DbSet<TrailerList> TrailerLists { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<StackNote> StackNotes { get; set; }
+        public virtual DbSet<MasterStacksTest> MasterStacksTests { get; set; }
     }
 }

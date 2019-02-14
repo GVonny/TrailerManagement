@@ -41,12 +41,6 @@
           <Property Name="Tags" Type="varchar" MaxLength="5" />
           <Property Name="DateModified" Type="varchar" MaxLength="15" />
         </EntityType>
-        <EntityType Name="AssignedConcerns">
-          <Key>
-            <PropertyRef Name="AssignedConcernGUID" />
-          </Key>
-          <Property Name="AssignedConcernGUID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-        </EntityType>
         <EntityType Name="CodeViolations">
           <Key>
             <PropertyRef Name="CodeViolationGUID" />
@@ -127,6 +121,22 @@
           <Property Name="StackNumber" Type="int" />
         </EntityType>
         <EntityType Name="MasterStacks">
+          <Key>
+            <PropertyRef Name="StackGUID" />
+          </Key>
+          <Property Name="StackGUID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SortGUID" Type="bigint" />
+          <Property Name="StackNumber" Type="int" />
+          <Property Name="PartNumber" Type="varchar" MaxLength="25" />
+          <Property Name="Description" Type="varchar(max)" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="PeopleOnStack" Type="int" />
+          <Property Name="UserSignedIn" Type="varchar" MaxLength="20" />
+          <Property Name="PalletNote" Type="varchar(max)" />
+          <Property Name="IsSplit" Type="bit" />
+          <Property Name="SplitFrom" Type="varchar" MaxLength="25" />
+        </EntityType>
+        <EntityType Name="MasterStacksTest">
           <Key>
             <PropertyRef Name="StackGUID" />
           </Key>
@@ -309,7 +319,6 @@
           <EntitySet Name="ActiveInventoryLocations" EntityType="Self.ActiveInventoryLocations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ActiveLocationRows" EntityType="Self.ActiveLocationRows" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ActiveTrailerList" EntityType="Self.ActiveTrailerList" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="AssignedConcerns" EntityType="Self.AssignedConcerns" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CodeViolations" EntityType="Self.CodeViolations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CompletedSorts" EntityType="Self.CompletedSorts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CustomersAndVendors" EntityType="Self.CustomersAndVendors" Schema="dbo" store:Type="Tables" />
@@ -317,6 +326,7 @@
           <EntitySet Name="InactiveTrailerList" EntityType="Self.InactiveTrailerList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InventoryRowStacks" EntityType="Self.InventoryRowStacks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MasterStacks" EntityType="Self.MasterStacks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MasterStacksTest" EntityType="Self.MasterStacksTest" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PalletPrices" EntityType="Self.PalletPrices" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PalletTypes" EntityType="Self.PalletTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payouts" EntityType="Self.Payouts" Schema="dbo" store:Type="Tables" />
@@ -368,12 +378,6 @@
           <Property Name="Notes" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Tags" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="DateModified" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="AssignedConcern">
-          <Key>
-            <PropertyRef Name="AssignedConcernGUID" />
-          </Key>
-          <Property Name="AssignedConcernGUID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="CodeViolation">
           <Key>
@@ -630,7 +634,6 @@
           <EntitySet Name="ActiveInventoryLocations" EntityType="Self.ActiveInventoryLocation" />
           <EntitySet Name="ActiveLocationRows" EntityType="Self.ActiveLocationRow" />
           <EntitySet Name="ActiveTrailerLists" EntityType="Self.ActiveTrailerList" />
-          <EntitySet Name="AssignedConcerns" EntityType="Self.AssignedConcern" />
           <EntitySet Name="CodeViolations" EntityType="Self.CodeViolation" />
           <EntitySet Name="CompletedSorts" EntityType="Self.CompletedSort" />
           <EntitySet Name="CustomersAndVendors" EntityType="Self.CustomersAndVendor" />
@@ -649,6 +652,7 @@
           <EntitySet Name="TrailerLists" EntityType="Self.TrailerList" />
           <EntitySet Name="Users" EntityType="Self.User" />
           <EntitySet Name="StackNotes" EntityType="TrailerModel.StackNote" />
+          <EntitySet Name="MasterStacksTests" EntityType="TrailerModel.MasterStacksTest" />
         </EntityContainer>
         <EntityType Name="StackNote">
           <Key>
@@ -656,6 +660,22 @@
           </Key>
           <Property Name="StackNoteGUID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="StackNoteOption" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="MasterStacksTest">
+          <Key>
+            <PropertyRef Name="StackGUID" />
+          </Key>
+          <Property Name="StackGUID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SortGUID" Type="Int64" />
+          <Property Name="StackNumber" Type="Int32" />
+          <Property Name="PartNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="PeopleOnStack" Type="Int32" />
+          <Property Name="UserSignedIn" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PalletNote" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="IsSplit" Type="Boolean" />
+          <Property Name="SplitFrom" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -699,13 +719,6 @@
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
                 <ScalarProperty Name="Tags" ColumnName="Tags" />
                 <ScalarProperty Name="DateModified" ColumnName="DateModified" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AssignedConcerns">
-            <EntityTypeMapping TypeName="TrailerModel.AssignedConcern">
-              <MappingFragment StoreEntitySet="AssignedConcerns">
-                <ScalarProperty Name="AssignedConcernGUID" ColumnName="AssignedConcernGUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -982,6 +995,23 @@
               <MappingFragment StoreEntitySet="StackNotes">
                 <ScalarProperty Name="StackNoteOption" ColumnName="StackNoteOption" />
                 <ScalarProperty Name="StackNoteGUID" ColumnName="StackNoteGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MasterStacksTests">
+            <EntityTypeMapping TypeName="TrailerModel.MasterStacksTest">
+              <MappingFragment StoreEntitySet="MasterStacksTest">
+                <ScalarProperty Name="SplitFrom" ColumnName="SplitFrom" />
+                <ScalarProperty Name="IsSplit" ColumnName="IsSplit" />
+                <ScalarProperty Name="PalletNote" ColumnName="PalletNote" />
+                <ScalarProperty Name="UserSignedIn" ColumnName="UserSignedIn" />
+                <ScalarProperty Name="PeopleOnStack" ColumnName="PeopleOnStack" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="PartNumber" ColumnName="PartNumber" />
+                <ScalarProperty Name="StackNumber" ColumnName="StackNumber" />
+                <ScalarProperty Name="SortGUID" ColumnName="SortGUID" />
+                <ScalarProperty Name="StackGUID" ColumnName="StackGUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

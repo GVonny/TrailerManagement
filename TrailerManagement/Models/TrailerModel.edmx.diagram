@@ -8,7 +8,6 @@
         <EntityTypeShape EntityType="TrailerModel.ActiveInventoryLocation" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="TrailerModel.ActiveLocationRow" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="TrailerModel.ActiveTrailerList" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="TrailerModel.AssignedConcern" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="TrailerModel.CodeViolation" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="TrailerModel.CompletedSort" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="TrailerModel.CustomersAndVendor" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
@@ -27,6 +26,7 @@
         <EntityTypeShape EntityType="TrailerModel.TrailerList" Width="1.5" PointX="0.75" PointY="12.75" IsExpanded="true" />
         <EntityTypeShape EntityType="TrailerModel.User" Width="1.5" PointX="12.75" PointY="5.75" IsExpanded="true" />
         <EntityTypeShape EntityType="TrailerModel.StackNote" Width="1.5" PointX="7.375" PointY="12.75" />
+        <EntityTypeShape EntityType="TrailerModel.MasterStacksTest" Width="1.5" PointX="13.375" PointY="9.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
