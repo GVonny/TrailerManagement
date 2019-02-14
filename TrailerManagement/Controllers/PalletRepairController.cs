@@ -412,91 +412,93 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                var sortedStacks = db.MasterStacks.Where(t => t.SortGUID == sortID);
+                var sortedStacks = db.MasterStacks.Where(t => t.SortGUID == sortID).ToList();
 
-                var completeStacks = db.CompletedSorts.Where(c => c.SortGUID == sortID);
+                var completeStacks = db.CompletedSorts.Where(c => c.SortGUID == sortID).ToList();
 
-                if(completeStacks != null)
+                if(completeStacks.Count > 0)
                 {
                     foreach (CompletedSort stack in completeStacks)
                     {
                         db.CompletedSorts.Remove(stack);
                     }
-                }
-                
-                ArrayList palletTypes = new ArrayList();
-                List<Int32> palletQuantities = new List<Int32>();
 
-                foreach (MasterStack stack in sortedStacks)
-                {
-                    int foundIndex = -1;
+                    ArrayList palletTypes = new ArrayList();
+                    List<Int32> palletQuantities = new List<Int32>();
 
-                    //checks to see if palletType already exists in
-                    for (int x = 0; x < palletTypes.Count; x++)
+                    foreach (MasterStack stack in sortedStacks)
                     {
-                        if (palletTypes[x].Equals(stack.PartNumber))
+                        int foundIndex = -1;
+
+                        //checks to see if palletType already exists in
+                        for (int x = 0; x < palletTypes.Count; x++)
                         {
-                            foundIndex = x;
-                            break;
-                        }
-                    }
-                    if (foundIndex < 0)
-                    {
-                        palletTypes.Add(stack.PartNumber);
-                        palletQuantities.Add(Convert.ToInt32(stack.Quantity));
-                    }
-                    else
-                    {
-                        palletQuantities[foundIndex] += Convert.ToInt32(stack.Quantity);
-                    }
-                }
-
-                SortList sort = db.SortLists.Find(sortID);
-                var palletPrices = db.PalletPrices.Where(t => t.VendorName == sort.Vendor);
-                
-                if(palletTypes.Count != 0)
-                {
-                    for (int x = 0; x < palletTypes.Count; x++)
-                    {
-                        var partNumber = palletTypes[x].ToString();
-                        CompletedSort palletType;
-                        if (!partNumber.Contains('x'))
-                        {
-                            PalletType pallet = db.PalletTypes.FirstOrDefault(p => p.PartNumber == partNumber);
-
-                            palletType = new CompletedSort()
+                            if (palletTypes[x].Equals(stack.PartNumber))
                             {
-                                SortGUID = sortID,
-                                PartNumber = pallet.PartNumber,
-                                Description = pallet.Description,
-                                Quantity = palletQuantities[x],
-                                Vendor = sort.Vendor,
-                            };
-                        }
-                        else
-                        {
-                            palletType = new CompletedSort()
-                            {
-                                SortGUID = sortID,
-                                PartNumber = partNumber,
-                                Description = "CUSTOM",
-                                Quantity = palletQuantities[x],
-                                Vendor = sort.Vendor,
-                            };
-                        }
-
-                        foreach (PalletPrice vendorPrice in palletPrices)
-                        {
-                            if (palletType.PartNumber.Equals(vendorPrice.PartNumber))
-                            {
-                                palletType.Cost = vendorPrice.PurchasePrice;
+                                foundIndex = x;
                                 break;
                             }
                         }
-                        db.CompletedSorts.Add(palletType);
+                        if (foundIndex < 0)
+                        {
+                            palletTypes.Add(stack.PartNumber);
+                            palletQuantities.Add(Convert.ToInt32(stack.Quantity));
+                        }
+                        else
+                        {
+                            palletQuantities[foundIndex] += Convert.ToInt32(stack.Quantity);
+                        }
                     }
+
+                    SortList sort = db.SortLists.Find(sortID);
+                    var palletPrices = db.PalletPrices.Where(t => t.VendorName == sort.Vendor);
+
+                    if (palletTypes.Count != 0)
+                    {
+                        for (int x = 0; x < palletTypes.Count; x++)
+                        {
+                            var partNumber = palletTypes[x].ToString();
+                            CompletedSort palletType;
+                            if (!partNumber.Contains('x'))
+                            {
+                                PalletType pallet = db.PalletTypes.FirstOrDefault(p => p.PartNumber == partNumber);
+
+                                palletType = new CompletedSort()
+                                {
+                                    SortGUID = sortID,
+                                    PartNumber = pallet.PartNumber,
+                                    Description = pallet.Description,
+                                    Quantity = palletQuantities[x],
+                                    Vendor = sort.Vendor,
+                                };
+                            }
+                            else
+                            {
+                                palletType = new CompletedSort()
+                                {
+                                    SortGUID = sortID,
+                                    PartNumber = partNumber,
+                                    Description = "CUSTOM",
+                                    Quantity = palletQuantities[x],
+                                    Vendor = sort.Vendor,
+                                };
+                            }
+
+                            foreach (PalletPrice vendorPrice in palletPrices)
+                            {
+                                if (palletType.PartNumber.Equals(vendorPrice.PartNumber))
+                                {
+                                    palletType.Cost = vendorPrice.PurchasePrice;
+                                    break;
+                                }
+                            }
+                            db.CompletedSorts.Add(palletType);
+                        }
+                    }
+                    db.SaveChanges();
                 }
-                db.SaveChanges();
+                
+                
                 return RedirectToAction(actionName: "CreatePayout", controllerName: "PalletRepair", routeValues: new { sortID });
             }
         }
@@ -509,7 +511,7 @@ namespace TrailerManagement.Controllers
 
                 //uncomment to change the status of active trailers when sort is complete
                 var activeTrailerEdit = db.ActiveTrailerLists.FirstOrDefault(a => a.TrailerNumber == sort.TrailerNumber);
-                if (activeTrailerEdit != null && activeTrailerEdit.LoadStatus == constant.TRAILER_STATUS_NEED_EMPTY)
+                if (activeTrailerEdit != null)
                 {
                     activeTrailerEdit.TrailerStatus = constant.TRAILER_STATUS_EMPTY;
                     activeTrailerEdit.LoadStatus = "";

@@ -86,7 +86,7 @@ namespace TrailerManagement.Controllers
             {
                 var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
                 DateTime date = DateTime.Now;
-                var currentDate = date.ToString();
+                var currentDate = date.ToString("MM/dd/yyyy");
                 
                 var day = date.Day.ToString();
                 if(day.Length == 1)
