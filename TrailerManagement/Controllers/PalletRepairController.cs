@@ -416,13 +416,15 @@ namespace TrailerManagement.Controllers
 
                 var completeStacks = db.CompletedSorts.Where(c => c.SortGUID == sortID).ToList();
 
-                if(completeStacks.Count > 0)
+                if(sortedStacks.Count > 0)
                 {
-                    foreach (CompletedSort stack in completeStacks)
+                    if(completeStacks.Count > 0)
                     {
-                        db.CompletedSorts.Remove(stack);
+                        foreach (CompletedSort stack in completeStacks)
+                        {
+                            db.CompletedSorts.Remove(stack);
+                        }
                     }
-
                     ArrayList palletTypes = new ArrayList();
                     List<Int32> palletQuantities = new List<Int32>();
 
@@ -497,8 +499,6 @@ namespace TrailerManagement.Controllers
                     }
                     db.SaveChanges();
                 }
-                
-                
                 return RedirectToAction(actionName: "CreatePayout", controllerName: "PalletRepair", routeValues: new { sortID });
             }
         }
@@ -1796,6 +1796,50 @@ namespace TrailerManagement.Controllers
             }
         }
 
+        public ActionResult StackNotes()
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var notes = db.StackNotes.ToList();
+                return View(notes);
+            }
+        }
+
+        public ActionResult CreateStackNote(string stackNote)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                StackNote newNote = new StackNote()
+                {
+                    StackNoteOption = stackNote,
+                };
+                db.StackNotes.Add(newNote);
+                db.SaveChanges();
+                return RedirectToAction(actionName: "StackNotes", controllerName: "PalletRepair");
+            }
+        }
+
+        public ActionResult EditStackNote(int noteID, string stackNote)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var note = db.StackNotes.FirstOrDefault(n => n.StackNoteGUID == noteID);
+                note.StackNoteOption = stackNote;
+                db.SaveChanges();
+                return RedirectToAction(actionName: "StackNotes", controllerName: "PalletRepair");
+            }
+        }
+
+        public ActionResult DeleteStackNote(int noteID)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var note = db.StackNotes.FirstOrDefault(n => n.StackNoteGUID == noteID);
+                db.StackNotes.Remove(note);
+                db.SaveChanges();
+                return RedirectToAction(actionName: "StackNotes", controllerName: "PalletRepair");
+            }
+        }
         //Testing
 
         //keep for testing

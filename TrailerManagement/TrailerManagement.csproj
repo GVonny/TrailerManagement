@@ -254,6 +254,9 @@
     <Compile Include="Models\SortListTest.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\StackNote.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\TrailerList.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
@@ -452,6 +455,7 @@
     <Content Include="Views\Reporting\PartsByVendorBetweenDates.cshtml" />
     <Content Include="Views\Reporting\PayoutInfoFileReport.cshtml" />
     <Content Include="Views\Reporting\FileAlreadyOpen.cshtml" />
+    <Content Include="Views\PalletRepair\StackNotes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

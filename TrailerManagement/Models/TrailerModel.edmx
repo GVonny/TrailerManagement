@@ -265,6 +265,13 @@
           <Property Name="SortChoice" Type="varchar" MaxLength="10" />
           <Property Name="DateCompleted" Type="varchar" MaxLength="10" />
         </EntityType>
+        <EntityType Name="StackNotes">
+          <Key>
+            <PropertyRef Name="StackNoteGUID" />
+          </Key>
+          <Property Name="StackNoteGUID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StackNoteOption" Type="varchar(max)" />
+        </EntityType>
         <EntityType Name="TrailerList">
           <Key>
             <PropertyRef Name="TrailerNumber" />
@@ -318,6 +325,7 @@
           <EntitySet Name="SortImages" EntityType="Self.SortImages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SortList" EntityType="Self.SortList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SortListTest" EntityType="Self.SortListTest" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StackNotes" EntityType="Self.StackNotes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TrailerList" EntityType="Self.TrailerList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
@@ -640,7 +648,15 @@
           <EntitySet Name="SortListTests" EntityType="Self.SortListTest" />
           <EntitySet Name="TrailerLists" EntityType="Self.TrailerList" />
           <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="StackNotes" EntityType="TrailerModel.StackNote" />
         </EntityContainer>
+        <EntityType Name="StackNote">
+          <Key>
+            <PropertyRef Name="StackNoteGUID" />
+          </Key>
+          <Property Name="StackNoteGUID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StackNoteOption" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -961,6 +977,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="StackNotes">
+            <EntityTypeMapping TypeName="TrailerModel.StackNote">
+              <MappingFragment StoreEntitySet="StackNotes">
+                <ScalarProperty Name="StackNoteOption" ColumnName="StackNoteOption" />
+                <ScalarProperty Name="StackNoteGUID" ColumnName="StackNoteGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -975,7 +999,7 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
