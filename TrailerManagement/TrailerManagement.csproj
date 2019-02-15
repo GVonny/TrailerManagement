@@ -456,6 +456,7 @@
     <Content Include="Views\Reporting\PayoutInfoFileReport.cshtml" />
     <Content Include="Views\Reporting\FileAlreadyOpen.cshtml" />
     <Content Include="Views\PalletRepair\StackNotes.cshtml" />
+    <Content Include="Views\Reporting\PayoutImagesByVendor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

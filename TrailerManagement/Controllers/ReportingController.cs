@@ -181,6 +181,7 @@ namespace TrailerManagement.Controllers
                 List<String> users = new List<string>();
                 List<int> sortIDs = new List<int>();
                 List<double> unloadTimes = new List<double>();
+                List<int> pictureCount = new List<int>();
                 foreach(Payout payout in payouts)
                 {
                     var sort = db.MasterStacks.Where(s => s.SortGUID == payout.SortGUID).ToList();
@@ -191,6 +192,9 @@ namespace TrailerManagement.Controllers
                         unloadTimes.Add(Convert.ToDouble(payout.TimeToSort));
                         sortIDs.Add(Convert.ToInt32(stack.SortGUID));
                         users.Add(user);
+
+                        var imageCount = db.SortImages.Where(i => i.SortGUID == payout.SortGUID).Count();
+                        pictureCount.Add(imageCount);
                     }
                     
                 }
@@ -200,8 +204,18 @@ namespace TrailerManagement.Controllers
                 model.SortIDs = sortIDs;
                 model.Stacks = stacks.ToList();
                 model.Payouts = payouts;
+                model.ImageCount = pictureCount;
 
                 return View(model);
+            }
+        }
+
+        public ActionResult PayoutImagesByVendor(int sortID)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var images = db.SortImages.Where(i => i.SortGUID == sortID);
+                return View(images.ToList());
             }
         }
 

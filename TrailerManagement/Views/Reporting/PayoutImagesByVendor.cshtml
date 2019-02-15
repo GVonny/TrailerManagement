@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "Payout Images By Vendor";
+}
+
+<h2>Payout Images By Vendor</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Note</th>
+            <th>Taken By</th>
+            <th>Date Taken</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var image in Model)
+        {
+            <tr>
+                <td>
+                    <a href="/SortImages/@image.ImagePath" download>
+                        <img src="/SortImages/@image.ImagePath" width="250" height="250" style="transform:rotate(90deg)">
+                    </a>
+                </td>
+                <td>@image.Notes</td>
+                <td>@image.TakenBy</td>
+                <td>@image.DateTaken</td>
+            </tr>
+        }
+    </tbody>
+</table>

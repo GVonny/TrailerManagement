@@ -12,17 +12,24 @@
 {
     <table class="table">
         <thead>
-            <tr>
+            <tr id="@payout.SortGUID">
                 @for (int x = 0; x < sortIDs.Count; x++)
                 {
                     if (sortIDs[x] == payout.SortGUID)
                     {
                         <th colspan="2">Data Inputed By: @Model.Users[x] on @payout.DateCompleted and took <span class="unload-time">@Model.Times[x]</span> minutes</th>
+                        <th class="col-xs-3">Image Count: @Model.ImageCount[x] 
+                            <input type="button" class="btn btn-primary float-right view-images" value="View Images" />
+                            <span class="hidden">@payout.SortGUID</span>
+                        </th>
+
                     }
                 }
                 @*<th colspan="2">@payout.DateCompleted</th>*@
+
                 <th class="col-xs-2">Quantity</th>
                 <th class="col-xs-2">Price</th>
+
             </tr>
         </thead>
         <tbody id="@payout.PayoutGUID">
@@ -32,7 +39,7 @@
                 {
                     <tr>
                         <td id="partNumber_@payout.PayoutGUID">@stack.PartNumber</td>
-                        <td class="col-xs-6">@stack.Description</td>
+                        <td class="col-xs-6" colspan="2">@stack.Description</td>
                         <td id="quantity_@payout.PayoutGUID">@stack.Quantity</td>
                         <td id="price_@payout.PayoutGUID" class="price">@stack.Cost</td>
                     </tr>
@@ -70,6 +77,13 @@
                 time = (time / 60).toFixed(2);
                 $(this).html(time);
             });
+
+            $('.view-images').on('click', function ()
+            {
+                var id = $(this).parent().children().last().html();
+                console.log(id);
+                location.href = "/Reporting/PayoutImagesByVendor?sortID=" + id;
+            })
         });
     </script>    
 }

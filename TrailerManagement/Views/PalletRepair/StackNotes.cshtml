@@ -61,7 +61,7 @@
             </div>
             <div class="modal-body">
                 <form action="EditStackNote" id="editStackNote">
-                    <input type="number" class="form-control" name="noteID" id="noteID" />
+                    <input type="number" class="form-control hidden" name="noteID" id="noteID" />
                     <input type="text" class="form-control" name="stackNote" placeholder="Stack Note" id="stackNoteEdit" />
                 </form>
             </div>
@@ -146,9 +146,7 @@
             $('table td').on('click', function ()
             {
                 var id = this.id;
-                console.log(id);
                 var note = $('#' + id).html();
-                console.log(note);
                 $('#noteID').val(id);
                 $('#stackNoteEdit').val(note);
                 $('#editStackNoteModal').modal();
