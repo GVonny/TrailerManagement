@@ -18,18 +18,19 @@
                     if (sortIDs[x] == payout.SortGUID)
                     {
                         <th colspan="2">Data Inputed By: @Model.Users[x] on @payout.DateCompleted and took <span class="unload-time">@Model.Times[x]</span> minutes</th>
-                        <th class="col-xs-3">Image Count: @Model.ImageCount[x] 
-                            <input type="button" class="btn btn-primary float-right view-images" value="View Images" />
+                        <th class="col-xs-3">
+                            Image Count: @Model.ImageCount[x]
+                            @if (Model.ImageCount[x] > 0)
+                            {
+                                <input type="button" class="btn btn-primary float-right view-images" value="View Images" />
+                            }
                             <span class="hidden">@payout.SortGUID</span>
                         </th>
 
                     }
                 }
-                @*<th colspan="2">@payout.DateCompleted</th>*@
-
                 <th class="col-xs-2">Quantity</th>
                 <th class="col-xs-2">Price</th>
-
             </tr>
         </thead>
         <tbody id="@payout.PayoutGUID">

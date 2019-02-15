@@ -214,8 +214,10 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                var images = db.SortImages.Where(i => i.SortGUID == sortID);
-                return View(images.ToList());
+                var images = db.SortImages.Where(i => i.SortGUID == sortID).OrderBy(i => i.StackNumber).ToList();
+                var date = images.Last().DateTaken;
+                ViewBag.Date = date;
+                return View(images);
             }
         }
 
