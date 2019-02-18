@@ -86,7 +86,7 @@
                     {
                         <a href="~/Home/Index" class="btn btn-warning">Cancel</a>
                     }
-                    @if (Convert.ToInt32(Session["permission"]) > 40)
+                    @if (Convert.ToInt32(Session["permission"]) >= 40)
                     {
                         <input type="button" value="Remove User" id="remove" class="btn btn-danger" />
                     }

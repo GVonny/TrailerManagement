@@ -229,7 +229,7 @@ namespace TrailerManagement.Controllers
                 if (returnType == "nextStack")
                 {
                     stackNumber++;
-                    return RedirectToAction(actionName: "SortTrailerTest", controllerName: "PalletRepair", routeValues: new { sortID, stackNumber, numberOfPeople });
+                    return RedirectToAction(actionName: "SortTrailer", controllerName: "PalletRepair", routeValues: new { sortID, stackNumber, numberOfPeople });
                 }
                 else
                 {
@@ -718,7 +718,7 @@ namespace TrailerManagement.Controllers
                 var images = db.SortImages.Where(i => i.SortGUID == sortID);
                 model.Images = images.ToList();
                     
-                var notes = db.MasterStacks.Where(n => n.SortGUID == sortID && n.PalletNote != null);
+                var notes = db.MasterStacks.Where(n => n.SortGUID == sortID && (n.PalletNote != null && n.PalletNote != ""));
                 model.Notes = notes.ToList();
 
                 var stacks = db.MasterStacks.Where(u => u.SortGUID == sortID).ToList();
