@@ -23,7 +23,7 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        @if (Convert.ToInt32(Session["permission"]) > 10 && (Convert.ToInt32(Session["department"]) != 4500 && (Convert.ToInt32(Session["department"]) != 2100 || Convert.ToInt32(Session["permission"]) > 30)))
+                        @if (Convert.ToInt32(Session["permission"]) > 10 && (Convert.ToInt32(Session["department"]) != 4500 && Convert.ToInt32(Session["department"]) != 8100 && (Convert.ToInt32(Session["department"]) != 2100 || Convert.ToInt32(Session["permission"]) > 30)))
                         {
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -81,7 +81,7 @@
                             </li>
                         }
 
-                        @if (Convert.ToInt32(Session["permission"]) > 20 && (Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000))
+                        @if (Convert.ToInt32(Session["permission"]) > 20 && (Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 8100 || Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000))
                         {
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -96,13 +96,17 @@
 
                                     }
                                     <li><a href="~/Reporting/PayoutVendors">Payout Info by Vendor</a></li>
-                                    <li><a href="~/Reporting/PartsRecievedByDate">Parts Recieved by Date</a></li>
-                                    <li><a href="~/Reporting/PartsReceivedBetweenDates">Parts Received Between Dates</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="~/Reporting/ActiveListReporting">Active List Reporting</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="~/Reporting/ActiveTrailerListFileReport">Run Active List Report</a></li>
-                                    <li><a href="~/Reporting/PayoutInfoFileReport">Run Payout Report</a></li>
+                                    @if (Convert.ToInt32(Session["department"]) != 8100)
+                                    {
+                                        <li><a href="~/Reporting/PartsRecievedByDate">Parts Recieved by Date</a></li>
+                                        <li><a href="~/Reporting/PartsReceivedBetweenDates">Parts Received Between Dates</a></li>
+                                        <li role="separator" class="divider"></li>
+                                        <li><a href="~/Reporting/ActiveListReporting">Active List Reporting</a></li>
+                                        <li role="separator" class="divider"></li>
+                                        <li><a href="~/Reporting/ActiveTrailerListFileReport">Run Active List Report</a></li>
+                                        <li><a href="~/Reporting/PayoutInfoFileReport">Run Payout Report</a></li>
+                                    }
+
 
                                 </ul>
                             </li>
