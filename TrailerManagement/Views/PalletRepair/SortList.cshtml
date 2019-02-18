@@ -11,7 +11,7 @@
     <a href="PayoutList" class="btn btn-primary float-left" style="margin-top:20px; margin-left:10px">Payout List</a>
     <a href="/Trailer/ActiveTrailerList" class="btn btn-primary" style="margin-top:20px; margin-left:10px">Active List</a>
 }
-    <a href="CreateSort" class="btn btn-primary float-left" style="margin-top:20px; margin-left:10px">Add Trailer</a>
+<a href="CreateSort" class="btn btn-primary float-left" style="margin-top:20px; margin-left:10px">Add Trailer</a>
 @if (Convert.ToInt32(Session["permission"]) > 30)
 {
     <div class="float-right">
@@ -53,6 +53,7 @@
                 {
                     <td id="remove_@t.SortGUID"><a href="/PalletRepair/RemoveSort?sortID=@t.SortGUID">Close Sort</a></td>
                 }
+
             }
             @if (t.Status == "OPEN" || t.Status == "CLOSED")
             {
@@ -62,10 +63,16 @@
 
 
 
+
+
             <td id="numberOfPeopleToStart_@t.SortGUID" class="hidden">@t.NumberOfPeopleToStart</td>
             <td id="maxStackNumber_@t.SortGUID" class="hidden">@t.MaxStackNumber</td>
 
             <td class="hidden" id="sortChoice_@t.SortGUID">@t.SortChoice</td>
+            @if (Convert.ToInt32(Session["permission"]) > 30)
+            {
+                <td><input type="button" class="changeNote" value="Change Note"></td>
+            }
         </tr>
         }
     </tbody>
@@ -152,20 +159,58 @@
     </div>
 </div>
 
+<!-- Note Change Modal -->
+<div id="changeNoteModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Change Sort Note</h2>
+            </div>
+            <div class="modal-body">
+                <form action="EditSortNote" id="changeSortNote">
+                    <input type="number" name="sortID" class="hidden" id="sortNoteID"/>
+                    <input type="text" name="newNote" class="form-control" placeholder="New Note - Leave blank to clear note" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="updateNote" data-dismiss="modal" data-toggle="modal">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section scripts
 {
     <script>
         $(function ()
         {
+            $('#updateNote').on('click', function ()
+            {
+                $('#changeSortNote').submit();
+            })
+
             $('#arrivalDate').on('change', function ()
             {
                 $('#updateDate').removeClass('hidden');
             });
 
+            $('.changeNote').on('click', function ()
+            {
+                var id = $(this).parent().parent().attr('id');
+                $('#sortNoteID').val(id);
+                event.stopPropagation();
+                $('#changeNoteModal').modal();
+            })
+
             var id;
-            $('#removals').on('click', '.product-row', function ()
+            $('tr:not(td:last-child)').on('click', function ()
             {
                 id = this.id;
+                console.log($(this).children());
                 var dateArrived = $('#dateArrived_' + id).html();
                 if (dateArrived.indexOf('-') != -1)
                 {
@@ -203,12 +248,7 @@
                     $('#today').prop('checked', false);
                 }
             });
-
-            $('#removals').on('click', '.closed-row', function ()
-            {
-                id = this.id;
-                location.href = "/PalletRepair/SortConfirmation?sortID=" + id;
-            });
+            
 
             $('#updateDate').on('click', function ()
             {

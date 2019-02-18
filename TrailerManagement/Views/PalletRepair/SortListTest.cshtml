@@ -98,7 +98,7 @@
                 </button>
                 <h2 class="modal-title">Additional Info for <span id="vendorName"></span></h2>
 
-                @using (Html.BeginForm("CreateSortImage", "PalletRepair", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                @using (Html.BeginForm("CreateSortImageTest", "PalletRepair", FormMethod.Post, new { enctype = "multipart/form-data", id = "sortImageForm" }))
                 {
                     @Html.AntiForgeryToken()
                     <div class="form-horizontal">
@@ -125,7 +125,7 @@
                             </div>
                             <div class="form-group">
                                 <strong>Image Note</strong>
-                                <input type="text" class="form-control" id="notes" name="notes">
+                                @Html.DropDownList("stackNotes", null, "- - - Part Note - - -", htmlAttributes: new { @class = "form-control signin-form drop-down stackNote" })
                             </div>
                             <br>
                         </div>
@@ -149,6 +149,27 @@
     <script>
         $(function ()
         {
+            $('#sortImageForm').on('submit', function ()
+            {
+                if ($('.stackNote').val() == "Other")
+                {
+                    $('.stackNote').attr('disabled', 'disabled');
+                }
+            })
+
+            $('body').on('change', '.stackNote', function ()
+            {
+                console.log($(this).val());
+                if ($(this).val() == "Other")
+                {
+                    $(this).parent().append("<input type=\"text\" name=\"" + $(this).attr('name') + "\" class=\"form-control\" placeholder=\"Leave a note about Part?\" tabindex=\"-1\">");
+                }
+                else
+                {
+                    $(this).parent().children('input[type=text]').remove();
+                }
+            });
+
             $('#arrivalDate').on('change', function ()
             {
                 $('#updateDate').removeClass('hidden');

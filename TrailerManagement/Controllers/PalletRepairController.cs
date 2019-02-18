@@ -23,11 +23,11 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
-            { 
+            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_TRANSPORTATION) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
+            {
                 using (TrailerEntities db = new TrailerEntities())
                 {
-                    dynamic model = new CreateSortImage();
+                    dynamic model = new ExpandoObject();
                     var trailers = from x in db.SortLists select x;
                     switch (status)
                     {
@@ -45,6 +45,7 @@ namespace TrailerManagement.Controllers
                     }
 
                     this.ViewData["Vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
+                    this.ViewData["stackNotes"] = new SelectList(db.StackNotes.OrderBy(n => n.StackNoteOption), "StackNoteOption", "StackNoteOption").ToList();
 
                     model.Trailers = trailers.OrderByDescending(t => t.Status).ThenByDescending(t => t.DateArrived).ThenBy(t => t.Customer).ToList();
                     return View(model);
@@ -114,6 +115,7 @@ namespace TrailerManagement.Controllers
                     var vendor = db.CustomersAndVendors.FirstOrDefault(v => v.Name == trailer.Vendor);
 
                     dynamic model = new ExpandoObject();
+
                     model.Trailer = trailer;
                     model.Vendor = vendor;
 
@@ -145,8 +147,9 @@ namespace TrailerManagement.Controllers
                 var stackSize = Convert.ToInt32(fc["stackSize"]);
                 var numberOfPeople = Convert.ToInt32(fc["numberOfPeople"]);
                 var timeOnStack = Convert.ToDouble(fc["timeOnStack"]);
+                var stackNotes = fc["stackNotes"].Split(',');
 
-                if(stackSize > 0)
+                if (stackSize > 0)
                 {
                     var trailer = db.SortLists.FirstOrDefault(t => t.SortGUID == sortID);
                     trailer.MaxStackNumber = stackNumber;
@@ -167,43 +170,45 @@ namespace TrailerManagement.Controllers
                             db.MasterStacks.Remove(stack);
                         }
                     }
-                    
+
+                    var counter = 0;
                     for (int x = 5; x < fc.Count - 2; x++)
                     {
                         var key = fc.GetKey(x);
-                        var part = fc[key].Split(',');
-
-                        var pallet = db.PalletTypes.FirstOrDefault(p => p.PartNumber == key);
-
-                        if (part[0] != "")
+                        if (key != "stackNotes" && key != "palletTypes" && key != "scrapTypes")
                         {
-                            MasterStack stack = new MasterStack
-                            {
-                                SortGUID = sortID,
-                                StackNumber = stackNumber,
-                                PartNumber = pallet.PartNumber,
-                                Description = pallet.Description.ToString(),
-                                Quantity = Convert.ToInt32(part[0]),
-                                PeopleOnStack = numberOfPeople,
-                                UserSignedIn = Session["name"].ToString(),
-                            };
-                            if (part[1] == "")
-                            {
-                                stack.PalletNote = null;
-                            }
-                            else
-                            {
-                                stack.PalletNote = part[1];
-                            }
+                            var quantity = fc[key];
 
-                            db.MasterStacks.Add(stack);
+                            var pallet = db.PalletTypes.FirstOrDefault(p => p.PartNumber == key);
+
+                            if (quantity != "")
+                            {
+                                if (stackNotes[counter] == "Other")
+                                {
+                                    counter++;
+                                }
+                                MasterStack stack = new MasterStack();
+
+                                stack.SortGUID = sortID;
+                                stack.StackNumber = stackNumber;
+                                stack.PartNumber = pallet.PartNumber;
+                                stack.Description = pallet.Description.ToString();
+                                stack.Quantity = Convert.ToInt32(quantity);
+                                stack.PeopleOnStack = numberOfPeople;
+                                stack.UserSignedIn = Session["name"].ToString();
+                                stack.PalletNote = stackNotes[counter];
+
+
+                                db.MasterStacks.Add(stack);
+                            }
+                            counter++;
                         }
                     }
 
                     var customPallet = fc["customPallet"].Split(',');
                     if (customPallet[0] != "")
                     {
-                        MasterStack newStack = new MasterStack
+                        MasterStack newStack = new MasterStack()
                         {
                             SortGUID = sortID,
                             StackNumber = stackNumber,
@@ -212,28 +217,19 @@ namespace TrailerManagement.Controllers
                             Quantity = Convert.ToInt32(customPallet[2]),
                             PeopleOnStack = numberOfPeople,
                             UserSignedIn = Session["name"].ToString(),
+                            PalletNote = stackNotes[stackNotes.Length - 1],
                         };
-                        if (customPallet[3] == "")
-                        {
-                            newStack.PalletNote = null;
-                        }
-                        else
-                        {
-                            newStack.PalletNote = customPallet[3];
-                        }
 
                         db.MasterStacks.Add(newStack);
                     }
                     db.SaveChanges();
                 }
-
                 
-
                 var returnType = fc.GetKey(fc.Count - 1);
                 if (returnType == "nextStack")
                 {
                     stackNumber++;
-                    return RedirectToAction(actionName: "SortTrailer", controllerName: "PalletRepair", routeValues: new { sortID, stackNumber, numberOfPeople });
+                    return RedirectToAction(actionName: "SortTrailerTest", controllerName: "PalletRepair", routeValues: new { sortID, stackNumber, numberOfPeople });
                 }
                 else
                 {
@@ -1198,14 +1194,14 @@ namespace TrailerManagement.Controllers
         //ADD/EDIT/VIEW/DELETE
 
         [HttpPost]
-        public ActionResult CreateSortImage(HttpPostedFileBase ImageFile, string vendors, int peopleOnTrailer, int sortID, string notes, string sortType)
+        public ActionResult CreateSortImage(HttpPostedFileBase ImageFile, string vendors, int peopleOnTrailer, int sortID, string stackNotes, string sortType)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
                 if (ModelState.IsValid)
                 {
                     var trailer = db.SortLists.FirstOrDefault(t => t.SortGUID == sortID);
-                    if(vendors != "")
+                    if (vendors != "")
                     {
                         trailer.Vendor = vendors;
                         trailer.Customer = vendors;
@@ -1231,7 +1227,7 @@ namespace TrailerManagement.Controllers
                                 SortGUID = sortID,
                                 StackNumber = 0,
                                 TakenBy = Session["name"].ToString(),
-                                Notes = notes,
+                                Notes = stackNotes,
                                 ImagePath = path,
                                 DateTaken = DateTime.Now.ToString("yyyy-MM-dd"),
                             };
@@ -1240,11 +1236,11 @@ namespace TrailerManagement.Controllers
                     }
                     db.SaveChanges();
 
-                    if(sortType == "Stack Sort")
+                    if (sortType == "Stack Sort")
                     {
                         return RedirectToAction(actionName: "SortTrailer", controllerName: "PalletRepair", routeValues: new { sortID, numberOfPeople = peopleOnTrailer });
                     }
-                    else if(sortType == "Bulk Sort")
+                    else if (sortType == "Bulk Sort")
                     {
                         return RedirectToAction(actionName: "SortStacks", controllerName: "PalletRepair", routeValues: new { sortID });
                     }
@@ -1260,7 +1256,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult CreateStackImage(HttpPostedFileBase ImageFile, int sortID, int stackNumber, string notes, int peopleOnStack)
+        public ActionResult CreateStackImage(HttpPostedFileBase ImageFile, int sortID, int stackNumber, string stackNotes, int peopleOnStack)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
@@ -1283,7 +1279,7 @@ namespace TrailerManagement.Controllers
                                 SortGUID = sortID,
                                 StackNumber = stackNumber,
                                 TakenBy = Session["name"].ToString(),
-                                Notes = notes,
+                                Notes = stackNotes,
                                 ImagePath = path,
                                 DateTaken = DateTime.Now.ToString("yyyy-MM-dd"),
                             };
@@ -1299,48 +1295,7 @@ namespace TrailerManagement.Controllers
                 }
             }
         }
-
-        //public ActionResult CreateStackImage(HttpPostedFileBase ImageFile, int sortID, int stackNumber, string stackNotes, int peopleOnStack)
-        //{
-        //    using (TrailerEntities db = new TrailerEntities())
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            var trailer = db.SortLists.FirstOrDefault(t => t.SortGUID == sortID);
-
-        //            if (ImageFile != null)
-        //            {
-        //                if (ImageFile.ContentLength > 0)
-        //                {
-        //                    var extension = Path.GetExtension(ImageFile.FileName);
-        //                    var fullPath = Server.MapPath("~/SortImages/") + trailer.Vendor.ToString() + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
-        //                    var path = trailer.Vendor.ToString() + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
-
-        //                    ImageFile.SaveAs(fullPath);
-
-
-        //                    SortImage initialImage = new SortImage()
-        //                    {
-        //                        SortGUID = sortID,
-        //                        StackNumber = stackNumber,
-        //                        TakenBy = Session["name"].ToString(),
-        //                        Notes = stackNotes,
-        //                        ImagePath = path,
-        //                        DateTaken = DateTime.Now.ToString("yyyy-MM-dd"),
-        //                    };
-        //                    db.SortImages.Add(initialImage);
-        //                }
-        //                db.SaveChanges();
-        //            }
-        //            return RedirectToAction(actionName: "SortTrailer", controllerName: "PalletRepair", routeValues: new { sortID, stackNumber, numberOfPeople = peopleOnStack, imageUploaded = true });
-        //        }
-        //        else
-        //        {
-        //            return View();
-        //        }
-        //    }
-        //}
-
+        
         public ActionResult CreateSort()
         {
             if (Session["username"] == null)
@@ -1913,9 +1868,19 @@ namespace TrailerManagement.Controllers
                 return RedirectToAction(actionName: "StackNotes", controllerName: "PalletRepair");
             }
         }
-        //Testing
 
-        //keep for testing
+        public ActionResult EditSortNote(int sortID, string newNote)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var sort = db.SortLists.FirstOrDefault(s => s.SortGUID == sortID);
+                sort.ArrivalNote = newNote;
+                db.SaveChanges();
+                return RedirectToAction(actionName: "SortList", controllerName: "PalletRepair");
+            }
+        }
+        //Testing
+        
         public ActionResult SortListTest(string status)
         {
             using (TrailerEntities db = new TrailerEntities())
@@ -1938,14 +1903,14 @@ namespace TrailerManagement.Controllers
                 }
 
                 this.ViewData["Vendors"] = new SelectList(db.CustomersAndVendors.OrderBy(t => t.Name), "Name", "Name").ToList();
+                this.ViewData["stackNotes"] = new SelectList(db.StackNotes.OrderBy(n => n.StackNoteOption), "StackNoteOption", "StackNoteOption").ToList();
 
                 model.Trailers = trailers.OrderByDescending(t => t.Status).ThenByDescending(t => t.DateArrived).ThenBy(t => t.Customer).ToList();
                 return View(model);
             }
 
         }
-
-        //keep for testing
+        
         public ActionResult SortTrailerTest(int sortID, int? stackNumber, int? numberOfPeople, bool? imageUploaded)
         {
             using (TrailerEntities db = new TrailerEntities())
@@ -2041,9 +2006,10 @@ namespace TrailerManagement.Controllers
                     for (int x = 5; x < fc.Count - 2; x++)
                     {
                         var key = fc.GetKey(x);
-                        if(key != "stackNotes" && key != "palletTypes" && key != "scrapTypes")
+                        var quantity = fc[key];
+                        if (key != "stackNotes" && key != "palletTypes" && key != "scrapTypes")
                         {
-                            var quantity = fc[key];
+                            
 
                             var pallet = db.PalletTypes.FirstOrDefault(p => p.PartNumber == key);
 
@@ -2102,6 +2068,109 @@ namespace TrailerManagement.Controllers
                 else
                 {
                     return RedirectToAction(actionName: "SortConfirmation", controllerName: "PalletRepair", routeValues: new { sortID });
+                }
+            }
+        }
+
+        [HttpPost]
+        public ActionResult CreateSortImageTest(HttpPostedFileBase ImageFile, string vendors, int peopleOnTrailer, int sortID, string stackNotes, string sortType)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                if (ModelState.IsValid)
+                {
+                    var trailer = db.SortLists.FirstOrDefault(t => t.SortGUID == sortID);
+                    if (vendors != "")
+                    {
+                        trailer.Vendor = vendors;
+                        trailer.Customer = vendors;
+                    }
+                    else
+                    {
+                        trailer.Vendor = trailer.Customer;
+                    }
+                    trailer.NumberOfPeopleToStart = peopleOnTrailer;
+
+                    if (ImageFile != null)
+                    {
+                        if (ImageFile.ContentLength > 0)
+                        {
+                            var extension = Path.GetExtension(ImageFile.FileName);
+                            var fullPath = Server.MapPath("~/SortImages/") + trailer.Vendor.ToString() + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+                            var path = vendors + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+
+                            ImageFile.SaveAs(fullPath);
+
+                            SortImage initialImage = new SortImage()
+                            {
+                                SortGUID = sortID,
+                                StackNumber = 0,
+                                TakenBy = Session["name"].ToString(),
+                                Notes = stackNotes,
+                                ImagePath = path,
+                                DateTaken = DateTime.Now.ToString("yyyy-MM-dd"),
+                            };
+                            db.SortImages.Add(initialImage);
+                        }
+                    }
+                    db.SaveChanges();
+
+                    if (sortType == "Stack Sort")
+                    {
+                        return RedirectToAction(actionName: "SortTrailerTest", controllerName: "PalletRepair", routeValues: new { sortID, numberOfPeople = peopleOnTrailer });
+                    }
+                    else if (sortType == "Bulk Sort")
+                    {
+                        return RedirectToAction(actionName: "SortStacks", controllerName: "PalletRepair", routeValues: new { sortID });
+                    }
+                    else
+                    {
+                        return RedirectToAction(actionName: "SortTrailerTest", controllerName: "PalletRepair", routeValues: new { sortID, numberOfPeople = peopleOnTrailer });
+                    }
+                }
+                else
+                {
+                    return View();
+                }
+            }
+        }
+
+        public ActionResult CreateStackImageTest(HttpPostedFileBase ImageFile, int sortID, int stackNumber, string stackNotes, int peopleOnStack)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                if (ModelState.IsValid)
+                {
+                    var trailer = db.SortLists.FirstOrDefault(t => t.SortGUID == sortID);
+
+                    if (ImageFile != null)
+                    {
+                        if (ImageFile.ContentLength > 0)
+                        {
+                            var extension = Path.GetExtension(ImageFile.FileName);
+                            var fullPath = Server.MapPath("~/SortImages/") + trailer.Vendor.ToString() + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+                            var path = trailer.Vendor.ToString() + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+
+                            ImageFile.SaveAs(fullPath);
+
+                            SortImage initialImage = new SortImage()
+                            {
+                                SortGUID = sortID,
+                                StackNumber = stackNumber,
+                                TakenBy = Session["name"].ToString(),
+                                Notes = stackNotes,
+                                ImagePath = path,
+                                DateTaken = DateTime.Now.ToString("yyyy-MM-dd"),
+                            };
+                            db.SortImages.Add(initialImage);
+                        }
+                        db.SaveChanges();
+                    }
+                    return RedirectToAction(actionName: "SortTrailer", controllerName: "PalletRepair", routeValues: new { sortID, stackNumber, numberOfPeople = peopleOnStack, imageUploaded = true });
+                }
+                else
+                {
+                    return View();
                 }
             }
         }

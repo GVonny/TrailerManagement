@@ -28,11 +28,11 @@
 <h2>Sort Sheet</h2>
 
 <div class="well">
-    <form method="post" action="CreateNewStack" class="form-horizontal" id="stackInput">
+    <form method="post" action="CreateNewStackTest" class="form-horizontal" id="stackInput">
         <div class="form-top-buttons">
             <input type="button" value="Next Stack" class="btn btn-primary col-xs-3 nextStack" />
-            <a href="/PalletRepair/SortList" value="Finish Later" class="btn btn-danger col-xs-3">Finish Later</a>
-            <input type="button" value="All Done" class="btn btn-warning float-right col-xs-3 all-done"/>
+            <a href="/PalletRepair/SortListTest" value="Finish Later" class="btn btn-danger col-xs-3">Finish Later</a>
+            <input type="button" value="All Done" class="btn btn-warning float-right col-xs-3 all-done" />
             <button type="button" id="hideKeyboard" class="btn btn-primary float-right col-xs-3 btn-green"><span class="fa fa-keyboard-o"></span>&nbsp;Hide Keyboard</button>
         </div>
 
@@ -77,7 +77,8 @@
             <div class="col-xs-7">
                 <strong id="palletType1">Unrepaired 48x40 Cores:</strong>
                 <input type="number" name="50-0140" class="form-control quantity" placeholder="(50-0140) - Quantity">
-                <input type="text" name="50-0140" class="form-control" placeholder="Leave a note about Part?" tabindex="-1"><br>
+                @Html.DropDownList("stackNotes", null, "- - - Part Note - - -", htmlAttributes: new { @class = "form-control signin-form drop-down stackNote" })
+                @*<input type="text" name="50-0140" class="form-control" placeholder="Leave a note about Part?" tabindex="-1"><br>*@
             </div>
             <div class="col-xs-2">
                 <button type="button" id="hideKeyboard" class="btn btn-primary btn-green" style="margin-top:30px" tabindex="-1"><h4><span class="fa fa-keyboard-o"></span></h4></button>
@@ -89,7 +90,8 @@
             <div class="col-xs-7">
                 <strong id="palletType2">Repaired 48x40 4/Way Flush (Grade A):</strong>
                 <input type="number" name="50-0001" class="form-control quantity" placeholder="(50-0001) - Quantity">
-                <input type="text" name="50-0001" class="form-control" placeholder="Leave a note about Part?" tabindex="-1"><br>
+                @Html.DropDownList("stackNotes", null, "- - - Part Note - - -", htmlAttributes: new { @class = "form-control signin-form drop-down stackNote" })
+                @*<input type="text" name="50-0001" class="form-control" placeholder="Leave a note about Part?" tabindex="-1"><br>*@
             </div>
             <div class="col-xs-2">
                 <button type="button" id="hideKeyboard" class="btn btn-primary btn-green" style="margin-top:30px" tabindex="-1"><h4><span class="fa fa-keyboard-o"></span></h4></button>
@@ -101,7 +103,8 @@
             <div class="col-xs-7">
                 <strong id="palletType3">Repaired 48x40 4/Way Flush (Grade B):</strong>
                 <input type="number" name="50-0004" class="form-control quantity" placeholder="(50-0004) - Quantity">
-                <input type="text" name="50-0004" class="form-control" placeholder="Leave a noteabout Part?" tabindex="-1"><br>
+                @Html.DropDownList("stackNotes", null, "- - - Part Note - - -", htmlAttributes: new { @class = "form-control signin-form drop-down stackNote" })
+                @*<input type="text" class="form-control" placeholder="Leave a note about Part?" tabindex="-1"><br>*@
             </div>
         </div>
 
@@ -111,10 +114,11 @@
             <div class="form-group" id="palletType4">
                 <div class="col-xs-7" id="palletType4TypeInput">
                     <strong>Extra Pallet Type 1:</strong>
-                    @Html.DropDownList("palletTypes", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form drop-down", @id = "extraPalletType1" })
+                    @Html.DropDownList("palletTypes", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form drop-down extra", @id = "extraPalletType1" })
                     <input type="number" id="extraPalletType1Quantity" class="form-control quantity extra-quantity" placeholder="Extra Pallet Type Quantity">
-                    <input type="text" id="extraPalletType1Notes" class="form-control" placeholder="Leave a note about Part?" tabindex="-1">
-                    <br />
+                    @Html.DropDownList("stackNotes", null, "- - - Part Note - - -", htmlAttributes: new { @class = "form-control signin-form drop-down stackNote" })
+                    @*<input type="text" id="extraPalletType1Notes" class="form-control" placeholder="Leave a note about Part?" tabindex="-1">*@
+
                 </div>
                 <div class="col-xs-5" id="firstExtraPalletType">
                     <br />
@@ -127,9 +131,10 @@
         <div class="form-group" id="palletTypeScrap">
             <div class="col-xs-7">
                 <strong>Scrap:</strong>
-                @Html.DropDownList("scrapTypes", null, htmlAttributes: new { @class = "form-control signin-form", @id = "scrapTypes" })
+                @Html.DropDownList("scrapTypes", null, htmlAttributes: new { @class = "form-control signin-form extra", @id = "scrapTypes" })
                 <input type="number" id="scrapQuantity" class="form-control quantity" name="SCRAP-ONLY" placeholder="SCRAP-ONLY - Quantity">
-                <input type="text" id="scrapNotes" class="form-control" name="SCRAP-ONLY" placeholder="Leave a note about Part?">
+                @Html.DropDownList("stackNotes", null, "- - - Part Note - - -", htmlAttributes: new { @class = "form-control signin-form drop-down stackNote" })
+                @*<input type="text" id="scrapNotes" class="form-control" name="SCRAP-ONLY" placeholder="Leave a note about Part?">*@
             </div>
             <div class="col-xs-5">
                 <button type="button" class="btn btn-danger clear-scrap-inputs" style="margin-top:30px"><h4>Clear Scrap</h4></button>
@@ -153,14 +158,14 @@
             </div>
             <div class="col-xs-5">
                 <strong>Note</strong>
-                <input type="text" id="customPalletNote" name="customPallet" class="form-control" placeholder="Leave a note about Part?"><br>
+                @Html.DropDownList("stackNotes", null, "- - - Part Note - - -", htmlAttributes: new { @class = "form-control signin-form drop-down stackNote" })
             </div>
         </div>
     </form>
 
     <div class="form-bottom-buttons">
         <input type="button" value="Next Stack" name="nextStack" class="btn btn-primary col-xs-3 nextStack" />
-        <a href="/PalletRepair/SortList" value="Finish Later" class="btn btn-danger col-xs-3" id="finishLater">Finish Later</a>
+        <a href="/PalletRepair/SortListTest" value="Finish Later" class="btn btn-danger col-xs-3" id="finishLater">Finish Later</a>
         <a class="btn btn-primary col-xs-3 btn-green" href="/PalletRepair/SortSummary?sortID=@trailer.SortGUID">Sort Summary</a>
         <input type="button" value="All Done" class="btn btn-warning float-right col-xs-3 all-done" />
         <br>
@@ -169,7 +174,11 @@
 </div>
 
 <div id="dropDownList" class="hidden">
-    @Html.DropDownList("palletTypes", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form", @id="hiddenList" })
+    @Html.DropDownList("palletTypes", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "hiddenList" })
+</div>
+
+<div id="notesDropDown" class="hidden">
+    @Html.DropDownList("stackNotes", null, "- - - Stack Note - - -", htmlAttributes: new { @class = "form-control signin-form drop-down stackNote" })
 </div>
 
 <!-- Error Modal -->
@@ -222,7 +231,7 @@
                 <h2 class="modal-title">Stack Image</h2>
             </div>
             <div class="modal-body">
-                @using (Html.BeginForm("CreateStackImage", "PalletRepair", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                @using (Html.BeginForm("CreateStackImageTest", "PalletRepair", FormMethod.Post, new { enctype = "multipart/form-data", id = "sortImageForm" }))
                 {
                     @Html.AntiForgeryToken()
                     <div class="form-horizontal">
@@ -243,7 +252,7 @@
                             </div>
                             <div class="form-group">
                                 <strong>Image Note</strong>
-                                <input type="text" class="form-control" id="notes" name="notes">
+                                @Html.DropDownList("stackNotes", null, "- - - Part Note - - -", htmlAttributes: new { @class = "form-control signin-form drop-down stackNote", @id = "stackImageNote" })
                             </div>
                             <br>
                         </div>
@@ -266,6 +275,27 @@
     <script>
     $(function ()
     {
+        $('body').on('change', '.stackNote', function ()
+        {
+            console.log($(this).val());
+            if ($(this).val() == "Other")
+            {
+                $(this).parent().append("<input type=\"text\" name=\"" + $(this).attr('name') + "\" class=\"form-control\" placeholder=\"Leave a note about Part?\" tabindex=\"-1\">");
+            }
+            else
+            {
+                $(this).parent().children('input[type=text]').remove();
+            }
+        });
+
+        $('#sortImageForm').on('submit', function ()
+        {
+            if ($('#stackImageNote').val() == "Other")
+            {
+                $('#stackImageNote').attr('disabled', 'disabled');
+            }
+        })
+
         var timeOnLoad = new Date();
         var seconds;
         function calculateTimeOnPage()
@@ -274,7 +304,7 @@
 
             seconds = (timeOnLeave.getTime() - timeOnLoad.getTime()) / 1000;
 
-            $('#timeOnStack').val(seconds)
+            $('#timeOnStack').val(seconds);
         }
 
         var imageUploaded = '@ViewBag.ImageUploaded';
@@ -291,7 +321,7 @@
         $('.all-done, .nextStack').on('click', function ()
         {
             var option = $(this).attr('class');
-            
+
             $('#numberOfPeople').removeAttr('disabled', 'disabled');
             var stackSize = $('#stackSize').val();
             var inputQuantity = [];
@@ -326,6 +356,7 @@
                     }
                 }
             });
+
             for (var x = 0; x < filledProgress.length; x++)
             {
                 if (filledProgress[x] == false)
@@ -353,7 +384,7 @@
                 }
                 else
                 {
-                    $('select').each(function ()
+                    $('.extra').each(function ()
                     {
                         $(this).attr('disabled', 'disabled');
                     });
@@ -391,7 +422,7 @@
                     {
                         $('#stackInput').append("<input type=\"text\" name=\"allDone\">");
                     }
-                    $('select').each(function ()
+                    $('.extra').each(function ()
                     {
                         $(this).attr('disabled', 'disabled');
                     });
@@ -452,8 +483,7 @@
                     "<strong>Extra Pallet Type " + extraPalletTypes + ":</strong>" +
                     $('#dropDownList').html() +
                     "<input type=\"number\" id=\"extraPalletType" + extraPalletTypes + "Quantity\" class=\"form-control quantity extra-quantity\" placeholder=\"Extra Pallet Type Quantity\">" +
-                    "<input type=\"text\" id=\"extraPalletType" + extraPalletTypes + "Notes\" class=\"form-control\" placeholder=\"Leave a note for Nancy?\" tabindex=\"-1\">" +
-                    "<br />" +
+                    $('#notesDropDown').html() +
                     "</div>" +
                     "<div class=\"col-xs-5\">" +
                     "<br />" +
@@ -463,7 +493,7 @@
                     "</div>"
                 );
             }
-            
+
         });
 
         $('body').on('click', '.remove-pallet-type', function ()
@@ -488,9 +518,9 @@
                     "</div>"
                 );
             }
-           
+
         });
-        
+
         var extraPalletTypes = 1;
         $('body').on('change', 'select', function ()
         {
@@ -566,9 +596,9 @@
         {
             $('#numberOfPeople').val(numberOfPeople);
         }
-        
+
         $('#currentDate').html(getCurrentDate());
-        
+
         function getCurrentDate()
         {
             var currentDate = new Date();
@@ -583,7 +613,7 @@
                 currentDay = "0" + currentDay;
             }
             var currentYear = currentDate.getFullYear();
-            
+
             currentDate = (currentYear + "-" + currentMonth + "-" + currentDay);
             console.log(currentDate);
             return currentDate;
