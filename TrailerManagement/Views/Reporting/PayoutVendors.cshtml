@@ -27,8 +27,12 @@
                         newVendor = vendor;
                     }
                     <a href="/Reporting/PayoutInfoByVendor?vendor=@newVendor">By Date</a>
-                    <b>|</b>
-                    <a href="/Reporting/PayoutInfoByPart?vendor=@newVendor" id="@newVendor" class="vendor-link">By Part</a>
+                    @if (Convert.ToInt32(Session["department"]) != 8100)
+                    {
+                        <b>|</b>
+                        <a href="/Reporting/PayoutInfoByPart?vendor=@newVendor" id="@newVendor" class="vendor-link">By Part</a>
+                    }
+
                 </td>
             </tr>
         }
