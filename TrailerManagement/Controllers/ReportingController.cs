@@ -176,7 +176,7 @@ namespace TrailerManagement.Controllers
 
                 var stacks = db.CompletedSorts.Where(s => s.Vendor == vendor).OrderBy(s => s.SortGUID).ThenBy(s => s.PartNumber).ThenByDescending(s => s.Quantity);
 
-                var payouts = db.Payouts.Where(p => p.Vendor == vendor).OrderBy(p => p.DateCompleted).ToList();
+                var payouts = db.Payouts.Where(p => p.Vendor == vendor).OrderByDescending(p => p.DateCompleted).ToList();
 
                 List<String> users = new List<string>();
                 List<int> sortIDs = new List<int>();

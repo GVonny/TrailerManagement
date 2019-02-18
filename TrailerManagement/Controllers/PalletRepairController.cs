@@ -545,11 +545,11 @@ namespace TrailerManagement.Controllers
                     MailMessage message = new MailMessage("grant.vonhaden@palletusa.com", cesarEmail, "Empty Trailer", body);
                     message.IsBodyHtml = true;
                     message.BodyEncoding = UTF8Encoding.UTF8;
-                    //client.Send(message);
+                    client.Send(message);
                     message = new MailMessage("grant.vonhaden@palletusa.com", gabeEmail, "Empty Trailer", body);
                     message.IsBodyHtml = true;
                     message.BodyEncoding = UTF8Encoding.UTF8;
-                    //client.Send(message);
+                    client.Send(message);
                 }
 
                 var vendor = db.CustomersAndVendors.FirstOrDefault(v => v.Name == sort.Vendor);
