@@ -539,7 +539,7 @@ namespace TrailerManagement.Controllers
                         ViewBag.EndDate = endingDate.ToString("MM/dd/yyyy");
                     }
 
-                    var sorts = db.SortLists.Where(s => s.Status == "CLOSED").ToList();
+                    var sorts = db.SortLists.Where(s => s.Status == "CLOSED").OrderBy(s => s.DateCompleted).ToList();
 
                     List<Int32> sortIDs = new List<int>();
 
@@ -552,7 +552,7 @@ namespace TrailerManagement.Controllers
 
                         DateTime dateCompleted = new DateTime(year, month, day);
 
-                        if (dateCompleted > beginningDate && dateCompleted < endingDate)
+                        if (dateCompleted >= beginningDate && dateCompleted <= endingDate)
                         {
                             sortIDs.Add(Convert.ToInt32(sort.SortGUID));
                         }

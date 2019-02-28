@@ -109,6 +109,8 @@
 
             $('#changeDates').on('click', function ()
             {
+                $('#startDate').val('@startDate');
+                $('#endDate').val('@endDate')
                 $('#dateFilter').modal();
             })
 
@@ -119,6 +121,10 @@
                 {
                     location.href = "/Home/Index";
                 }
+                else
+                {
+                    $('dateFilter').modal('hide');
+                }
             });
 
             $('#submit').on('click', function ()
@@ -128,7 +134,7 @@
                 var endDate = new Date($('#endDate').val());
                 console.log(endDate);
 
-                if (startDate < endDate && (startDate != "Invalid Date" && endDate != "Invalid Date"))
+                if (startDate <= endDate && (startDate != "Invalid Date" && endDate != "Invalid Date"))
                 {
                     $('#dateForm').submit();
                 }
@@ -136,7 +142,17 @@
                 {
                     $('#submit').removeAttr('data-toggle').removeAttr('data-dismiss');
 
-                    $('#error').html("No results found - Please select start and end dates");
+                    if (startDate >= endDate)
+                    {
+                        $('#error').html("No results found - Start date must be before end date");
+                    }
+                    else
+                    {
+                        $('#error').html("No results found - Please select start and end dates");
+                    }
+
+                    $('#startDate').val($('#startDate').val());
+                    $('#endDate').val($('#endDate').val());
                     $('#dateFilter').modal();
                 }
             });

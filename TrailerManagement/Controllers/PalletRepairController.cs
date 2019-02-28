@@ -29,6 +29,7 @@ namespace TrailerManagement.Controllers
                 {
                     dynamic model = new ExpandoObject();
                     var trailers = from x in db.SortLists select x;
+                    var notArrived = from x in db.SortLists select x;
                     switch (status)
                     {
                         case "CLOSED":
@@ -39,7 +40,8 @@ namespace TrailerManagement.Controllers
                         }
                         default:
                         {
-                            trailers = trailers.Where(t => t.Status == "OPEN" || t.Status == "NEW");
+                            trailers = trailers.Where(t => t.Status == "OPEN" || t.Status == "NEW" && t.DateArrived != null);
+                            notArrived = notArrived.Where(t => t.Status == "NEW" && t.DateArrived == null);
                             break;
                         }
                     }
@@ -48,6 +50,7 @@ namespace TrailerManagement.Controllers
                     this.ViewData["stackNotes"] = new SelectList(db.StackNotes.OrderBy(n => n.StackNoteOption), "StackNoteOption", "StackNoteOption").ToList();
 
                     model.Trailers = trailers.OrderByDescending(t => t.Status).ThenByDescending(t => t.DateArrived).ThenBy(t => t.Customer).ToList();
+                    model.NotArrived = notArrived.OrderByDescending(t => t.ExpectedArrivalDate).ThenBy(t => t.ExpectedArrivalTime).ToList(); ;
                     return View(model);
                 }
             }
@@ -814,6 +817,8 @@ namespace TrailerManagement.Controllers
             {
                 var trailer = db.SortLists.Find(sortID);
                 trailer.DateArrived = date;
+                trailer.ExpectedArrivalDate = null;
+                trailer.ExpectedArrivalTime = null;
                 db.SaveChanges();
                 return RedirectToAction(actionName: "SortList", controllerName: "PalletRepair");
             }
@@ -909,6 +914,28 @@ namespace TrailerManagement.Controllers
                 }
                 db.SaveChanges();
                 return RedirectToAction(actionName: "ViewPayout", controllerName: "PalletRepair", routeValues: new { sortID });
+            }
+        }
+
+        public ActionResult ChangeExpectedDate(string date, int sortID)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var sort = db.SortLists.FirstOrDefault(s => s.SortGUID == sortID);
+                sort.ExpectedArrivalDate = date;
+                db.SaveChanges();
+                return RedirectToAction(actionName: "SortList", controllerName: "PalletRepair");
+            }
+        }
+
+        public ActionResult ChangeExpectedTime(int sortID, string time)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var sort = db.SortLists.FirstOrDefault(s => s.SortGUID == sortID);
+                sort.ExpectedArrivalTime = time;
+                db.SaveChanges();
+                return RedirectToAction(actionName: "SortList", controllerName: "PalletRepair");
             }
         }
 

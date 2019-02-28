@@ -1,6 +1,4 @@
-﻿
-@model TrailerManagement.Models.ActiveTrailerList
-
+﻿@model TrailerManagement.Models.ActiveTrailerList
 @{
     ViewBag.Title = "Edit Active Trailer";
 }
@@ -46,7 +44,8 @@
                         @Html.DropDownList("TrailerStatus", new List<SelectListItem>
                         {
                             new SelectListItem { Text = "", Value = "" },
-                            new SelectListItem { Text = "NEED EMPTY", Value = "1" },
+                            new SelectListItem { Text = "NEED EMPTY", Value = "1" },                            
+                            new SelectListItem { Text = "EMPTY", Value = "4" },
                             new SelectListItem { Text = "IN TRANSIT", Value = "6" },
                             new SelectListItem { Text = "DELIVERED", Value = "7"},
                         },
@@ -339,6 +338,7 @@
                 }
                 if (newTrailerStatus == '4')
                 {
+                    $('#offSiteLocationInput').val("");
                     $('#customer').val("");
                     $('#loadStatus').val("");
                     $('#notesList').val("");

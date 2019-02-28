@@ -309,10 +309,10 @@
 
         var imageUploaded = '@ViewBag.ImageUploaded';
         imageUploaded = imageUploaded.toLowerCase();
-        if (imageUploaded == "false")
-        {
-            $('#pictureModal').modal();
-        }
+        //if (imageUploaded == "false")
+        //{
+        $('#pictureModal').modal();
+        //}
 
         var stackNumber = parseInt('@ViewBag.StackNumber');
         $('.stackNumber').html(stackNumber);

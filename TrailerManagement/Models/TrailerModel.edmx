@@ -255,6 +255,8 @@
           <Property Name="SortChoice" Type="varchar" MaxLength="10" />
           <Property Name="DateCompleted" Type="varchar" MaxLength="10" />
           <Property Name="ArrivalNote" Type="varchar(max)" />
+          <Property Name="ExpectedArrivalDate" Type="varchar" MaxLength="10" />
+          <Property Name="ExpectedArrivalTime" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="SortListTest">
           <Key>
@@ -577,6 +579,8 @@
           <Property Name="SortChoice" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="DateCompleted" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="ArrivalNote" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ExpectedArrivalDate" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ExpectedArrivalTime" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="SortListTest">
           <Key>
@@ -917,6 +921,8 @@
           <EntitySetMapping Name="SortLists">
             <EntityTypeMapping TypeName="TrailerModel.SortList">
               <MappingFragment StoreEntitySet="SortList">
+                <ScalarProperty Name="ExpectedArrivalTime" ColumnName="ExpectedArrivalTime" />
+                <ScalarProperty Name="ExpectedArrivalDate" ColumnName="ExpectedArrivalDate" />
                 <ScalarProperty Name="ArrivalNote" ColumnName="ArrivalNote" />
                 <ScalarProperty Name="SortGUID" ColumnName="SortGUID" />
                 <ScalarProperty Name="TrailerNumber" ColumnName="TrailerNumber" />
