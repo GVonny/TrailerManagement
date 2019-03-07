@@ -468,6 +468,7 @@
     <Content Include="Views\Trailer\MyConcerns.cshtml" />
     <Content Include="Views\Reporting\DriverCustomers.cshtml" />
     <Content Include="Views\Reporting\CustomerInfo.cshtml" />
+    <Content Include="Views\Reporting\CustomerList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,30 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "CustomerList";
+}
+
+<h2 class="float-left">Customer List</h2>
+<a href="/Reporting/DriverCustomers" class="btn btn-primary float-left" style="margin-top:20px;">Change Customer</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Notes</th>
+            <th>Date Taken</th>
+            <th>Taken By</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(DriverConcern concern in Model)
+        {
+            <tr>
+                <td>@concern.Customer</td>
+                <td>@concern.Notes</td>
+                <td>@concern.DateTaken</td>
+                <td>@concern.DriverSignedIn</td>
+                <td class="col-xs-1"><a href="/Reporting/CustomerInfo?driverConcernID=@concern.DriverConcernGUID" class="btn btn-primary">View</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

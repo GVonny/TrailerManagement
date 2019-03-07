@@ -52,18 +52,8 @@ namespace TrailerManagement.Controllers
                     sortedTrailer.Status = "CLOSED";
 
                     var date = DateTime.Now;
-                    var day = date.Day.ToString();
-                    if (day.Length == 1)
-                    {
-                        day = "0" + day;
-                    }
-                    var month = date.Month.ToString();
-                    if (month.Length == 1)
-                    {
-                        month = "0" + month;
-                    }
-                    var year = date.Year;
-                    sortedTrailer.DateCompleted = (year + "-" + month + "-" + day);
+                    var day = date.Day.ToString("yyyy-MM-dd");
+                    sortedTrailer.DateCompleted = day;
 
                     db.SaveChanges();
                 }
@@ -93,20 +83,9 @@ namespace TrailerManagement.Controllers
             {
                 var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
                 DateTime date = DateTime.Now;
-                var currentDate = date.ToString("MM/dd/yyyy");
+                var currentDate = date.ToString("yyyy-MM-dd");
                 
-                var day = date.Day.ToString();
-                if(day.Length == 1)
-                {
-                    day = "0" + day;
-                }
-                var month = date.Month.ToString();
-                if (month.Length == 1)
-                {
-                    month = "0" + month;
-                }
-                var year = date.Year;
-                payout.DateCompleted = (year + "-" + month + "-" + day);
+                payout.DateCompleted = currentDate;
                 db.SaveChanges();
 
                 SmtpClient client = new SmtpClient("smtp.outlook.com", 587);

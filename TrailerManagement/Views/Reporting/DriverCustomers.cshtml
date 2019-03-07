@@ -9,20 +9,14 @@
     <thead>
         <tr>
             <th>Customer</th>
-            <th>Notes</th>
-            <th>Date</th>
-            <th>Taken By</th>
         </tr>
     </thead>
     <tbody>
-        @foreach(DriverConcern concern in Model)
+        @foreach(String concern in Model)
         {
             <tr>
-                <td>@concern.Customer</td>
-                <td>@concern.Notes</td>
-                <td>@concern.DateTaken</td>
-                <td>@concern.DriverSignedIn</td>
-                <td class="col-xs-1"><a href="/Reporting/CustomerInfo?driverConcernID=@concern.DriverConcernGUID" class="btn btn-primary">View</a></td>
+                <td>@concern</td>
+                <td class="col-xs-1"><a href="/Reporting/CustomerList?customer=@concern" class="btn btn-primary">View Records</a></td>
             </tr>
         }
     </tbody>

@@ -905,18 +905,27 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                var concerns = db.DriverConcerns.ToList();
+                var concerns = db.DriverConcerns.OrderBy(c => c.Customer).ToList();
 
-                switch(order)
+                List<string> uniqueCustomers = new List<string>();
+
+                foreach(DriverConcern concern in concerns)
                 {
-                    case "date":
-                        concerns.OrderBy(c => c.DateTaken);
-                        break;
-                    default:
-                        concerns.OrderBy(c => c.Customer);
-                        break;
+                    if(!uniqueCustomers.Contains(concern.Customer))
+                    {
+                        uniqueCustomers.Add(concern.Customer);
+                    }
                 }
-                return View(concerns);
+                return View(uniqueCustomers);
+            }
+        }
+
+        public ActionResult CustomerList(string customer)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var customers = db.DriverConcerns.Where(c => c.Customer == customer).OrderBy(c => c.DateTaken).ToList();
+                return View(customers);
             }
         }
 
