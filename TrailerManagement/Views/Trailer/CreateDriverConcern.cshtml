@@ -1,0 +1,34 @@
+﻿@model TrailerManagement.Models.DriverConcern
+@{
+    ViewBag.Title = "Create Driver Concern";
+}
+
+<h2>New Driver Concern</h2>
+
+<div class="well">
+    @using (Html.BeginForm("CreateDriverConcern", "Trailer", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-xs-1 text-right">
+                    <strong>Customer</strong>
+                </div>
+                <div class="col-xs-4">
+                    <input type="text" id="customer" name="customer" class="form-control" placeholder="Customer">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-1 text-right">
+                    <strong>Notes</strong>
+                </div>
+                <div class="col-xs-4">
+                    <input type="text" id="notes" name="notes" class="form-control" placeholder="Note">
+                </div>
+            </div>
+            <div class="col-xs-offset-1">
+                <input type="submit" value="Continue" class="btn btn-primary" />
+            </div>
+        </div>
+    }
+</div>

@@ -688,7 +688,7 @@ namespace TrailerManagement.Controllers
 
                     DateTime dateCompleted = new DateTime(Convert.ToInt32(year), Convert.ToInt32(month), Convert.ToInt32(day));
 
-                    if (dateCompleted > beginningDate && dateCompleted < endingDate)
+                    if (dateCompleted >= beginningDate && dateCompleted <= endingDate)
                     {
                         sortIDs.Add(Convert.ToInt32(sort.SortGUID));
                     }
@@ -698,7 +698,8 @@ namespace TrailerManagement.Controllers
 
                 foreach (Int32 sortID in sortIDs)
                 {
-                    var stacks = db.CompletedSorts.Where(s => s.PartNumber == partNumber && s.SortGUID == sortID && (s.Vendor != "" && s.Vendor != null)).ToList();
+                    //&& (s.Vendor != "" && s.Vendor != null)
+                    var stacks = db.CompletedSorts.Where(s => s.PartNumber == partNumber && s.SortGUID == sortID ).ToList();
                     foreach (CompletedSort stack in stacks)
                     {
                         completeStacks.Add(stack);

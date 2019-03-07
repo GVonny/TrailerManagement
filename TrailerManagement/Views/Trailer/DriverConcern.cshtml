@@ -1,0 +1,171 @@
+﻿@using TrailerManagement.Models
+@{
+    ViewBag.Title = "Driver Concern";
+    DriverConcern concern = Model.Concern;
+}
+
+<div>
+    <h2 class="float-left">Driver Concern</h2>
+    <input type="button" id="addImage" value="Add Image" class="btn btn-primary float-left" style="margin-top:20px;"/>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Date</th>
+            <th>Note</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@concern.Customer</td>
+            <td>@concern.DateTaken</td>
+            <td>@concern.Notes</td>
+        </tr>
+    </tbody>
+</table>
+
+@if(Model.Images.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Note</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(DriverConcernImage image in Model.Images)
+            {
+                <tr>
+                    <td id="image_@image.DriverConcernImageGUID">
+                        <a href="/DriverImages/@image.ImagePath" download>
+                            <img src="/DriverImages/@image.ImagePath" width="250" height="250" style="transform:rotate(90deg)">
+                        </a>
+                    </td>
+                    <td class="col-xs-3" id="imageNote_@image.DriverConcernImageGUID">@image.Note</td>
+                    <td class="col-xs-1">
+                        <input type="button" value="change note" class="change-note btn btn-primary" id="@image.DriverConcernImageGUID" />
+                        <br />
+                        <br />
+                        <input type="button" value="remove" class="remove-image btn btn-primary" id="@image.DriverConcernImageGUID" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div id="uploadImageModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Image Upload</h2>
+
+                @using (Html.BeginForm("CreateDriverImage", "Trailer", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="number" class="form-control" id="driverConcernID" name="driverConcernID" value="@concern.DriverConcernGUID">
+                                <br>
+                            </div>
+                            <div class="form-group">
+                                <strong>Image</strong>
+                                <input type="file" name="ImageFile" id="ImageFile">
+                            </div>
+                            <div class="form-group">
+                                <strong>Image Note</strong>
+                                <input type="text" class="form-control" id="note" name="note">
+                            </div>
+                            <br>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <input type="submit" value="Upload" class="btn btn-primary" />
+                                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="changeImageNoteModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Change Note</h2>
+
+                @using (Html.BeginForm("ChangeImageNote", "Trailer", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="modal-body">
+                            <div class="form-group hidden">
+                                <input type="number" class="form-control" id="driverImageConcernID" name="driverImageConcernID">
+                                <br>
+                            </div>
+                            <div class="form-group">
+                                <strong>Image Note</strong>
+                                <input type="text" class="form-control" id="imageNote" name="note">
+                            </div>
+                            <br>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <input type="submit" value="Change" class="btn btn-primary" />
+                                <button type="button" class="btn btn-warning" id="close" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('#addImage').on('click', function ()
+            {
+                $('#uploadImageModal').modal();
+            });
+
+            $('.remove-image').on('click', function ()
+            {
+                var id = this.id;
+                location.href = "RemoveDriverImage?driverImageConcernID=" + id;
+            });
+
+            $('.change-note').on('click', function ()
+            {
+                var id = this.id;
+                var note = $('#imageNote_' + id).html().trim();
+                $('#imageNote').val(note);
+                $('#driverImageConcernID').val(id);
+                $('#changeImageNoteModal').modal();
+            });
+        });
+    </script>    
+}

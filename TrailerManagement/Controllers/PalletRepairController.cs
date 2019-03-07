@@ -1344,7 +1344,7 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateSort(string vendors, string trailerNumber, string orderNumber, string loadStatus, string dateArrived, string note)
+        public ActionResult CreateSort(string vendors, string trailerNumber, string orderNumber, string loadStatus, string dateArrived, string note, string expectedDate, string expectedTime)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
@@ -1375,11 +1375,22 @@ namespace TrailerManagement.Controllers
                     sort.LoadStatus = loadStatus;
                     sort.DateArrived = dateArrived;
                     sort.Status = "NEW";
+                    
                 }
 
                 if(note != "")
                 {
                     sort.ArrivalNote = note;
+                }
+
+                if(expectedDate != "")
+                {
+                    sort.ExpectedArrivalDate = expectedDate;
+                }
+
+                if(expectedTime != "")
+                {
+                    sort.ExpectedArrivalTime = expectedTime;
                 }
                 db.SortLists.Add(sort);
                 db.SaveChanges();

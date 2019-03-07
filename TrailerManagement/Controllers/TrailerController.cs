@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Dynamic;
+using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using TrailerManagement.Models;
 
@@ -57,7 +60,7 @@ namespace TrailerManagement.Controllers
                     }
                     if (Convert.ToInt32(Session["permission"]) == constant.PERMISSION_DRIVER)
                     {
-                        trailer = trailer.Where(t => t.TrailerStatus == constant.TRAILER_STATUS_IN_TRANSIT || t.TrailerStatus == constant.TRAILER_STATUS_DELIVERED || t.TrailerStatus == constant.TRAILER_STATUS_READY_TO_ROLL).OrderBy(t => t.TrailerStatus).ThenBy(t => t.TrailerNumber);
+                        trailer = trailer.Where(t => t.TrailerStatus == constant.TRAILER_STATUS_NEED_EMPTY || t.TrailerStatus == constant.TRAILER_STATUS_IN_TRANSIT || t.TrailerStatus == constant.TRAILER_STATUS_DELIVERED || t.TrailerStatus == constant.TRAILER_STATUS_READY_TO_ROLL).OrderBy(t => t.TrailerStatus).ThenBy(t => t.TrailerNumber);
                     }
                     return View(trailer.ToList());
                 }
@@ -617,6 +620,104 @@ namespace TrailerManagement.Controllers
                         return RedirectToAction(actionName: "ActiveTrailerList", controllerName: "Trailer");
                     }
                 }
+            }
+        }
+
+        public ActionResult CreateDriverConcern()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult CreateDriverConcern(string customer, string notes)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                DateTime current = DateTime.Now;
+                DriverConcern newConcern = new DriverConcern()
+                {
+                    Customer = customer,
+                    DateTaken = current.ToString("yyyy-MM-dd"),
+                    DriverSignedIn = Session["username"].ToString(),
+                    Notes = notes,
+                };
+                db.DriverConcerns.Add(newConcern);
+                db.SaveChanges();
+                return RedirectToAction(actionName: "DriverConcern", controllerName: "Trailer", routeValues: new { driverConcernID = newConcern.DriverConcernGUID });
+            }
+           
+        }
+
+        public ActionResult DriverConcern(int driverConcernID)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                dynamic model = new ExpandoObject();
+                var concern = db.DriverConcerns.FirstOrDefault(c => c.DriverConcernGUID == driverConcernID);
+
+                var images = db.DriverConcernImages.Where(c => c.DriverConcernGUID == driverConcernID).ToList();
+
+                model.Concern = concern;
+                model.Images = images;
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult CreateDriverImage(HttpPostedFileBase ImageFile, string note, int driverConcernID)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var concern = db.DriverConcerns.FirstOrDefault(c => c.DriverConcernGUID == driverConcernID);
+                if (ImageFile.ContentLength > 0)
+                {
+                    var extension = Path.GetExtension(ImageFile.FileName);
+                    var fullPath = Server.MapPath("~/DriverImages/") + concern.Customer.ToString() + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+                    var path = concern.Customer + " " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + extension.ToLower();
+
+                    ImageFile.SaveAs(fullPath);
+
+                    DriverConcernImage newImage = new DriverConcernImage()
+                    {
+                        DriverConcernGUID = driverConcernID,
+                        ImagePath = path,
+                    };
+
+                    if(note != "")
+                    {
+                        newImage.Note = note;
+                    }
+                    else
+                    {
+                        newImage.Note = "No note";
+                    }
+                    db.DriverConcernImages.Add(newImage);
+                    db.SaveChanges();
+                }
+                return RedirectToAction(actionName: "DriverConcern", controllerName: "Trailer", routeValues: new { driverConcernID });
+            }
+        }
+
+        public ActionResult RemoveDriverImage(int driverImageConcernID)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var concernImage = db.DriverConcernImages.FirstOrDefault(c => c.DriverConcernImageGUID == driverImageConcernID);
+                db.DriverConcernImages.Remove(concernImage);
+                db.SaveChanges();
+                return RedirectToAction(actionName: "DriverConcern", controllerName: "Trailer", routeValues: new { driverConcernID = concernImage.DriverConcernGUID });
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ChangeImageNote(int driverImageConcernID, string note)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var concernImage = db.DriverConcernImages.FirstOrDefault(c => c.DriverConcernImageGUID == driverImageConcernID);
+                concernImage.Note = note;
+                db.SaveChanges();
+                return RedirectToAction(actionName: "DriverConcern", controllerName: "Trailer", routeValues: new { driverConcernID = concernImage.DriverConcernGUID });
             }
         }
     }

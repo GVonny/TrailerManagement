@@ -217,6 +217,12 @@
     <Compile Include="Models\Department.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DriverConcern.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DriverConcernImage.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\InactiveTrailerList.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
@@ -457,9 +463,12 @@
     <Content Include="Views\Reporting\FileAlreadyOpen.cshtml" />
     <Content Include="Views\PalletRepair\StackNotes.cshtml" />
     <Content Include="Views\Reporting\PayoutImagesByVendor.cshtml" />
+    <Content Include="Views\Trailer\CreateDriverConcern.cshtml" />
+    <Content Include="Views\Trailer\DriverConcern.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="DriverImages\" />
     <Folder Include="Reports\" />
     <Folder Include="SafetyImages\" />
     <Folder Include="SortImages\" />

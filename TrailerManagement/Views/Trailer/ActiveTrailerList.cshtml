@@ -50,41 +50,36 @@
 <br />
 
 <table class="table table-hover table-responsive">
-    @using (Html.BeginForm("ActiveTrailerList", "Trailer", FormMethod.Get))
-    {
-        <thead>
-            <tr class="font-md">
-                <th class="col-xs-1">Trailer Number</th>
-                <th class=" text-center">Trailer Status</th>
-                @if ((Convert.ToInt32(Session["permission"]) > 20))
-                {
-                    <th class="text-center col-xs-1">Load Status</th>
-                }
-                <th class="text-center">Customer</th>
+    <thead>
+        <tr class="font-md">
+            <th class="col-xs-1">Trailer Number</th>
+            <th class=" text-center">Trailer Status</th>
+            
+            <th class="text-center col-xs-1">Load Status</th>
+            
+            <th class="text-center">Customer</th>
 
-                <th class="text-center col-xs-1">Location Status</th>
-                <th class="text-center">Trailer Location</th>
-                @if ((Convert.ToInt32(Session["permission"]) > 20))
-                {
-                    <th>Notes</th>
-                    <th class="text-center">Tags</th>
-                    <th class="text-center col-xs-1 no-print">Last Modified</th>
-                }
-                <th class="orderDate text-center hidden">Order Date</th>
-                <th class="hidden">Order Number</th>
-            </tr>
-        </thead>
-    }
+            <th class="text-center col-xs-1">Location Status</th>
+            <th class="text-center">Trailer Location</th>
+            @if ((Convert.ToInt32(Session["permission"]) > 20))
+            {
+                <th>Notes</th>
+                <th class="text-center">Tags</th>
+                <th class="text-center col-xs-1 no-print">Last Modified</th>
+            }
+            <th class="orderDate text-center hidden">Order Date</th>
+            <th class="hidden">Order Number</th>
+        </tr>
+    </thead>
     <tbody id="trailers">
         @foreach (ActiveTrailerList t in Model)
         {
             <tr class="product-row" id="@t.TrailerNumber">
                 <td id="trailerNumber_@t.TrailerNumber">@t.TrailerNumber</td>
                 <td id="trailerStatus_@t.TrailerNumber" class="text-center">@t.TrailerStatus</td>
-                @if ((Convert.ToInt32(Session["permission"]) > 20))
-                {
-                    <td id="loadStatus_@t.TrailerNumber" class="text-center">@t.LoadStatus</td>
-                }
+                
+                <td id="loadStatus_@t.TrailerNumber" class="text-center">@t.LoadStatus</td>
+                
                 <td id="customer_@t.TrailerNumber" class="text-center">@t.Customer</td>
                 <td id="loactionStatus_@t.TrailerNumber" class="text-center">@t.LocationStatus</td>
                 <td id="trailerLocation_@t.TrailerNumber" class="text-center">@t.TrailerLocation</td>
@@ -151,7 +146,7 @@
         //redirect to edit page on click
         $('#trailers').on('click', '.product-row', function ()
         {
-            if (permission >= 2)
+            if (permission >= 20)
             {
                 TrailerNumber = this.id;
                 location.href = "EditActiveTrailer/" + TrailerNumber;

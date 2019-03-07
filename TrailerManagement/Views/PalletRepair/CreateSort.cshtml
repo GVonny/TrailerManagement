@@ -16,7 +16,7 @@
                     <strong>Vendor</strong>
                 </div>
                 <div class="col-xs-5">
-                    @Html.DropDownList("Vendors", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "vendors", @name="vendors" })                   
+                    @Html.DropDownList("Vendors", null, "- - - Please Select - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "vendors", @name = "vendors" })
                 </div>
             </div>
 
@@ -29,16 +29,6 @@
                     <input type="text" id="trailerNumber" name="trailerNumber" class="form-control" placeholder="Trailer Number">
                 </div>
             </div>
-
-            <!-- Order Number -->
-            @*<div class="form-group">
-                <div class="col-xs-3 text-right">
-                    <strong>Order Number</strong>
-                </div>
-                <div class="col-xs-4">
-                    <input type="text" id="orderNumber" name="orderNumber" class="form-control" placeholder="Order Number">
-                </div>
-            </div>*@
 
             <!-- Load Status -->
             <div class="form-group">
@@ -84,10 +74,28 @@
                 </div>
             </div>
 
+            <div class="form-group hidden" id="expectedDate">
+                <div class="col-xs-3 text-right">
+                    <strong>Expected Date</strong>
+                </div>
+                <div class="col-xs-4">
+                    <input type="text" name="expectedDate" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group hidden" id="expectedTime">
+                <div class="col-xs-3 text-right">
+                    <strong>Expected Time</strong>
+                </div>
+                <div class="col-xs-4">
+                    <input type="text" name="expectedTime" class="form-control">
+                </div>
+            </div>
+
             <!-- Sumbit -->
             <div class="form-group">
                 <div class="col-xs-offset-3 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-primary" id="create"/>
+                    <input type="submit" value="Create" class="btn btn-primary" id="create" />
                     <a href="/PalletRepair/SortList" value="Cancel" class="btn btn-warning" id="cancel">Cancel</a>
                 </div>
             </div>
@@ -104,6 +112,8 @@
             {
                 if ($(this).is(':checked'))
                 {
+                    $('#expectedDate').removeClass('hidden');
+                    $('#expectedTime').removeClass('hidden');
                     $('#dateArrived').val("");
                     $('#dateArrived').attr('disabled', 'disabled');
                     $('#arrivalNote').removeClass('hidden');
@@ -118,6 +128,8 @@
             {
                 if ($(this).is(':checked'))
                 {
+                    $('#expectedDate').addClass('hidden');
+                    $('#expectedTime').addClass('hidden');
                     $('#dateArrived').val(getCurrentDate);
                     $('#dateArrived').removeAttr('disabled', 'disabled');
                 }

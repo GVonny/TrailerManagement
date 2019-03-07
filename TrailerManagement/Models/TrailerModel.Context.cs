@@ -47,5 +47,7 @@ namespace TrailerManagement.Models
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<StackNote> StackNotes { get; set; }
         public virtual DbSet<MasterStacksTest> MasterStacksTests { get; set; }
+        public virtual DbSet<DriverConcernImage> DriverConcernImages { get; set; }
+        public virtual DbSet<DriverConcern> DriverConcerns { get; set; }
     }
 }

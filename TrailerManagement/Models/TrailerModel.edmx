@@ -89,6 +89,25 @@
           <Property Name="DepartmentNumber" Type="int" Nullable="false" />
           <Property Name="DepartmentName" Type="varchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="DriverConcernImages">
+          <Key>
+            <PropertyRef Name="DriverConcernImageGUID" />
+          </Key>
+          <Property Name="DriverConcernImageGUID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DriverConcernGUID" Type="int" />
+          <Property Name="ImagePath" Type="varchar(max)" />
+          <Property Name="Note" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="DriverConcerns">
+          <Key>
+            <PropertyRef Name="DriverConcernGUID" />
+          </Key>
+          <Property Name="DriverConcernGUID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DriverSignedIn" Type="varchar" MaxLength="20" />
+          <Property Name="Customer" Type="varchar(max)" />
+          <Property Name="DateTaken" Type="varchar" MaxLength="10" />
+          <Property Name="Notes" Type="varchar(max)" />
+        </EntityType>
         <EntityType Name="InactiveTrailerList">
           <Key>
             <PropertyRef Name="TrailerGUID" />
@@ -325,6 +344,8 @@
           <EntitySet Name="CompletedSorts" EntityType="Self.CompletedSorts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CustomersAndVendors" EntityType="Self.CustomersAndVendors" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Departments" EntityType="Self.Departments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DriverConcernImages" EntityType="Self.DriverConcernImages" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DriverConcerns" EntityType="Self.DriverConcerns" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InactiveTrailerList" EntityType="Self.InactiveTrailerList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InventoryRowStacks" EntityType="Self.InventoryRowStacks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MasterStacks" EntityType="Self.MasterStacks" Schema="dbo" store:Type="Tables" />
@@ -657,6 +678,8 @@
           <EntitySet Name="Users" EntityType="Self.User" />
           <EntitySet Name="StackNotes" EntityType="TrailerModel.StackNote" />
           <EntitySet Name="MasterStacksTests" EntityType="TrailerModel.MasterStacksTest" />
+          <EntitySet Name="DriverConcernImages" EntityType="TrailerModel.DriverConcernImage" />
+          <EntitySet Name="DriverConcerns" EntityType="TrailerModel.DriverConcern" />
         </EntityContainer>
         <EntityType Name="StackNote">
           <Key>
@@ -680,6 +703,25 @@
           <Property Name="PalletNote" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="IsSplit" Type="Boolean" />
           <Property Name="SplitFrom" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="DriverConcernImage">
+          <Key>
+            <PropertyRef Name="DriverConcernImageGUID" />
+          </Key>
+          <Property Name="DriverConcernImageGUID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DriverConcernGUID" Type="Int32" />
+          <Property Name="ImagePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="DriverConcern">
+          <Key>
+            <PropertyRef Name="DriverConcernGUID" />
+          </Key>
+          <Property Name="DriverConcernGUID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DriverSignedIn" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Customer" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="DateTaken" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1018,6 +1060,27 @@
                 <ScalarProperty Name="StackNumber" ColumnName="StackNumber" />
                 <ScalarProperty Name="SortGUID" ColumnName="SortGUID" />
                 <ScalarProperty Name="StackGUID" ColumnName="StackGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DriverConcernImages">
+            <EntityTypeMapping TypeName="TrailerModel.DriverConcernImage">
+              <MappingFragment StoreEntitySet="DriverConcernImages">
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="ImagePath" ColumnName="ImagePath" />
+                <ScalarProperty Name="DriverConcernGUID" ColumnName="DriverConcernGUID" />
+                <ScalarProperty Name="DriverConcernImageGUID" ColumnName="DriverConcernImageGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DriverConcerns">
+            <EntityTypeMapping TypeName="TrailerModel.DriverConcern">
+              <MappingFragment StoreEntitySet="DriverConcerns">
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="DateTaken" ColumnName="DateTaken" />
+                <ScalarProperty Name="Customer" ColumnName="Customer" />
+                <ScalarProperty Name="DriverSignedIn" ColumnName="DriverSignedIn" />
+                <ScalarProperty Name="DriverConcernGUID" ColumnName="DriverConcernGUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
