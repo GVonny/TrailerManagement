@@ -10,16 +10,18 @@
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
-        @if (Session["username"] != null)
-        {
-            <div class="container" id="container">
+        <div class="container" id="container">
+            @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            @if (Session["username"] != null)
+            {
+
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
@@ -35,8 +37,8 @@
                                     {
                                         <li><a href="~/Trailer/TrailerList">Master List</a></li>
                                         <li><a href="~/Trailer/InactiveTrailerList">Inactive List</a></li>
-                                    
-                                    
+
+
                                         <li role="separator" class="divider"></li>
                                         <li><a href="~/Trailer/CreateTrailer">Create Trailer</a></li>
                                     }
@@ -145,15 +147,16 @@
                         </span>
                     }
                 </div>
-            </div>
-        }
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-    </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+            }
+        </div>
+        </div>
+        <div class="container body-content">
+            @RenderBody()
+        </div>
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
 </body>
 </html>

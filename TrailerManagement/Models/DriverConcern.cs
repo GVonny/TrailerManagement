@@ -19,5 +19,6 @@ namespace TrailerManagement.Models
         public string Customer { get; set; }
         public string DateTaken { get; set; }
         public string Notes { get; set; }
+        public string Status { get; set; }
     }
 }

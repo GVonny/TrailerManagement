@@ -625,7 +625,14 @@ namespace TrailerManagement.Controllers
 
         public ActionResult CreateDriverConcern()
         {
-            return View();
+            if(Session["username"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
+            }
         }
 
         [HttpPost]
@@ -640,6 +647,7 @@ namespace TrailerManagement.Controllers
                     DateTaken = current.ToString("yyyy-MM-dd"),
                     DriverSignedIn = Session["username"].ToString(),
                     Notes = notes,
+                    Status = "OPEN",
                 };
                 db.DriverConcerns.Add(newConcern);
                 db.SaveChanges();
@@ -727,6 +735,23 @@ namespace TrailerManagement.Controllers
                 concernImage.Note = note;
                 db.SaveChanges();
                 return RedirectToAction(actionName: "DriverConcern", controllerName: "Trailer", routeValues: new { driverConcernID = concernImage.DriverConcernGUID });
+            }
+        }
+
+        public ActionResult MyConcerns()
+        {
+            if(Session["username"] == null)
+            {
+                return RedirectToAction(actionName: "SignIn", controllerName: "Users");
+            }
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                DateTime current = DateTime.Now;
+                var date = current.ToString("yyyy-MM-dd");
+                var user = Session["username"].ToString();
+                var concerns = db.DriverConcerns.Where(c => c.DriverSignedIn == user && c.DateTaken == date && c.Status == "OPEN").ToList();
+
+                return View(concerns);
             }
         }
     }

@@ -6,7 +6,12 @@
 
 <div>
     <h2 class="float-left">Driver Concern</h2>
-    <input type="button" id="addImage" value="Add Image" class="btn btn-primary float-left" style="margin-top:20px;"/>
+    @if (Session["username"] != null)
+    {
+        <input type="button" id="addImage" value="Add Image" class="btn btn-primary float-left" style="margin-top:20px;" />
+        <input type="button" id="finishConcern" value="All Done" class="btn btn-warning float-right" style="margin-top:20px;" />
+    }
+
 </div>
 
 
@@ -46,12 +51,15 @@
                         </a>
                     </td>
                     <td class="col-xs-3" id="imageNote_@image.DriverConcernImageGUID">@image.Note</td>
-                    <td class="col-xs-1">
-                        <input type="button" value="change note" class="change-note btn btn-primary" id="@image.DriverConcernImageGUID" />
-                        <br />
-                        <br />
-                        <input type="button" value="remove" class="remove-image btn btn-primary" id="@image.DriverConcernImageGUID" />
-                    </td>
+                    @if (Session["username"] != null)
+                    {
+                        <td class="col-xs-1">
+                            <input type="button" value="change note" class="change-note btn btn-primary" id="@image.DriverConcernImageGUID" />
+                            <br />
+                            <br />
+                            <input type="button" value="remove" class="remove-image btn btn-primary" id="@image.DriverConcernImageGUID" />
+                        </td>
+                    }
                 </tr>
             }
         </tbody>
@@ -165,6 +173,11 @@
                 $('#imageNote').val(note);
                 $('#driverImageConcernID').val(id);
                 $('#changeImageNoteModal').modal();
+            });
+
+            $('#finishConcern').on('click', function ()
+            {
+                location.href = "/Email/DriverDeliverNotes?driverConcernID=" + '@concern.DriverConcernGUID';
             });
         });
     </script>    

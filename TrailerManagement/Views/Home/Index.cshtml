@@ -13,28 +13,39 @@
     <!-- Trailer Lists -->
     @if ((Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000))
     {
-        <fieldset>
-            <legend>Trailers</legend>
-                <div class="col-xs-3">
-                    <h2>Active List</h2>
-                    <p><a href="~/Trailer/ActiveTrailerList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
-                </div>
-            @if (Convert.ToInt32(Session["permission"]) > 30 && Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 10000)
-            {
-                <div class="col-xs-3">
-                    <h2>Master List</h2>
-                    <p><a href="~/Trailer/TrailerList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
-                </div>
-                <div class="col-xs-3">
-                    <h2>Inactive List</h2>
-                    <p><a href="~/Trailer/InactiveTrailerList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
-                </div>
-                <div class="col-xs-3">
-                    <h2>Create Trailer</h2>
-                    <p><a href="~/Trailer/CreateTrailer" class="btn btn-primary btn-default">Continue &raquo;</a></p>
-                </div>
-            }
-        </fieldset>
+    <fieldset>
+        <legend>Trailers</legend>
+        <div class="col-xs-3">
+            <h2>Active List</h2>
+            <p><a href="~/Trailer/ActiveTrailerList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+        </div>
+        @if (Convert.ToInt32(Session["permission"]) > 30 && Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 10000)
+        {
+            <div class="col-xs-3">
+                <h2>Master List</h2>
+                <p><a href="~/Trailer/TrailerList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+            </div>
+            <div class="col-xs-3">
+                <h2>Inactive List</h2>
+                <p><a href="~/Trailer/InactiveTrailerList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+            </div>
+            <div class="col-xs-3">
+                <h2>Create Trailer</h2>
+                <p><a href="~/Trailer/CreateTrailer" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+            </div>
+        }
+        @if (Convert.ToInt32(Session["permission"]) == 20 || Convert.ToInt32(Session["permission"]) > 50)
+        {
+            <div class="col-xs-3">
+                <h2>New Concern</h2>
+                <p><a href="~/Trailer/CreateDriverConcern" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+            </div>
+            <div class="col-xs-3">
+                <h2>My Concerns</h2>
+                <p><a href="~/Trailer/MyConcerns" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+            </div>
+        }
+    </fieldset>
     }
 </div>
 <br />

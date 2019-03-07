@@ -465,6 +465,7 @@
     <Content Include="Views\Reporting\PayoutImagesByVendor.cshtml" />
     <Content Include="Views\Trailer\CreateDriverConcern.cshtml" />
     <Content Include="Views\Trailer\DriverConcern.cshtml" />
+    <Content Include="Views\Trailer\MyConcerns.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

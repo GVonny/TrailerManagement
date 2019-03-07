@@ -107,6 +107,7 @@
           <Property Name="Customer" Type="varchar(max)" />
           <Property Name="DateTaken" Type="varchar" MaxLength="10" />
           <Property Name="Notes" Type="varchar(max)" />
+          <Property Name="Status" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="InactiveTrailerList">
           <Key>
@@ -722,6 +723,7 @@
           <Property Name="Customer" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="DateTaken" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1076,6 +1078,7 @@
           <EntitySetMapping Name="DriverConcerns">
             <EntityTypeMapping TypeName="TrailerModel.DriverConcern">
               <MappingFragment StoreEntitySet="DriverConcerns">
+                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
                 <ScalarProperty Name="DateTaken" ColumnName="DateTaken" />
                 <ScalarProperty Name="Customer" ColumnName="Customer" />
