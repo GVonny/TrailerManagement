@@ -668,6 +668,10 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
+                if(ImageFile == null)
+                {
+                    return RedirectToAction(actionName: "DriverConcern", controllerName: "Trailer", routeValues: new { driverConcernID });
+                }
                 var concern = db.DriverConcerns.FirstOrDefault(c => c.DriverConcernGUID == driverConcernID);
                 if (ImageFile.ContentLength > 0)
                 {
@@ -703,6 +707,11 @@ namespace TrailerManagement.Controllers
             using (TrailerEntities db = new TrailerEntities())
             {
                 var concernImage = db.DriverConcernImages.FirstOrDefault(c => c.DriverConcernImageGUID == driverImageConcernID);
+                var path = Server.MapPath("~/DriverImages/") + concernImage.ImagePath;
+                if (System.IO.File.Exists(path))
+                {
+                    System.IO.File.Delete(path);
+                }
                 db.DriverConcernImages.Remove(concernImage);
                 db.SaveChanges();
                 return RedirectToAction(actionName: "DriverConcern", controllerName: "Trailer", routeValues: new { driverConcernID = concernImage.DriverConcernGUID });
