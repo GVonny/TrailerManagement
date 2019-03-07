@@ -645,7 +645,7 @@ namespace TrailerManagement.Controllers
                 {
                     Customer = customer,
                     DateTaken = current.ToString("yyyy-MM-dd"),
-                    DriverSignedIn = Session["username"].ToString(),
+                    DriverSignedIn = Session["name"].ToString(),
                     Notes = notes,
                     Status = "OPEN",
                 };
@@ -749,9 +749,16 @@ namespace TrailerManagement.Controllers
                 DateTime current = DateTime.Now;
                 var date = current.ToString("yyyy-MM-dd");
                 var user = Session["username"].ToString();
-                var concerns = db.DriverConcerns.Where(c => c.DriverSignedIn == user && c.DateTaken == date && c.Status == "OPEN").ToList();
-
-                return View(concerns);
+                if(Convert.ToInt32(Session["permission"]) == 10000)
+                {
+                    var concerns = db.DriverConcerns.Where(c => c.DateTaken == date && c.Status == "OPEN").ToList();
+                    return View(concerns);
+                }
+                else
+                {
+                    var concerns = db.DriverConcerns.Where(c => c.DriverSignedIn == user && c.DateTaken == date && c.Status == "OPEN").ToList();
+                    return View(concerns);
+                }
             }
         }
     }

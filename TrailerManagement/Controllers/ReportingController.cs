@@ -900,5 +900,39 @@ namespace TrailerManagement.Controllers
         {
             return View();
         }
+
+        public ActionResult DriverCustomers(string order)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var concerns = db.DriverConcerns.ToList();
+
+                switch(order)
+                {
+                    case "date":
+                        concerns.OrderBy(c => c.DateTaken);
+                        break;
+                    default:
+                        concerns.OrderBy(c => c.Customer);
+                        break;
+                }
+                return View(concerns);
+            }
+        }
+
+        public ActionResult CustomerInfo(int driverConcernID)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                dynamic model = new ExpandoObject();
+                var concern = db.DriverConcerns.FirstOrDefault(c => c.DriverConcernGUID == driverConcernID);
+
+                var images = db.DriverConcernImages.Where(c => c.DriverConcernGUID == driverConcernID).ToList();
+
+                model.Concern = concern;
+                model.Images = images;
+                return View(model);
+            }
+        }
     }
 }
