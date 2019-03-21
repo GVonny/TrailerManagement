@@ -10,6 +10,7 @@
     {
         <input type="button" id="addImage" value="Add Image" class="btn btn-primary float-left" style="margin-top:20px;" />
         <input type="button" id="finishConcern" value="All Done" class="btn btn-warning float-right" style="margin-top:20px;" />
+        <input type="button" id="remove" value="Undo / Remove" class="btn btn-danger float-right" style="margin-top:20px;margin-right:10px;" />
     }
 
 </div>
@@ -150,6 +151,26 @@
     </div>
 </div>
 
+<div id="confirmDeleteModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body">
+                <h3>Are you sure you want to remove this concern?</h3>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-warning" id="cancel" value="Cancel" data-dismiss="modal">
+                <button id="delete" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section scripts
 {
     <script>
@@ -179,6 +200,16 @@
             {
                 location.href = "/Email/DriverDeliverNotes?driverConcernID=" + '@concern.DriverConcernGUID';
             });
+
+            $('#remove').on('click', function ()
+            {
+                $('#confirmDeleteModal').modal();
+            });
+
+            $('#delete').on('click', function ()
+            {
+                location.href = "/Trailer/RemoveConcern?concernID=" + '@concern.DriverConcernGUID';
+            })
         });
     </script>    
 }

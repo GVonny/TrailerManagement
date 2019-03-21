@@ -7,6 +7,8 @@
 <div>
     <h2 class="float-left">Customer Info</h2>
     <a href="/Reporting/CustomerList?customer=@concern.Customer" class="btn btn-primary" style="margin-top:20px;">Return to List</a>
+
+    <button id="@concern.DriverConcernGUID" class="btn btn-warning edit-info" style="margin-top:20px;">Edit Header Info</button>
 </div>
 
 
@@ -14,15 +16,17 @@
     <thead>
         <tr>
             <th>Customer</th>
-            <th>Date</th>
             <th>Note</th>
+            <th>Date</th>
+            <th>Taken By</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>@concern.Customer</td>
+            <td id="customer_@concern.DriverConcernGUID">@concern.Customer</td>
+            <td id="notes_@concern.DriverConcernGUID">@concern.Notes</td>
             <td>@concern.DateTaken</td>
-            <td>@concern.Notes</td>
+            <td id="driver_@concern.DriverConcernGUID">@concern.DriverSignedIn</td>
         </tr>
     </tbody>
 </table>
@@ -46,8 +50,114 @@
                         </a>
                     </td>
                     <td class="col-xs-3" id="imageNote_@image.DriverConcernImageGUID">@image.Note</td>
+                    @if(Convert.ToInt32(Session["permission"]) > 40)
+                    {
+                        <td class="col-xs-1" id="@image.DriverConcernImageGUID"><button class="change-note btn btn-primary" id="@image.DriverConcernGUID">Change Note</button></td>
+                    }
                 </tr>
             }
         </tbody>
     </table>
+}
+
+<div id="editImageNoteModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Edit Info</h2>
+            </div>
+            <div class="modal-body">
+                <form action="EditImageNote" id="editNoteForm">
+                    <input type="number" name="imageID" id="imageID" class="form-control hidden" />
+                    <input type="number" name="concernID" id="imageConcernID" class="form-control hidden" />
+                    <strong>Notes</strong>
+                    <input type="text" name="note" id="imageNote" class="form-control" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-warning" id="cancel" value="Cancel" data-dismiss="modal">
+                <button type="button" class="btn btn-primary" id="noteSubmit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="editInfoModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Edit Info</h2>
+            </div>
+            <div class="modal-body">
+                <form action="EditCustomerHeaderInfo" id="editForm">
+                    <input type="number" name="concernID" id="concernID" class="form-control hidden" />
+                    <strong>Customer</strong>
+                    <input type="text" name="customer" id="customer" class="form-control" />
+
+                    <br />
+                    <strong>Notes</strong>
+                    <input type="text" name="note" id="note" class="form-control" />
+                    <br />
+                    <strong>Drivers</strong>
+                    @Html.DropDownList("driver", null, "- - - Drivers - - -", htmlAttributes: new { @class = "form-control", @id = "drivers" })
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-warning" id="cancel" value="Cancel" data-dismiss="modal">
+                <button type="button" class="btn btn-primary" id="submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('.change-note').on('click', function ()
+            {
+                var concernID = this.id;
+                $('#imageConcernID').val(concernID);
+
+                var imageID = this.parentElement.id;
+                $('#imageID').val(imageID);
+
+                var note = $('#imageNote_' + imageID).html().trim();
+                $('#imageNote').val(note);
+
+                $('#editImageNoteModal').modal();
+            });
+
+            $('#noteSubmit').on('click', function ()
+            {
+                $('#editNoteForm').submit();
+            });
+
+            $('.edit-info').on('click', function ()
+            {
+                var id = this.id;
+                console.log("id = " + id);
+                $("#concernID").val(id);
+                var customer = $('#customer_' + id).html().trim();
+                $('#customer').val(customer);
+                var note = $('#notes_' + id).html().trim();
+                $('#note').val(note);
+                var driver = $('#driver_' + id).html().trim();
+                $('#drivers').val(driver);
+                $('#editInfoModal').modal();
+            });
+
+            $('#submit').on('click', function ()
+            {
+                $('#editForm').submit();
+            });
+        });
+    </script>    
 }

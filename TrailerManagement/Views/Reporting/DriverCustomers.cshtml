@@ -12,11 +12,11 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(String concern in Model)
+        @foreach(String customer in Model)
         {
             <tr>
-                <td>@concern</td>
-                <td class="col-xs-1"><a href="/Reporting/CustomerList?customer=@concern" class="btn btn-primary">View Records</a></td>
+                <td>@customer</td>
+                <td class="col-xs-1"><a href="/Reporting/CustomerList?customer=@customer" class="btn btn-primary">View Records</a></td>
             </tr>
         }
     </tbody>

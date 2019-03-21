@@ -761,5 +761,56 @@ namespace TrailerManagement.Controllers
                 }
             }
         }
+
+        public ActionResult RemoveConcern(int concernID)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var concern = db.DriverConcerns.FirstOrDefault(c => c.DriverConcernGUID == concernID);
+
+                var images = db.DriverConcernImages.Where(c => c.DriverConcernGUID == concernID).ToList();
+
+                if (images.Count > 0)
+                {
+                    foreach (DriverConcernImage image in images)
+                    {
+                        var path = Server.MapPath("~/DriverImages/" + image.ImagePath);
+                        if (System.IO.File.Exists(path))
+                        {
+                            System.IO.File.Delete(path);
+                        }
+                        db.DriverConcernImages.Remove(image);
+                    }
+                }
+
+                db.DriverConcerns.Remove(concern);
+                db.SaveChanges();
+                return RedirectToAction(actionName: "Index", controllerName: "Home");
+            }
+        }
+
+        public ActionResult AddStorageTrailer(string trailerNumber)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var trailer = db.InactiveTrailerLists.FirstOrDefault(t => t.TrailerNumber == trailerNumber);
+                var date = DateTime.Now;
+
+
+                ActiveTrailerList newTrailer = new ActiveTrailerList()
+                {
+                    TrailerNumber = trailer.TrailerNumber,
+                    TrailerStatus = "8",
+                    LoadStatus = "FIXED",
+                    LocationStatus = "ON SITE",
+                    DateModified = date.ToString("yyyy-MM-dd"),
+                    Notes = trailer.TrailerStatus,
+                };
+
+                db.ActiveTrailerLists.Add(newTrailer);
+                db.SaveChanges();
+                return RedirectToAction(actionName: "InactiveTrailerList", controllerName: "Trailer");
+            }
+        }
     }
 }

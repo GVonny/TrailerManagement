@@ -18,13 +18,113 @@
     <tbody>
         @foreach(DriverConcern concern in Model)
         {
-            <tr>
-                <td>@concern.Customer</td>
-                <td>@concern.Notes</td>
-                <td>@concern.DateTaken</td>
-                <td>@concern.DriverSignedIn</td>
-                <td class="col-xs-1"><a href="/Reporting/CustomerInfo?driverConcernID=@concern.DriverConcernGUID" class="btn btn-primary">View</a></td>
-            </tr>
+        <tr id="@concern.DriverConcernGUID">
+            <td id="customer_@concern.DriverConcernGUID">@concern.Customer</td>
+            <td id="notes_@concern.DriverConcernGUID">@concern.Notes</td>
+            <td>@concern.DateTaken</td>
+            <td id="driver_@concern.DriverConcernGUID">@concern.DriverSignedIn</td>
+            <td class="col-xs-1"><a href="/Reporting/CustomerInfo?driverConcernID=@concern.DriverConcernGUID" class="btn btn-primary">View</a></td>
+            @if (Convert.ToInt32(Session["permission"]) > 40)
+            {
+                <td class="col-xs-1">
+                    <button class="edit-info btn btn-warning">Edit</button>
+                </td>
+                <td class="col-xs-1"><button class="btn btn-danger delete">Delete</button></td>
+            }
+
+        </tr>
         }
     </tbody>
 </table>
+
+<div id="editInfoModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Edit Info</h2>
+            </div>
+            <div class="modal-body">
+                <form action="EditCustomerInfo" id="editForm">
+                    <input type="number" name="concernID" id="concernID" class="form-control hidden" />
+                    <strong>Customer</strong>
+                    <input type="text" name="customer" id="customer" class="form-control" />
+
+                    <br />
+                    <strong>Notes</strong>
+                    <input type="text" name="note" id="note" class="form-control" />
+                    <br />
+                    <strong>Drivers</strong>
+                    @Html.DropDownList("driver", null, "- - - Drivers - - -", htmlAttributes: new { @class = "form-control", @id = "drivers"})
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-warning" id="cancel" value="Cancel" data-dismiss="modal">
+                <button type="button" class="btn btn-primary" id="submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmDeleteModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body">
+                <h3>Are you sure you want to delete this record?</h3>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-warning" id="cancel" value="Cancel" data-dismiss="modal">
+                <button id="delete" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('.edit-info').on('click', function ()
+            {
+                var id = this.parentElement.parentElement.id;
+                $("#concernID").val(id);
+                var customer = $('#customer_' + id).html().trim();
+                $('#customer').val(customer);
+                var note = $('#notes_' + id).html().trim();
+                $('#note').val(note);
+                var driver = $('#driver_' + id).html().trim();
+                $('#drivers').val(driver);
+                $('#editInfoModal').modal();
+            });
+
+            $('#submit').on('click', function ()
+            {
+                $('#editForm').submit();
+            });
+
+            var concernID;
+            $('.delete').on('click', function ()
+            {
+                concernID = this.parentElement.parentElement.id;
+                console.log(concernID);
+                
+                $('#confirmDeleteModal').modal();
+            })
+
+            $('#delete').on('click', function ()
+            {
+                var customer = $('#customer_' + concernID).html().trim();
+                location.href = "/Reporting/DeleteInfo?driverConcernID=" + concernID + "&customer=" + customer;
+            });
+        });
+    </script>    
+}

@@ -924,7 +924,15 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                var customers = db.DriverConcerns.Where(c => c.Customer == customer).OrderBy(c => c.DateTaken).ToList();
+                var customers = db.DriverConcerns.Where(c => c.Customer == customer).OrderByDescending(c => c.DateTaken).ToList();
+
+                if(customers.Count == 0)
+                {
+                    return RedirectToAction(actionName: "DriverCustomers", controllerName: "Reporting");
+                }
+
+                this.ViewData["driver"] = new SelectList(db.Users.Where(u => u.Permission == "20"), "FirstName", "FirstName").ToList();
+
                 return View(customers);
             }
         }
@@ -938,9 +946,82 @@ namespace TrailerManagement.Controllers
 
                 var images = db.DriverConcernImages.Where(c => c.DriverConcernGUID == driverConcernID).ToList();
 
+                this.ViewData["driver"] = new SelectList(db.Users.Where(u => u.Permission == "20"), "FirstName", "FirstName").ToList();
+
                 model.Concern = concern;
                 model.Images = images;
                 return View(model);
+            }
+        }
+
+        public ActionResult DeleteInfo(int driverConcernID, string customer)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var concern = db.DriverConcerns.FirstOrDefault(c => c.DriverConcernGUID == driverConcernID);
+
+                var images = db.DriverConcernImages.Where(c => c.DriverConcernGUID == driverConcernID).ToList();
+
+                if(images.Count > 0)
+                {
+                    foreach (DriverConcernImage image in images)
+                    {
+                        var path = Server.MapPath("~/DriverImages/" + image.ImagePath);
+                        if (System.IO.File.Exists(path))
+                        {
+                            System.IO.File.Delete(path);
+                        }
+                        db.DriverConcernImages.Remove(image);
+                    }
+                }
+
+                db.DriverConcerns.Remove(concern);
+                db.SaveChanges();
+
+                return RedirectToAction(actionName: "CustomerList", controllerName: "Reporting", routeValues: new { customer });
+            }
+        }
+
+        public ActionResult EditImageNote(int imageID, int concernID, string note)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var image = db.DriverConcernImages.FirstOrDefault(i => i.DriverConcernImageGUID == imageID);
+                image.Note = note;
+                db.SaveChanges();
+                return RedirectToAction(actionName: "CustomerInfo", controllerName: "Reporting", routeValues: new { driverConcernID = concernID });
+            }
+        }
+
+        public ActionResult EditCustomerInfo(int concernID, string customer, string note, string driver)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var concern = db.DriverConcerns.FirstOrDefault(c => c.DriverConcernGUID == concernID);
+                var oldCustomer = concern.Customer;
+
+                concern.Customer = customer;
+                concern.Notes = note;
+                concern.DriverSignedIn = driver;
+                db.SaveChanges();
+
+                return RedirectToAction(actionName: "CustomerList", controllerName: "Reporting", routeValues: new { customer = oldCustomer });
+            }
+        }
+
+        public ActionResult EditCustomerHeaderInfo(int concernID, string customer, string note, string driver)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var concern = db.DriverConcerns.FirstOrDefault(c => c.DriverConcernGUID == concernID);
+                var oldCustomer = concern.Customer;
+
+                concern.Customer = customer;
+                concern.Notes = note;
+                concern.DriverSignedIn = driver;
+                db.SaveChanges();
+
+                return RedirectToAction(actionName: "CustomerInfo", controllerName: "Reporting", routeValues: new { driverConcernID = concern.DriverConcernGUID });
             }
         }
     }

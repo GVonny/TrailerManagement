@@ -133,13 +133,14 @@
             </div>
 
             <div class="modal-footer">
-                @if ((Convert.ToInt32(Session["permission"]) > 3))
+                <button class="btn btn-primary float-left" id="addToActive">Add To Active as Storage</button>
+                @if ((Convert.ToInt32(Session["permission"]) > 40))
                 {
                     <button type="button" class="btn btn-danger" id="delete">
                         Delete
                     </button>
                 }
-                @if ((Convert.ToInt32(Session["permission"]) >= 3))
+                @if ((Convert.ToInt32(Session["permission"]) >= 40))
                 {
                     <button type="button" class="btn btn-warning" id="edit">
                         Edit
@@ -199,6 +200,12 @@
     <script>
         $(function ()
         {
+            $('#addToActive').on('click', function ()
+            {
+                var trailerNumber = $('#TrailerNumber').html().trim();
+                location.href = "/Trailer/AddStorageTrailer?trailerNumber=" + trailerNumber;
+            })
+
             //hides scroll bar when any modals are open
             $('#trailerModal').on('hide.bs.modal', function ()
             {

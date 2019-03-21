@@ -34,6 +34,7 @@
                             new SelectListItem { Text = "NEED WORK", Value = "5" },
                             new SelectListItem { Text = "IN TRANSIT", Value = "6" },
                             new SelectListItem { Text = "DELIVERED", Value = "7"},
+                            new SelectListItem { Text = "STORAGE", Value = "8"},
                         },
                         htmlAttributes: new { @class = "form-control signin-form", id = "trailerStatus" })
                     </div>
@@ -70,7 +71,7 @@
                 </div>
             </div>
             <!-- Customer -->
-            <div class="form-group hidden">
+            <div class="form-group">
                 @Html.LabelFor(model => model.Customer, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-3">
                     @Html.EditorFor(model => model.Customer, new { htmlAttributes = new { @class = "form-control", placeholder = "Customer", id = "customer" } })
@@ -102,6 +103,7 @@
                        new SelectListItem { Text = "", Value = "" },
                        new SelectListItem { Text = "ON SITE", Value = "ON SITE" },
                        new SelectListItem { Text = "OFF SITE", Value = "OFF SITE" },
+                       new SelectListItem { Text = "FIXED", Value = "FIXED"},
                     },
                     htmlAttributes: new { @class = "form-control signin-form", id = "locationStatus" })
                 </div>

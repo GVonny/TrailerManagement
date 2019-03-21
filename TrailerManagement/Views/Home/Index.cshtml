@@ -34,14 +34,14 @@
                 <p><a href="~/Trailer/CreateTrailer" class="btn btn-primary btn-default">Continue &raquo;</a></p>
             </div>
         }
-        @if (Convert.ToInt32(Session["permission"]) == 20 || Convert.ToInt32(Session["permission"]) > 50)
+        @if (Convert.ToInt32(Session["permission"]) == 20 || Convert.ToInt32(Session["permission"]) >= 50)
         {
             <div class="col-xs-3">
-                <h2>New Concern</h2>
+                <h2>Picture Log</h2>
                 <p><a href="~/Trailer/CreateDriverConcern" class="btn btn-primary btn-default">Continue &raquo;</a></p>
             </div>
             <div class="col-xs-3">
-                <h2>My Concerns</h2>
+                <h2>My Picture Log</h2>
                 <p><a href="~/Trailer/MyConcerns" class="btn btn-primary btn-default">Continue &raquo;</a></p>
             </div>
         }
@@ -59,7 +59,7 @@
                 <h2>Sort List</h2>
                 <p><a href="~/PalletRepair/SortList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
             </div>
-            @if (Convert.ToInt32(Session["permission"]) > 40)
+            @if (Convert.ToInt32(Session["permission"]) > 40 && (Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000))
             {
                 <div class="col-xs-2">
                     <h2>Payouts</h2>
