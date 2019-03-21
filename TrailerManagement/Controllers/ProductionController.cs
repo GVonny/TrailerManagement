@@ -127,5 +127,18 @@ namespace TrailerManagement.Controllers
                 return View();
             }
         }
+
+        public ActionResult SubmitWorkstationInput(int workstationNumber, int quantity, string partNumber)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                //get workstation based on workstation number to get the badge number
+                //use the badge number to get the user name
+
+                //ask janice about where the work order ties into this
+
+                return View();
+            }
+        }
     }
 }

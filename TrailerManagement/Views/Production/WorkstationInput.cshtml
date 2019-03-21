@@ -22,11 +22,20 @@
         <button id="full6" class="btn btn-warning" style="font-size:2em;width:20%;">&nbsp;6 INCH&nbsp;</button>
         <br />
         <br />
-        <strong>Quantity</strong>
-        <input type="number" id="fullQuantity" class="form-control"/>
-        <br />
-        <strong>Part Number</strong>
-        <input type="text" id="fullPartNumber" class="form-control" />
+
+        <form>
+            <strong>Quantity</strong>
+            <input type="number" id="fullQuantity" name="quantity" class="form-control" />
+            <br />
+            <strong>Part Number</strong>
+            <input type="text" id="fullPartNumber" name="partNumber" class="form-control" />
+
+            <br />
+            <div>
+                <strong>Workstation</strong>
+                <input type="number" id="fullWorkstationNumber" name="workstationNumber"  class="form-control"/>
+            </div>
+        </form>
     </div>
 
     <div id="partialStackInput">
@@ -39,6 +48,13 @@
     <script>
         $(function ()
         {
+            $('#fullWorkstationNumber').val(1);
+            $('#workstations').on('change', function ()
+            {
+                var workstation = $(this).val();
+                $('#fullWorkstationNumber').val(workstation);
+            })
+
             $('#fullStack').on('click', function ()
             {
                 $('#fullStackInput').removeClass('hidden');
