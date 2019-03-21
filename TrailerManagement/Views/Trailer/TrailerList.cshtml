@@ -374,20 +374,20 @@
             $('#activeConfirm').on('click', function ()
             {
                 showScrollBar();
-                location.href = "CreateActiveTrailer/" + ($('#TrailerNumber').html());
+                location.href = "CreateActiveTrailer?trailerNumber=" + ($('#TrailerNumber').html());
             });
 
             //inactive modal confirm button click
             $('#inactiveConfirm').on('click', function ()
             {
                 showScrollBar();
-                location.href = "CreateInactiveTrailer/" + ($('#TrailerNumber').html());
+                location.href = "CreateInactiveTrailer?trailerNumber=" + ($('#TrailerNumber').html());
             });
 
             //edit trailer button click
             $('#edit').on('click', function ()
             {                
-                location.href = "EditTrailer/" + ($('#TrailerNumber').html());
+                location.href = "EditTrailer?trailerNumber=" + ($('#TrailerNumber').html());
             })
 
             //close button click

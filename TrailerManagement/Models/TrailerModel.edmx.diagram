@@ -29,6 +29,7 @@
         <EntityTypeShape EntityType="TrailerModel.MasterStacksTest" Width="1.5" PointX="13.375" PointY="9.75" />
         <EntityTypeShape EntityType="TrailerModel.DriverConcernImage" Width="2" PointX="9.375" PointY="13.75" />
         <EntityTypeShape EntityType="TrailerModel.DriverConcern" Width="1.75" PointX="12" PointY="13.75" />
+        <EntityTypeShape EntityType="TrailerModel.DriverConcernsList" Width="1.5" PointX="14.375" PointY="13.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

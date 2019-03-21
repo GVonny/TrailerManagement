@@ -268,7 +268,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult EditTrailer(string id)
+        public ActionResult EditTrailer(string trailerNumber)
         {
             if (Session["username"] == null)
             {
@@ -284,7 +284,7 @@ namespace TrailerManagement.Controllers
                 {
                     using (TrailerEntities db = new TrailerEntities())
                     {
-                        TrailerList trailer = db.TrailerLists.Find(id);
+                        TrailerList trailer = db.TrailerLists.FirstOrDefault(t => t.TrailerNumber == trailerNumber);
                         
                         return View(trailer);
                     }
@@ -293,15 +293,15 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditTrailer([Bind(Include = "TrailerNumber,DOTDate,TrailerStatus,Leased,InsuranceCard,Insured,Title,PlateNumber,VinNumber,Manufacturer,ManufactureYear,TrailerLocation,TrailerLength,Issues,DateModified")]TrailerList UpdatedTrailer, string id)
+        public ActionResult EditTrailer([Bind(Include = "TrailerNumber,DOTDate,TrailerStatus,Leased,InsuranceCard,Insured,Title,PlateNumber,VinNumber,Manufacturer,ManufactureYear,TrailerLocation,TrailerLength,Issues,DateModified")]TrailerList UpdatedTrailer)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                TrailerList trailer = db.TrailerLists.Find(id);
+                TrailerList trailer = db.TrailerLists.FirstOrDefault(t => t.TrailerNumber == UpdatedTrailer.TrailerNumber);
 
                 try
                 {
-                    ActiveTrailerList editActiveTrailer = db.ActiveTrailerLists.Find(id);
+                    ActiveTrailerList editActiveTrailer = db.ActiveTrailerLists.FirstOrDefault(t => t.TrailerNumber == UpdatedTrailer.TrailerNumber);
                     editActiveTrailer.TrailerLocation = UpdatedTrailer.TrailerLocation;
                 }
                 catch{}
@@ -326,7 +326,7 @@ namespace TrailerManagement.Controllers
             }
         }
         
-        public ActionResult CreateInactiveTrailer(string id)
+        public ActionResult CreateInactiveTrailer(string trailerNumber)
         {
             if (Session["username"] == null)
             {
@@ -342,7 +342,7 @@ namespace TrailerManagement.Controllers
                     }
                     else
                     {
-                        TrailerList trailer = db.TrailerLists.Find(id);
+                        TrailerList trailer = db.TrailerLists.FirstOrDefault(t => t.TrailerNumber == trailerNumber);
 
                         InactiveTrailerList trailerEdit = new InactiveTrailerList()
                         {
@@ -363,13 +363,13 @@ namespace TrailerManagement.Controllers
                         };
                         db.InactiveTrailerLists.Add(trailerEdit);
                         db.SaveChanges();
-                        return RedirectToAction(actionName: "RemoveFromMasterList/" + id, controllerName: "Trailer");
+                        return RedirectToAction(actionName: "RemoveFromMasterList", controllerName: "Trailer", routeValues: new { trailerNumber });
                     }
                 }
             }
         }
 
-        public ActionResult EditInactiveTrailer(int id)
+        public ActionResult EditInactiveTrailer(string trailerNumber)
         {
             if (Session["username"] == null)
             {
@@ -385,7 +385,7 @@ namespace TrailerManagement.Controllers
                 {
                     using (TrailerEntities db = new TrailerEntities())
                     {
-                        InactiveTrailerList trailer = db.InactiveTrailerLists.Find(id);
+                        InactiveTrailerList trailer = db.InactiveTrailerLists.FirstOrDefault(t => t.TrailerNumber == trailerNumber);
                         
                         return View(trailer);
                     }
@@ -394,11 +394,11 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditInactiveTrailer([Bind(Include = "TrailerNumber,DOTDate,TrailerStatus,Leased,InsuranceCard,Insured,Title,PlateNumber,VinNumber,Manufacturer,ManufactureYear,TrailerLength,Issues,Tags,DateModified")]InactiveTrailerList UpdatedTrailer, int id)
+        public ActionResult EditInactiveTrailer([Bind(Include = "TrailerNumber,DOTDate,TrailerStatus,Leased,InsuranceCard,Insured,Title,PlateNumber,VinNumber,Manufacturer,ManufactureYear,TrailerLength,Issues,Tags,DateModified")]InactiveTrailerList UpdatedTrailer)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                InactiveTrailerList trailer = db.InactiveTrailerLists.Find(id);
+                InactiveTrailerList trailer = db.InactiveTrailerLists.FirstOrDefault(t => t.TrailerNumber == UpdatedTrailer.TrailerNumber);
                 
                 trailer.TrailerNumber = UpdatedTrailer.TrailerNumber;
                 trailer.DOTDate = UpdatedTrailer.DOTDate;
@@ -420,7 +420,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult CreateActiveTrailer(string id)
+        public ActionResult CreateActiveTrailer(string trailerNumber)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
@@ -439,7 +439,7 @@ namespace TrailerManagement.Controllers
                         TrailerList trailer;
                         try
                         {
-                            trailer = db.TrailerLists.Find(id);
+                            trailer = db.TrailerLists.FirstOrDefault(t => t.TrailerNumber == trailerNumber);
                             if (db.ActiveTrailerLists.Any(t => t.TrailerNumber == trailer.TrailerNumber))
                             {
                                 //duplicate trailer number
@@ -469,7 +469,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult EditActiveTrailer(string id)
+        public ActionResult EditActiveTrailer(string trailerNumber)
         {
             if (Session["username"] == null)
             {
@@ -485,7 +485,7 @@ namespace TrailerManagement.Controllers
                 {
                     using (TrailerEntities db = new TrailerEntities())
                     {
-                        ActiveTrailerList trailer = db.ActiveTrailerLists.Find(id);
+                        ActiveTrailerList trailer = db.ActiveTrailerLists.FirstOrDefault(t => t.TrailerNumber == trailerNumber);
                         
                         return View(trailer);
                     }
@@ -494,11 +494,11 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditActiveTrailer([Bind(Include = "TrailerNumber,TrailerStatus,LoadStatus,Customer,OrderDate,OrderNumber,LocationStatus,TrailerLocation,Notes,Tags,DateModified")]ActiveTrailerList UpdatedTrailer, string id)
+        public ActionResult EditActiveTrailer([Bind(Include = "TrailerNumber,TrailerStatus,LoadStatus,Customer,OrderDate,OrderNumber,LocationStatus,TrailerLocation,Notes,Tags,DateModified")]ActiveTrailerList UpdatedTrailer)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                ActiveTrailerList trailer = db.ActiveTrailerLists.Find(id);
+                ActiveTrailerList trailer = db.ActiveTrailerLists.FirstOrDefault(t => t.TrailerNumber == UpdatedTrailer.TrailerNumber);
                 TrailerList trailerEdit = db.TrailerLists.FirstOrDefault(t => t.TrailerNumber == UpdatedTrailer.TrailerNumber);
                 
                 if (trailer.TrailerStatus != constant.TRAILER_STATUS_NEED_EMPTY && UpdatedTrailer.TrailerStatus == constant.TRAILER_STATUS_NEED_EMPTY)
@@ -516,9 +516,11 @@ namespace TrailerManagement.Controllers
                     db.SortLists.Add(newSort);
                 }
 
-                trailerEdit.TrailerLocation = UpdatedTrailer.TrailerLocation;
-
-                trailer.TrailerNumber = UpdatedTrailer.TrailerNumber;
+                if(trailerEdit != null)
+                {
+                    trailerEdit.TrailerLocation = UpdatedTrailer.TrailerLocation;
+                }
+                
                 trailer.TrailerStatus = UpdatedTrailer.TrailerStatus;
                 trailer.LoadStatus = UpdatedTrailer.LoadStatus;
                 trailer.Customer = UpdatedTrailer.Customer;
@@ -558,7 +560,7 @@ namespace TrailerManagement.Controllers
                 {
                     using (TrailerEntities db = new TrailerEntities())
                     {
-                        var trailer = db.InactiveTrailerLists.Where(t => t.TrailerGUID == id).FirstOrDefault();
+                        var trailer = db.InactiveTrailerLists.FirstOrDefault(t => t.TrailerGUID == id);
                         db.InactiveTrailerLists.Remove(trailer);
                         db.SaveChanges();
                         return RedirectToAction(actionName: "InactiveTrailerList", controllerName: "Trailer");
@@ -567,7 +569,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult RemoveFromMasterList(string id)
+        public ActionResult RemoveFromMasterList(string trailerNumber)
         {
             if (Session["username"] == null)
             {
@@ -583,9 +585,9 @@ namespace TrailerManagement.Controllers
                 {
                     using (TrailerEntities db = new TrailerEntities())
                     {
-                        var trailer = db.TrailerLists.Where(t => t.TrailerNumber == id).FirstOrDefault();
+                        var trailer = db.TrailerLists.FirstOrDefault(t => t.TrailerNumber == trailerNumber);
                         db.TrailerLists.Remove(trailer);
-                        var activeTrailer = db.ActiveTrailerLists.Where(t => t.TrailerNumber == id).FirstOrDefault();
+                        var activeTrailer = db.ActiveTrailerLists.FirstOrDefault(t => t.TrailerNumber == trailerNumber);
                         //removes trailer from master and active if trailer exists in active
                         if (activeTrailer != null)
                         {
@@ -598,7 +600,7 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult RemoveFromActive(string id)
+        public ActionResult RemoveFromActive(string trailerNumber)
         {
             if (Session["username"] == null)
             {
@@ -614,7 +616,7 @@ namespace TrailerManagement.Controllers
                 {
                     using (TrailerEntities db = new TrailerEntities())
                     {
-                        var trailer = db.ActiveTrailerLists.Where(t => t.TrailerNumber == id).FirstOrDefault();
+                        var trailer = db.ActiveTrailerLists.FirstOrDefault(t => t.TrailerNumber == trailerNumber);
                         db.ActiveTrailerLists.Remove(trailer);
                         db.SaveChanges();
                         return RedirectToAction(actionName: "ActiveTrailerList", controllerName: "Trailer");
@@ -627,6 +629,10 @@ namespace TrailerManagement.Controllers
         {
             if(Session["username"] != null)
             {
+                using (TrailerEntities db = new TrailerEntities())
+                {
+                    this.ViewData["concerns"] = new SelectList(db.DriverConcernsLists.OrderBy(t => t.Concern), "Concern", "Concern").ToList();
+                }
                 return View();
             }
             else
@@ -648,6 +654,7 @@ namespace TrailerManagement.Controllers
                     DriverSignedIn = Session["name"].ToString(),
                     Notes = notes,
                     Status = "OPEN",
+                    CreatedBy = Session["name"].ToString(),
                 };
                 db.DriverConcerns.Add(newConcern);
                 db.SaveChanges();
@@ -810,6 +817,51 @@ namespace TrailerManagement.Controllers
                 db.ActiveTrailerLists.Add(newTrailer);
                 db.SaveChanges();
                 return RedirectToAction(actionName: "InactiveTrailerList", controllerName: "Trailer");
+            }
+        }
+
+        public ActionResult DriverConcernList()
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var concerns = db.DriverConcernsLists.OrderBy(c => c.Concern).ToList();
+                return View(concerns);
+            }
+        }
+
+        public ActionResult EditConcernList(int concernID, string concern)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var issue = db.DriverConcernsLists.FirstOrDefault(c => c.DriverConcernListGUID == concernID);
+                issue.Concern = concern;
+                db.SaveChanges();
+                return RedirectToAction(actionName: "DriverConcernList", controllerName: "Trailer");
+            }
+        }
+
+        public ActionResult DeleteConcernList(int concernID)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var concern = db.DriverConcernsLists.FirstOrDefault(c => c.DriverConcernListGUID == concernID);
+                db.DriverConcernsLists.Remove(concern);
+                db.SaveChanges();
+                return RedirectToAction(actionName: "DriverConcernList", controllerName: "Trailer");
+            }
+        }
+
+        public ActionResult CreateConcernList(string concern)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                DriverConcernsList newConcern = new DriverConcernsList()
+                {
+                    Concern = concern,
+                };
+                db.DriverConcernsLists.Add(newConcern);
+                db.SaveChanges();
+                return RedirectToAction(actionName: "DriverConcernList", controllerName: "Trailer");
             }
         }
     }

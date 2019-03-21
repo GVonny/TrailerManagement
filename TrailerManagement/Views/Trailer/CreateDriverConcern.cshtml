@@ -12,10 +12,20 @@
         <div class="form-horizontal">
             <div class="form-group">
                 <div class="col-xs-2 text-center">
-                    <strong>Customer</strong>
+                    <strong>Issue</strong>
                 </div>
                 <div class="col-xs-6">
-                    <input type="text" id="customer" name="customer" class="form-control" placeholder="Customer">
+                    @Html.DropDownList("concerns", null, "- - - Pick One - - -", htmlAttributes: new { @class = "form-control signin-form", @id = "concerns" })
+                </div>
+            </div>
+            <div class="form-group">
+
+
+                <div class="col-xs-2 text-center">
+                    <strong>Company</strong>
+                </div>
+                <div class="col-xs-6">
+                    <input type="text" id="customer" name="customer" class="form-control" placeholder="Company">
                 </div>
             </div>
             <div class="form-group">
@@ -33,3 +43,26 @@
         </div>
     }
 </div>
+
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('#concerns').on('change', function ()
+            {
+                var option = $(this).val();
+
+                if (option == "Pallet USA Issue")
+                {
+                    $('#customer').val("Pallet USA");
+                }
+                else
+                {
+                    $('#customer').val("");
+                }
+            })
+        });
+    </script>  
+}

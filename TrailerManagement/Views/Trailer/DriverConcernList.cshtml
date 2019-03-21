@@ -1,0 +1,115 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "DriverConcernList";
+}
+
+<div>
+    <h2 class="float-left">Driver Concern List</h2>
+    <button id="addConcern" class="btn btn-primary" style="margin-top:20px;">Add Concern</button>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Concern</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (DriverConcernsList concern in Model)
+        {
+            <tr>
+                <td id="concern_@concern.DriverConcernListGUID">@concern.Concern</td>
+                <td class="col-xs-1"><button id="@concern.DriverConcernListGUID" class="edit-concern btn btn-primary">Edit</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="editConcernModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Edit Info</h2>
+            </div>
+            <div class="modal-body">
+                <form action="EditConcernList" id="editForm">
+                    <input type="number" name="concernID" id="concernID" class="form-control hidden" />
+                    <strong>Concern</strong>
+                    <input type="text" name="concern" id="concern" class="form-control" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="delete" class="btn btn-danger float-left">Delete</button>
+                <input type="button" class="btn btn-warning" id="cancel" value="Cancel" data-dismiss="modal">
+                <button type="button" class="btn btn-primary" id="editSubmit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="createConcernModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Create Concern</h2>
+            </div>
+            <div class="modal-body">
+                <form action="CreateConcernList" id="createForm">
+                    <strong>Concern</strong>
+                    <input type="text" name="concern" id="concern" class="form-control" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-warning" id="cancel" value="Cancel" data-dismiss="modal">
+                <button type="button" class="btn btn-primary" id="createSubmit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function()
+        {
+            var id;
+            $('.edit-concern').on('click', function ()
+            {
+                id = this.id;
+                $('#concernID').val(id);
+
+                var concern = $('#concern_' + id).html().trim();
+                $('#concern').val(concern);
+
+                $('#editConcernModal').modal();
+            });
+
+            $('#editSubmit').on('click', function ()
+            {
+                $('#editForm').submit();
+            });
+
+            $('#delete').on('click', function ()
+            {
+                location.href = "/Trailer/DeleteConcernList?concernID=" + id;
+            });
+
+            $('#addConcern').on('click', function ()
+            {
+                $('#createConcernModal').modal();
+            });
+
+            $('#createSubmit').on('click', function ()
+            {
+                $('#createForm').submit();
+            })
+        });
+    </script>    
+}

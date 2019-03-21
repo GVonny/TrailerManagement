@@ -49,5 +49,6 @@ namespace TrailerManagement.Models
         public virtual DbSet<MasterStacksTest> MasterStacksTests { get; set; }
         public virtual DbSet<DriverConcernImage> DriverConcernImages { get; set; }
         public virtual DbSet<DriverConcern> DriverConcerns { get; set; }
+        public virtual DbSet<DriverConcernsList> DriverConcernsLists { get; set; }
     }
 }

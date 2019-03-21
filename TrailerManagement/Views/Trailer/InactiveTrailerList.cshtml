@@ -271,7 +271,7 @@
             //redirect to edit trailer button click
             $('#edit').on('click', function ()
             {
-                location.href = "EditInactiveTrailer/" + (TrailerID);
+                location.href = "EditInactiveTrailer?trailerNumber=" + ($('#trailerNumber_' + TrailerID).html());
                 @*if ('@Session["error"]' == "")
                 {
                     location.href = "EditInactiveTrailer/" + (TrailerID);

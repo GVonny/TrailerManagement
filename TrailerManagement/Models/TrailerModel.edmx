@@ -108,6 +108,14 @@
           <Property Name="DateTaken" Type="varchar" MaxLength="10" />
           <Property Name="Notes" Type="varchar(max)" />
           <Property Name="Status" Type="varchar" MaxLength="10" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="DriverConcernsList">
+          <Key>
+            <PropertyRef Name="DriverConcernListGUID" />
+          </Key>
+          <Property Name="DriverConcernListGUID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Concern" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="InactiveTrailerList">
           <Key>
@@ -347,6 +355,7 @@
           <EntitySet Name="Departments" EntityType="Self.Departments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DriverConcernImages" EntityType="Self.DriverConcernImages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DriverConcerns" EntityType="Self.DriverConcerns" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DriverConcernsList" EntityType="Self.DriverConcernsList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InactiveTrailerList" EntityType="Self.InactiveTrailerList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InventoryRowStacks" EntityType="Self.InventoryRowStacks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MasterStacks" EntityType="Self.MasterStacks" Schema="dbo" store:Type="Tables" />
@@ -681,6 +690,7 @@
           <EntitySet Name="MasterStacksTests" EntityType="TrailerModel.MasterStacksTest" />
           <EntitySet Name="DriverConcernImages" EntityType="TrailerModel.DriverConcernImage" />
           <EntitySet Name="DriverConcerns" EntityType="TrailerModel.DriverConcern" />
+          <EntitySet Name="DriverConcernsLists" EntityType="TrailerModel.DriverConcernsList" />
         </EntityContainer>
         <EntityType Name="StackNote">
           <Key>
@@ -724,6 +734,14 @@
           <Property Name="DateTaken" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="DriverConcernsList">
+          <Key>
+            <PropertyRef Name="DriverConcernListGUID" />
+          </Key>
+          <Property Name="DriverConcernListGUID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Concern" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1078,12 +1096,21 @@
           <EntitySetMapping Name="DriverConcerns">
             <EntityTypeMapping TypeName="TrailerModel.DriverConcern">
               <MappingFragment StoreEntitySet="DriverConcerns">
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
                 <ScalarProperty Name="DateTaken" ColumnName="DateTaken" />
                 <ScalarProperty Name="Customer" ColumnName="Customer" />
                 <ScalarProperty Name="DriverSignedIn" ColumnName="DriverSignedIn" />
                 <ScalarProperty Name="DriverConcernGUID" ColumnName="DriverConcernGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DriverConcernsLists">
+            <EntityTypeMapping TypeName="TrailerModel.DriverConcernsList">
+              <MappingFragment StoreEntitySet="DriverConcernsList">
+                <ScalarProperty Name="Concern" ColumnName="Concern" />
+                <ScalarProperty Name="DriverConcernListGUID" ColumnName="DriverConcernListGUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

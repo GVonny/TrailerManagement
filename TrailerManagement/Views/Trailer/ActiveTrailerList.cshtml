@@ -152,7 +152,7 @@
             if (permission >= 20)
             {
                 TrailerNumber = this.id;
-                location.href = "EditActiveTrailer/" + TrailerNumber;
+                location.href = "EditActiveTrailer?trailerNumber=" + TrailerNumber;
             }
         });
 
@@ -162,7 +162,7 @@
             var id = $('#addSearch').val();
             if (id != "")
             {
-                location.href = "CreateActiveTrailer/" + id;
+                location.href = "CreateActiveTrailer?trailerNumber=" + id;
             }
         });
 

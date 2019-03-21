@@ -181,7 +181,7 @@
                 <div class="col-xs-offset-2 col-xs-10">
                     <input type="submit" id="save" value="Save" class="btn btn-primary" />
                     <input type="button" id="cancel" class=" btn btn-warning" value="Cancel" />
-                    @if ((Convert.ToInt32(Session["permission"]) > 3))
+                    @if ((Convert.ToInt32(Session["permission"]) > 30))
                     {
                         <input type="button" id="remove" class="btn btn-danger" value="Remove from Active" />
                     }
@@ -281,7 +281,7 @@
             //remove modal confirm button click
             $('#removeConfirm').on('click', function ()
             {
-                location.href = '@Url.Action("RemoveFromActive", "Trailer")' + "/" + trailerNumber;
+                location.href = "/Trailer/RemoveFromActive?trailerNumber=" + trailerNumber;
             });
             //remove from active button click
             $('#remove').on('click', function ()

@@ -223,6 +223,9 @@
     <Compile Include="Models\DriverConcernImage.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DriverConcernsList.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\InactiveTrailerList.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
@@ -469,6 +472,7 @@
     <Content Include="Views\Reporting\DriverCustomers.cshtml" />
     <Content Include="Views\Reporting\CustomerInfo.cshtml" />
     <Content Include="Views\Reporting\CustomerList.cshtml" />
+    <Content Include="Views\Trailer\DriverConcernList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

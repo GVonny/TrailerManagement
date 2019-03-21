@@ -12,14 +12,9 @@ namespace TrailerManagement.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class DriverConcern
+    public partial class DriverConcernsList
     {
-        public int DriverConcernGUID { get; set; }
-        public string DriverSignedIn { get; set; }
-        public string Customer { get; set; }
-        public string DateTaken { get; set; }
-        public string Notes { get; set; }
-        public string Status { get; set; }
-        public string CreatedBy { get; set; }
+        public int DriverConcernListGUID { get; set; }
+        public string Concern { get; set; }
     }
 }
