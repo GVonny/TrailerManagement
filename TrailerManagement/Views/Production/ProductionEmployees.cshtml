@@ -1,0 +1,173 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Production Employees";
+}
+
+<div>
+    <h2 class="float-left">Production Employees</h2>
+    <button id="createEmployee" class="btn btn-primary" style="margin-top:20px;">Create Employee</button>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Employee Name</th>
+            <th>Badge Number</th>
+            <th class="text-center">Status</th>
+        </tr>
+    </thead>
+    <tbody id="employees">
+        @foreach(ProductionEmployee employee in Model)
+        {
+            <tr id="@employee.ProductionEmployeeGUID">
+                <td id="name_@employee.ProductionEmployeeGUID">@employee.EmployeeName</td>
+                <td id="badge_@employee.ProductionEmployeeGUID">@employee.EmployeeBadgeNumber</td>
+
+                @if (employee.Status == "ACTIVE")
+                {
+                    <td class="col-xs-1 text-center" style="color:green" id="status_@employee.ProductionEmployeeGUID">@employee.Status</td>
+                }
+                else
+                {
+                    <td class="col-xs-1 text-center" style="color:red" id="status_@employee.ProductionEmployeeGUID">@employee.Status</td>
+                }
+
+                <td class="col-xs-1"><button class="edit-employee btn btn-primary">Edit</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="createEmployeeModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Create Employee</h2>
+            </div>
+            <div class="modal-body">
+                <form action="CreateProductionEmployee" id="createForm">
+                    <strong>Name</strong>
+                    <input type="text" name="name" id="name" class="form-control" placeholder="Full Name"/>
+                    <br />
+                    <strong>Badge Number</strong>
+                    <input type="number" name="badgeNumber" id="badgeNumber" class="form-control" placeholder="Badge Number"/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <span id="createError" class="float-left" style="color:red"></span>
+                <input type="button" class="btn btn-warning" id="cancel" value="Cancel" data-dismiss="modal">
+                <button type="button" class="btn btn-primary" id="createSubmit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="editEmployeeModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Create Employee</h2>
+            </div>
+            <div class="modal-body">
+                <form action="EditProductionEmployee" id="editForm">
+                    <input type="number" id="employeeID" name="employeeID" class="hidden" />
+
+                    <strong>Name</strong>
+                    <input type="text" name="name" id="editName" class="form-control" placeholder="Full Name" />
+                    <br />
+
+                    <strong>Badge Number</strong>
+                    <input type="number" name="badgeNumber" id="editBadgeNumber" class="form-control" placeholder="Badge Number" />
+                    <br />
+
+                    <strong>Status</strong>
+                    @Html.DropDownList("status", new List<SelectListItem>
+                    {
+                       new SelectListItem { Text = "ACTIVE", Value = "ACTIVE" },
+                       new SelectListItem { Text = "INACTIVE", Value = "INACTIVE" },
+                    },
+                    htmlAttributes: new { @class = "form-control", id = "status" })
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-warning" id="cancel" value="Cancel" data-dismiss="modal">
+                <button type="button" class="btn btn-primary" id="editSubmit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $("#createEmployee").on('click', function ()
+            {
+                $('#name').val("")
+                $('#badgeNumber').val("");
+                $('#createError').html("");
+                $('#createEmployeeModal').modal();
+            });
+
+            $('#createSubmit').on('click', function ()
+            {
+                if ($('#name').val() == "" || $('#badgeNumber').val() == "")
+                {
+                    $('#createError').html("Please fill out all fields");
+                }
+                else
+                {
+                    var badge = $('#badgeNumber').val();
+                    var exists = false;
+                    $('#employees tr').each(function ()
+                    {
+                        var id = this.id;
+                        if (badge == $('#badge_' + id).html().trim())
+                        {
+                            exists = true;
+                        }
+                    });
+                    if (exists == false)
+                    {
+                        $('#createForm').submit();
+                    }
+                    else
+                    {
+                        $('#createError').html("User with that badge number already exists");
+                    }
+                }
+            })
+
+            $('.edit-employee').on('click', function ()
+            {
+                var id = this.parentElement.parentElement.id;
+                console.log(id);
+
+                $('#employeeID').val(id);
+
+                var name = $('#name_' + id).html().trim();
+                $('#editName').val(name);
+
+                var badge = $('#badge_' + id).html().trim();
+                $('#editBadgeNumber').val(badge);
+
+                var status = $('#status_' + id).html().trim();
+                $('#status').val(status);
+
+                $('#editEmployeeModal').modal();
+            });
+
+            $('#editSubmit').on('click', function ()
+            {
+                $('#editForm').submit();
+            });
+        });
+    </script>    
+}

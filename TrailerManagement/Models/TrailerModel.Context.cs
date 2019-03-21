@@ -50,5 +50,8 @@ namespace TrailerManagement.Models
         public virtual DbSet<DriverConcernImage> DriverConcernImages { get; set; }
         public virtual DbSet<DriverConcern> DriverConcerns { get; set; }
         public virtual DbSet<DriverConcernsList> DriverConcernsLists { get; set; }
+        public virtual DbSet<ProductionEmployee> ProductionEmployees { get; set; }
+        public virtual DbSet<ProductionStack> ProductionStacks { get; set; }
+        public virtual DbSet<Workstation> Workstations { get; set; }
     }
 }

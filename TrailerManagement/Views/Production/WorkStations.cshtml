@@ -1,0 +1,183 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Work Stations";
+}
+
+<div>
+    <h2 class="float-left">Work Stations</h2>
+    <button id="addWorkstation" class="btn btn-primary" style="margin-top:20px">Add Workstation</button>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Workstation Number</th>
+            <th>Employee Assigned</th>
+        </tr>
+    </thead>
+    <tbody id="workstations">
+        @foreach(Workstation station in Model.Workstations)
+        {
+            <tr id="@station.WorkstationGUID">
+                <td class="col-xs-3"><strong style="font-size:2.5em" id="workstation_@station.WorkstationGUID">@station.WorkstationNumber</strong> </td>
+                <td>
+                    @if (station.EmployeeBadgeNumberAssigned == null)
+                    {
+                        <span style="font-size:2.5em" id="employee_@station.WorkstationGUID">No Assignment</span>
+                    }
+                    else
+                    {
+                        foreach (ProductionEmployee employee in Model.Employees)
+                        {
+                            if (employee.EmployeeBadgeNumber == station.EmployeeBadgeNumberAssigned)
+                            {
+                                <span style="font-size:2.5em" id="employee_@station.WorkstationGUID">@employee.EmployeeName</span>
+                            }
+                        }
+                    }
+                </td>
+                <td id="employeeBadge_@station.WorkstationGUID" class="hidden">@station.EmployeeBadgeNumberAssigned</td>
+                <td class="col-xs-2">
+                    <button class="btn btn-primary change-assignment" id="@station.WorkstationGUID">Change Assignment</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="editAssignmentModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Change Workstation Assignment</h2>
+            </div>
+            <div class="modal-body">
+                <form action="ChangeWorkstationAssignment" id="editForm">
+                    <input type="number" name="workstationID" id="workstationID" class="form-control hidden" />
+                    <strong>Employee</strong>
+                    @Html.DropDownList("employees", null, "Remove Assignment", htmlAttributes: new { @class = "form-control", @id = "employees"})
+                </form>
+            </div>
+            <div class="modal-footer">
+                <span id="editError" class="float-left" style="color:red"></span>
+                <input type="button" class="btn btn-warning" id="cancel" value="Cancel" data-dismiss="modal">
+                <button type="button" class="btn btn-primary" id="changeSubmit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="addWorkstationModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Create Workstation</h2>
+            </div>
+            <div class="modal-body">
+                <form action="CreateWorkStation" id="createForm">
+                    <strong>Workstation Number</strong>
+                    <input type="number" name="workstationNumber" id="workstationNumber" class="form-control" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <span id="createError" class="float-left" style="color:red"></span>
+                <input type="button" class="btn btn-warning" id="cancel" value="Cancel" data-dismiss="modal">
+                <button type="button" class="btn btn-primary" id="createSubmit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('.change-assignment').on('click', function ()
+            {
+                var id = this.id;
+
+                var employee = $('#employeeBadge_' + id).html().trim();
+                $('#employees').val(employee);
+
+                var workstation = $('#workstation_' + id).html().trim();
+                $('#workstationID').val(workstation);
+
+                $('#editError').html("");
+
+                $('#editAssignmentModal').modal();
+            });
+
+            $('#changeSubmit').on('click', function ()
+            {
+                var badgeNumber = $('#employees').val();
+                
+                var exists = false;
+                $('#workstations tr').each(function ()
+                {
+                    var id = this.id;
+                    if ($('#employee_' + id).html() != "No Assignment")
+                    {
+                        if (badgeNumber == ($('#employeeBadge_' + id).html().trim()))
+                        {
+                            exists = true;
+                        }
+                    }
+                });
+                console.log(exists);
+                if (exists == false)
+                {
+                    $('#editForm').submit();
+                }
+                else
+                {
+                    $('#editError').html("Employee is already assigned to a workstation");
+                }
+            });
+
+            $('#addWorkstation').on('click', function ()
+            {
+                $('#createError').html("");
+                $('#workstationNumber').val("");
+
+                $('#addWorkstationModal').modal();
+            });
+
+            $('#createSubmit').on('click', function ()
+            {
+                var workstationNumber = $('#workstationNumber').val().trim();
+                if (workstationNumber != "")
+                {
+                    var exists = false;
+                    $('#workstations tr').each(function ()
+                    {
+                        var id = this.id;
+                        if (workstationNumber == ($('#workstation_' + id).html().trim()))
+                        {
+                            exists = true;
+                        }
+                    });
+                    if (exists == false)
+                    {
+                        $('#createForm').submit();
+                    }
+                    else
+                    {
+                        $('#createError').html("Workstation number already exists");
+                    }
+                }
+                else
+                {
+                    $('#createError').html("Please enter a workstation number");
+                }
+                
+            });
+        });
+    </script>    
+}

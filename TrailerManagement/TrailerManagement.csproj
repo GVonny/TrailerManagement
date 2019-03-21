@@ -186,6 +186,7 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
+    <Compile Include="Controllers\ProductionController.cs" />
     <Compile Include="Controllers\SafetyController.cs" />
     <Compile Include="Controllers\TrailerController.cs" />
     <Compile Include="Controllers\PalletRepairController.cs" />
@@ -247,6 +248,12 @@
     <Compile Include="Models\Payout.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProductionEmployee.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProductionStack.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SafetyCode.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
@@ -285,6 +292,9 @@
       <DependentUpon>TrailerModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\User.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Workstation.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -473,6 +483,9 @@
     <Content Include="Views\Reporting\CustomerInfo.cshtml" />
     <Content Include="Views\Reporting\CustomerList.cshtml" />
     <Content Include="Views\Trailer\DriverConcernList.cshtml" />
+    <Content Include="Views\Production\WorkStations.cshtml" />
+    <Content Include="Views\Production\ProductionEmployees.cshtml" />
+    <Content Include="Views\Production\WorkstationInput.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

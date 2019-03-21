@@ -22,6 +22,7 @@
             <th>Customer</th>
             <th>Date</th>
             <th>Note</th>
+            <th>Taken By</th>
         </tr>
     </thead>
     <tbody>
@@ -29,6 +30,7 @@
             <td>@concern.Customer</td>
             <td>@concern.DateTaken</td>
             <td>@concern.Notes</td>
+            <td>@concern.DriverSignedIn</td>
         </tr>
     </tbody>
 </table>
@@ -48,7 +50,7 @@
                 <tr>
                     <td id="image_@image.DriverConcernImageGUID">
                         <a href="/DriverImages/@image.ImagePath" download>
-                            <img src="/DriverImages/@image.ImagePath" width="250" height="250">
+                            <img src="/DriverImages/@image.ImagePath" width="250" height="250" style="transform:rotate(90deg);">
                         </a>
                     </td>
                     <td class="col-xs-3" id="imageNote_@image.DriverConcernImageGUID">@image.Note</td>

@@ -1,0 +1,66 @@
+﻿
+@{
+    ViewBag.Title = "Workstation Input";
+}
+
+<h2>Workstation Input</h2>
+
+<div class="well">
+    <strong>Workstation Number</strong>
+    @Html.DropDownList("workstations", null, htmlAttributes: new { @class = "form-control", @id = "workstations" })
+    <br />
+    <div>
+        <button id="fullStack" class="btn btn-primary" style="font-size:2em;width:25%;display:inline">FULL STACK</button>
+        <button id="partialStack" class="btn btn-primary" style="font-size:2em;width:25%;display:inline">PARTIAL STACK</button>
+    </div>
+    <br />
+    
+    
+    <div id="fullStackInput" class="hidden">
+        <button id="fullA" class="btn btn-warning" style="font-size:2em;width:15%;">&nbsp;A&nbsp;</button>
+        <button id="fullB" class="btn btn-warning" style="font-size:2em;width:15%;">&nbsp;B&nbsp;</button>
+        <button id="full6" class="btn btn-warning" style="font-size:2em;width:20%;">&nbsp;6 INCH&nbsp;</button>
+        <br />
+        <br />
+        <strong>Quantity</strong>
+        <input type="number" id="fullQuantity" class="form-control"/>
+        <br />
+        <strong>Part Number</strong>
+        <input type="text" id="fullPartNumber" class="form-control" />
+    </div>
+
+    <div id="partialStackInput">
+
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('#fullStack').on('click', function ()
+            {
+                $('#fullStackInput').removeClass('hidden');
+            });
+
+            $('#fullA').on('click', function ()
+            {
+                $('#fullQuantity').val(20);
+                $('#fullPartNumber').val("50-0001");
+            });
+
+            $('#fullB').on('click', function ()
+            {
+                $('#fullQuantity').val(20);
+                $('#fullPartNumber').val("50-0004");
+            });
+
+            $('#full6').on('click', function ()
+            {
+                $('#fullQuantity').val(20);
+                $('#fullPartNumber').val("50-0308");
+            });
+        });
+    </script>    
+}

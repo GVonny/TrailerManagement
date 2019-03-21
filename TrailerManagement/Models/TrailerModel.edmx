@@ -223,6 +223,30 @@
           <Property Name="DateCompleted" Type="varchar" MaxLength="10" />
           <Property Name="AccountingNote" Type="varchar(max)" />
         </EntityType>
+        <EntityType Name="ProductionEmployees">
+          <Key>
+            <PropertyRef Name="ProductionEmployeeGUID" />
+          </Key>
+          <Property Name="ProductionEmployeeGUID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmployeeName" Type="varchar" MaxLength="75" />
+          <Property Name="EmployeeBadgeNumber" Type="int" />
+          <Property Name="NameAndBadgeNumber" Type="varchar" MaxLength="100" />
+          <Property Name="Status" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="ProductionStacks">
+          <Key>
+            <PropertyRef Name="ProductionStackGUID" />
+          </Key>
+          <Property Name="ProductionStackGUID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WorkstationNumber" Type="int" />
+          <Property Name="EmployeeName" Type="varchar" MaxLength="75" />
+          <Property Name="EmployeeBadgeNumber" Type="int" />
+          <Property Name="PartNumber" Type="varchar" MaxLength="15" />
+          <Property Name="StackQuantity" Type="int" />
+          <Property Name="TimeStamp" Type="varchar" MaxLength="50" />
+          <Property Name="WorkOrderNumber" Type="int" />
+          <Property Name="IsEndOfDay" Type="bit" />
+        </EntityType>
         <EntityType Name="SafetyCodes">
           <Key>
             <PropertyRef Name="SafetyCodeGUID" />
@@ -345,6 +369,14 @@
           <Property Name="Permission" Type="varchar" MaxLength="20" />
           <Property Name="Email" Type="varchar(max)" />
         </EntityType>
+        <EntityType Name="Workstations">
+          <Key>
+            <PropertyRef Name="WorkstationGUID" />
+          </Key>
+          <Property Name="WorkstationGUID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WorkstationNumber" Type="int" />
+          <Property Name="EmployeeBadgeNumberAssigned" Type="int" />
+        </EntityType>
         <EntityContainer Name="TrailerModelStoreContainer">
           <EntitySet Name="ActiveInventoryLocations" EntityType="Self.ActiveInventoryLocations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ActiveLocationRows" EntityType="Self.ActiveLocationRows" Schema="dbo" store:Type="Tables" />
@@ -363,6 +395,8 @@
           <EntitySet Name="PalletPrices" EntityType="Self.PalletPrices" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PalletTypes" EntityType="Self.PalletTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payouts" EntityType="Self.Payouts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductionEmployees" EntityType="Self.ProductionEmployees" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductionStacks" EntityType="Self.ProductionStacks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SafetyCodes" EntityType="Self.SafetyCodes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SafetyConcerns" EntityType="Self.SafetyConcerns" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SortImages" EntityType="Self.SortImages" Schema="dbo" store:Type="Tables" />
@@ -371,6 +405,7 @@
           <EntitySet Name="StackNotes" EntityType="Self.StackNotes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TrailerList" EntityType="Self.TrailerList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Workstations" EntityType="Self.Workstations" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -691,6 +726,9 @@
           <EntitySet Name="DriverConcernImages" EntityType="TrailerModel.DriverConcernImage" />
           <EntitySet Name="DriverConcerns" EntityType="TrailerModel.DriverConcern" />
           <EntitySet Name="DriverConcernsLists" EntityType="TrailerModel.DriverConcernsList" />
+          <EntitySet Name="ProductionEmployees" EntityType="TrailerModel.ProductionEmployee" />
+          <EntitySet Name="ProductionStacks" EntityType="TrailerModel.ProductionStack" />
+          <EntitySet Name="Workstations" EntityType="TrailerModel.Workstation" />
         </EntityContainer>
         <EntityType Name="StackNote">
           <Key>
@@ -742,6 +780,38 @@
           </Key>
           <Property Name="DriverConcernListGUID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Concern" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="ProductionEmployee">
+          <Key>
+            <PropertyRef Name="ProductionEmployeeGUID" />
+          </Key>
+          <Property Name="ProductionEmployeeGUID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmployeeName" Type="String" MaxLength="75" FixedLength="false" Unicode="false" />
+          <Property Name="EmployeeBadgeNumber" Type="Int32" />
+          <Property Name="NameAndBadgeNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="ProductionStack">
+          <Key>
+            <PropertyRef Name="ProductionStackGUID" />
+          </Key>
+          <Property Name="ProductionStackGUID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkstationNumber" Type="Int32" />
+          <Property Name="EmployeeName" Type="String" MaxLength="75" FixedLength="false" Unicode="false" />
+          <Property Name="EmployeeBadgeNumber" Type="Int32" />
+          <Property Name="PartNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="StackQuantity" Type="Int32" />
+          <Property Name="TimeStamp" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="WorkOrderNumber" Type="Int32" />
+          <Property Name="IsEndOfDay" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Workstation">
+          <Key>
+            <PropertyRef Name="WorkstationGUID" />
+          </Key>
+          <Property Name="WorkstationGUID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkstationNumber" Type="Int32" />
+          <Property Name="EmployeeBadgeNumberAssigned" Type="Int32" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1111,6 +1181,41 @@
               <MappingFragment StoreEntitySet="DriverConcernsList">
                 <ScalarProperty Name="Concern" ColumnName="Concern" />
                 <ScalarProperty Name="DriverConcernListGUID" ColumnName="DriverConcernListGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductionEmployees">
+            <EntityTypeMapping TypeName="TrailerModel.ProductionEmployee">
+              <MappingFragment StoreEntitySet="ProductionEmployees">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="NameAndBadgeNumber" ColumnName="NameAndBadgeNumber" />
+                <ScalarProperty Name="EmployeeBadgeNumber" ColumnName="EmployeeBadgeNumber" />
+                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
+                <ScalarProperty Name="ProductionEmployeeGUID" ColumnName="ProductionEmployeeGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductionStacks">
+            <EntityTypeMapping TypeName="TrailerModel.ProductionStack">
+              <MappingFragment StoreEntitySet="ProductionStacks">
+                <ScalarProperty Name="IsEndOfDay" ColumnName="IsEndOfDay" />
+                <ScalarProperty Name="WorkOrderNumber" ColumnName="WorkOrderNumber" />
+                <ScalarProperty Name="TimeStamp" ColumnName="TimeStamp" />
+                <ScalarProperty Name="StackQuantity" ColumnName="StackQuantity" />
+                <ScalarProperty Name="PartNumber" ColumnName="PartNumber" />
+                <ScalarProperty Name="EmployeeBadgeNumber" ColumnName="EmployeeBadgeNumber" />
+                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
+                <ScalarProperty Name="WorkstationNumber" ColumnName="WorkstationNumber" />
+                <ScalarProperty Name="ProductionStackGUID" ColumnName="ProductionStackGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Workstations">
+            <EntityTypeMapping TypeName="TrailerModel.Workstation">
+              <MappingFragment StoreEntitySet="Workstations">
+                <ScalarProperty Name="EmployeeBadgeNumberAssigned" ColumnName="EmployeeBadgeNumberAssigned" />
+                <ScalarProperty Name="WorkstationNumber" ColumnName="WorkstationNumber" />
+                <ScalarProperty Name="WorkstationGUID" ColumnName="WorkstationGUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
