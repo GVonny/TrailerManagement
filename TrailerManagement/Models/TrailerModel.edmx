@@ -246,6 +246,16 @@
           <Property Name="TimeStamp" Type="varchar" MaxLength="50" />
           <Property Name="WorkOrderNumber" Type="int" />
           <Property Name="IsEndOfDay" Type="bit" />
+          <Property Name="Date" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="ProductionWorkOrders">
+          <Key>
+            <PropertyRef Name="ProductionWorkOrderGUID" />
+          </Key>
+          <Property Name="ProductionWorkOrderGUID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PartNumber" Type="varchar" MaxLength="10" />
+          <Property Name="Description" Type="varchar(max)" />
+          <Property Name="WorkOrderNumber" Type="int" />
         </EntityType>
         <EntityType Name="SafetyCodes">
           <Key>
@@ -397,6 +407,7 @@
           <EntitySet Name="Payouts" EntityType="Self.Payouts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionEmployees" EntityType="Self.ProductionEmployees" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionStacks" EntityType="Self.ProductionStacks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductionWorkOrders" EntityType="Self.ProductionWorkOrders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SafetyCodes" EntityType="Self.SafetyCodes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SafetyConcerns" EntityType="Self.SafetyConcerns" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SortImages" EntityType="Self.SortImages" Schema="dbo" store:Type="Tables" />
@@ -729,6 +740,7 @@
           <EntitySet Name="ProductionEmployees" EntityType="TrailerModel.ProductionEmployee" />
           <EntitySet Name="ProductionStacks" EntityType="TrailerModel.ProductionStack" />
           <EntitySet Name="Workstations" EntityType="TrailerModel.Workstation" />
+          <EntitySet Name="ProductionWorkOrders" EntityType="TrailerModel.ProductionWorkOrder" />
         </EntityContainer>
         <EntityType Name="StackNote">
           <Key>
@@ -804,6 +816,7 @@
           <Property Name="TimeStamp" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="WorkOrderNumber" Type="Int32" />
           <Property Name="IsEndOfDay" Type="Boolean" />
+          <Property Name="Date" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Workstation">
           <Key>
@@ -812,6 +825,15 @@
           <Property Name="WorkstationGUID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="WorkstationNumber" Type="Int32" />
           <Property Name="EmployeeBadgeNumberAssigned" Type="Int32" />
+        </EntityType>
+        <EntityType Name="ProductionWorkOrder">
+          <Key>
+            <PropertyRef Name="ProductionWorkOrderGUID" />
+          </Key>
+          <Property Name="ProductionWorkOrderGUID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PartNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="WorkOrderNumber" Type="Int32" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1198,6 +1220,7 @@
           <EntitySetMapping Name="ProductionStacks">
             <EntityTypeMapping TypeName="TrailerModel.ProductionStack">
               <MappingFragment StoreEntitySet="ProductionStacks">
+                <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="IsEndOfDay" ColumnName="IsEndOfDay" />
                 <ScalarProperty Name="WorkOrderNumber" ColumnName="WorkOrderNumber" />
                 <ScalarProperty Name="TimeStamp" ColumnName="TimeStamp" />
@@ -1216,6 +1239,16 @@
                 <ScalarProperty Name="EmployeeBadgeNumberAssigned" ColumnName="EmployeeBadgeNumberAssigned" />
                 <ScalarProperty Name="WorkstationNumber" ColumnName="WorkstationNumber" />
                 <ScalarProperty Name="WorkstationGUID" ColumnName="WorkstationGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductionWorkOrders">
+            <EntityTypeMapping TypeName="TrailerModel.ProductionWorkOrder">
+              <MappingFragment StoreEntitySet="ProductionWorkOrders">
+                <ScalarProperty Name="WorkOrderNumber" ColumnName="WorkOrderNumber" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="PartNumber" ColumnName="PartNumber" />
+                <ScalarProperty Name="ProductionWorkOrderGUID" ColumnName="ProductionWorkOrderGUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

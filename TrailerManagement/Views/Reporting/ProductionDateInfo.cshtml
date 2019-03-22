@@ -1,0 +1,27 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "ProductionDateInfo";
+    var counter = 0;
+}
+
+<h2>Production Date Info</h2>
+<table class="table">
+    <tbody>
+        <tr>
+            @foreach (int workstation in Model.Workstations)
+            {
+                <td colspan="3">@Model.Users[counter]</td>
+                counter++;
+            }
+        </tr>
+        <tr>
+            @foreach (int workstation in Model.Workstations)
+            {
+                foreach(ProductionWorkOrder part in Model.Parts)
+                {
+                    <td>@part.Description</td>
+                }
+            }
+        </tr>
+    </tbody>
+</table>

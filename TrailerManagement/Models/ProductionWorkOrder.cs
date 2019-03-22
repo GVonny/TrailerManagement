@@ -12,17 +12,11 @@ namespace TrailerManagement.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ProductionStack
+    public partial class ProductionWorkOrder
     {
-        public long ProductionStackGUID { get; set; }
-        public Nullable<int> WorkstationNumber { get; set; }
-        public string EmployeeName { get; set; }
-        public Nullable<int> EmployeeBadgeNumber { get; set; }
+        public int ProductionWorkOrderGUID { get; set; }
         public string PartNumber { get; set; }
-        public Nullable<int> StackQuantity { get; set; }
-        public string TimeStamp { get; set; }
+        public string Description { get; set; }
         public Nullable<int> WorkOrderNumber { get; set; }
-        public Nullable<bool> IsEndOfDay { get; set; }
-        public string Date { get; set; }
     }
 }

@@ -230,6 +230,7 @@
     <Compile Include="Models\InactiveTrailerList.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\IndividualWorkstation.cs" />
     <Compile Include="Models\InventoryRowStack.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
@@ -252,6 +253,9 @@
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductionStack.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProductionWorkOrder.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SafetyCode.cs">
@@ -486,6 +490,9 @@
     <Content Include="Views\Production\WorkStations.cshtml" />
     <Content Include="Views\Production\ProductionEmployees.cshtml" />
     <Content Include="Views\Production\WorkstationInput.cshtml" />
+    <Content Include="Views\Production\WorkOrders.cshtml" />
+    <Content Include="Views\Reporting\ProductionDates.cshtml" />
+    <Content Include="Views\Reporting\ProductionDateInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

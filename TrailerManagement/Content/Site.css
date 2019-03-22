@@ -240,10 +240,17 @@ a.special {
     text-align: center;
 }
 
-.btn-green{
+.btn-green:focus{
     background-color:green;
     border-color:green;
+    
     color:black;
+}
+
+.btn-green {
+    background-color: green;
+    border-color: green;
+    color: black;
 }
 
 .btn-green:hover

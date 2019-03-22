@@ -1,0 +1,76 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "WorkOrders";
+}
+
+<h2>Work Orders</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Part Number</th>
+            <th>Description</th>
+            <th>Work Order Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(ProductionWorkOrder part in Model)
+        {
+            <tr>
+                <td>@part.PartNumber</td>
+                <td>@part.Description</td>
+                <td>@part.WorkOrderNumber</td>
+                <td class="col-xs-1"><button id="@part.ProductionWorkOrderGUID" class="edit-work-order btn btn-primary">Edit</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="editWorkOrderModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Edit Work Order</h2>
+            </div>
+            <div class="modal-body">
+                <form action="EdidWorkOrderNumber" id="editForm">
+                    <input type="number" id="workOrderID" name="workOrderID" class="hidden"/>
+                    <strong>Work Order Number</strong>
+                    <input type="number" name="workOrderNumber" id="workOrderNumber" class="form-control" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <span id="editError" class="float-left" style="color:red"></span>
+                <input type="button" class="btn btn-warning" id="cancel" value="Cancel" data-dismiss="modal">
+                <button type="button" class="btn btn-primary" id="editSubmit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('.edit-work-order').on('click', function ()
+            {
+                var id = this.id;
+                $('#workOrderID').val(id);
+                $('#workOrderNumber').val("");
+                $('#editWorkOrderModal').modal();
+            });
+
+            $('#editSubmit').on('click', function ()
+            {
+                if ($('#workOrderNumber').val() != "")
+                {
+                    $('#editForm').submit();
+                }
+            });
+        });
+    </script>    
+}

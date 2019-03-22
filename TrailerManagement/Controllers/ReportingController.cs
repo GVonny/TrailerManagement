@@ -1024,5 +1024,44 @@ namespace TrailerManagement.Controllers
                 return RedirectToAction(actionName: "CustomerInfo", controllerName: "Reporting", routeValues: new { driverConcernID = concern.DriverConcernGUID });
             }
         }
+
+        public ActionResult ProductionDates()
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                dynamic model = new ExpandoObject();
+                List<String> uniqueDates = db.ProductionStacks.Select(u => u.Date).Distinct().ToList();
+
+                model.Dates = uniqueDates;
+
+                return View(model);
+            }
+        }
+
+        public ActionResult ProductionDateInfo(string date)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                dynamic model = new ExpandoObject();
+                var stacks = db.ProductionStacks.Where(s => s.Date == date).ToList();
+                model.Stacks = stacks;
+
+                var workstations = db.ProductionStacks.Where(w => w.Date == date).Select(w => w.WorkstationNumber).Distinct().ToList();
+                model.Workstations = workstations;
+
+                List<String> users = new List<string>();
+                foreach(int workstation in workstations)
+                {
+                    var user = stacks.FirstOrDefault(u => u.WorkstationNumber == workstation).EmployeeName;
+                    users.Add(user);
+                }
+                model.Users = users;
+
+                var parts = db.ProductionWorkOrders.ToList();
+                model.Parts = parts;
+
+                return View(model);
+            }
+        }
     }
 }

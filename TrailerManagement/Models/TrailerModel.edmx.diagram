@@ -33,6 +33,7 @@
         <EntityTypeShape EntityType="TrailerModel.ProductionEmployee" Width="1.5" PointX="15.375" PointY="0.75" />
         <EntityTypeShape EntityType="TrailerModel.ProductionStack" Width="1.5" PointX="15.375" PointY="3.75" />
         <EntityTypeShape EntityType="TrailerModel.Workstation" Width="1.5" PointX="15.375" PointY="7.75" />
+        <EntityTypeShape EntityType="TrailerModel.ProductionWorkOrder" Width="1.5" PointX="15.375" PointY="10.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

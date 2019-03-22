@@ -23,23 +23,77 @@
         <br />
         <br />
 
-        <form>
-            <strong>Quantity</strong>
-            <input type="number" id="fullQuantity" name="quantity" class="form-control" />
-            <br />
-            <strong>Part Number</strong>
-            <input type="text" id="fullPartNumber" name="partNumber" class="form-control" />
+        <div id="fullInputs" class="hidden">
+            <form action="SubmitWorkstationInput" id="fullForm">
+                <strong>Quantity</strong>
+                <input type="number" id="fullQuantity" name="quantity" class="form-control" />
+                <br />
+                <strong>Part Number</strong>
+                <input type="text" id="fullPartNumber" name="partNumber" class="form-control" disabled />
 
-            <br />
-            <div>
-                <strong>Workstation</strong>
-                <input type="number" id="fullWorkstationNumber" name="workstationNumber"  class="form-control"/>
-            </div>
-        </form>
+                <br />
+                <div>
+                    <strong>Workstation - hide this once working</strong>
+                    <input type="number" id="fullWorkstationNumber" name="workstationNumber" class="form-control" />
+                </div>
+                <br />
+                <label for="endOfDay" style="font-size:1.5em">End of Day?</label>
+                <input type="checkbox" name="endOfDay" style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin-left:10px" />
+                <br />
+                <br />
+                <input type="button" value="Submit" id="fullSubmit" class="btn btn-primary" />
+            </form>
+        </div>
     </div>
 
-    <div id="partialStackInput">
+    <div id="partialStackInput" class="hidden">
+        <button id="partialA" class="btn btn-warning" style="font-size:2em;width:15%;">&nbsp;A&nbsp;</button>
+        <button id="partialB" class="btn btn-warning" style="font-size:2em;width:15%;">&nbsp;B&nbsp;</button>
+        <button id="partial6" class="btn btn-warning" style="font-size:2em;width:20%;">&nbsp;6 INCH&nbsp;</button>
+        <br />
+        <br />
+        <div id="partialInputs" class="hidden">
+            <form action="SubmitWorkstationInput" id="partialForm">
+                <strong>Quantity</strong><span id="quantityError" style="color:red"></span>
+                <input type="number" id="partialQuantity" name="quantity" class="form-control" placeholder="Please enter the stack quantity" />
+                <br />
+                <strong>Part Number</strong>
+                <input type="text" id="partialPartNumber" name="partNumber" class="form-control" disabled />
 
+                <br />
+                <div>
+                    <strong>Workstation - hide this once working</strong>
+                    <input type="number" id="partialWorkstationNumber" name="workstationNumber" class="form-control" />
+                </div>
+                <br />
+                <label for="endOfDay" style="font-size:1.5em">End of Day?</label>
+                @*<input type="checkbox" name="endOfDay" style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin-left:10px" />*@
+                @Html.CheckBox("endOfDay")
+                <br />
+                <br />
+                <input type="button" value="Submit" id="partialSubmit" class="btn btn-primary" />
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="quantityCheckModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body">
+                <strong id="quantityCheck" style="font-size:1.5em">Are you sure yo</strong>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-warning" id="cancel" value="Cancel" data-dismiss="modal">
+                <button type="button" class="btn btn-primary" id="confirmSubmit">Confirm</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -48,34 +102,119 @@
     <script>
         $(function ()
         {
+            $('#fullSubmit').on('click', function ()
+            {
+                $('#fullPartNumber').removeAttr('disabled', 'disabled');
+                $('#fullForm').submit();
+            });
+
+            $('#partialSubmit').on('click', function ()
+            {
+                if ($("#partialQuantity").val() == "")
+                {
+                    $('#quantityError').html("   please enter a stack quantity")
+                }
+                else
+                {
+                    if ($("#partialQuantity").val() > 20)
+                    {
+                        $('#quantityCheck').html("Are you sure you want a stack size of " + $("#partialQuantity").val() + "?");
+                        $('#quantityCheckModal').modal();
+                    }
+                    else
+                    {
+                        $('#partialPartNumber').removeAttr('disabled', 'disabled');
+                        $('#partialForm').submit();
+                    }
+                }
+            });
+
+            $('#confirmSubmit').on('click', function ()
+            {
+                $('#partialPartNumber').removeAttr('disabled', 'disabled');
+                $('#partialForm').submit();
+            });
+
             $('#fullWorkstationNumber').val(1);
+            $('#partialWorkstationNumber').val(1);
             $('#workstations').on('change', function ()
             {
                 var workstation = $(this).val();
                 $('#fullWorkstationNumber').val(workstation);
+                $('#partialWorkstationNumber').val(workstation);
             })
 
             $('#fullStack').on('click', function ()
             {
+                $('#partialStackInput').addClass('hidden');
+                $('#partialStack').removeClass('btn-green');
+                $('#fullStack').addClass('btn-green');
                 $('#fullStackInput').removeClass('hidden');
             });
+
+            $('#partialStack').on('click', function ()
+            {
+                $('#fullStackInput').addClass('hidden');
+                $('#fullStack').removeClass('btn-green');
+                $('#partialStack').addClass('btn-green');
+                $('#partialStackInput').removeClass('hidden');
+            })
 
             $('#fullA').on('click', function ()
             {
                 $('#fullQuantity').val(20);
                 $('#fullPartNumber').val("50-0001");
+                $('#fullA').addClass('btn-green');
+                $('#fullB').removeClass('btn-green');
+                $('#full6').removeClass('btn-green');
+                $('#fullInputs').removeClass('hidden');
+            });
+
+            $('#partialA').on('click', function ()
+            {
+                $('#partialPartNumber').val("50-0001");
+                $('#partialA').addClass('btn-green');
+                $('#partialB').removeClass('btn-green');
+                $('#partial6').removeClass('btn-green');
+                $('#partialInputs').removeClass('hidden');
             });
 
             $('#fullB').on('click', function ()
             {
                 $('#fullQuantity').val(20);
                 $('#fullPartNumber').val("50-0004");
+                $('#fullB').addClass('btn-green');
+                $('#fullA').removeClass('btn-green');
+                $('#full6').removeClass('btn-green');
+                $('#fullInputs').removeClass('hidden');
+            });
+
+            $('#partialB').on('click', function ()
+            {
+                $('#partialPartNumber').val("50-0004");
+                $('#partialB').addClass('btn-green');
+                $('#partialA').removeClass('btn-green');
+                $('#partial6').removeClass('btn-green');
+                $('#partialInputs').removeClass('hidden');
             });
 
             $('#full6').on('click', function ()
             {
                 $('#fullQuantity').val(20);
                 $('#fullPartNumber').val("50-0308");
+                $('#full6').addClass('btn-green');
+                $('#fullB').removeClass('btn-green');
+                $('#fullA').removeClass('btn-green');
+                $('#fullInputs').removeClass('hidden');
+            });
+
+            $('#partial6').on('click', function ()
+            {
+                $('#partialPartNumber').val("50-0308");
+                $('#partial6').addClass('btn-green');
+                $('#partialB').removeClass('btn-green');
+                $('#partialA').removeClass('btn-green');
+                $('#partialInputs').removeClass('hidden');
             });
         });
     </script>    

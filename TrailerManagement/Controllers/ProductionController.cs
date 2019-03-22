@@ -33,7 +33,7 @@ namespace TrailerManagement.Controllers
             {
                 var workstation = db.Workstations.FirstOrDefault(w => w.WorkstationGUID == workstationID);
 
-                if(employees != null)
+                if (employees != null)
                 {
                     var employee = db.ProductionEmployees.FirstOrDefault(e => e.EmployeeBadgeNumber == employees);
                     workstation.EmployeeBadgeNumberAssigned = employee.EmployeeBadgeNumber;
@@ -42,7 +42,7 @@ namespace TrailerManagement.Controllers
                 {
                     workstation.EmployeeBadgeNumberAssigned = null;
                 }
-                
+
                 db.SaveChanges();
                 return RedirectToAction(actionName: "Workstations", controllerName: "Production");
             }
@@ -87,7 +87,7 @@ namespace TrailerManagement.Controllers
                 return RedirectToAction(actionName: "ProductionEmployees", controllerName: "Production");
             }
         }
-        
+
         public ActionResult EditProductionEmployee(int employeeID, string name, int badgeNumber, string status)
         {
             using (TrailerEntities db = new TrailerEntities())
@@ -95,7 +95,7 @@ namespace TrailerManagement.Controllers
                 var employee = db.ProductionEmployees.FirstOrDefault(e => e.ProductionEmployeeGUID == employeeID);
 
                 var workstation = db.Workstations.FirstOrDefault(w => w.EmployeeBadgeNumberAssigned == employee.EmployeeBadgeNumber);
-                
+
                 employee.EmployeeName = name;
                 employee.EmployeeBadgeNumber = badgeNumber;
                 employee.Status = status;
@@ -103,7 +103,7 @@ namespace TrailerManagement.Controllers
 
                 if (workstation != null)
                 {
-                    if(employee.Status == "INACTIVE")
+                    if (employee.Status == "INACTIVE")
                     {
                         workstation.EmployeeBadgeNumberAssigned = null;
                     }
@@ -128,16 +128,63 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult SubmitWorkstationInput(int workstationNumber, int quantity, string partNumber)
+        public ActionResult SubmitWorkstationInput(int workstationNumber, int quantity, string partNumber, bool endOfDay = false)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                //get workstation based on workstation number to get the badge number
-                //use the badge number to get the user name
+                int? inputQuantity = quantity;
+                var endOfDayCheck = db.ProductionStacks.Where(e => e.WorkstationNumber == workstationNumber).ToList();
+                if (endOfDayCheck.Count > 0)
+                {
+                    var lastDay = endOfDayCheck.Last();
+                    if (lastDay.IsEndOfDay == true)
+                    {
+                        inputQuantity -= lastDay.StackQuantity;
+                    }
+                }
 
-                //ask janice about where the work order ties into this
+                ProductionStack newStack = new ProductionStack();
 
-                return View();
+                var workstation = db.Workstations.FirstOrDefault(w => w.WorkstationNumber == workstationNumber);
+                var employee = db.ProductionEmployees.FirstOrDefault(e => e.EmployeeBadgeNumber == workstation.EmployeeBadgeNumberAssigned);
+                var workorder = db.ProductionWorkOrders.FirstOrDefault(w => w.PartNumber == partNumber);
+
+                newStack.WorkstationNumber = workstation.WorkstationNumber;
+                newStack.EmployeeBadgeNumber = workstation.EmployeeBadgeNumberAssigned;
+                newStack.EmployeeName = employee.EmployeeName;
+                newStack.PartNumber = partNumber;
+                newStack.StackQuantity = inputQuantity;
+
+                DateTime now = DateTime.Now;
+                newStack.TimeStamp = now.ToString("yyyy-MM-dd HH:mm:ss");
+                newStack.Date = now.ToString("yyyy-MM-dd");
+                newStack.IsEndOfDay = endOfDay;
+                newStack.WorkOrderNumber = workorder.WorkOrderNumber;
+
+                db.ProductionStacks.Add(newStack);
+                db.SaveChanges();
+
+                return RedirectToAction(actionName: "WorkstationInput", controllerName: "Production");
+            }
+        }
+
+        public ActionResult WorkOrders()
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var workOrders = db.ProductionWorkOrders.ToList();
+                return View(workOrders);
+            }
+        }
+
+        public ActionResult EdidWorkOrderNumber(int workOrderID, int workOrderNumber)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var workOrder = db.ProductionWorkOrders.FirstOrDefault(w => w.ProductionWorkOrderGUID == workOrderID);
+                workOrder.WorkOrderNumber = workOrderNumber;
+                db.SaveChanges();
+                return RedirectToAction(actionName: "WorkOrders", controllerName: "Production");
             }
         }
     }

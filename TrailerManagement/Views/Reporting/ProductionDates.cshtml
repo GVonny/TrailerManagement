@@ -1,0 +1,37 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "ProductionDates";
+}
+
+<h2>Production Dates</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(String date in Model.Dates)
+        {
+            <tr>
+                <td>@date</td>
+                <td class="col-xs-1"><button class="btn btn-primary view-date" id="@date">View</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(function()
+        {
+            $('.view-date').on('click', function ()
+            {
+                var date = this.id;
+                location.href = "/Reporting/ProductionDateInfo?date=" + date;
+            });
+        });
+    </script>
+}
