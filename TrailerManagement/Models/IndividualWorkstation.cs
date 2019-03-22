@@ -10,9 +10,9 @@ namespace TrailerManagement.Models
         List<int?> A;
         List<int?> B;
         List<int?> SIX;
-        int TotalA;
-        int TotalB;
-        int TotalSix;
+        int? TotalA = 0;
+        int? TotalB = 0;
+        int? TotalSix = 0;
 
         public IndividualWorkstation()
         {
@@ -31,6 +31,28 @@ namespace TrailerManagement.Models
         public void SetSix(List<int?> six)
         {
             SIX = six;
+        }
+
+        public void CalculateTotalA()
+        {
+            foreach(int? a in A)
+            {
+                TotalA += a;
+            }
+        }
+        public void CalculateTotalB()
+        {
+            foreach (int? b in B)
+            {
+                TotalB += b;
+            }
+        }
+        public void CalculateTotalSix()
+        {
+            foreach (int? six in SIX)
+            {
+                TotalSix += six;
+            }
         }
     }
 }
