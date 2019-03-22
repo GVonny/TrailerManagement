@@ -33,6 +33,21 @@ namespace TrailerManagement.Models
             SIX = six;
         }
 
+        public List<int?> GetA()
+        {
+            return A;
+        }
+
+        public List<int?> GetB()
+        {
+            return B;
+        }
+
+        public List<int?> GetSIX()
+        {
+            return SIX;
+        }
+
         public void CalculateTotalA()
         {
             foreach(int? a in A)
