@@ -1050,12 +1050,40 @@ namespace TrailerManagement.Controllers
                 model.Workstations = workstations;
 
                 List<String> users = new List<string>();
+                List<int?> a = new List<int?>();
+                List<int?> b = new List<int?>();
+                List<int?> six = new List<int?>();
+                List<IndividualWorkstation> individualWorkstations = new List<IndividualWorkstation>();
                 foreach(int workstation in workstations)
                 {
                     var user = stacks.FirstOrDefault(u => u.WorkstationNumber == workstation).EmployeeName;
                     users.Add(user);
+
+
+                    var partStacks = stacks.Where(p => p.WorkstationNumber == workstation);
+                    IndividualWorkstation individualWorkstation = new IndividualWorkstation();
+                    foreach(ProductionStack stack in partStacks)
+                    {
+                        switch(stack.PartNumber)
+                        {
+                            case "50-0001":
+                                a.Add(stack.StackQuantity);
+                                break;
+                            case "50-0004":
+                                b.Add(stack.StackQuantity);
+                                break;
+                            case "50-0308":
+                                b.Add(stack.StackQuantity);
+                                break;
+                        }
+                        individualWorkstation.SetA(a);
+                        individualWorkstation.SetB(b);
+                        individualWorkstation.SetSix(six);
+                        individualWorkstations.Add(individualWorkstation);
+                    }
                 }
                 model.Users = users;
+                model.IndividualWorkstations = individualWorkstations;
 
                 var parts = db.ProductionWorkOrders.ToList();
                 model.Parts = parts;

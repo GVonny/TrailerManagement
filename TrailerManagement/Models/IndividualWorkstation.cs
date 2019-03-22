@@ -7,12 +7,30 @@ namespace TrailerManagement.Models
 {
     public class IndividualWorkstation
     {
+        List<int?> A;
+        List<int?> B;
+        List<int?> SIX;
+        int TotalA;
+        int TotalB;
+        int TotalSix;
+
         public IndividualWorkstation()
         {
-            using (TrailerEntities db = new TrailerEntities())
-            {
+        }
 
-            }
+        public void SetA(List<int?> a)
+        {
+            A = a;
+        }
+
+        public void SetB(List<int?> b)
+        {
+            B = b;
+        }
+
+        public void SetSix(List<int?> six)
+        {
+            SIX = six;
         }
     }
 }
