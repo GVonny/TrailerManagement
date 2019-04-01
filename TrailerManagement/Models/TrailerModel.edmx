@@ -233,6 +233,17 @@
           <Property Name="NameAndBadgeNumber" Type="varchar" MaxLength="100" />
           <Property Name="Status" Type="varchar" MaxLength="10" />
         </EntityType>
+        <EntityType Name="ProductionHours">
+          <Key>
+            <PropertyRef Name="ProductionHourGUID" />
+          </Key>
+          <Property Name="ProductionHourGUID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmployeeName" Type="varchar" MaxLength="75" />
+          <Property Name="EmployeeBadgeNumber" Type="int" />
+          <Property Name="HoursWorked" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Date" Type="varchar" MaxLength="10" />
+          <Property Name="WorkstationNumber" Type="int" />
+        </EntityType>
         <EntityType Name="ProductionStacks">
           <Key>
             <PropertyRef Name="ProductionStackGUID" />
@@ -247,6 +258,7 @@
           <Property Name="WorkOrderNumber" Type="int" />
           <Property Name="IsEndOfDay" Type="bit" />
           <Property Name="Date" Type="varchar" MaxLength="10" />
+          <Property Name="ForkliftDriver" Type="varchar" MaxLength="75" />
         </EntityType>
         <EntityType Name="ProductionWorkOrders">
           <Key>
@@ -406,6 +418,7 @@
           <EntitySet Name="PalletTypes" EntityType="Self.PalletTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payouts" EntityType="Self.Payouts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionEmployees" EntityType="Self.ProductionEmployees" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductionHours" EntityType="Self.ProductionHours" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionStacks" EntityType="Self.ProductionStacks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionWorkOrders" EntityType="Self.ProductionWorkOrders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SafetyCodes" EntityType="Self.SafetyCodes" Schema="dbo" store:Type="Tables" />
@@ -741,6 +754,7 @@
           <EntitySet Name="ProductionStacks" EntityType="TrailerModel.ProductionStack" />
           <EntitySet Name="Workstations" EntityType="TrailerModel.Workstation" />
           <EntitySet Name="ProductionWorkOrders" EntityType="TrailerModel.ProductionWorkOrder" />
+          <EntitySet Name="ProductionHours" EntityType="TrailerModel.ProductionHour" />
         </EntityContainer>
         <EntityType Name="StackNote">
           <Key>
@@ -817,6 +831,7 @@
           <Property Name="WorkOrderNumber" Type="Int32" />
           <Property Name="IsEndOfDay" Type="Boolean" />
           <Property Name="Date" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ForkliftDriver" Type="String" MaxLength="75" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Workstation">
           <Key>
@@ -834,6 +849,17 @@
           <Property Name="PartNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="WorkOrderNumber" Type="Int32" />
+        </EntityType>
+        <EntityType Name="ProductionHour">
+          <Key>
+            <PropertyRef Name="ProductionHourGUID" />
+          </Key>
+          <Property Name="ProductionHourGUID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmployeeName" Type="String" MaxLength="75" FixedLength="false" Unicode="false" />
+          <Property Name="EmployeeBadgeNumber" Type="Int32" />
+          <Property Name="HoursWorked" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Date" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="WorkstationNumber" Type="Int32" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1220,6 +1246,7 @@
           <EntitySetMapping Name="ProductionStacks">
             <EntityTypeMapping TypeName="TrailerModel.ProductionStack">
               <MappingFragment StoreEntitySet="ProductionStacks">
+                <ScalarProperty Name="ForkliftDriver" ColumnName="ForkliftDriver" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="IsEndOfDay" ColumnName="IsEndOfDay" />
                 <ScalarProperty Name="WorkOrderNumber" ColumnName="WorkOrderNumber" />
@@ -1249,6 +1276,18 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="PartNumber" ColumnName="PartNumber" />
                 <ScalarProperty Name="ProductionWorkOrderGUID" ColumnName="ProductionWorkOrderGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductionHours">
+            <EntityTypeMapping TypeName="TrailerModel.ProductionHour">
+              <MappingFragment StoreEntitySet="ProductionHours">
+                <ScalarProperty Name="WorkstationNumber" ColumnName="WorkstationNumber" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="HoursWorked" ColumnName="HoursWorked" />
+                <ScalarProperty Name="EmployeeBadgeNumber" ColumnName="EmployeeBadgeNumber" />
+                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
+                <ScalarProperty Name="ProductionHourGUID" ColumnName="ProductionHourGUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

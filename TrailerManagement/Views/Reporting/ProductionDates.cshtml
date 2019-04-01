@@ -1,37 +1,93 @@
 ﻿@using TrailerManagement.Models;
 @{
     ViewBag.Title = "ProductionDates";
+    var browser = Request.Browser.Type;
 }
 
-<h2>Production Dates</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(String date in Model.Dates)
-        {
-            <tr>
-                <td>@date</td>
-                <td class="col-xs-1"><button class="btn btn-primary view-date" id="@date">View</button></td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div id="dateFilter" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Select production date</h2>
+            </div>
+            <div class="modal-body">
+                    @if (browser.ToLower().Equals("internetexplorer11"))
+                    {
+                        <strong>Date (mm/dd/yyyy)</strong>
+                        <input type="text" name="date" class="datepicker" id="date" placeholder="mm/dd/yyyy" required>
+                    }
+                    else
+                    {
+                        <strong>Date</strong>
+                        <input type="date" name="date" class="datepicker" id="date" required>
+                    }
+            </div>
+            <div class="modal-footer">
+                <span style="color:red" id="error" class="float-left"></span>
+                <a href="/Home/Index" class="btn btn-warning">Cancel</a>
+                <button type="button" class="btn btn-primary" id="selectDate" data-dismiss="modal" data-toggle="modal">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="updateTimeModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                <p><strong>Do you wish to input/alter the hours worked at each workstation?</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="no" data-dismiss="modal" data-toggle="modal">No</button>
+                <button type="button" class="btn btn-primary" id="yes" data-dismiss="modal" data-toggle="modal">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @section scripts
 {
     <script>
-        $(function()
+        $(function ()
         {
+            $('#dateFilter').modal();
+
+            var date;
             $('.view-date').on('click', function ()
             {
-                var date = this.id;
+                date = this.id;
+                $('#updateTimeModal').modal();
+                //location.href = "/Reporting/ProductionDateInfo?date=" + date;
+            });
+
+            $('#no').on('click', function ()
+            {
                 location.href = "/Reporting/ProductionDateInfo?date=" + date;
             });
+
+            $('#yes').on('click', function ()
+            {
+                location.href = "/Production/ProductionWorkHours?date=" + date;
+            })
+
+            $('#selectDate').on('click', function ()
+            {
+                date = $('#date').val();
+                console.log(date);
+                $('#updateTimeModal').modal();
+            })
+
         });
     </script>
 }

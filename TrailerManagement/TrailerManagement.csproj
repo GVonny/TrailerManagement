@@ -252,6 +252,9 @@
     <Compile Include="Models\ProductionEmployee.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProductionHour.cs">
+      <DependentUpon>TrailerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ProductionStack.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
@@ -493,6 +496,7 @@
     <Content Include="Views\Production\WorkOrders.cshtml" />
     <Content Include="Views\Reporting\ProductionDates.cshtml" />
     <Content Include="Views\Reporting\ProductionDateInfo.cshtml" />
+    <Content Include="Views\Production\ProductionWorkHours.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

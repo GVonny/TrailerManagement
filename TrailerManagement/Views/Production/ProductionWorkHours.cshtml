@@ -1,0 +1,38 @@
+﻿@using TrailerManagement.Models;
+@{
+    ViewBag.Title = "Production Work Hours";
+    var counter = 0;
+}
+
+<h2>Production Work Hours</h2>
+
+<div class="well">
+
+    <form action="ProductionWorkHoursInput" method="post">
+        <input type="text" name="date" value="@Model.Date" class="hidden"/>
+        <br />
+        @foreach (int workstation in Model.Workstations)
+        {
+            <input type="number" name="workstation" value="@workstation" class="hidden" />
+            <span><strong>Workstaion @workstation:</strong></span>
+            <br />
+
+            <span>Employee: @Model.Users[counter]</span>
+            <br />
+
+            <span>Badge: @Model.BadgeNumber[counter]</span>
+            <input type="text" value="@Model.BadgeNumber[counter]" name="badge" class="hidden"/>
+            <br />
+
+            <span>Hours Worked:</span>
+            <input type="number" name="hours" value="@Model.Hours[counter]"/>
+
+            <br />
+            <br />
+            counter++;
+        }
+
+        <a href="/Reporting/ProductionDates" class="btn btn-warning">Cancel</a>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
