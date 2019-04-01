@@ -1073,15 +1073,14 @@ namespace TrailerManagement.Controllers
                                 b.Add(stack.StackQuantity);
                                 break;
                             case "50-0308":
-                                six.Add(stack.StackQuantity);
+                                b.Add(stack.StackQuantity);
                                 break;
                         }
-                        
+                        individualWorkstation.SetA(a);
+                        individualWorkstation.SetB(b);
+                        individualWorkstation.SetSix(six);
+                        individualWorkstations.Add(individualWorkstation);
                     }
-                    individualWorkstation.SetA(a);
-                    individualWorkstation.SetB(b);
-                    individualWorkstation.SetSix(six);
-                    individualWorkstations.Add(individualWorkstation);
                 }
                 model.Users = users;
                 model.IndividualWorkstations = individualWorkstations;
