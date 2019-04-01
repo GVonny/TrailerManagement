@@ -1,27 +1,239 @@
 ﻿@using TrailerManagement.Models;
 @{
     ViewBag.Title = "ProductionDateInfo";
-    var counter = 0;
+    int counter = 0;
+    int rowCounter = 0;
+    int rowTotal = 0;
+    List<int> list;
+    var workstationCount = Model.IndividualWorkstations.Count;
+    var columnCount = Model.IndividualWorkstations.Count * 3;
+    var halfColumnCount = columnCount / 2;
+    var widthPercent = 100 / columnCount;
 }
 
-<h2>Production Date Info</h2>
-<table class="table">
+<br class="no-print"/>
+<a href="/Production/ProductionWorkHours?date=@ViewBag.DateParam" class="btn btn-primary no-print">Alter Hours</a>
+<a href="/Reporting/ProductionDates" class="btn btn-primary no-print">Change Date</a><br />
+<br class="no-print"/>
+<table style="width:100%">
     <tbody>
         <tr>
+            <th style="width:50%">DATE: @ViewBag.Date</th>
+            <th style="width:50%">FORKLIFT DRIVER(S): @ViewBag.Drivers</th>
+        </tr>
+    </tbody>
+</table>
+<table style="width:100%;page-break-inside: avoid;">
+    <tbody>
+        <tr id="width">
             @foreach (int workstation in Model.Workstations)
             {
-                <td colspan="3">@Model.Users[counter]</td>
+                <th colspan="3">@Model.Users[counter]</th>
                 counter++;
             }
         </tr>
         <tr>
             @foreach (int workstation in Model.Workstations)
             {
-                foreach(ProductionWorkOrder part in Model.Parts)
+                foreach (ProductionWorkOrder part in Model.Parts)
                 {
-                    <td>@part.Description</td>
+                    <td width="@widthPercent%" class="text-center">@part.Description</td>
                 }
             }
         </tr>
+
+        @do
+        {
+            rowTotal = 0;
+            <tr>
+                @foreach (IndividualWorkstation workstation in Model.IndividualWorkstations)
+                {
+                    for (var y = 0; y < 3; y++)
+                    {
+                        switch (y)
+                        {
+                            case 0:
+                                try
+                                {
+                                    list = workstation.GetA();
+                                    rowTotal += list[rowCounter];
+                                    <td class="text-center">@list[rowCounter]</td>
+                                }
+                                catch
+                                {
+                                    <td></td>
+                                }
+                                break;
+                            case 1:
+                                try
+                                {
+                                    list = workstation.GetB();
+                                    rowTotal += list[rowCounter];
+                                    <td class="text-center">@list[rowCounter]</td>
+                                }
+                                catch
+                                {
+                                    <td></td>
+                                }
+                                break;
+                            case 2:
+                                try
+                                {
+                                    list = workstation.GetSIX();
+                                    rowTotal += list[rowCounter];
+                                    <td class="text-center">@list[rowCounter]</td>
+                                }
+                                catch
+                                {
+                                    <td></td>
+                                }
+                                break;
+                        }
+                    }
+                }
+            </tr>
+            rowCounter++;
+        } while (rowTotal > 0);
+
+        <tr>
+            @foreach (IndividualWorkstation workstation in Model.IndividualWorkstations)
+            {
+                for (int x = 0; x < 3; x++)
+                {
+                    switch (x)
+                    {
+                        case 0:
+                            <td class="text-center total-A">@workstation.getTotalA()</td>
+                            break;
+                        case 1:
+                            <td class="text-center total-B">@workstation.getTotalB()</td>
+                            break;
+                        case 2:
+                            <td class="text-center total-SIX">@workstation.getTotalSix()</td>
+                            break;
+                    }
+                }
+            }
+            <th class="col-xs-1" style="font-size:.8em">Totals As, Bs, and 6"</th>
+        </tr>
+        <tr>
+            @foreach (IndividualWorkstation workstation in Model.IndividualWorkstations)
+            {
+                <td colspan="3" class="text-center">@workstation.getGrandTotal()</td>
+            }
+            <th class="col-xs-1">Total produced</th>
+        </tr>
+        
+        @*row for hours worked*@
+        <tr>
+            @{ counter = 0; }
+            @foreach (IndividualWorkstation workstation in Model.IndividualWorkstations)
+            {
+                <td colspan="3" class="hours text-center" >@Model.Hours[counter]</td>
+                counter++;
+            }
+            <th class="col-xs-1">Hours Worked</th>
+        </tr>
+        @*row for total per hour / dependent on hours row*@
+        <tr>
+            @{ counter = 0; }
+            @foreach (IndividualWorkstation workstation in Model.IndividualWorkstations)
+            {
+                var average = (workstation.getGrandTotal() / Model.Hours[counter]);
+                <td colspan="3" class="text-center">@average.ToString("#.##")</td>
+                counter++;
+            }
+            <th class="col-xs-1">Total per Hour</th>
+        </tr>
     </tbody>
 </table>
+<br />
+<table style="width:100%;page-break-inside: avoid;">
+    <thead>
+        <tr>
+            <th class="text-center">Part</th>
+            <th class="text-center">Order</th>
+            <th class="text-center">Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(ProductionWorkOrder workOrder in Model.WorkOrders)
+        {
+            <tr>
+                <td class="text-center">@workOrder.PartNumber @workOrder.Description <span>'s</span></td>
+                <td class="text-center">@workOrder.WorkOrderNumber</td>
+                <td class="text-center totals" id="@workOrder.PartNumber"></td>
+            </tr>
+        }
+        <tr>
+            <td colspan="3"></td>
+        </tr>
+        <tr>
+            <th colspan="2" class="text-right" style="padding-right:10px;">Total Units Made</th>
+            <th id="grandTotal" class="text-center"></th>
+        </tr>
+        <tr>
+            <th colspan="2" class="text-right" style="padding-right:10px;">Total Hours</th>
+            <th id="totalHours" class="text-center"></th>
+        </tr>
+        <tr>
+            <th colspan="2" class="text-right" style="padding-right:10px;">Overall units per hour</th>
+            <th id="totalUnitsPerHour" class="text-center"></th>
+        </tr>
+    </tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            var width = $('#width').width();
+
+            $('#header').width(width);
+
+            var totalA = 0;
+            $('.total-A').each(function ()
+            {
+                var quantity = parseInt($(this).html());
+                totalA += quantity;
+                $('#50-0001').html(totalA);
+            });
+
+            var totalB = 0;
+            $('.total-B').each(function ()
+            {
+                var quantity = parseInt($(this).html());
+                totalB += quantity;
+                $('#50-0004').html(totalB);
+            });
+
+            var totalSIX = 0;
+            $('.total-SIX').each(function ()
+            {
+                var quantity = parseInt($(this).html());
+                totalSIX += quantity;
+                $('#50-0308').html(totalSIX);
+            });
+
+            var grandTotal = 0;
+            $('.totals').each(function ()
+            {
+                var quantity = parseInt($(this).html());
+                grandTotal += quantity;
+                $('#grandTotal').html(grandTotal);
+            });
+
+            var totalHours = 0;
+            $('.hours').each(function ()
+            {
+                var hours = parseInt($(this).html());
+                totalHours += hours;
+                $('#totalHours').html(totalHours.toFixed(2));
+            });
+
+            $('#totalUnitsPerHour').html((grandTotal / totalHours).toFixed(2));
+        });
+    </script>
+        
+}

@@ -118,10 +118,19 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult WorkstationInput()
+        public ActionResult WorkstationInput(int? workstationNumber)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
+
+                if(workstationNumber != null)
+                {
+                    ViewBag.WorkstationNumber = workstationNumber;
+                }
+                else
+                {
+                    ViewBag.WorkstationNumber = 1;
+                }
                 this.ViewData["workstations"] = new SelectList(db.Workstations.Where(w => w.EmployeeBadgeNumberAssigned != null).OrderBy(w => w.WorkstationNumber), "WorkstationNumber", "WorkstationNumber").ToList();
 
                 return View();
@@ -155,6 +164,9 @@ namespace TrailerManagement.Controllers
                 newStack.PartNumber = partNumber;
                 newStack.StackQuantity = inputQuantity;
 
+                var name = Session["name"].ToString();
+                newStack.ForkliftDriver = db.Users.FirstOrDefault(u => u.FirstName == name).FirstName;
+
                 DateTime now = DateTime.Now;
                 newStack.TimeStamp = now.ToString("yyyy-MM-dd HH:mm:ss");
                 newStack.Date = now.ToString("yyyy-MM-dd");
@@ -164,7 +176,7 @@ namespace TrailerManagement.Controllers
                 db.ProductionStacks.Add(newStack);
                 db.SaveChanges();
 
-                return RedirectToAction(actionName: "WorkstationInput", controllerName: "Production");
+                return RedirectToAction(actionName: "WorkstationInput", controllerName: "Production", routeValues: new { workstationNumber });
             }
         }
 
@@ -185,6 +197,103 @@ namespace TrailerManagement.Controllers
                 workOrder.WorkOrderNumber = workOrderNumber;
                 db.SaveChanges();
                 return RedirectToAction(actionName: "WorkOrders", controllerName: "Production");
+            }
+        }
+
+        public ActionResult ProductionWorkHours(string date)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                if(db.ProductionStacks.Any(d => d.Date == date))
+                {
+                    dynamic model = new ExpandoObject();
+
+                    var stacks = db.ProductionStacks.Where(s => s.Date == date).OrderBy(s => s.WorkstationNumber).ToList();
+
+                    var workstations = stacks.Select(w => w.WorkstationNumber).Distinct().ToList();
+                    model.Workstations = workstations;
+
+                    var users = stacks.Select(u => u.EmployeeName).Distinct().ToList();
+                    model.Users = users;
+
+                    var hours = db.ProductionHours.Where(h => h.Date == date).OrderBy(h => h.WorkstationNumber).ToList();
+                    if (hours.Count > 0)
+                    {
+                        List<Decimal> hoursWorked = new List<decimal>();
+                        foreach (ProductionHour hour in hours)
+                        {
+                            hoursWorked.Add(Convert.ToDecimal(hour.HoursWorked));
+                        }
+                        model.Hours = hoursWorked;
+                    }
+                    else
+                    {
+                        List<Decimal> hoursWorked = new List<decimal>();
+                        foreach (int workstation in workstations)
+                        {
+                            hoursWorked.Add(0);
+                        }
+                        model.Hours = hoursWorked;
+                    }
+
+
+                    var badgeNumbers = stacks.Select(b => b.EmployeeBadgeNumber).Distinct().ToList();
+                    model.BadgeNumber = badgeNumbers;
+
+                    model.Date = date;
+
+                    return View(model);
+                }
+                else
+                {
+                    return RedirectToAction(actionName: "ProductionDates", controllerName: "Reporting");
+                }
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ProductionWorkHoursInput(FormCollection fc)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var date = fc["date"];
+                var badges = fc["badge"].Split(',');
+                var hoursWorked = fc["hours"].Split(',');
+                var workstationNumbers = fc["workstation"].Split(',');
+
+                var counter = 0;
+                foreach(string badgeNumber in badges)
+                {
+                    var number = Convert.ToInt32(badgeNumber);
+                    var dateCheck = db.ProductionHours.FirstOrDefault(d => d.EmployeeBadgeNumber == number && d.Date == date);
+                    if(dateCheck != null)
+                    {
+                        if(hoursWorked[counter] != "")
+                        {
+                            dateCheck.HoursWorked = Convert.ToInt32(hoursWorked[counter]);
+                        }
+                    }
+                    else
+                    {
+                        var user = db.ProductionEmployees.FirstOrDefault(u => u.EmployeeBadgeNumber == number);
+                        ProductionHour hour = new ProductionHour()
+                        {
+                            EmployeeName = user.EmployeeName,
+                            EmployeeBadgeNumber = Convert.ToInt32(badgeNumber),
+                            Date = date,
+                            WorkstationNumber = Convert.ToInt32(workstationNumbers[counter]),
+                        };
+                        if (hoursWorked[counter] != "")
+                        {
+                            hour.HoursWorked = Convert.ToDecimal(hoursWorked[counter]);
+                        }
+                        db.ProductionHours.Add(hour);
+                        
+                    }
+                    counter++;
+                }
+                db.SaveChanges();
+                return RedirectToAction(actionName: "ProductionDateInfo", controllerName: "Reporting", routeValues: new { date });
             }
         }
     }

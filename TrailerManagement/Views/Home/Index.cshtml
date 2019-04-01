@@ -13,46 +13,46 @@
     <!-- Trailer Lists -->
     @if ((Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000))
     {
-    <fieldset>
-        <legend>Trailers</legend>
-        <div class="col-xs-3">
-            <h2>Active List</h2>
-            <p><a href="~/Trailer/ActiveTrailerList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
-        </div>
-        @if (Convert.ToInt32(Session["permission"]) > 30 && Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 10000)
-        {
+        <fieldset>
+            <legend>Trailers</legend>
             <div class="col-xs-3">
-                <h2>Master List</h2>
-                <p><a href="~/Trailer/TrailerList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+                <h2>Active List</h2>
+                <p><a href="~/Trailer/ActiveTrailerList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
             </div>
-            <div class="col-xs-3">
-                <h2>Inactive List</h2>
-                <p><a href="~/Trailer/InactiveTrailerList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
-            </div>
-            <div class="col-xs-3">
-                <h2>Create Trailer</h2>
-                <p><a href="~/Trailer/CreateTrailer" class="btn btn-primary btn-default">Continue &raquo;</a></p>
-            </div>
-        }
-        @if (Convert.ToInt32(Session["permission"]) == 20 || Convert.ToInt32(Session["permission"]) >= 50)
-        {
-            <div class="col-xs-3">
-                <h2>Picture Log</h2>
-                <p><a href="~/Trailer/CreateDriverConcern" class="btn btn-primary btn-default">Continue &raquo;</a></p>
-            </div>
-            <div class="col-xs-3">
-                <h2>My Picture Log</h2>
-                <p><a href="~/Trailer/MyConcerns" class="btn btn-primary btn-default">Continue &raquo;</a></p>
-            </div>
-        }
-        @if (Convert.ToInt32(Session["permission"]) >= 50)
-        {
-            <div class="col-xs-3">
-                <h2>Concern List</h2>
-                <p><a href="~/Trailer/DriverConcernList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
-            </div>
-        }
-    </fieldset>
+            @if (Convert.ToInt32(Session["permission"]) > 30 && Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 10000)
+            {
+                <div class="col-xs-3">
+                    <h2>Master List</h2>
+                    <p><a href="~/Trailer/TrailerList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+                </div>
+                <div class="col-xs-3">
+                    <h2>Inactive List</h2>
+                    <p><a href="~/Trailer/InactiveTrailerList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+                </div>
+                <div class="col-xs-3">
+                    <h2>Create Trailer</h2>
+                    <p><a href="~/Trailer/CreateTrailer" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+                </div>
+            }
+            @if (Convert.ToInt32(Session["permission"]) == 20 || Convert.ToInt32(Session["permission"]) >= 50)
+            {
+                <div class="col-xs-3">
+                    <h2>Picture Log</h2>
+                    <p><a href="~/Trailer/CreateDriverConcern" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+                </div>
+                <div class="col-xs-3">
+                    <h2>My Picture Log</h2>
+                    <p><a href="~/Trailer/MyConcerns" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+                </div>
+            }
+            @if (Convert.ToInt32(Session["permission"]) >= 50)
+            {
+                <div class="col-xs-3">
+                    <h2>Concern List</h2>
+                    <p><a href="~/Trailer/DriverConcernList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+                </div>
+            }
+        </fieldset>
     }
 </div>
 <br />
@@ -116,18 +116,49 @@
 </div>
 <br />
 <div>
-    @if (Convert.ToInt32(Session["permission"]) >= 40 && Convert.ToInt32(Session["department"]) != 4500)
+    <!-- Production -->
+    @if (Convert.ToInt32(Session["department"]) == 1100 || Convert.ToInt32(Session["department"]) == 10000)
     {
-    <fieldset>
-        <legend>Safety</legend>
-        <div class="col-xs-3">
-            <h2>Safety Dashboard</h2>
-            <a href="/Safety/ManagerDashboard?area=@Session["departmentName"]" class="btn btn-primary btn-default">Continue &raquo;</a>
-        </div>
-    </fieldset>
+        <fieldset>
+            <legend>Production / Assembly</legend>
+            @if (Convert.ToInt32(Session["permission"]) > 40)
+            {
+                <div class="col-xs-3">
+                    <h2>Workstations</h2>
+                    <p><a href="~/Production/Workstations" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+                </div>
+                <div class="col-xs-3">
+                    <h2>Work Orders</h2>
+                    <p><a href="~/Production/WorkOrders" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+                </div>
+                <div class="col-xs-3">
+                    <h2>Employees</h2>
+                    <p><a href="~/Production/ProductionEmployees" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+                </div>
+            }
+
+            <div class="col-xs-3">
+                <h2>Workstation Input</h2>
+                <p><a href="~/Production/WorkstationInput" class="btn btn-primary btn-default">Continue &raquo;</a></p>
+            </div>
+        </fieldset>
     }
 </div>
 <br />
+<div>
+    @if (Convert.ToInt32(Session["permission"]) >= 40 && Convert.ToInt32(Session["department"]) != 4500)
+    {
+        <fieldset>
+            <legend>Safety</legend>
+            <div class="col-xs-3">
+                <h2>Safety Dashboard</h2>
+                <a href="/Safety/ManagerDashboard?area=@Session["departmentName"]" class="btn btn-primary btn-default">Continue &raquo;</a>
+            </div>
+        </fieldset>
+    }
+</div>
+<br />
+
 <div>
     <!-- Users -->
     @if (Convert.ToInt32(Session["permission"]) > 30)
@@ -152,7 +183,7 @@
             </div>
         </fieldset>
     }
-    
+
 
 </div>
 

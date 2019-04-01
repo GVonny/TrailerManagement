@@ -1,6 +1,7 @@
 ﻿
 @{
     ViewBag.Title = "Workstation Input";
+    var workstationNumber = ViewBag.WorkstationNumber;
 }
 
 <h2>Workstation Input</h2>
@@ -102,6 +103,11 @@
     <script>
         $(function ()
         {
+            $('#workstations').val('@workstationNumber');
+            $('#partialWorkstationNumber').val('@workstationNumber');
+            $('#fullWorkstationNumber').val('@workstationNumber')
+
+
             $('#fullSubmit').on('click', function ()
             {
                 $('#fullPartNumber').removeAttr('disabled', 'disabled');
@@ -134,9 +140,7 @@
                 $('#partialPartNumber').removeAttr('disabled', 'disabled');
                 $('#partialForm').submit();
             });
-
-            $('#fullWorkstationNumber').val(1);
-            $('#partialWorkstationNumber').val(1);
+            
             $('#workstations').on('change', function ()
             {
                 var workstation = $(this).val();

@@ -167,7 +167,7 @@ namespace TrailerManagement.Controllers
             {
                 dynamic model = new ExpandoObject();
 
-                if(vendor.Contains("@"))
+                if (vendor.Contains("@"))
                 {
                     vendor = vendor.Replace('@', '&');
                 }
@@ -182,10 +182,10 @@ namespace TrailerManagement.Controllers
                 List<int> sortIDs = new List<int>();
                 List<double> unloadTimes = new List<double>();
                 List<int> pictureCount = new List<int>();
-                foreach(Payout payout in payouts)
+                foreach (Payout payout in payouts)
                 {
                     var sort = db.MasterStacks.Where(s => s.SortGUID == payout.SortGUID).ToList();
-                    if(sort.Count > 0)
+                    if (sort.Count > 0)
                     {
                         var stack = sort.Last();
                         var user = stack.UserSignedIn;
@@ -196,7 +196,7 @@ namespace TrailerManagement.Controllers
                         var imageCount = db.SortImages.Where(i => i.SortGUID == payout.SortGUID).Count();
                         pictureCount.Add(imageCount);
                     }
-                    
+
                 }
 
                 model.Users = users;
@@ -225,7 +225,7 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                if(vendor.Contains("@"))
+                if (vendor.Contains("@"))
                 {
                     vendor = vendor.Replace('@', '&');
                 }
@@ -247,7 +247,7 @@ namespace TrailerManagement.Controllers
                     DateTime beginningDate;
                     DateTime endingDate;
 
-                    if(browser.Contains("InternetExplorer"))
+                    if (browser.Contains("InternetExplorer"))
                     {
                         var month = startDate.Substring(0, 2);
                         var day = startDate.Substring(3, 2);
@@ -283,7 +283,7 @@ namespace TrailerManagement.Controllers
 
                     List<Int32> sortIDs = new List<int>();
 
-                    foreach(SortList sort in sorts)
+                    foreach (SortList sort in sorts)
                     {
                         var date = sort.DateCompleted;
                         var year = Convert.ToInt32(date.Substring(0, 4));
@@ -292,7 +292,7 @@ namespace TrailerManagement.Controllers
 
                         DateTime dateCompleted = new DateTime(year, month, day);
 
-                        if(dateCompleted > beginningDate && dateCompleted < endingDate)
+                        if (dateCompleted > beginningDate && dateCompleted < endingDate)
                         {
                             sortIDs.Add(Convert.ToInt32(sort.SortGUID));
                         }
@@ -300,10 +300,10 @@ namespace TrailerManagement.Controllers
 
                     List<CompletedSort> completeStacks = new List<CompletedSort>();
 
-                    foreach(Int32 sortID in sortIDs)
+                    foreach (Int32 sortID in sortIDs)
                     {
                         var stacks = db.CompletedSorts.Where(s => s.Vendor == vendor && s.SortGUID == sortID).ToList();
-                        foreach(CompletedSort stack in stacks)
+                        foreach (CompletedSort stack in stacks)
                         {
                             completeStacks.Add(stack);
                         }
@@ -311,7 +311,7 @@ namespace TrailerManagement.Controllers
 
                     List<string> uniqueParts = new List<string>();
                     //db.CompletedSorts.Where(u => u.Vendor == vendor).OrderBy(u => u.PartNumber).Select(u => u.PartNumber).Distinct().ToList();
-                    if(completeStacks.Count >= 1)
+                    if (completeStacks.Count >= 1)
                     {
                         foreach (CompletedSort stack in completeStacks)
                         {
@@ -322,11 +322,11 @@ namespace TrailerManagement.Controllers
                         }
 
                         double[] lastCosts = new double[uniqueParts.Count];
-                        for(int x = 0; x < uniqueParts.Count; x++)
+                        for (int x = 0; x < uniqueParts.Count; x++)
                         {
                             var partNumber = uniqueParts[x];
                             var part = completeStacks.Where(p => p.PartNumber == partNumber && p.Vendor == vendor).Last();
-                            if(part.Cost == null)
+                            if (part.Cost == null)
                             {
                                 lastCosts[x] = 0;
                             }
@@ -361,7 +361,7 @@ namespace TrailerManagement.Controllers
                                 averageCount[index]++;
                             }
                         }
-                        
+
                         double[] averageCosts = new double[uniqueParts.Count];
                         for (int x = 0; x < averageCosts.Length; x++)
                         {
@@ -412,7 +412,7 @@ namespace TrailerManagement.Controllers
                     month = date.Substring(0, 2);
                     day = date.Substring(3, 2);
                     year = date.Substring(6, 4);
-                    
+
                     date = (year.ToString() + '-' + month.ToString() + '-' + day.ToString());
                 }
                 else
@@ -421,11 +421,11 @@ namespace TrailerManagement.Controllers
                     month = date.Substring(5, 2);
                     day = date.Substring(8, 2);
                 }
-               
+
                 var sorts = db.SortLists.Where(s => s.DateCompleted == date).ToList();
-                
+
                 DateTime reportDate = new DateTime(Convert.ToInt32(year), Convert.ToInt32(month), Convert.ToInt32(day));
-                
+
                 List<CompletedSort> completeStacks = new List<CompletedSort>();
                 foreach (SortList sort in sorts)
                 {
@@ -462,7 +462,7 @@ namespace TrailerManagement.Controllers
                             var quantity = Convert.ToDouble(stack.Quantity);
 
                             var price = db.PalletPrices.Where(p => p.VendorName == vendor && p.PartNumber == partNumber).FirstOrDefault();
-                            if(price != null)
+                            if (price != null)
                             {
                                 var purchasePrice = Convert.ToDouble(price.PurchasePrice);
                                 var cost = (purchasePrice * quantity);
@@ -582,10 +582,10 @@ namespace TrailerManagement.Controllers
                         uniqueParts = uniqueParts.OrderBy(u => u).ToList();
 
                         List<String> descriptions = new List<string>();
-                        foreach(var part in uniqueParts)
+                        foreach (var part in uniqueParts)
                         {
                             var partMaster = db.PalletTypes.FirstOrDefault(p => p.PartNumber == part);
-                            if(partMaster != null)
+                            if (partMaster != null)
                             {
                                 descriptions.Add(partMaster.Description);
                             }
@@ -593,7 +593,7 @@ namespace TrailerManagement.Controllers
                             {
                                 descriptions.Add("CUSTOM");
                             }
-                            
+
                         }
 
                         int[] quantities = new int[uniqueParts.Count];
@@ -659,7 +659,7 @@ namespace TrailerManagement.Controllers
 
                 DateTime beginningDate;
                 DateTime endingDate;
-                
+
                 var month = startDate.Substring(0, 2);
                 var day = startDate.Substring(3, 2);
                 var year = startDate.Substring(6, 4);
@@ -699,7 +699,7 @@ namespace TrailerManagement.Controllers
                 foreach (Int32 sortID in sortIDs)
                 {
                     //&& (s.Vendor != "" && s.Vendor != null)
-                    var stacks = db.CompletedSorts.Where(s => s.PartNumber == partNumber && s.SortGUID == sortID ).ToList();
+                    var stacks = db.CompletedSorts.Where(s => s.PartNumber == partNumber && s.SortGUID == sortID).ToList();
                     foreach (CompletedSort stack in stacks)
                     {
                         completeStacks.Add(stack);
@@ -709,11 +709,11 @@ namespace TrailerManagement.Controllers
                 completeStacks = completeStacks.OrderBy(c => c.Vendor).ToList();
 
                 List<String> uniqueVendors = new List<string>();
-                
+
 
                 foreach (CompletedSort stack in completeStacks)
                 {
-                    if(!uniqueVendors.Contains(stack.Vendor))
+                    if (!uniqueVendors.Contains(stack.Vendor))
                     {
                         uniqueVendors.Add(stack.Vendor);
                     }
@@ -724,7 +724,7 @@ namespace TrailerManagement.Controllers
 
                 double[] addedTotalCosts = new double[uniqueVendors.Count];
                 double[] totalCosts = new double[uniqueVendors.Count];
-                
+
                 foreach (CompletedSort stack in completeStacks)
                 {
                     var index = uniqueVendors.IndexOf(stack.Vendor);
@@ -771,7 +771,7 @@ namespace TrailerManagement.Controllers
                     foreach (ActiveTrailerList trailer in trailers)
                     {
                         var trailerStatus = trailer.TrailerStatus;
-                        switch(trailerStatus)
+                        switch (trailerStatus)
                         {
                             case "1":
                                 trailerStatus = "NEED EMPTY";
@@ -888,7 +888,7 @@ namespace TrailerManagement.Controllers
                     message.BodyEncoding = UTF8Encoding.UTF8;
                     client.Send(message);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                 }
 
@@ -909,9 +909,9 @@ namespace TrailerManagement.Controllers
 
                 List<string> uniqueCustomers = new List<string>();
 
-                foreach(DriverConcern concern in concerns)
+                foreach (DriverConcern concern in concerns)
                 {
-                    if(!uniqueCustomers.Contains(concern.Customer))
+                    if (!uniqueCustomers.Contains(concern.Customer))
                     {
                         uniqueCustomers.Add(concern.Customer);
                     }
@@ -926,7 +926,7 @@ namespace TrailerManagement.Controllers
             {
                 var customers = db.DriverConcerns.Where(c => c.Customer == customer).OrderByDescending(c => c.DateTaken).ToList();
 
-                if(customers.Count == 0)
+                if (customers.Count == 0)
                 {
                     return RedirectToAction(actionName: "DriverCustomers", controllerName: "Reporting");
                 }
@@ -962,7 +962,7 @@ namespace TrailerManagement.Controllers
 
                 var images = db.DriverConcernImages.Where(c => c.DriverConcernGUID == driverConcernID).ToList();
 
-                if(images.Count > 0)
+                if (images.Count > 0)
                 {
                     foreach (DriverConcernImage image in images)
                     {
@@ -1030,7 +1030,7 @@ namespace TrailerManagement.Controllers
             using (TrailerEntities db = new TrailerEntities())
             {
                 dynamic model = new ExpandoObject();
-                List<String> uniqueDates = db.ProductionStacks.Select(u => u.Date).Distinct().ToList();
+                List<String> uniqueDates = db.ProductionStacks.Select(u => u.Date).Distinct().OrderByDescending(u => u).ToList();
 
                 model.Dates = uniqueDates;
 
@@ -1042,53 +1042,146 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                dynamic model = new ExpandoObject();
-                var stacks = db.ProductionStacks.Where(s => s.Date == date).ToList();
-                model.Stacks = stacks;
-
-                var workstations = db.ProductionStacks.Where(w => w.Date == date).Select(w => w.WorkstationNumber).Distinct().ToList();
-                model.Workstations = workstations;
-
-                List<String> users = new List<string>();
-                List<int?> a = new List<int?>();
-                List<int?> b = new List<int?>();
-                List<int?> six = new List<int?>();
-                List<IndividualWorkstation> individualWorkstations = new List<IndividualWorkstation>();
-                foreach(int workstation in workstations)
+                if(db.ProductionStacks.Any(d =>d.Date == date))
                 {
-                    var user = stacks.FirstOrDefault(u => u.WorkstationNumber == workstation).EmployeeName;
-                    users.Add(user);
+                    DateTime productionDate = Convert.ToDateTime(date);
+                    ViewBag.Date = productionDate.ToString("MM/dd/yyyy");
+                    ViewBag.DateParam = date;
 
+                    dynamic model = new ExpandoObject();
+                    var stacks = db.ProductionStacks.Where(s => s.Date == date).ToList();
+                    model.Stacks = stacks;
 
-                    var partStacks = stacks.Where(p => p.WorkstationNumber == workstation);
-                    IndividualWorkstation individualWorkstation = new IndividualWorkstation();
-                    foreach(ProductionStack stack in partStacks)
+                    var drivers = stacks.Select(d => d.ForkliftDriver).Distinct().ToList();
+
+                    var driver = "";
+                    foreach (String forkliftDriver in drivers)
                     {
-                        switch(stack.PartNumber)
+                        driver += forkliftDriver + ", ";
+                    }
+                    driver = driver.Substring(0, driver.Length - 2);
+
+                    ViewBag.Drivers = driver;
+
+                    var workstations = db.ProductionStacks.Where(w => w.Date == date).Select(w => w.WorkstationNumber).Distinct().ToList();
+                    model.Workstations = workstations;
+
+                    var workOrders = db.ProductionWorkOrders.ToList();
+                    model.WorkOrders = workOrders;
+
+                    List<String> users = new List<string>();
+                    List<IndividualWorkstation> individualWorkstations = new List<IndividualWorkstation>();
+
+                    foreach (int workstation in workstations)
+                    {
+                        List<int> a = new List<int>();
+                        List<int> b = new List<int>();
+                        List<int> six = new List<int>();
+
+                        var user = stacks.FirstOrDefault(u => u.WorkstationNumber == workstation).EmployeeName;
+                        users.Add(user);
+
+
+                        var partStacks = stacks.Where(p => p.WorkstationNumber == workstation).ToList();
+                        IndividualWorkstation individualWorkstation = new IndividualWorkstation();
+                        foreach (ProductionStack stack in partStacks)
                         {
-                            case "50-0001":
-                                a.Add(stack.StackQuantity);
-                                break;
-                            case "50-0004":
-                                b.Add(stack.StackQuantity);
-                                break;
-                            case "50-0308":
-                                b.Add(stack.StackQuantity);
-                                break;
+                            switch (stack.PartNumber)
+                            {
+                                case "50-0001":
+                                    a.Add(Convert.ToInt32(stack.StackQuantity));
+                                    break;
+                                case "50-0004":
+                                    b.Add(Convert.ToInt32(stack.StackQuantity));
+                                    break;
+                                case "50-0308":
+                                    b.Add(Convert.ToInt32(stack.StackQuantity));
+                                    break;
+                            }
                         }
                         individualWorkstation.SetA(a);
                         individualWorkstation.SetB(b);
                         individualWorkstation.SetSix(six);
+                        individualWorkstation.CalculateTotalA();
+                        individualWorkstation.CalculateTotalB();
+                        individualWorkstation.CalculateTotalSix();
+                        individualWorkstation.CalculateGrandTotal();
                         individualWorkstations.Add(individualWorkstation);
                     }
+                    model.Users = users;
+                    model.IndividualWorkstations = individualWorkstations.ToList();
+
+                    List<double> hours = new List<double>();
+                    foreach (String user in users)
+                    {
+                        ProductionEmployee productionUser = db.ProductionEmployees.FirstOrDefault(p => p.EmployeeName == user);
+                        try
+                        {
+                            var hoursWorked = db.ProductionHours.FirstOrDefault(h => h.EmployeeBadgeNumber == productionUser.EmployeeBadgeNumber && h.Date == date).HoursWorked;
+                            hours.Add(Convert.ToDouble(hoursWorked));
+                        }
+                        catch
+                        {
+                            hours.Add(0);
+                        }
+                    }
+
+                    model.Hours = hours.ToList();
+
+                    var parts = db.ProductionWorkOrders.ToList();
+                    model.Parts = parts;
+
+                    return View(model);
                 }
-                model.Users = users;
-                model.IndividualWorkstations = individualWorkstations;
+                else
+                {
+                    return RedirectToAction(actionName: "ProductionDates", controllerName: "Reporting");
+                }
+                
+            }
+        }
 
-                var parts = db.ProductionWorkOrders.ToList();
-                model.Parts = parts;
+        public ActionResult PalletRepairPrices()
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var prices = db.PalletPrices.ToList();
 
-                return View(model);
+                var filePath = Server.MapPath("~/Reports/") + "PayoutPrices.csv";
+
+                using (StreamWriter writer = new StreamWriter(filePath))
+                {
+                    writer.WriteLine("Vendor Number,Vendor Name,Part Number,Price");
+                    foreach (PalletPrice price in prices)
+                    {
+                        var cost = price.PurchasePrice;
+                        writer.WriteLine(price.VendorNumber + "," + price.VendorName + "," + price.PartNumber + "," + cost);
+                    }
+                }
+
+                var name = Session["name"].ToString();
+                var user = db.Users.FirstOrDefault(u => u.FirstName == name);
+
+                SmtpClient client = new SmtpClient("smtp.outlook.com", 587);
+                client.EnableSsl = true;
+                client.Timeout = 100000;
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.UseDefaultCredentials = false;
+                client.Credentials = new NetworkCredential("grant.vonhaden@palletusa.com", Properties.Settings.Default.EmailPassword);
+
+                string body = "Attached is the list of all Payout Prices in an excell file.";
+
+                if (user.Email != null || user.Email != "")
+                {
+                    MailMessage message = new MailMessage("grant.vonhaden@palletusa.com", user.Email, "Payout Report", body);
+
+                    message.Attachments.Add(new Attachment(filePath));
+                    message.IsBodyHtml = true;
+                    message.BodyEncoding = UTF8Encoding.UTF8;
+                    client.Send(message);
+                }
+
+                return RedirectToAction(actionName: "Index", controllerName: "Home");
             }
         }
     }
