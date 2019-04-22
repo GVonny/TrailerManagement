@@ -118,67 +118,137 @@ namespace TrailerManagement.Controllers
             }
         }
 
-        public ActionResult WorkstationInput(int? workstationNumber)
+        public ActionResult WorkstationInput()
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-
-                if(workstationNumber != null)
-                {
-                    ViewBag.WorkstationNumber = workstationNumber;
-                }
-                else
-                {
-                    ViewBag.WorkstationNumber = 1;
-                }
-                this.ViewData["workstations"] = new SelectList(db.Workstations.Where(w => w.EmployeeBadgeNumberAssigned != null).OrderBy(w => w.WorkstationNumber), "WorkstationNumber", "WorkstationNumber").ToList();
+                this.ViewData["workstation1"] = new SelectList(db.Workstations.Where(w => w.EmployeeBadgeNumberAssigned != null).OrderBy(w => w.WorkstationNumber), "WorkstationNumber", "WorkstationNumber").ToList();
+                this.ViewData["workstation2"] = new SelectList(db.Workstations.Where(w => w.EmployeeBadgeNumberAssigned != null).OrderBy(w => w.WorkstationNumber), "WorkstationNumber", "WorkstationNumber").ToList();
 
                 return View();
             }
         }
-
-        public ActionResult SubmitWorkstationInput(int workstationNumber, int quantity, string partNumber, bool endOfDay = false)
+        
+        public ActionResult SubmitWorkstationInput(int? workstation1, int? workstation2, int? workstation1Quantity, int? workstation2Quantity, string partNumber, bool endOfDay = false)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                int? inputQuantity = quantity;
-                var endOfDayCheck = db.ProductionStacks.Where(e => e.WorkstationNumber == workstationNumber).ToList();
-                if (endOfDayCheck.Count > 0)
+                var name = Session["name"].ToString();
+                DateTime now = DateTime.Now;
+
+                if(workstation1 != null)
                 {
-                    var lastDay = endOfDayCheck.Last();
-                    if (lastDay.IsEndOfDay == true)
+                    var workstation = db.Workstations.FirstOrDefault(w => w.WorkstationNumber == workstation1);
+                    var employee = db.ProductionEmployees.FirstOrDefault(e => e.EmployeeBadgeNumber == workstation.EmployeeBadgeNumberAssigned);
+                    var workorder = db.ProductionWorkOrders.FirstOrDefault(w => w.PartNumber == partNumber);
+
+                    var endOfDayCheck = db.ProductionStacks.Where(e => e.WorkstationNumber == workstation1).ToList();
+                    if (endOfDayCheck.Count > 0)
                     {
-                        inputQuantity -= lastDay.StackQuantity;
+                        var lastDay = endOfDayCheck.Last();
+                        if (lastDay.IsEndOfDay == true)
+                        {
+                            var subtractQuantity = Convert.ToInt32(lastDay.StackQuantity);
+                            workstation1Quantity -= subtractQuantity;
+                        }
                     }
+
+                    ProductionStack newStack = new ProductionStack()
+                    {
+                        WorkstationNumber = workstation.WorkstationNumber,
+                        EmployeeBadgeNumber = workstation.EmployeeBadgeNumberAssigned,
+                        EmployeeName = employee.EmployeeName,
+                        PartNumber = partNumber,
+                        StackQuantity = workstation1Quantity,
+                        ForkliftDriver = db.Users.FirstOrDefault(u => u.FirstName == name).FirstName,
+                        TimeStamp = now.ToString("yyyy-MM-dd HH:mm:ss"),
+                        Date = now.ToString("yyyy-MM-dd"),
+                        IsEndOfDay = endOfDay,
+                        WorkOrderNumber = workorder.WorkOrderNumber,
+                    };
+                    db.ProductionStacks.Add(newStack);
+                    db.SaveChanges();
                 }
 
-                ProductionStack newStack = new ProductionStack();
+                if(workstation2 != null)
+                {
+                    var workstation = db.Workstations.FirstOrDefault(w => w.WorkstationNumber == workstation2);
+                    var employee = db.ProductionEmployees.FirstOrDefault(e => e.EmployeeBadgeNumber == workstation.EmployeeBadgeNumberAssigned);
+                    var workorder = db.ProductionWorkOrders.FirstOrDefault(w => w.PartNumber == partNumber);
 
-                var workstation = db.Workstations.FirstOrDefault(w => w.WorkstationNumber == workstationNumber);
-                var employee = db.ProductionEmployees.FirstOrDefault(e => e.EmployeeBadgeNumber == workstation.EmployeeBadgeNumberAssigned);
-                var workorder = db.ProductionWorkOrders.FirstOrDefault(w => w.PartNumber == partNumber);
+                    var endOfDayCheck = db.ProductionStacks.Where(e => e.WorkstationNumber == workstation2).ToList();
+                    if (endOfDayCheck.Count > 0)
+                    {
+                        var lastDay = endOfDayCheck.Last();
+                        if (lastDay.IsEndOfDay == true)
+                        {
+                            var subtractQuantity = Convert.ToInt32(lastDay.StackQuantity);
+                            workstation2Quantity -= subtractQuantity;
+                        }
+                    }
 
-                newStack.WorkstationNumber = workstation.WorkstationNumber;
-                newStack.EmployeeBadgeNumber = workstation.EmployeeBadgeNumberAssigned;
-                newStack.EmployeeName = employee.EmployeeName;
-                newStack.PartNumber = partNumber;
-                newStack.StackQuantity = inputQuantity;
-
-                var name = Session["name"].ToString();
-                newStack.ForkliftDriver = db.Users.FirstOrDefault(u => u.FirstName == name).FirstName;
-
-                DateTime now = DateTime.Now;
-                newStack.TimeStamp = now.ToString("yyyy-MM-dd HH:mm:ss");
-                newStack.Date = now.ToString("yyyy-MM-dd");
-                newStack.IsEndOfDay = endOfDay;
-                newStack.WorkOrderNumber = workorder.WorkOrderNumber;
-
-                db.ProductionStacks.Add(newStack);
-                db.SaveChanges();
-
-                return RedirectToAction(actionName: "WorkstationInput", controllerName: "Production", routeValues: new { workstationNumber });
-            }
+                    ProductionStack newStack = new ProductionStack()
+                    {
+                        WorkstationNumber = workstation.WorkstationNumber,
+                        EmployeeBadgeNumber = workstation.EmployeeBadgeNumberAssigned,
+                        EmployeeName = employee.EmployeeName,
+                        PartNumber = partNumber,
+                        StackQuantity = workstation2Quantity,
+                        ForkliftDriver = db.Users.FirstOrDefault(u => u.FirstName == name).FirstName,
+                        TimeStamp = now.ToString("yyyy-MM-dd HH:mm:ss"),
+                        Date = now.ToString("yyyy-MM-dd"),
+                        IsEndOfDay = endOfDay,
+                        WorkOrderNumber = workorder.WorkOrderNumber,
+                    };
+                    db.ProductionStacks.Add(newStack);
+                    db.SaveChanges();
+                }
+            };
+            return RedirectToAction(actionName: "WorkstationInput", controllerName: "Production");
         }
+
+        //public ActionResult SubmitWorkstationInput(int workstationNumber, int quantity, string partNumber, bool endOfDay = false)
+        //{
+        //    using (TrailerEntities db = new TrailerEntities())
+        //    {
+        //        int? inputQuantity = quantity;
+        //        var endOfDayCheck = db.ProductionStacks.Where(e => e.WorkstationNumber == workstationNumber).ToList();
+        //        if (endOfDayCheck.Count > 0)
+        //        {
+        //            var lastDay = endOfDayCheck.Last();
+        //            if (lastDay.IsEndOfDay == true)
+        //            {
+        //                inputQuantity -= lastDay.StackQuantity;
+        //            }
+        //        }
+
+        //        ProductionStack newStack = new ProductionStack();
+
+        //        var workstation = db.Workstations.FirstOrDefault(w => w.WorkstationNumber == workstationNumber);
+        //        var employee = db.ProductionEmployees.FirstOrDefault(e => e.EmployeeBadgeNumber == workstation.EmployeeBadgeNumberAssigned);
+        //        var workorder = db.ProductionWorkOrders.FirstOrDefault(w => w.PartNumber == partNumber);
+
+        //        newStack.WorkstationNumber = workstation.WorkstationNumber;
+        //        newStack.EmployeeBadgeNumber = workstation.EmployeeBadgeNumberAssigned;
+        //        newStack.EmployeeName = employee.EmployeeName;
+        //        newStack.PartNumber = partNumber;
+        //        newStack.StackQuantity = inputQuantity;
+
+        //        var name = Session["name"].ToString();
+        //        newStack.ForkliftDriver = db.Users.FirstOrDefault(u => u.FirstName == name).FirstName;
+
+        //        DateTime now = DateTime.Now;
+        //        newStack.TimeStamp = now.ToString("yyyy-MM-dd HH:mm:ss");
+        //        newStack.Date = now.ToString("yyyy-MM-dd");
+        //        newStack.IsEndOfDay = endOfDay;
+        //        newStack.WorkOrderNumber = workorder.WorkOrderNumber;
+
+        //        db.ProductionStacks.Add(newStack);
+        //        db.SaveChanges();
+
+        //        return RedirectToAction(actionName: "WorkstationInput", controllerName: "Production", routeValues: new { workstationNumber });
+        //    }
+        //}
 
         public ActionResult WorkOrders()
         {

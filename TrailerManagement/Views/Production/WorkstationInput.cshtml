@@ -7,74 +7,39 @@
 <h2>Workstation Input</h2>
 
 <div class="well">
-    <strong>Workstation Number</strong>
-    @Html.DropDownList("workstations", null, htmlAttributes: new { @class = "form-control", @id = "workstations" })
+    <strong>Stack Quantity</strong>
+    <input type="number" id="stackQuantity" class="form-control" />
+
     <br />
-    <div>
-        <button id="fullStack" class="btn btn-primary" style="font-size:2em;width:25%;display:inline">FULL STACK</button>
-        <button id="partialStack" class="btn btn-primary" style="font-size:2em;width:25%;display:inline">PARTIAL STACK</button>
-    </div>
+    <input type="button" id="A" class="btn btn-warning" style="font-size:2em;width:15%;" value="A" />
+    <input type="button" id="B" class="btn btn-warning" style="font-size:2em;width:15%;" value="B" />
+    <input type="button" id="6" class="btn btn-warning" style="font-size:2em;width:15%;" value="6 INCH" />
+
     <br />
-    
-    
-    <div id="fullStackInput" class="hidden">
-        <button id="fullA" class="btn btn-warning" style="font-size:2em;width:15%;">&nbsp;A&nbsp;</button>
-        <button id="fullB" class="btn btn-warning" style="font-size:2em;width:15%;">&nbsp;B&nbsp;</button>
-        <button id="full6" class="btn btn-warning" style="font-size:2em;width:20%;">&nbsp;6 INCH&nbsp;</button>
-        <br />
-        <br />
+    <br />
+        
+    <div class="hidden" id="workstations">
+        <form action="SubmitWorkstationInput" id="workstationInput">
+            <input type="number" name="stackQuantity" id="formStackQuantity" class="form-control hidden" />
+            <input type="text" name="partNumber" id="partNumber" class="form-control hidden" />
 
-        <div id="fullInputs" class="hidden">
-            <form action="SubmitWorkstationInput" id="fullForm">
-                <strong>Quantity</strong>
-                <input type="number" id="fullQuantity" name="quantity" class="form-control" />
-                <br />
-                <strong>Part Number</strong>
-                <input type="text" id="fullPartNumber" name="partNumber" class="form-control" disabled />
 
-                <br />
-                <div>
-                    <strong>Workstation - hide this once working</strong>
-                    <input type="number" id="fullWorkstationNumber" name="workstationNumber" class="form-control" />
-                </div>
-                <br />
-                <label for="endOfDay" style="font-size:1.5em">End of Day?</label>
-                <input type="checkbox" name="endOfDay" style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin-left:10px" />
-                <br />
-                <br />
-                <input type="button" value="Submit" id="fullSubmit" class="btn btn-primary" />
-            </form>
-        </div>
-    </div>
+            <strong>Workstation 1</strong>
+            @Html.DropDownList("workstation1", null, "Select Workstation", htmlAttributes: new { @class = "form-control", @id = "workstation1" })
+            <strong>Workstation Quantity</strong>
+            <input type="number" name="workstation1Quantity" id="workstation1Quantity" class="form-control" />
 
-    <div id="partialStackInput" class="hidden">
-        <button id="partialA" class="btn btn-warning" style="font-size:2em;width:15%;">&nbsp;A&nbsp;</button>
-        <button id="partialB" class="btn btn-warning" style="font-size:2em;width:15%;">&nbsp;B&nbsp;</button>
-        <button id="partial6" class="btn btn-warning" style="font-size:2em;width:20%;">&nbsp;6 INCH&nbsp;</button>
-        <br />
-        <br />
-        <div id="partialInputs" class="hidden">
-            <form action="SubmitWorkstationInput" id="partialForm">
-                <strong>Quantity</strong><span id="quantityError" style="color:red"></span>
-                <input type="number" id="partialQuantity" name="quantity" class="form-control" placeholder="Please enter the stack quantity" />
-                <br />
-                <strong>Part Number</strong>
-                <input type="text" id="partialPartNumber" name="partNumber" class="form-control" disabled />
+            <br />
+            <strong>Workstation 2</strong>
+            @Html.DropDownList("workstation2", null, "Select Workstation", htmlAttributes: new { @class = "form-control", @id = "workstation2" })
+            <strong>Workstation Quantity</strong>
+            <input type="number" name="workstation2Quantity" id="workstation2Quantity" class="form-control" />
 
-                <br />
-                <div>
-                    <strong>Workstation - hide this once working</strong>
-                    <input type="number" id="partialWorkstationNumber" name="workstationNumber" class="form-control" />
-                </div>
-                <br />
-                <label for="endOfDay" style="font-size:1.5em">End of Day?</label>
-                @*<input type="checkbox" name="endOfDay" style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin-left:10px" />*@
-                @Html.CheckBox("endOfDay")
-                <br />
-                <br />
-                <input type="button" value="Submit" id="partialSubmit" class="btn btn-primary" />
-            </form>
-        </div>
+            <br />
+            <label for="endOfDay" style="font-size:1.5em">End of Day?</label>
+            @Html.CheckBox("endOfDay")
+        </form>
+        <input type="button" value="Submit" id="stackSubmit" class="btn btn-primary" />
     </div>
 </div>
 
@@ -103,122 +68,140 @@
     <script>
         $(function ()
         {
-            $('#workstations').val('@workstationNumber');
-            $('#partialWorkstationNumber').val('@workstationNumber');
-            $('#fullWorkstationNumber').val('@workstationNumber')
-
-
-            $('#fullSubmit').on('click', function ()
+            $('#stackSubmit').on('click', function ()
             {
-                $('#fullPartNumber').removeAttr('disabled', 'disabled');
-                $('#fullForm').submit();
-            });
-
-            $('#partialSubmit').on('click', function ()
-            {
-                if ($("#partialQuantity").val() == "")
+                var stackQuantity = parseInt($('#stackQuantity').val());
+                var workstation1Quantity = $('#workstation1Quantity').val();
+                if (workstation1Quantity == "")
                 {
-                    $('#quantityError').html("   please enter a stack quantity")
+                    workstation1Quantity = 0;
                 }
                 else
                 {
-                    if ($("#partialQuantity").val() > 20)
-                    {
-                        $('#quantityCheck').html("Are you sure you want a stack size of " + $("#partialQuantity").val() + "?");
-                        $('#quantityCheckModal').modal();
-                    }
-                    else
-                    {
-                        $('#partialPartNumber').removeAttr('disabled', 'disabled');
-                        $('#partialForm').submit();
-                    }
+                    workstation1Quantity = parseInt(workstation1Quantity);
+                }
+
+                var workstation2Quantity = $('#workstation2Quantity').val();
+                if (workstation2Quantity == "")
+                {
+                    workstation2Quantity = 0;
+                }
+                else
+                {
+                    workstation2Quantity = parseInt(workstation2Quantity);
+                }
+                console.log(stackQuantity);
+                console.log(workstation1Quantity);
+                console.log(workstation2Quantity);
+
+
+                var quantityMatches = false;
+                if (stackQuantity == (workstation1Quantity + workstation2Quantity))
+                {
+                    console.log("got here");
+                    $('#workstation1Quantity').css('border-color', 'lightgrey');
+                    $('#workstation2Quantity').css('border-color', 'lightgrey');
+                    quantityMatches = true;
+                }
+                else
+                {
+                    $('#workstation1Quantity').css('border-color', 'red');
+                    $('#workstation2Quantity').css('border-color', 'red');
+                }
+
+                var workstationsSelected = false;
+                var workstation1Ready = false;
+                var workstation2Ready = false;
+                var workstation1 = $('#workstation1').val();
+                var workstation2 = $('#workstation2').val();
+
+
+                if (workstation1 == "" && $('#workstation1Quantity').val() != "")
+                {
+                    $('#workstation1').css('border-color', 'red');
+                }
+                else
+                {
+                    workstation1Ready = true;
+                    $('#workstation1').css('border-color', 'lightgrey');
+                } 
+
+                if (workstation2 == "" && $('#workstation2Quantity').val() != "")
+                {
+                    $('#workstation2').css('border-color', 'red');
+                }
+                else
+                {
+                    workstation2Ready = true;
+                    $('#workstation2').css('border-color', 'lightgrey');
+                }
+
+                if (workstation1Ready && workstation2Ready)
+                {
+                    $('#workstation1').css('border-color', 'lightgrey');
+                    $('#workstation2').css('border-color', 'lightgrey');
+                    workstationsSelected = true;
+                }
+
+
+                if (quantityMatches && workstationsSelected)
+                {
+                    $('#workstationInput').submit();
                 }
             });
 
-            $('#confirmSubmit').on('click', function ()
+            $('#A').on('click', function ()
             {
-                $('#partialPartNumber').removeAttr('disabled', 'disabled');
-                $('#partialForm').submit();
-            });
-            
-            $('#workstations').on('change', function ()
-            {
-                var workstation = $(this).val();
-                $('#fullWorkstationNumber').val(workstation);
-                $('#partialWorkstationNumber').val(workstation);
-            })
-
-            $('#fullStack').on('click', function ()
-            {
-                $('#partialStackInput').addClass('hidden');
-                $('#partialStack').removeClass('btn-green');
-                $('#fullStack').addClass('btn-green');
-                $('#fullStackInput').removeClass('hidden');
+                if ($('#stackQuantity').val() != "")
+                {
+                    $('#A').addClass('btn-green');
+                    $('#B').removeClass('btn-green');
+                    $('#6').removeClass('btn-green');
+                    $('#formStackQuantity').val($('#stackQuantity').val());
+                    $('#partNumber').val('50-0001');
+                    $("#workstations").removeClass('hidden');
+                    $('#stackQuantity').css('border-color', 'lightgray');
+                }
+                else
+                {
+                    $('#stackQuantity').css('border-color', 'red');
+                }
             });
 
-            $('#partialStack').on('click', function ()
+            $('#B').on('click', function ()
             {
-                $('#fullStackInput').addClass('hidden');
-                $('#fullStack').removeClass('btn-green');
-                $('#partialStack').addClass('btn-green');
-                $('#partialStackInput').removeClass('hidden');
-            })
-
-            $('#fullA').on('click', function ()
-            {
-                $('#fullQuantity').val(20);
-                $('#fullPartNumber').val("50-0001");
-                $('#fullA').addClass('btn-green');
-                $('#fullB').removeClass('btn-green');
-                $('#full6').removeClass('btn-green');
-                $('#fullInputs').removeClass('hidden');
+                if ($('#stackQuantity').val() != "")
+                {
+                    $('#B').addClass('btn-green');
+                    $('#A').removeClass('btn-green');
+                    $('#6').removeClass('btn-green');
+                    $('#formStackQuantity').val($('#stackQuantity').val());
+                    $('#partNumber').val('50-0004');
+                    $("#workstations").removeClass('hidden');
+                    $('#stackQuantity').css('border-color', 'lightgray');
+                }
+                else
+                {
+                    $('#stackQuantity').css('border-color', 'red');
+                }
             });
 
-            $('#partialA').on('click', function ()
+            $('#6').on('click', function ()
             {
-                $('#partialPartNumber').val("50-0001");
-                $('#partialA').addClass('btn-green');
-                $('#partialB').removeClass('btn-green');
-                $('#partial6').removeClass('btn-green');
-                $('#partialInputs').removeClass('hidden');
-            });
-
-            $('#fullB').on('click', function ()
-            {
-                $('#fullQuantity').val(20);
-                $('#fullPartNumber').val("50-0004");
-                $('#fullB').addClass('btn-green');
-                $('#fullA').removeClass('btn-green');
-                $('#full6').removeClass('btn-green');
-                $('#fullInputs').removeClass('hidden');
-            });
-
-            $('#partialB').on('click', function ()
-            {
-                $('#partialPartNumber').val("50-0004");
-                $('#partialB').addClass('btn-green');
-                $('#partialA').removeClass('btn-green');
-                $('#partial6').removeClass('btn-green');
-                $('#partialInputs').removeClass('hidden');
-            });
-
-            $('#full6').on('click', function ()
-            {
-                $('#fullQuantity').val(20);
-                $('#fullPartNumber').val("50-0308");
-                $('#full6').addClass('btn-green');
-                $('#fullB').removeClass('btn-green');
-                $('#fullA').removeClass('btn-green');
-                $('#fullInputs').removeClass('hidden');
-            });
-
-            $('#partial6').on('click', function ()
-            {
-                $('#partialPartNumber').val("50-0308");
-                $('#partial6').addClass('btn-green');
-                $('#partialB').removeClass('btn-green');
-                $('#partialA').removeClass('btn-green');
-                $('#partialInputs').removeClass('hidden');
+                if ($('#stackQuantity').val() != "")
+                {
+                    $('#6').addClass('btn-green');
+                    $('#B').removeClass('btn-green');
+                    $('#A').removeClass('btn-green');
+                    $('#formStackQuantity').val($('#stackQuantity').val());
+                    $('#partNumber').val('50-0308');
+                    $("#workstations").removeClass('hidden');
+                    $('#stackQuantity').css('border-color', 'lightgray');
+                }
+                else
+                {
+                    $('#stackQuantity').css('border-color', 'red');
+                }
             });
         });
     </script>    
