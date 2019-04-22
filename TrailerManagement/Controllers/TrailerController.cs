@@ -539,6 +539,8 @@ namespace TrailerManagement.Controllers
                 trailer.Notes = UpdatedTrailer.Notes;
                 trailer.Tags = UpdatedTrailer.Tags;
                 trailer.DateModified = UpdatedTrailer.DateModified;
+                trailer.LastModifiedBy = Session["name"].ToString();
+
                 db.SaveChanges();
                 return RedirectToAction(actionName: "ActiveTrailerList", controllerName: "Trailer");
             }

@@ -65,7 +65,8 @@ namespace TrailerManagement.Controllers
             using (TrailerEntities db = new TrailerEntities())
             {
                 var sort = db.SortLists.FirstOrDefault(s => s.SortGUID == sortID);
-                sort.DateCompleted = DateTime.Now.ToString("yyyy-MM-dd");
+                DateTime date = DateTime.Now;
+                sort.DateCompleted = date.ToString("yyyy-MM-dd");
                 db.SortLists.Remove(sort);
                 db.SaveChanges();
                 return RedirectToAction(actionName: "SortList", controllerName: "PalletRepair");

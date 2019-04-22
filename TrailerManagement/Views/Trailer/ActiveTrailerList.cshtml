@@ -54,9 +54,9 @@
         <tr class="font-md">
             <th class="col-xs-1">Trailer Number</th>
             <th class=" text-center">Trailer Status</th>
-            
+
             <th class="text-center col-xs-1">Load Status</th>
-            
+
             <th class="text-center">Customer</th>
 
             <th class="text-center col-xs-1">Location Status</th>
@@ -66,6 +66,11 @@
                 <th>Notes</th>
                 <th class="text-center">Tags</th>
                 <th class="text-center col-xs-1 no-print">Last Modified</th>
+
+            }
+            @if ((Convert.ToInt32(Session["permission"]) > 40))
+            {
+                <th class="text-center col-xs-1 no-print">Modified By</th>
             }
             <th class="orderDate text-center hidden">Order Date</th>
             <th class="hidden">Order Number</th>
@@ -77,9 +82,9 @@
             <tr class="product-row" id="@t.TrailerNumber">
                 <td id="trailerNumber_@t.TrailerNumber">@t.TrailerNumber</td>
                 <td id="trailerStatus_@t.TrailerNumber" class="text-center">@t.TrailerStatus</td>
-                
+
                 <td id="loadStatus_@t.TrailerNumber" class="text-center">@t.LoadStatus</td>
-                
+
                 <td id="customer_@t.TrailerNumber" class="text-center">@t.Customer</td>
                 <td id="loactionStatus_@t.TrailerNumber" class="text-center">@t.LocationStatus</td>
                 <td id="trailerLocation_@t.TrailerNumber" class="text-center">@t.TrailerLocation</td>
@@ -88,6 +93,10 @@
                     <td id="notes_@t.TrailerNumber">@t.Notes</td>
                     <td id="tags_@t.TrailerNumber" class="text-center">@t.Tags</td>
                     <td id="dateModified_@t.TrailerNumber" class="text-center no-print">@t.DateModified</td>
+                }
+                @if ((Convert.ToInt32(Session["permission"]) > 40))
+                {
+                    <td id="modifiedBy_@t.TrailerNumber" class="text-center no-print">@t.LastModifiedBy</td>
                 }
                 @*hidden for data purposes*@
                 <td class="hidden">@t.TrailerGUID</td>

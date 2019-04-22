@@ -6,7 +6,7 @@
 <h2>@ViewBag.Title</h2>
 
 <div class="well">
-    <form method="post" class="form-horizontal">
+    <form method="post" class="form-horizontal" id="trailerEdit">
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-horizontal">
@@ -45,7 +45,7 @@
                         @Html.DropDownList("TrailerStatus", new List<SelectListItem>
                         {
                             new SelectListItem { Text = "", Value = "" },
-                            new SelectListItem { Text = "NEED EMPTY", Value = "1" },                            
+                            new SelectListItem { Text = "NEED EMPTY", Value = "1" },
                             new SelectListItem { Text = "EMPTY", Value = "4" },
                             new SelectListItem { Text = "IN TRANSIT", Value = "6" },
                             new SelectListItem { Text = "DELIVERED", Value = "7"},
@@ -179,6 +179,7 @@
             <!-- Submit -->
             <div class="form-group">
                 <div class="col-xs-offset-2 col-xs-10">
+                    <input type="button" id="needEmpty" value="Save" class="btn btn-primary hidden" />
                     <input type="submit" id="save" value="Save" class="btn btn-primary" />
                     <input type="button" id="cancel" class=" btn btn-warning" value="Cancel" />
                     @if ((Convert.ToInt32(Session["permission"]) > 30))
@@ -231,6 +232,26 @@
         </div>
     </div>
 </div>
+<!-- Need Empty Confirmation Modal -->
+<div id="needEmptyConfirmModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Alert!</h2>
+            </div>
+            <div class="modal-body" id="confirmText">
+                <p>Are you sure this trailer has product that needs to be unloaded?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="cancel" data-dismiss="modal" data-toggle="modal" data-target="#trailerModal">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="saveConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section scripts
 {
@@ -260,7 +281,7 @@
             $('#onSiteLocations').addClass('hidden');
             $('#offSiteLocation').addClass('hidden');
 
-            
+
             //determines if location is "ON SITE" or "OFF SITE" or neither
             determineLocationStatus();
             //determines if the notes is special or within drop down
@@ -268,7 +289,7 @@
 
             //sets the order date to the current date
             $('#orderDate').val(getCurrentDate());
-            
+
             var permission = '@Session["permission"]';
             if (permission > 20)
             {
@@ -276,7 +297,7 @@
                 $('.form-group').removeClass('hidden');
                 $('#specialNoteCheckBox').removeClass('hidden');
             }
-            
+
             var trailerNumber = $('#trailerNumber').val();
             //remove modal confirm button click
             $('#removeConfirm').on('click', function ()
@@ -288,7 +309,7 @@
             {
                 $('#removeConfirmModal').modal();
             });
-            
+
             //checkbox modal cancel button click
             $('#locationCancel').on('click', function ()
             {
@@ -300,6 +321,16 @@
                 $('#onSiteLocations').addClass('hidden');
                 $('#offSiteLocation').removeClass('hidden');
             });
+
+            $('#needEmpty').on('click', function ()
+            {
+                $('#needEmptyConfirmModal').modal();
+            });
+
+            $('#saveConfirm').on('click', function ()
+            {
+                $('#trailerEdit').submit();
+            })
 
             $('#save').on('click', function ()
             {
@@ -321,7 +352,7 @@
             {
                 location.href = "/Trailer/ActiveTrailerList";
             });
-            
+
             var lastModifiedDate = $('#dateModified').val();
             var modified = 0;
 
@@ -338,6 +369,17 @@
                 {
                     modified--;
                 }
+                if (newTrailerStatus == '1')
+                {
+                    $('#save').addClass('hidden');
+                    $('#needEmpty').removeClass('hidden');
+                }
+                else
+                {
+                    $('#save').removeClass('hidden');
+                    $('#needEmpty').addClass('hidden');
+                }
+
                 if (newTrailerStatus == '4')
                 {
                     $('#offSiteLocationInput').val("");
@@ -362,9 +404,9 @@
                     $('#trailerLocation').val("");
                     $('#offSiteLocation').val("");
                 }
-                
+
             });
-            
+
             var customer = $('#customer').val();
             $('#customer').on('change', function ()
             {
@@ -380,7 +422,7 @@
                     modified--;
                 }
             });
-            
+
             var locationStatus = $('#locationStatus').val();
             $('#locationStatus').on('change', function ()
             {
@@ -454,7 +496,7 @@
                     $('#offSiteLocation').addClass('hidden');
                 }
             });
-            
+
             //for each change that was made a counter increments, if counter is greater than zero,
             //calls getCurrentDate which updates the last modified date
             function checkModification()
@@ -468,7 +510,7 @@
                     $('#dateModified').val(lastModifiedDate);
                 }
             }
-            
+
             function determineSpecialNote()
             {
                 //if($('#specialNotes').val() == null)

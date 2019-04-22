@@ -40,6 +40,7 @@
           <Property Name="Notes" Type="varchar" MaxLength="255" />
           <Property Name="Tags" Type="varchar" MaxLength="5" />
           <Property Name="DateModified" Type="varchar" MaxLength="15" />
+          <Property Name="LastModifiedBy" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="CodeViolations">
           <Key>
@@ -470,6 +471,7 @@
           <Property Name="Notes" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Tags" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="DateModified" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="LastModifiedBy" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="CodeViolation">
           <Key>
@@ -891,6 +893,7 @@
           <EntitySetMapping Name="ActiveTrailerLists">
             <EntityTypeMapping TypeName="TrailerModel.ActiveTrailerList">
               <MappingFragment StoreEntitySet="ActiveTrailerList">
+                <ScalarProperty Name="LastModifiedBy" ColumnName="LastModifiedBy" />
                 <ScalarProperty Name="TrailerGUID" ColumnName="TrailerGUID" />
                 <ScalarProperty Name="TrailerNumber" ColumnName="TrailerNumber" />
                 <ScalarProperty Name="TrailerStatus" ColumnName="TrailerStatus" />

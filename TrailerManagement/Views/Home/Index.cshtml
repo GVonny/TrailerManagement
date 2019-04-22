@@ -149,7 +149,7 @@
     @if (Convert.ToInt32(Session["permission"]) >= 40 && Convert.ToInt32(Session["department"]) != 4500)
     {
         <fieldset>
-            <legend>Safety</legend>
+            <legend>Managers</legend>
             <div class="col-xs-3">
                 <h2>Safety Dashboard</h2>
                 <a href="/Safety/ManagerDashboard?area=@Session["departmentName"]" class="btn btn-primary btn-default">Continue &raquo;</a>

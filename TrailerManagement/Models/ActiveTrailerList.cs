@@ -26,5 +26,6 @@ namespace TrailerManagement.Models
         public string Notes { get; set; }
         public string Tags { get; set; }
         public string DateModified { get; set; }
+        public string LastModifiedBy { get; set; }
     }
 }
