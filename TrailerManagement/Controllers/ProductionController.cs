@@ -289,11 +289,19 @@ namespace TrailerManagement.Controllers
                     var hours = db.ProductionHours.Where(h => h.Date == date).OrderBy(h => h.WorkstationNumber).ToList();
                     if (hours.Count > 0)
                     {
-                        List<Decimal> hoursWorked = new List<decimal>();
-                        foreach (ProductionHour hour in hours)
+                        decimal[] hoursWorked = new decimal[users.Count];
+                        for(var x = 0; x < users.Count; x++)
                         {
-                            hoursWorked.Add(Convert.ToDecimal(hour.HoursWorked));
+                            try
+                            {
+                                hoursWorked[x] = Convert.ToDecimal(hours[x].HoursWorked);
+                            }
+                            catch
+                            {
+                                hoursWorked[x] = 8;
+                            }
                         }
+                        
                         model.Hours = hoursWorked;
                     }
                     else
