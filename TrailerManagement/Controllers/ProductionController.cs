@@ -164,8 +164,16 @@ namespace TrailerManagement.Controllers
                         TimeStamp = now.ToString("yyyy-MM-dd HH:mm:ss"),
                         Date = now.ToString("yyyy-MM-dd"),
                         IsEndOfDay = endOfDay,
-                        WorkOrderNumber = workorder.WorkOrderNumber,
                     };
+
+                    try
+                    {
+                        newStack.WorkOrderNumber = workorder.WorkOrderNumber;
+                    }
+                    catch
+                    {
+                        newStack.WorkOrderNumber = null;
+                    }
                     db.ProductionStacks.Add(newStack);
                     db.SaveChanges();
                 }
@@ -198,8 +206,15 @@ namespace TrailerManagement.Controllers
                         TimeStamp = now.ToString("yyyy-MM-dd HH:mm:ss"),
                         Date = now.ToString("yyyy-MM-dd"),
                         IsEndOfDay = endOfDay,
-                        WorkOrderNumber = workorder.WorkOrderNumber,
                     };
+                    try
+                    {
+                        newStack.WorkOrderNumber = workorder.WorkOrderNumber;
+                    }
+                    catch
+                    {
+                        newStack.WorkOrderNumber = null;
+                    }
                     db.ProductionStacks.Add(newStack);
                     db.SaveChanges();
                 }

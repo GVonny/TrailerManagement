@@ -60,7 +60,7 @@ namespace TrailerManagement.Controllers
                     }
                     if (Convert.ToInt32(Session["permission"]) == constant.PERMISSION_DRIVER)
                     {
-                        trailer = trailer.Where(t => t.TrailerStatus == constant.TRAILER_STATUS_NEED_EMPTY || t.TrailerStatus == constant.TRAILER_STATUS_IN_TRANSIT || t.TrailerStatus == constant.TRAILER_STATUS_DELIVERED || t.TrailerStatus == constant.TRAILER_STATUS_READY_TO_ROLL).OrderBy(t => t.TrailerStatus).ThenBy(t => t.TrailerNumber);
+                        trailer = trailer.Where(t => t.TrailerStatus == constant.TRAILER_STATUS_NEED_EMPTY || t.TrailerStatus == constant.TRAILER_STATUS_IN_TRANSIT || t.TrailerStatus == constant.TRAILER_STATUS_DELIVERED || t.TrailerStatus == constant.TRAILER_STATUS_READY_TO_ROLL || t.TrailerStatus == constant.TRAILER_STATUS_EMPTY).OrderBy(t => t.TrailerStatus).ThenBy(t => t.TrailerNumber);
                     }
                     return View(trailer.ToList());
                 }
@@ -500,7 +500,7 @@ namespace TrailerManagement.Controllers
             {
                 ActiveTrailerList trailer = db.ActiveTrailerLists.FirstOrDefault(t => t.TrailerNumber == UpdatedTrailer.TrailerNumber);
                 TrailerList trailerEdit = db.TrailerLists.FirstOrDefault(t => t.TrailerNumber == UpdatedTrailer.TrailerNumber);
-                
+
                 if (trailer.TrailerStatus != constant.TRAILER_STATUS_NEED_EMPTY && UpdatedTrailer.TrailerStatus == constant.TRAILER_STATUS_NEED_EMPTY)
                 {
                     SortList newSort = new SortList()

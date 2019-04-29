@@ -662,14 +662,8 @@ namespace TrailerManagement.Controllers
                 var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
                 payout.Status = "CLOSED";
                 DateTime date = DateTime.Now;
-                var day = date.Day.ToString();
-                if(day.Length == 1)
-                {
-                    day = "0" + day;
-                }
-                var month = date.Month;
-                var year = date.Year;
-                payout.DateCompleted = (year + "-" + month + "-" + day);
+
+                payout.DateCompleted = date.ToString("yyyy-MM-dd");
                 
                 db.SaveChanges();
                 return RedirectToAction(actionName: "PayoutList", controllerName: "PalletRepair", routeValues: new { status = "CLOSED" });

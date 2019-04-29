@@ -304,6 +304,7 @@
     <Compile Include="Models\Workstation.cs">
       <DependentUpon>TrailerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\WorkstationOtherParts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

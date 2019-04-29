@@ -1095,7 +1095,10 @@ namespace TrailerManagement.Controllers
                                     b.Add(Convert.ToInt32(stack.StackQuantity));
                                     break;
                                 case "50-0308":
-                                    b.Add(Convert.ToInt32(stack.StackQuantity));
+                                    six.Add(Convert.ToInt32(stack.StackQuantity));
+                                    break;
+                                default:
+                                    individualWorkstation.AddToOtherList(stack.PartNumber, Convert.ToInt32(stack.StackQuantity));
                                     break;
                             }
                         }
@@ -1105,11 +1108,21 @@ namespace TrailerManagement.Controllers
                         individualWorkstation.CalculateTotalA();
                         individualWorkstation.CalculateTotalB();
                         individualWorkstation.CalculateTotalSix();
+                        individualWorkstation.CalculateTotalOther();
                         individualWorkstation.CalculateGrandTotal();
                         individualWorkstations.Add(individualWorkstation);
                     }
                     model.Users = users;
                     model.IndividualWorkstations = individualWorkstations.ToList();
+
+                    WorkstationOtherParts otherParts = new WorkstationOtherParts();
+                    foreach(IndividualWorkstation workstation in individualWorkstations)
+                    {
+                        otherParts.AddParts(workstation.GetParts());
+                        otherParts.AddQuantities(workstation.GetParts(), workstation.GetOther());
+                    }
+
+                    model.OtherParts = otherParts;
 
                     List<double> hours = new List<double>();
                     foreach (String user in users)

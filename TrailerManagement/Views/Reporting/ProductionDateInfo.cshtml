@@ -6,9 +6,12 @@
     int rowTotal = 0;
     List<int> list;
     var workstationCount = Model.IndividualWorkstations.Count;
-    var columnCount = Model.IndividualWorkstations.Count * 3;
+    var columnCount = Model.IndividualWorkstations.Count * 4;
     var halfColumnCount = columnCount / 2;
     var widthPercent = 100 / columnCount;
+
+    var otherParts = Model.OtherParts.GetParts();
+    var otherQuantities = Model.OtherParts.GetQuantities();
 }
 
 <br class="no-print"/>
@@ -28,7 +31,7 @@
         <tr id="width">
             @foreach (int workstation in Model.Workstations)
             {
-                <th colspan="3">@Model.Users[counter]</th>
+                <th colspan="4">@Model.Users[counter]</th>
                 counter++;
             }
         </tr>
@@ -39,66 +42,80 @@
                 {
                     <td width="@widthPercent%" class="text-center">@part.Description</td>
                 }
+                <td width="@widthPercent%" class="text-center">OTHER</td>
             }
         </tr>
 
         @do
         {
             rowTotal = 0;
-            <tr>
-                @foreach (IndividualWorkstation workstation in Model.IndividualWorkstations)
+        <tr>
+            @foreach (IndividualWorkstation workstation in Model.IndividualWorkstations)
+            {
+                for (var y = 0; y < 4; y++)
                 {
-                    for (var y = 0; y < 3; y++)
+                    switch (y)
                     {
-                        switch (y)
-                        {
-                            case 0:
-                                try
-                                {
-                                    list = workstation.GetA();
-                                    rowTotal += list[rowCounter];
-                                    <td class="text-center">@list[rowCounter]</td>
-                                }
-                                catch
-                                {
-                                    <td></td>
-                                }
-                                break;
-                            case 1:
-                                try
-                                {
-                                    list = workstation.GetB();
-                                    rowTotal += list[rowCounter];
-                                    <td class="text-center">@list[rowCounter]</td>
-                                }
-                                catch
-                                {
-                                    <td></td>
-                                }
-                                break;
-                            case 2:
-                                try
-                                {
-                                    list = workstation.GetSIX();
-                                    rowTotal += list[rowCounter];
-                                    <td class="text-center">@list[rowCounter]</td>
-                                }
-                                catch
-                                {
-                                    <td></td>
-                                }
-                                break;
-                        }
+                        case 0:
+                            try
+                            {
+                                list = workstation.GetA();
+                                rowTotal += list[rowCounter];
+                                <td class="text-center">@list[rowCounter]</td>
+                            }
+                            catch
+                            {
+                                <td></td>
+                            }
+                            break;
+                        case 1:
+                            try
+                            {
+                                list = workstation.GetB();
+                                rowTotal += list[rowCounter];
+                                <td class="text-center">@list[rowCounter]</td>
+                            }
+                            catch
+                            {
+                                <td></td>
+                            }
+                            break;
+                        case 2:
+                            try
+                            {
+                                list = workstation.GetSIX();
+                                rowTotal += list[rowCounter];
+                                <td class="text-center">@list[rowCounter]</td>
+                            }
+                            catch
+                            {
+                                <td></td>
+                            }
+                            break;
+                        case 3:
+                            try
+                            {
+                                list = workstation.GetOther();
+                                List<string> parts = workstation.GetParts();
+                                rowTotal += list[rowCounter];
+                                <td class="text-center" style="white-space:nowrap">@parts[rowCounter] - @list[rowCounter]</td>
+                            }
+                            catch
+                            {
+                                <td></td>
+                            }
+                            break;
                     }
                 }
-            </tr>
+            }
+        </tr>
             rowCounter++;
         } while (rowTotal > 0);
 
         <tr>
             @foreach (IndividualWorkstation workstation in Model.IndividualWorkstations)
             {
-                for (int x = 0; x < 3; x++)
+                for (int x = 0; x < 4; x++)
                 {
                     switch (x)
                     {
@@ -111,15 +128,18 @@
                         case 2:
                             <td class="text-center total-SIX">@workstation.getTotalSix()</td>
                             break;
+                        case 3:
+                            <td class="text-center total-OTHER">@workstation.getTotalOther()</td>
+                            break;
                     }
                 }
             }
-            <th class="col-xs-1" style="font-size:.8em">Totals As, Bs, and 6"</th>
+            <th class="col-xs-1" style="font-size:.8em">Totals As, Bs, 6", Other</th>
         </tr>
         <tr>
             @foreach (IndividualWorkstation workstation in Model.IndividualWorkstations)
             {
-                <td colspan="3" class="text-center">@workstation.getGrandTotal()</td>
+                <td colspan="4" class="text-center">@workstation.getGrandTotal()</td>
             }
             <th class="col-xs-1">Total produced</th>
         </tr>
@@ -129,7 +149,7 @@
             @{ counter = 0; }
             @foreach (IndividualWorkstation workstation in Model.IndividualWorkstations)
             {
-                <td colspan="3" class="hours text-center" >@Model.Hours[counter]</td>
+                <td colspan="4" class="hours text-center" >@Model.Hours[counter]</td>
                 counter++;
             }
             <th class="col-xs-1">Hours Worked</th>
@@ -140,7 +160,7 @@
             @foreach (IndividualWorkstation workstation in Model.IndividualWorkstations)
             {
                 var average = (workstation.getGrandTotal() / Model.Hours[counter]);
-                <td colspan="3" class="text-center">@average.ToString("#.##")</td>
+                <td colspan="4" class="text-center">@average.ToString("#.##")</td>
                 counter++;
             }
             <th class="col-xs-1">Total per Hour</th>
@@ -165,6 +185,16 @@
                 <td class="text-center totals" id="@workOrder.PartNumber"></td>
             </tr>
         }
+
+        @for(int x = 0; x < otherParts.Count; x++)
+        {
+            <tr>
+                <td class="text-center">@otherParts[x]</td>
+                <td class="text-center"></td>
+                <td class="text-center totals">@otherQuantities[x]</td>
+            </tr>
+        }
+
         <tr>
             <td colspan="3"></td>
         </tr>

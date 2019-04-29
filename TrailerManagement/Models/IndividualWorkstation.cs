@@ -10,9 +10,12 @@ namespace TrailerManagement.Models
         List<int> A;
         List<int> B;
         List<int> SIX;
+        List<int> OtherPartQuantities;
+        List<string> OtherPartNumbers;
         int TotalA = 0;
         int TotalB = 0;
         int TotalSix = 0;
+        int TotalOther = 0;
         int GrandTotal = 0;
 
         public IndividualWorkstation()
@@ -20,6 +23,8 @@ namespace TrailerManagement.Models
             A = new List<int>();
             B = new List<int>();
             SIX = new List<int>();
+            OtherPartNumbers = new List<string>();
+            OtherPartQuantities = new List<int>();
             TotalA = 0;
             TotalB = 0;
             TotalSix = 0;
@@ -77,11 +82,36 @@ namespace TrailerManagement.Models
             }
         }
 
+        public void CalculateTotalOther()
+        {
+            foreach(int other in OtherPartQuantities)
+            {
+                TotalOther += other;
+            }
+        }
+
         public void CalculateGrandTotal()
         {
             GrandTotal += TotalA;
             GrandTotal += TotalB;
             GrandTotal += TotalSix;
+            GrandTotal += TotalOther;
+        }
+        
+        public void AddToOtherList(string partNumber, int quantity)
+        {
+            OtherPartNumbers.Add(partNumber);
+            OtherPartQuantities.Add(quantity);
+        }
+
+        public List<int> GetOther()
+        {
+            return OtherPartQuantities;
+        }
+
+        public List<string> GetParts()
+        {
+            return OtherPartNumbers;
         }
 
         public int getGrandTotal()
@@ -102,6 +132,11 @@ namespace TrailerManagement.Models
         public int getTotalSix()
         {
             return TotalSix;
+        }
+
+        public int getTotalOther()
+        {
+            return TotalOther;
         }
     }
 }

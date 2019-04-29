@@ -7,21 +7,28 @@
 <h2>Workstation Input</h2>
 
 <div class="well">
-    <strong>Stack Quantity</strong>
-    <input type="number" id="stackQuantity" class="form-control" />
-
+    <input type="button" id="fullStack" class="btn btn-warning" value="Full Stack" style="font-size:2em;width:30%;"/>
+    <input type="button" id="partialStack" class="btn btn-warning" value="Partial Stack" style="font-size:2em;width:30%;"/>
+    <br />
     <br />
     <input type="button" id="A" class="btn btn-warning" style="font-size:2em;width:15%;" value="A" />
     <input type="button" id="B" class="btn btn-warning" style="font-size:2em;width:15%;" value="B" />
     <input type="button" id="6" class="btn btn-warning" style="font-size:2em;width:15%;" value="6 INCH" />
+    <input type="button" id="OTHER" class="btn btn-warning" style="font-size:2em;width:15%;" value="OTHER" />
 
+
+    <input type="number" id="quantity" class="hidden"/>
     <br />
     <br />
         
     <div class="hidden" id="workstations">
         <form action="SubmitWorkstationInput" id="workstationInput">
-            <input type="number" name="stackQuantity" id="formStackQuantity" class="form-control hidden" />
+            <strong id="formStackQuantityLabel" class="hidden">Stack Quantity</strong>
+            <input type="number" name="stackQuantity" id="formStackQuantity" class="form-control" />
+
+            <strong id="partNumberLabel" class="hidden">Part Number</strong>
             <input type="text" name="partNumber" id="partNumber" class="form-control hidden" />
+            <br />
 
 
             <strong>Workstation 1</strong>
@@ -70,7 +77,13 @@
         {
             $('#stackSubmit').on('click', function ()
             {
-                var stackQuantity = parseInt($('#stackQuantity').val());
+                var stackQuantity = $('#formStackQuantity').val();
+                if ($('#quantity').val() != "")
+                {
+                    $('#formStackQuantity').val(stackQuantity);
+                }
+                
+                console.log(stackQuantity);
                 var workstation1Quantity = $('#workstation1Quantity').val();
                 if (workstation1Quantity == "")
                 {
@@ -90,15 +103,10 @@
                 {
                     workstation2Quantity = parseInt(workstation2Quantity);
                 }
-                console.log(stackQuantity);
-                console.log(workstation1Quantity);
-                console.log(workstation2Quantity);
-
-
+                
                 var quantityMatches = false;
                 if (stackQuantity == (workstation1Quantity + workstation2Quantity))
                 {
-                    console.log("got here");
                     $('#workstation1Quantity').css('border-color', 'lightgrey');
                     $('#workstation2Quantity').css('border-color', 'lightgrey');
                     quantityMatches = true;
@@ -116,7 +124,7 @@
                 var workstation2 = $('#workstation2').val();
 
 
-                if (workstation1 == "" && $('#workstation1Quantity').val() != "")
+                if (workstation1 == "" && ($('#workstation1Quantity').val() != "" || ('#workstation1Quantity').val() != 0))
                 {
                     $('#workstation1').css('border-color', 'red');
                 }
@@ -126,7 +134,7 @@
                     $('#workstation1').css('border-color', 'lightgrey');
                 } 
 
-                if (workstation2 == "" && $('#workstation2Quantity').val() != "")
+                if (workstation2 == "" && ($('#workstation2Quantity').val() != "" || $('#workstation2Quantity').val() != 0))
                 {
                     $('#workstation2').css('border-color', 'red');
                 }
@@ -150,6 +158,27 @@
                 }
             });
 
+            $('#fullStack').on('click', function ()
+            {
+                $('#fullStack').addClass('btn-green');
+                $('#partialStack').removeClass('btn-green');
+
+                $('#formStackQuantityLabel').addClass('hidden');
+                $('#formStackQuantity').addClass('hidden');
+
+                $('#quantity').val(20);
+            });
+
+            $('#partialStack').on('click', function ()
+            {
+                $('#partialStack').addClass('btn-green');
+                $('#fullStack').removeClass('btn-green');
+
+                $('#formStackQuantityLabel').removeClass('hidden');
+                $('#formStackQuantity').removeClass('hidden').val("");
+                $('#quantity').val("");
+            });
+
             $('#A').on('click', function ()
             {
                 if ($('#stackQuantity').val() != "")
@@ -157,7 +186,12 @@
                     $('#A').addClass('btn-green');
                     $('#B').removeClass('btn-green');
                     $('#6').removeClass('btn-green');
+                    $('#OTHER').removeClass('btn-green');
+
                     $('#formStackQuantity').val($('#stackQuantity').val());
+
+                    $('#partNumberLabel').addClass('hidden');
+                    $('#partNumber').addClass('hidden');
                     $('#partNumber').val('50-0001');
                     $("#workstations").removeClass('hidden');
                     $('#stackQuantity').css('border-color', 'lightgray');
@@ -175,7 +209,12 @@
                     $('#B').addClass('btn-green');
                     $('#A').removeClass('btn-green');
                     $('#6').removeClass('btn-green');
+                    $('#OTHER').removeClass('btn-green');
+
                     $('#formStackQuantity').val($('#stackQuantity').val());
+
+                    $('#partNumberLabel').addClass('hidden');
+                    $('#partNumber').addClass('hidden');
                     $('#partNumber').val('50-0004');
                     $("#workstations").removeClass('hidden');
                     $('#stackQuantity').css('border-color', 'lightgray');
@@ -193,7 +232,14 @@
                     $('#6').addClass('btn-green');
                     $('#B').removeClass('btn-green');
                     $('#A').removeClass('btn-green');
+                    $('#OTHER').removeClass('btn-green');
+
+
                     $('#formStackQuantity').val($('#stackQuantity').val());
+
+                    $('#partNumberLabel').addClass('hidden');
+                    $('#partNumber').addClass('hidden');
+
                     $('#partNumber').val('50-0308');
                     $("#workstations").removeClass('hidden');
                     $('#stackQuantity').css('border-color', 'lightgray');
@@ -203,6 +249,31 @@
                     $('#stackQuantity').css('border-color', 'red');
                 }
             });
+
+            $('#OTHER').on('click', function ()
+            {
+                if ($('#stackQuantity').val() != "")
+                {
+                    $('#OTHER').addClass('btn-green');
+                    $('#B').removeClass('btn-green');
+                    $('#6').removeClass('btn-green');
+                    $('#A').removeClass('btn-green');
+
+                    $('#formStackQuantity').val($('#stackQuantity').val());
+
+                    $('#partNumber').val("");
+                    $('#partNumberLabel').removeClass('hidden');
+                    $('#partNumber').removeClass('hidden');
+
+                    $("#workstations").removeClass('hidden');
+                    $('#stackQuantity').css('border-color', 'lightgray');
+                }
+                else
+                {
+                    $('#stackQuantity').css('border-color', 'red');
+                }
+            });
+
         });
     </script>    
 }

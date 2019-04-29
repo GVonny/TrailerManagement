@@ -87,7 +87,7 @@
                 </div>
             </div>
             <!-- Order Number -->
-            <div class="form-group hidden">
+            <div class="form-group">
                 @Html.LabelFor(model => model.OrderNumber, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-3">
                     @Html.EditorFor(model => model.OrderNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Order Number", id = "orderNumber" } })
@@ -180,7 +180,7 @@
             <div class="form-group">
                 <div class="col-xs-offset-2 col-xs-10">
                     <input type="button" id="needEmpty" value="Save" class="btn btn-primary hidden" />
-                    <input type="submit" id="save" value="Save" class="btn btn-primary" />
+                    <input type="button" id="save" value="Save" class="btn btn-primary" />
                     <input type="button" id="cancel" class=" btn btn-warning" value="Cancel" />
                     @if ((Convert.ToInt32(Session["permission"]) > 30))
                     {
@@ -324,11 +324,40 @@
 
             $('#needEmpty').on('click', function ()
             {
-                $('#needEmptyConfirmModal').modal();
+                if ($('#orderNumber').val() != "" && $('#customer').val() != "")
+                {
+                    $('#orderNumber').css('border-color', 'lightgrey');
+                    $('#customer').css('border-color', 'lightgrey');
+                    $('#needEmptyConfirmModal').modal();
+                }
+                else
+                {
+                    if ($('#orderNumber').val() == "")
+                    {
+                        $('#orderNumber').css('border-color', 'red');
+                    }
+                    else
+                    {
+                        $('#orderNumber').css('border-color', 'lightgrey');
+                    }
+
+                    if ($('#customer').val() == "")
+                    {
+                        $('#customer').css('border-color', 'red');
+                    }
+                    else
+                    {
+                        $('#customer').css('border-color', 'lightgrey');
+                    }
+                }
+
+                
             });
 
             $('#saveConfirm').on('click', function ()
             {
+                $('#dateModified').removeAttr('disabled', 'disabled');
+                $('#trailerNumber').removeAttr('disabled', 'disabled');
                 $('#trailerEdit').submit();
             })
 
@@ -345,6 +374,7 @@
                 checkModification();
                 $('#dateModified').removeAttr('disabled', 'disabled');
                 $('#trailerNumber').removeAttr('disabled', 'disabled');
+                $('#trailerEdit').submit();
             });
 
 
