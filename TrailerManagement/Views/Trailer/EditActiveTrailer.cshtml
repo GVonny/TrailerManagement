@@ -286,6 +286,7 @@
                 if (evt.persisted)
                     disableBack()
             }
+            determineLocationStatus();
 
             //auto uncheckes checkbox
             $('#locationNotInList').prop('checked', false);
@@ -507,6 +508,13 @@
                     }
                 }
             }
+
+            var locationStatus = $('#locationStatus').val();
+            $('#locationStatus').on('change', function ()
+            {
+                var newLocationStatus = $('#locationStatus').val();
+                determineLocationStatus();
+            });
 
             var offsite;
             //function to determine which input to show depending if trailer is "ON SITE" or "OFF SITE" or neither
