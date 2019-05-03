@@ -6,6 +6,10 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @using TrailerManagement.Models;
+    @{ 
+        Constants constant = new Constants();
+    }
     <link rel="icon" type="image/png" href="~/Content/icon.PNG" />
 </head>
 <body>
@@ -25,7 +29,8 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        @if (Convert.ToInt32(Session["permission"]) > 10 && (Convert.ToInt32(Session["department"]) != 4500 && Convert.ToInt32(Session["department"]) != 8100 && (Convert.ToInt32(Session["department"]) != 2100 || Convert.ToInt32(Session["permission"]) > 30)))
+                        @if (Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_DRIVER && 
+                            (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY && Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SALES && (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_MANAGER)))
                         {
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -33,7 +38,8 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a href="~/Trailer/ActiveTrailerList">Active List</a></li>
-                                    @if (Convert.ToInt32(Session["permission"]) > 30 && (Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 10000))
+                                    @if (Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_MANAGER && 
+                                        (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_TRANSPORTATION || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
                                     {
                                         <li><a href="~/Trailer/TrailerList">Master List</a></li>
                                         <li><a href="~/Trailer/InactiveTrailerList">Inactive List</a></li>
@@ -45,7 +51,8 @@
                                 </ul>
                             </li>
                         }
-                        @if (Convert.ToInt32(Session["permission"]) > 20 && (Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) >= 10000))
+                        @if (Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT && 
+                            (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) >= constant.DEPARTMENT_SUPER_ADMIN))
                         {
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -53,7 +60,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a href="~/PalletRepair/SortList?status=OPEN">Sort List</a></li>
-                                    @if (Convert.ToInt32(Session["permission"]) > 30)
+                                    @if (Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_MANAGER)
                                     {
                                         <li role="separator" class="divider"></li>
                                         <li><a href="~/PalletRepair/PayoutList">Payout List</a></li>
@@ -68,7 +75,8 @@
                             </li>
                         }
 
-                        @if (Convert.ToInt32(Session["permission"]) > 20 && (Convert.ToInt32(Session["department"]) >= 10000 || Convert.ToInt32(Session["department"]) == 4500))
+                        @if (Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT && 
+                            (Convert.ToInt32(Session["department"]) >= constant.DEPARTMENT_SUPER_ADMIN || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY))
                         {
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -83,14 +91,15 @@
                             </li>
                         }
 
-                        @if (Convert.ToInt32(Session["permission"]) > 20 && (Convert.ToInt32(Session["department"]) >= 10000 || Convert.ToInt32(Session["department"]) == 1100))
+                        @if (Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT && 
+                            (Convert.ToInt32(Session["department"]) >= constant.DEPARTMENT_SUPER_ADMIN || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_ASSEMBLY))
                         {
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                     Production<span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    @if (Convert.ToInt32(Session["permission"]) > 40)
+                                    @if (Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
                                     {
                                         <li><a href="~/Production/Workstations">Workstations</a></li>
                                         <li><a href="~/Production/WorkOrders">Work Orders</a></li>
@@ -102,7 +111,9 @@
                             </li>
                         }
 
-                        @if (Convert.ToInt32(Session["permission"]) > 20 && (Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 8100 || Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000))
+                        @if (Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT && 
+                            (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_TRANSPORTATION || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SALES || 
+                             Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
                         {
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -117,7 +128,7 @@
 
                                     }
                                     <li><a href="~/Reporting/PayoutVendors">Payout Info by Vendor</a></li>
-                                    @if (Convert.ToInt32(Session["department"]) != 8100)
+                                    @if (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SALES || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY)
                                     {
                                         <li><a href="~/Reporting/PartsRecievedByDate">Parts Recieved by Date</a></li>
                                         <li><a href="~/Reporting/PartsReceivedBetweenDates">Parts Received Between Dates</a></li>
@@ -130,8 +141,8 @@
                                         <li role="separator" class="divider"></li>
                                         <li><a href="~/Reporting/DriverCustomers">Driver Images</a></li>
                                         <li role="separator" class="divider"></li>
-                                        <li><a href="~/Reporting/ProductionDates">Production</a></li>
                                     }
+                                    <li><a href="~/Reporting/ProductionDates">Production</a></li>
                                 </ul>
                             </li>
                         }

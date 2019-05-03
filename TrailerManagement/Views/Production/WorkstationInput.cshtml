@@ -7,20 +7,21 @@
 <h2>Workstation Input</h2>
 
 <div class="well">
-    <input type="button" id="fullStack" class="btn btn-warning" value="Full Stack" style="font-size:2em;width:30%;"/>
-    <input type="button" id="partialStack" class="btn btn-warning" value="Partial Stack" style="font-size:2em;width:30%;"/>
+    <input type="button" id="fullStack" class="btn btn-warning" value="Full Stack" style="font-size:2em;width:30%;" />
+    <input type="button" id="partialStack" class="btn btn-warning" value="Partial Stack" style="font-size:2em;width:30%;" />
     <br />
     <br />
-    <input type="button" id="A" class="btn btn-warning" style="font-size:2em;width:15%;" value="A" />
-    <input type="button" id="B" class="btn btn-warning" style="font-size:2em;width:15%;" value="B" />
-    <input type="button" id="6" class="btn btn-warning" style="font-size:2em;width:15%;" value="6 INCH" />
-    <input type="button" id="OTHER" class="btn btn-warning" style="font-size:2em;width:15%;" value="OTHER" />
+    <div class="hidden" id="parts">
+        <input type="button" id="A" class="btn btn-warning" style="font-size:2em;width:15%;" value="A" />
+        <input type="button" id="B" class="btn btn-warning" style="font-size:2em;width:15%;" value="B" />
+        <input type="button" id="6" class="btn btn-warning" style="font-size:2em;width:15%;" value="6 INCH" />
+        <input type="button" id="OTHER" class="btn btn-warning" style="font-size:2em;width:15%;" value="OTHER" />
+    </div>
 
 
-    <input type="number" id="quantity" class="hidden"/>
-    <br />
-    <br />
-        
+    <input type="number" id="quantity" class="hidden" />
+    
+
     <div class="hidden" id="workstations">
         <form action="SubmitWorkstationInput" id="workstationInput">
             <strong id="formStackQuantityLabel" class="hidden">Stack Quantity</strong>
@@ -60,11 +61,10 @@
                 <h2 class="modal-title">Alert!</h2>
             </div>
             <div class="modal-body">
-                <strong id="quantityCheck" style="font-size:1.5em">Are you sure yo</strong>
+                <strong id="quantityCheck" style="font-size:1.5em">Quantity entered does not match stack quantity.</strong>
             </div>
             <div class="modal-footer">
-                <input type="button" class="btn btn-warning" id="cancel" value="Cancel" data-dismiss="modal">
-                <button type="button" class="btn btn-primary" id="confirmSubmit">Confirm</button>
+                <input type="button" class="btn btn-warning" id="cancel" value="Close" data-dismiss="modal">
             </div>
         </div>
     </div>
@@ -113,6 +113,7 @@
                 }
                 else
                 {
+                    $('#quantityCheckModal').modal();
                     $('#workstation1Quantity').css('border-color', 'red');
                     $('#workstation2Quantity').css('border-color', 'red');
                 }
@@ -124,7 +125,7 @@
                 var workstation2 = $('#workstation2').val();
 
 
-                if (workstation1 == "" && ($('#workstation1Quantity').val() != "" || ('#workstation1Quantity').val() != 0))
+                if (workstation1 == "" && ($('#workstation1Quantity').val() != "" || $('#workstation1Quantity').val() != 0))
                 {
                     $('#workstation1').css('border-color', 'red');
                 }
@@ -166,7 +167,10 @@
                 $('#formStackQuantityLabel').addClass('hidden');
                 $('#formStackQuantity').addClass('hidden');
 
+                $('#formStackQuantity').val(20);
                 $('#quantity').val(20);
+
+                $('#parts').removeClass('hidden');
             });
 
             $('#partialStack').on('click', function ()
@@ -177,12 +181,11 @@
                 $('#formStackQuantityLabel').removeClass('hidden');
                 $('#formStackQuantity').removeClass('hidden').val("");
                 $('#quantity').val("");
+                $('#parts').removeClass('hidden');
             });
 
             $('#A').on('click', function ()
             {
-                if ($('#stackQuantity').val() != "")
-                {
                     $('#A').addClass('btn-green');
                     $('#B').removeClass('btn-green');
                     $('#6').removeClass('btn-green');
@@ -195,17 +198,10 @@
                     $('#partNumber').val('50-0001');
                     $("#workstations").removeClass('hidden');
                     $('#stackQuantity').css('border-color', 'lightgray');
-                }
-                else
-                {
-                    $('#stackQuantity').css('border-color', 'red');
-                }
             });
 
             $('#B').on('click', function ()
             {
-                if ($('#stackQuantity').val() != "")
-                {
                     $('#B').addClass('btn-green');
                     $('#A').removeClass('btn-green');
                     $('#6').removeClass('btn-green');
@@ -218,17 +214,11 @@
                     $('#partNumber').val('50-0004');
                     $("#workstations").removeClass('hidden');
                     $('#stackQuantity').css('border-color', 'lightgray');
-                }
-                else
-                {
-                    $('#stackQuantity').css('border-color', 'red');
-                }
+                
             });
 
             $('#6').on('click', function ()
             {
-                if ($('#stackQuantity').val() != "")
-                {
                     $('#6').addClass('btn-green');
                     $('#B').removeClass('btn-green');
                     $('#A').removeClass('btn-green');
@@ -243,23 +233,17 @@
                     $('#partNumber').val('50-0308');
                     $("#workstations").removeClass('hidden');
                     $('#stackQuantity').css('border-color', 'lightgray');
-                }
-                else
-                {
-                    $('#stackQuantity').css('border-color', 'red');
-                }
+                
             });
 
             $('#OTHER').on('click', function ()
             {
-                if ($('#stackQuantity').val() != "")
-                {
                     $('#OTHER').addClass('btn-green');
                     $('#B').removeClass('btn-green');
                     $('#6').removeClass('btn-green');
                     $('#A').removeClass('btn-green');
 
-                    $('#formStackQuantity').val($('#stackQuantity').val());
+                    $('#formStackQuantity').val($('#quantity').val());
 
                     $('#partNumber').val("");
                     $('#partNumberLabel').removeClass('hidden');
@@ -267,11 +251,6 @@
 
                     $("#workstations").removeClass('hidden');
                     $('#stackQuantity').css('border-color', 'lightgray');
-                }
-                else
-                {
-                    $('#stackQuantity').css('border-color', 'red');
-                }
             });
 
         });

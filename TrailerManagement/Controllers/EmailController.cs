@@ -50,9 +50,7 @@ namespace TrailerManagement.Controllers
                 if (sortedTrailer != null)
                 {
                     sortedTrailer.Status = "CLOSED";
-
-                    var date = DateTime.Now;
-                    sortedTrailer.DateCompleted = date.ToString("yyyy-MM-dd");
+                    sortedTrailer.DateCompleted = DateTime.Now.ToString("yyyy-MM-dd");
 
                     db.SaveChanges();
                 }
@@ -65,10 +63,8 @@ namespace TrailerManagement.Controllers
             using (TrailerEntities db = new TrailerEntities())
             {
                 var payout = db.Payouts.FirstOrDefault(p => p.SortGUID == sortID);
-                DateTime date = DateTime.Now;
-                var currentDate = date.ToString("yyyy-MM-dd");
                 
-                payout.DateCompleted = currentDate;
+                payout.DateCompleted = DateTime.Now.ToString("yyyy-MM-dd");
                 db.SaveChanges();
 
                 SmtpClient client = new SmtpClient("smtp.outlook.com", 587);
