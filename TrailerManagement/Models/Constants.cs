@@ -66,5 +66,27 @@ namespace TrailerManagement.Models
             DEPARTMENT_G_AND_A = 9100;
             DEPARTMENT_SUPER_ADMIN = 10000;
         }
+
+        public Boolean checkIfEqual(ActiveTrailerList current, ActiveTrailerList modified)
+        {
+            if (current.TrailerGUID == modified.TrailerGUID &&
+               current.TrailerNumber == modified.TrailerNumber &&
+               current.TrailerStatus == modified.TrailerStatus &&
+               current.LoadStatus == modified.LoadStatus &&
+               current.Customer == modified.Customer &&
+               current.OrderDate == modified.OrderDate &&
+               current.OrderNumber == modified.OrderNumber &&
+               current.LocationStatus == modified.LoadStatus &&
+               current.TrailerLocation == modified.TrailerLocation &&
+               current.Notes == modified.Notes &&
+               current.Tags == modified.Tags &&
+               current.DateModified == modified.DateModified &&
+               current.LastModifiedBy == modified.LastModifiedBy)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
     }
 }

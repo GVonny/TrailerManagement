@@ -85,12 +85,12 @@
 
                 <td id="loadStatus_@t.TrailerNumber" class="text-center">@t.LoadStatus</td>
 
-                <td id="customer_@t.TrailerNumber" class="text-center">@t.Customer</td>
+                <td id="customer_@t.TrailerNumber" class="text-center" style="white-space:nowrap">@t.Customer</td>
                 <td id="loactionStatus_@t.TrailerNumber" class="text-center">@t.LocationStatus</td>
-                <td id="trailerLocation_@t.TrailerNumber" class="text-center">@t.TrailerLocation</td>
+                <td id="trailerLocation_@t.TrailerNumber" class="text-center" style="white-space:nowrap">@t.TrailerLocation</td>
                 @if ((Convert.ToInt32(Session["permission"]) > 20))
                 {
-                    <td id="notes_@t.TrailerNumber">@t.Notes</td>
+                    <td id="notes_@t.TrailerNumber" style="white-space:nowrap">@t.Notes</td>
                     <td id="tags_@t.TrailerNumber" class="text-center">@t.Tags</td>
                     <td id="dateModified_@t.TrailerNumber" class="text-center no-print">@t.DateModified</td>
                 }

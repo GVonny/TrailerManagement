@@ -1,5 +1,7 @@
-﻿@{
+﻿@using TrailerManagement.Models;
+@{
     ViewBag.Title = "Trailer Management";
+    Constants constant = new Constants();
 }
 
 <div class="row">
@@ -11,7 +13,10 @@
 
 <div>
     <!-- Trailer Lists -->
-    @if ((Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000))
+    @if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_TRANSPORTATION || 
+         Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || 
+         Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN ||
+         (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY && Convert.ToInt32(Session["permission"]) == constant.PERMISSION_ADMIN))
     {
         <fieldset>
             <legend>Trailers</legend>
@@ -19,7 +24,8 @@
                 <h2>Active List</h2>
                 <p><a href="~/Trailer/ActiveTrailerList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
             </div>
-            @if (Convert.ToInt32(Session["permission"]) > 30 && Convert.ToInt32(Session["department"]) == 4300 || Convert.ToInt32(Session["department"]) == 10000)
+            @if (Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_MANAGER && 
+                 (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_TRANSPORTATION || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
             {
                 <div class="col-xs-3">
                     <h2>Master List</h2>
@@ -34,7 +40,8 @@
                     <p><a href="~/Trailer/CreateTrailer" class="btn btn-primary btn-default">Continue &raquo;</a></p>
                 </div>
             }
-            @if (Convert.ToInt32(Session["permission"]) == 20 || Convert.ToInt32(Session["permission"]) >= 50)
+            @if (Convert.ToInt32(Session["permission"]) == constant.DEPARTMENT_TRANSPORTATION || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN ||
+                 Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_DRIVER)
             {
                 <div class="col-xs-3">
                     <h2>Picture Log</h2>
@@ -45,7 +52,7 @@
                     <p><a href="~/Trailer/MyConcerns" class="btn btn-primary btn-default">Continue &raquo;</a></p>
                 </div>
             }
-            @if (Convert.ToInt32(Session["permission"]) >= 50)
+            @if (Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
             {
                 <div class="col-xs-3">
                     <h2>Concern List</h2>
@@ -58,7 +65,10 @@
 <br />
 <div>
     <!-- Pallet Repair -->
-    @if (Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000 || Convert.ToInt32(Session["department"]) == 4300)
+    @if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || 
+         Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN || 
+         Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_TRANSPORTATION ||
+         (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN))
     {
         <fieldset>
             <legend>Pallet Repair</legend>
@@ -66,7 +76,8 @@
                 <h2>Sort List</h2>
                 <p><a href="~/PalletRepair/SortList" class="btn btn-primary btn-default">Continue &raquo;</a></p>
             </div>
-            @if (Convert.ToInt32(Session["permission"]) > 40 && (Convert.ToInt32(Session["department"]) == 2100 || Convert.ToInt32(Session["department"]) == 10000))
+            @if (Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN  && 
+                (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN))
             {
                 <div class="col-xs-2">
                     <h2>Payouts</h2>
@@ -91,7 +102,8 @@
 <br />
 <div>
     <!-- Safety / HR-->
-    @if (Convert.ToInt32(Session["department"]) == 4500 || Convert.ToInt32(Session["department"]) == 10000)
+    @if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY || 
+        Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
     {
         <fieldset>
             <legend>Safety</legend>
@@ -117,11 +129,12 @@
 <br />
 <div>
     <!-- Production -->
-    @if (Convert.ToInt32(Session["department"]) == 1100 || Convert.ToInt32(Session["department"]) == 10000)
+    @if (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_ASSEMBLY || 
+         Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN)
     {
         <fieldset>
             <legend>Production / Assembly</legend>
-            @if (Convert.ToInt32(Session["permission"]) > 40)
+            @if (Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
             {
                 <div class="col-xs-3">
                     <h2>Workstations</h2>
@@ -146,7 +159,8 @@
 </div>
 <br />
 <div>
-    @if (Convert.ToInt32(Session["permission"]) >= 40 && Convert.ToInt32(Session["department"]) != 4500)
+    @if (Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_MANAGER && 
+         Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY)
     {
         <fieldset>
             <legend>Managers</legend>
@@ -161,7 +175,7 @@
 
 <div>
     <!-- Users -->
-    @if (Convert.ToInt32(Session["permission"]) > 30)
+    @if (Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_MANAGER)
     {
         <fieldset>
             <legend>Users</legend>

@@ -477,7 +477,8 @@ namespace TrailerManagement.Controllers
             }
             else
             {
-                if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_DRIVER)
+                if (Convert.ToInt32(Session["permission"]) < constant.PERMISSION_DRIVER && 
+                   (Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_TRANSPORTATION || Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_SUPER_ADMIN))
                 {
                     return RedirectToAction(actionName: "InsufficientPermissions", controllerName: "Error");
                 }
@@ -494,11 +495,16 @@ namespace TrailerManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditActiveTrailer([Bind(Include = "TrailerNumber,TrailerStatus,LoadStatus,Customer,OrderDate,OrderNumber,LocationStatus,TrailerLocation,Notes,Tags,DateModified")]ActiveTrailerList UpdatedTrailer)
+        public ActionResult EditActiveTrailer([Bind(Include = "TrailerGUID,TrailerNumber,TrailerStatus,LoadStatus,Customer,OrderDate,OrderNumber,LocationStatus,TrailerLocation,Notes,Tags,DateModified,LastModifiedBy")]ActiveTrailerList UpdatedTrailer)
         {
             using (TrailerEntities db = new TrailerEntities())
             {
                 ActiveTrailerList trailer = db.ActiveTrailerLists.FirstOrDefault(t => t.TrailerNumber == UpdatedTrailer.TrailerNumber);
+                if(!constant.checkIfEqual(trailer, UpdatedTrailer))
+                {
+                    trailer.DateModified = DateTime.Now.ToString("yyyy-MM-dd");
+                }
+
                 TrailerList trailerEdit = db.TrailerLists.FirstOrDefault(t => t.TrailerNumber == UpdatedTrailer.TrailerNumber);
 
                 if (trailer.TrailerStatus != constant.TRAILER_STATUS_NEED_EMPTY && UpdatedTrailer.TrailerStatus == constant.TRAILER_STATUS_NEED_EMPTY)
@@ -510,7 +516,7 @@ namespace TrailerManagement.Controllers
                         OrderNumber = UpdatedTrailer.OrderNumber,
                         SortType = UpdatedTrailer.Notes,
                         LoadStatus = UpdatedTrailer.LoadStatus,
-                        DateArrived = UpdatedTrailer.DateModified,
+                        DateArrived = DateTime.Now.ToString("yyyy-MM-dd"),
                         Status = "NEW",
                     };
                     db.SortLists.Add(newSort);
@@ -536,9 +542,9 @@ namespace TrailerManagement.Controllers
                 {
                     trailer.TrailerLocation = UpdatedTrailer.TrailerLocation;
                 }
+
                 trailer.Notes = UpdatedTrailer.Notes;
                 trailer.Tags = UpdatedTrailer.Tags;
-                trailer.DateModified = UpdatedTrailer.DateModified;
                 trailer.LastModifiedBy = Session["name"].ToString();
 
                 db.SaveChanges();

@@ -23,7 +23,10 @@ namespace TrailerManagement.Controllers
             {
                 return RedirectToAction(actionName: "SignIn", controllerName: "Users");
             }
-            if ((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN || Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_TRANSPORTATION) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT)
+            if (((Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_PALLET_REPAIR || 
+                 Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_SUPER_ADMIN || 
+                 Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_TRANSPORTATION) && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_EDIT) ||
+                 (Convert.ToInt32(Session["department"]) == constant.DEPARTMENT_HR_SAFETY && Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN))
             {
                 using (TrailerEntities db = new TrailerEntities())
                 {

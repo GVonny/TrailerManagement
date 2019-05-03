@@ -37,10 +37,14 @@ namespace TrailerManagement.Controllers
                 {
                     var employee = db.ProductionEmployees.FirstOrDefault(e => e.EmployeeBadgeNumber == employees);
                     workstation.EmployeeBadgeNumberAssigned = employee.EmployeeBadgeNumber;
+                    workstation.EmployeeName = employee.EmployeeName;
+                    workstation.WorkstationNumberName = (workstation.WorkstationNumber + " - " + employee.EmployeeName);
                 }
                 else
                 {
                     workstation.EmployeeBadgeNumberAssigned = null;
+                    workstation.EmployeeName = null;
+                    workstation.WorkstationNumberName = null;
                 }
 
                 db.SaveChanges();
@@ -122,8 +126,8 @@ namespace TrailerManagement.Controllers
         {
             using (TrailerEntities db = new TrailerEntities())
             {
-                this.ViewData["workstation1"] = new SelectList(db.Workstations.Where(w => w.EmployeeBadgeNumberAssigned != null).OrderBy(w => w.WorkstationNumber), "WorkstationNumber", "WorkstationNumber").ToList();
-                this.ViewData["workstation2"] = new SelectList(db.Workstations.Where(w => w.EmployeeBadgeNumberAssigned != null).OrderBy(w => w.WorkstationNumber), "WorkstationNumber", "WorkstationNumber").ToList();
+                this.ViewData["workstation1"] = new SelectList(db.Workstations.Where(w => w.EmployeeBadgeNumberAssigned != null).OrderBy(w => w.WorkstationNumber), "WorkstationNumber", "WorkstationNumberName").ToList();
+                this.ViewData["workstation2"] = new SelectList(db.Workstations.Where(w => w.EmployeeBadgeNumberAssigned != null).OrderBy(w => w.WorkstationNumber), "WorkstationNumber", "WorkstationNumberName").ToList();
 
                 return View();
             }
@@ -221,50 +225,7 @@ namespace TrailerManagement.Controllers
             };
             return RedirectToAction(actionName: "WorkstationInput", controllerName: "Production");
         }
-
-        //public ActionResult SubmitWorkstationInput(int workstationNumber, int quantity, string partNumber, bool endOfDay = false)
-        //{
-        //    using (TrailerEntities db = new TrailerEntities())
-        //    {
-        //        int? inputQuantity = quantity;
-        //        var endOfDayCheck = db.ProductionStacks.Where(e => e.WorkstationNumber == workstationNumber).ToList();
-        //        if (endOfDayCheck.Count > 0)
-        //        {
-        //            var lastDay = endOfDayCheck.Last();
-        //            if (lastDay.IsEndOfDay == true)
-        //            {
-        //                inputQuantity -= lastDay.StackQuantity;
-        //            }
-        //        }
-
-        //        ProductionStack newStack = new ProductionStack();
-
-        //        var workstation = db.Workstations.FirstOrDefault(w => w.WorkstationNumber == workstationNumber);
-        //        var employee = db.ProductionEmployees.FirstOrDefault(e => e.EmployeeBadgeNumber == workstation.EmployeeBadgeNumberAssigned);
-        //        var workorder = db.ProductionWorkOrders.FirstOrDefault(w => w.PartNumber == partNumber);
-
-        //        newStack.WorkstationNumber = workstation.WorkstationNumber;
-        //        newStack.EmployeeBadgeNumber = workstation.EmployeeBadgeNumberAssigned;
-        //        newStack.EmployeeName = employee.EmployeeName;
-        //        newStack.PartNumber = partNumber;
-        //        newStack.StackQuantity = inputQuantity;
-
-        //        var name = Session["name"].ToString();
-        //        newStack.ForkliftDriver = db.Users.FirstOrDefault(u => u.FirstName == name).FirstName;
-
-        //        DateTime now = DateTime.Now;
-        //        newStack.TimeStamp = now.ToString("yyyy-MM-dd HH:mm:ss");
-        //        newStack.Date = now.ToString("yyyy-MM-dd");
-        //        newStack.IsEndOfDay = endOfDay;
-        //        newStack.WorkOrderNumber = workorder.WorkOrderNumber;
-
-        //        db.ProductionStacks.Add(newStack);
-        //        db.SaveChanges();
-
-        //        return RedirectToAction(actionName: "WorkstationInput", controllerName: "Production", routeValues: new { workstationNumber });
-        //    }
-        //}
-
+        
         public ActionResult WorkOrders()
         {
             using (TrailerEntities db = new TrailerEntities())

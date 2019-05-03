@@ -17,5 +17,7 @@ namespace TrailerManagement.Models
         public int WorkstationGUID { get; set; }
         public Nullable<int> WorkstationNumber { get; set; }
         public Nullable<int> EmployeeBadgeNumberAssigned { get; set; }
+        public string EmployeeName { get; set; }
+        public string WorkstationNumberName { get; set; }
     }
 }

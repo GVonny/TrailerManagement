@@ -10,6 +10,21 @@
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-horizontal">
+            <div class="hidden">
+                @Html.LabelFor(model => model.TrailerGUID, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.TrailerGUID, new { htmlAttributes = new { @class = "form-control", placeholder = "Trailer Number" } })
+                    @Html.ValidationMessageFor(model => model.TrailerGUID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="hidden">
+                @Html.LabelFor(model => model.LastModifiedBy, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.LastModifiedBy, new { htmlAttributes = new { @class = "form-control", placeholder = "Trailer Number"} })
+                    @Html.ValidationMessageFor(model => model.LastModifiedBy, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
             <!-- Trailer Number -->
             <div class="form-group">
                 @Html.LabelFor(model => model.TrailerNumber, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -350,8 +365,6 @@
                         $('#customer').css('border-color', 'lightgrey');
                     }
                 }
-
-                
             });
 
             $('#saveConfirm').on('click', function ()
@@ -382,23 +395,10 @@
             {
                 location.href = "/Trailer/ActiveTrailerList";
             });
-
-            var lastModifiedDate = $('#dateModified').val();
-            var modified = 0;
-
+            
             var trailerStatus = $('#trailerStatus').val();
             $('#trailerStatus').on('change', function ()
             {
-                var newTrailerStatus = $('#trailerStatus').val();
-                //changes date modified field if the new value does not equal previous value
-                if (trailerStatus != newTrailerStatus)
-                {
-                    modified++;
-                }
-                else
-                {
-                    modified--;
-                }
                 if (newTrailerStatus == '1')
                 {
                     $('#save').addClass('hidden');
@@ -436,54 +436,7 @@
                 }
 
             });
-
-            var customer = $('#customer').val();
-            $('#customer').on('change', function ()
-            {
-                var newCustomer = $('#customer').val();
-                $('#offSiteLocationInput').val(newCustomer);
-                //changes date modified field if the new value does not equal previous value
-                if (customer != newCustomer)
-                {
-                    modified++;
-                }
-                else
-                {
-                    modified--;
-                }
-            });
-
-            var locationStatus = $('#locationStatus').val();
-            $('#locationStatus').on('change', function ()
-            {
-                var newLocationStatus = $('#locationStatus').val();
-                determineLocationStatus();
-                //changes date modified field if the new value does not equal previous value
-                if (locationStatus != newLocationStatus)
-                {
-                    modified++;
-                }
-                else
-                {
-                    modified--;
-                }
-            });
-
-            var trailerLocation = $('#trailerLocation').val();
-            $('#trailerLocation').on('change', function ()
-            {
-                var newTrailerLocation = $('#trailerLocation').val();
-                //changes date modified field if the new value does not equal previous value
-                if (trailerLocation != newTrailerLocation)
-                {
-                    modified++;
-                }
-                else
-                {
-                    modified--;
-                }
-            });
-
+            
             $('#notesList').on('change', function ()
             {
                 var note = $('#notesList').val();
@@ -526,20 +479,7 @@
                     $('#offSiteLocation').addClass('hidden');
                 }
             });
-
-            //for each change that was made a counter increments, if counter is greater than zero,
-            //calls getCurrentDate which updates the last modified date
-            function checkModification()
-            {
-                if (modified > 0)
-                {
-                    $('#dateModified').val(getCurrentDate());
-                }
-                else
-                {
-                    $('#dateModified').val(lastModifiedDate);
-                }
-            }
+            
 
             function determineSpecialNote()
             {

@@ -399,6 +399,8 @@
           <Property Name="WorkstationGUID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="WorkstationNumber" Type="int" />
           <Property Name="EmployeeBadgeNumberAssigned" Type="int" />
+          <Property Name="EmployeeName" Type="varchar" MaxLength="20" />
+          <Property Name="WorkstationNumberName" Type="varchar" MaxLength="25" />
         </EntityType>
         <EntityContainer Name="TrailerModelStoreContainer">
           <EntitySet Name="ActiveInventoryLocations" EntityType="Self.ActiveInventoryLocations" Schema="dbo" store:Type="Tables" />
@@ -842,6 +844,8 @@
           <Property Name="WorkstationGUID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="WorkstationNumber" Type="Int32" />
           <Property Name="EmployeeBadgeNumberAssigned" Type="Int32" />
+          <Property Name="EmployeeName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="WorkstationNumberName" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="ProductionWorkOrder">
           <Key>
@@ -1266,6 +1270,8 @@
           <EntitySetMapping Name="Workstations">
             <EntityTypeMapping TypeName="TrailerModel.Workstation">
               <MappingFragment StoreEntitySet="Workstations">
+                <ScalarProperty Name="WorkstationNumberName" ColumnName="WorkstationNumberName" />
+                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
                 <ScalarProperty Name="EmployeeBadgeNumberAssigned" ColumnName="EmployeeBadgeNumberAssigned" />
                 <ScalarProperty Name="WorkstationNumber" ColumnName="WorkstationNumber" />
                 <ScalarProperty Name="WorkstationGUID" ColumnName="WorkstationGUID" />
