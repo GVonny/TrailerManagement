@@ -2,7 +2,7 @@
     ViewBag.Title = "Inventory Input";
 }
 
-<h2>Location: @ViewBag.LocationNumber - @ViewBag.RowNumber</h2>
+<h2>Location: @ViewBag.LocationNumber - Row: @ViewBag.RowNumber</h2>
 
 <div class="well">
     @using (Html.BeginForm("AddToRow", "Inventory", FormMethod.Post))
@@ -23,7 +23,7 @@
                         </div>
                         <div id="part-1-stack-1" class="form-group">
                             <label for="1-1" class="col-md-1">Stack 1</label>
-                            <input type="number" placeholder="Stack 1 Quantity" id="1-1" name="1-1" class="form-control float-left" style="width:150px;" />
+                            <input type="number" placeholder="Stack 1 Quantity" id="1-1" name="1-1" class="form-control" style="width:150px;" />
                         </div>
                     </div>
                     <div id="part-1-buttons">
@@ -339,7 +339,7 @@
                     $('#' + grandparent + '-stacks').append(
                         "<div id=\"part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"form-group\">" +
                         "<label for=\"" + numberOfParts + '-' + totalStacks + "\" class=\"col-md-1\">Stack " + totalStacks + "</label>" +
-                        "<input type=\"number\" placeholder=\"Stack " + totalStacks + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control float-left\" style=\"width: 150px;\" />" +
+                        "<input type=\"number\" placeholder=\"Stack " + totalStacks + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control\" style=\"width: 150px;\" />" +
                         "</div>"
                     );
 
@@ -444,7 +444,7 @@
                             "</div>" +
                             "<div id=part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"form-group\" >" +
                             "<label for=\"" + numberOfParts + '-' + totalStacks + "\" class=\"col-md-1\">Stack " + totalStacks + "</label>" +
-                            "<input type=\"number\" placeholder=\"Part " + partsList[partsList.length - 1]["NumberOfParts"] + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control float-left\" style=\"width:150px;\" />" +
+                            "<input type=\"number\" placeholder=\"Part " + partsList[partsList.length - 1]["NumberOfParts"] + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control\" style=\"width:150px;\" />" +
                             "</div>" +
                             "<div id=\"part-" + numberOfParts + "-buttons\">" +
                             "<input type=\"button\" class=\"btn btn-green next-stack\" value=\"Next Stack\" style=\"margin-left:80px;\" />" +
@@ -467,7 +467,7 @@
                             "</div>" +
                             "<div id=part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"form-group\" >" +
                             "<label for=\"" + numberOfParts + '-' + totalStacks + "\" class=\"col-md-1\">Stack " + totalStacks + "</label>" +
-                            "<input type=\"number\" placeholder=\"Part " + partsList[partsList.length - 1]["NumberOfParts"] + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control float-left\" style=\"width:150px;\" />" +
+                            "<input type=\"number\" placeholder=\"Part " + partsList[partsList.length - 1]["NumberOfParts"] + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control\" style=\"width:150px;\" />" +
                             "</div>" +
                             "<div id=\"part-" + numberOfParts + "-buttons\">" +
                             "<input type=\"button\" class=\"btn btn-green next-stack\" value=\"Next Stack\" style=\"margin-left:80px;\" />" +
@@ -608,7 +608,7 @@
                             "</div>" +
                             "<div id=part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"form-group\" >" +
                                 "<label for=\"" + numberOfParts + '-' + totalStacks + "\" class=\"col-md-1\">Stack " + totalStacks + "</label>" +
-                                "<input type=\"number\" placeholder=\"Stack " + totalStacks + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control float-left\" style=\"width:150px;\" />" +
+                                "<input type=\"number\" placeholder=\"Stack " + totalStacks + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control\" style=\"width:150px;\" />" +
                             "</div>" +
                         "</div>" +
                         "<div id=\"part-" + numberOfParts + "-buttons\">" +
@@ -700,7 +700,7 @@
                         "</div>" +
                         "<div id=part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"form-group\" >" +
                         "<label for=\"" + numberOfParts + '-' + totalStacks + "\" class=\"col-md-1\">Stack " + totalStacks + "</label>" +
-                        "<input type=\"number\" placeholder=\"Part " + partsList[partsList.length - 1]["NumberOfParts"] + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control float-left\" style=\"width:150px;\" />" +
+                        "<input type=\"number\" placeholder=\"Part " + partsList[partsList.length - 1]["NumberOfParts"] + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control\" style=\"width:150px;\" />" +
                         "</div>" +
                         "<div id=\"part-" + numberOfParts + "-buttons\">" +
                         "<input type=\"button\" class=\"btn btn-green next-stack\" value=\"Next Stack\" style=\"margin-left:80px;\" />" +
@@ -804,7 +804,7 @@
                                     "</div>" +
                                     "<div id=part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"form-group\" >" +
                                         "<label for=\"" + numberOfParts + '-' + totalStacks + "\" class=\"col-md-1\">Stack " + totalStacks + "</label>" +
-                                        "<input type=\"number\" placeholder=\"Part " + partsList[partsList.length - 1]["NumberOfParts"] + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control float-left\" style=\"width:150px;\" />" +
+                                        "<input type=\"number\" placeholder=\"Part " + partsList[partsList.length - 1]["NumberOfParts"] + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control\" style=\"width:150px;\" />" +
                                     "</div>" +
                                 "</div>" +
                             "</div>"
@@ -824,7 +824,7 @@
                                     "</div>" +
                                     "<div id=part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"form-group\" >" +
                                         "<label for=\"" + numberOfParts + '-' + totalStacks + "\" class=\"col-md-1\">Stack " + totalStacks + "</label>" +
-                                        "<input type=\"number\" placeholder=\"Part " + partsList[partsList.length - 1]["NumberOfParts"] + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control float-left\" style=\"width:150px;\" />" +
+                                        "<input type=\"number\" placeholder=\"Part " + partsList[partsList.length - 1]["NumberOfParts"] + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control\" style=\"width:150px;\" />" +
                                     "</div>" +
                                 "</div>" +
                             "</div>"
@@ -911,7 +911,7 @@
                                 "</div>" +
                                 "<div id=part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"form-group\" >" +
                                     "<label for=\"" + numberOfParts + '-' + totalStacks + "\" class=\"col-md-1\">Stack " + totalStacks + "</label>" +
-                                    "<input type=\"number\" placeholder=\"Part " + partsList[partsList.length - 1]["NumberOfParts"] + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control float-left\" style=\"width:150px;\" />" +
+                                    "<input type=\"number\" placeholder=\"Part " + partsList[partsList.length - 1]["NumberOfParts"] + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control\" style=\"width:150px;\" />" +
                                 "</div>" +
                             "</div>" +
                         "</div>"
@@ -931,7 +931,7 @@
                                 "</div>" +
                                 "<div id=part-" + numberOfParts + "-stack-" + totalStacks + "\" class=\"form-group\" >" +
                                     "<label for=\"" + numberOfParts + '-' + totalStacks + "\" class=\"col-md-1\">Stack " + totalStacks + "</label>" +
-                                    "<input type=\"number\" placeholder=\"Part " + partsList[partsList.length - 1]["NumberOfParts"] + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control float-left\" style=\"width:150px;\" />" +
+                                    "<input type=\"number\" placeholder=\"Part " + partsList[partsList.length - 1]["NumberOfParts"] + " Quantity\" id=\"" + numberOfParts + '-' + totalStacks + "\" name=\"" + numberOfParts + '-' + totalStacks + "\" class=\"form-control\" style=\"width:150px;\" />" +
                                 "</div>" +
                             "</div>" +
                         "</div>"

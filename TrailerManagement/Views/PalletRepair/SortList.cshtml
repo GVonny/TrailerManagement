@@ -223,9 +223,9 @@
                 <h2 class="modal-title">Select Option</h2>
             </div>
             <div class="modal-body">
-                <button id="changeExpectedTime" data-toggle="modal" data-dismiss="modal">Change Expected Time</button>
-                <button id="changeExpectedDate" data-toggle="modal" data-dismiss="modal">Change Expected Date</button>
                 <button id="changeNote" data-toggle="modal" data-dismiss="modal">Change Note</button>
+                <button id="changeExpectedDate" data-toggle="modal" data-dismiss="modal">Change Expected Date</button>
+                <button id="changeExpectedTime" data-toggle="modal" data-dismiss="modal">Change Expected Time</button>
                 <button id="changeArrivalDate" data-toggle="modal" data-dismiss="modal">Change Arrival Date</button>
             </div>
             <div class="modal-footer">
@@ -299,7 +299,7 @@
                 var note = $('#arrivalNote_' + id).html().trim();
                 $('#sortNote').val(note);
                 $('#changeNoteModal').modal();
-            })
+            });
 
             $('#changeArrivalDate').on('click', function ()
             {
@@ -317,12 +317,12 @@
             $('#updateExpectedTime').on('click', function ()
             {
                 $('#changeExpectedTimeForm').submit();
-            })
+            });
 
             $('#updateExpectedDate').on('click', function ()
             {
                 $('#changeExpectedDateForm').submit();
-            })
+            });
 
             $('#changeExpectedDate').on('click', function ()
             {
@@ -330,39 +330,39 @@
                 var date = $('#expectedDate_' + id).html();
                 $('#expectedDate').val(date);
                 $('#changeDateModal').modal();
-            })
+            });
 
             $('#updateNote').on('click', function ()
             {
                 $('#changeSortNote').submit();
-            })
+            });
 
             $('#arrivalDate').on('change', function ()
             {
                 $('#updateDate').removeClass('hidden');
             });
 
-            $('.changeNote').on('click', function ()
-            {
-                id = $(this).parent().parent().attr('id');
-                $('#sortNoteID').val(id);
-                var note = $('#arrivalNote_' + id).html().trim();
-                var index = note.indexOf("&amp;");
-                if (index > 0)
-                {
-                    note = note.substring(0, index + 1) + note.substring(index + 5);
-                }
+            //$('.changeNote').on('click', function ()
+            //{
+            //    id = $(this).parent().parent().attr('id');
+            //    $('#sortNoteID').val(id);
+            //    var note = $('#arrivalNote_' + id).html().trim();
+            //    var index = note.indexOf("&amp;");
+            //    if (index > 0)
+            //    {
+            //        note = note.substring(0, index + 1) + note.substring(index + 5);
+            //    }
 
-                $('#sortNote').val(note);
-                event.stopPropagation();
-                $('#changeNoteModal').modal();
-            })
+            //    $('#sortNote').val(note);
+            //    event.stopPropagation();
+            //    $('#changeNoteModal').modal();
+            //})
 
             var id;
-            $('#removals tr').on('click', 'tr.details-control td:not(:last-child)', function ()
+            $('#removals tr').on('click', 'td:not(:last-child)', function ()
             {
-                id = this.id;
-                console.log($(this).children());
+                id = this.parentElement.id;
+                //console.log(id);
                 var dateArrived = $('#dateArrived_' + id).html();
                 if (dateArrived.indexOf('-') != -1)
                 {

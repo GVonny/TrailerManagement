@@ -119,7 +119,11 @@ namespace TrailerManagement.Controllers
                 ViewBag.LocationNumber = locationID;
                 ViewBag.RowNumber = rowNumber;
 
-                this.ViewData["partNumbers"] = new SelectList(db.PalletTypes.Where(c => c.Type != "SCRAP" && c.Type != "DEDUCTION").OrderBy(c => c.PartNumber), "PartNumber", "PartNumber").ToList();
+                var parts = db.PalletTypes.Where(c => c.Type != "SCRAP" && c.Type != "DEDUCTION").OrderBy(c => c.PartNumber);
+                
+                
+
+                this.ViewData["partNumbers"] = new SelectList(db.PalletTypes.Where(c => c.Type != "SCRAP" && c.Type != "DEDUCTION").OrderBy(c => c.PartNumber), "PartNumber", "PartNumberDescription").ToList();
 
                 return View();
             } 
@@ -196,9 +200,9 @@ namespace TrailerManagement.Controllers
                 ViewBag.RowNumber = location.RowNumber;
 
                 var stacks = db.InventoryRowStacks.Where(p => p.InventoryRowGUID == rowID).ToList();
-                var partNumbers = db.InventoryRowStacks.DistinctBy(p => p.PartNumber).Where(p => p.InventoryRowGUID == rowID).ToList();
+                var partNumbers = db.InventoryRowStacks.Where(p => p.InventoryRowGUID == rowID).Select(p => p.PartNumber).Distinct().ToList();
 
-                this.ViewData["partNumbers"] = new SelectList(db.PalletTypes.Where(c => c.Type != "SCRAP" && c.Type != "DEDUCTION").OrderBy(c => c.PartNumber), "PartNumber", "PartNumber").ToList();
+                this.ViewData["partNumbers"] = new SelectList(db.PalletTypes.Where(c => c.Type != "SCRAP" && c.Type != "DEDUCTION").OrderBy(c => c.PartNumber), "PartNumber", "PartNumberDescription").ToList();
 
                 model.Stacks = stacks;
                 model.PartNumbers = partNumbers;
@@ -207,7 +211,7 @@ namespace TrailerManagement.Controllers
                 var parts = "";
                 foreach (var stack in partNumbers)
                 {
-                    parts += stack.PartNumber + ",";
+                    parts += stack + ",";
                 }
                 parts = parts.Substring(0, parts.Length - 1);
                 ViewBag.Parts = parts;
@@ -233,6 +237,20 @@ namespace TrailerManagement.Controllers
                 model.LocationID = locationID;
 
                 return View(model);
+            }
+        }
+
+        public void PartNumberDescription()
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var parts = db.PalletTypes.ToList();
+
+                foreach(PalletType part in parts)
+                {
+                    part.PartNumberDescription = part.PartNumber + " - " + part.Description;
+                }
+                db.SaveChanges();
             }
         }
     }

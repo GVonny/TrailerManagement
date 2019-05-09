@@ -30,7 +30,7 @@
                 <td id="numberOfParts_@r.InventoryRowGUID" class="text-center">@r.NumberOfPartNumbers</td>
                 <td id="numberOfStacks_@r.InventoryRowGUID" class="text-center">@r.NumberOfStacks</td>
                 <td id="palletCount_@r.InventoryRowGUID" class="text-center">@r.PalletCount</td>
-                @if (r.NumberOfStacks < 0)
+                @if (r.NumberOfStacks > 0)
                 {
                     <td><a href="/Inventory/ViewRowStacks?rowID=@r.InventoryRowGUID">Edit Stacks</a></td>
                 }

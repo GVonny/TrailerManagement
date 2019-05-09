@@ -159,6 +159,7 @@
 </div>
 <br />
 <div>
+    <!-- Managers Safety -->
     @if (Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_MANAGER && 
          Convert.ToInt32(Session["department"]) != constant.DEPARTMENT_HR_SAFETY)
     {
@@ -167,6 +168,21 @@
             <div class="col-xs-3">
                 <h2>Safety Dashboard</h2>
                 <a href="/Safety/ManagerDashboard?area=@Session["departmentName"]" class="btn btn-primary btn-default">Continue &raquo;</a>
+            </div>
+        </fieldset>
+    }
+</div>
+<br />
+
+<div>
+    <!-- Inventory -->
+    @if(Convert.ToInt32(Session["permission"]) >= constant.PERMISSION_ADMIN)
+    {
+        <fieldset>
+            <legend>Inventory</legend>
+            <div class="col-xs-3">
+                <h2>Active Locations</h2>
+                <a href="/Inventory/ActiveInventoryLocations" class="btn btn-primary btn-default">Continue &raquo;</a>
             </div>
         </fieldset>
     }

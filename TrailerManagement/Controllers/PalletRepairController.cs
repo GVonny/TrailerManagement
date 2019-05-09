@@ -1614,6 +1614,7 @@ namespace TrailerManagement.Controllers
                         TagsRequired = palletType.TagsRequired,
                         PutAwayLocation = palletType.PutAwayLocation,
                         Status = "ACTIVE",
+                        PartNumberDescription = palletType.PartNumber + " - " + palletType.Description,
                     };
                     db.PalletTypes.Add(newPalletType);
                     db.SaveChanges();
@@ -1681,6 +1682,7 @@ namespace TrailerManagement.Controllers
                 }
                 
                 pallet.Status = palletType.Status;
+                pallet.PartNumberDescription = pallet.PartNumber + " - " + pallet.Description;
 
                 db.SaveChanges();
                 return RedirectToAction(actionName: "PalletTypes", controllerName: "PalletRepair");

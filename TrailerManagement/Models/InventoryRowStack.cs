@@ -19,5 +19,6 @@ namespace TrailerManagement.Models
         public string PartNumber { get; set; }
         public Nullable<int> StackQuantity { get; set; }
         public Nullable<int> StackNumber { get; set; }
+        public string StackNote { get; set; }
     }
 }

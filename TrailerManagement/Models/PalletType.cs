@@ -21,5 +21,6 @@ namespace TrailerManagement.Models
         public string TagsRequired { get; set; }
         public string PutAwayLocation { get; set; }
         public string Status { get; set; }
+        public string PartNumberDescription { get; set; }
     }
 }

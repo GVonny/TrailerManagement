@@ -148,6 +148,7 @@
           <Property Name="PartNumber" Type="varchar" MaxLength="10" />
           <Property Name="StackQuantity" Type="int" />
           <Property Name="StackNumber" Type="int" />
+          <Property Name="StackNote" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="MasterStacks">
           <Key>
@@ -203,6 +204,7 @@
           <Property Name="TagsRequired" Type="varchar" MaxLength="5" />
           <Property Name="PutAwayLocation" Type="varchar" MaxLength="50" />
           <Property Name="Status" Type="varchar" MaxLength="10" />
+          <Property Name="PartNumberDescription" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="Payouts">
           <Key>
@@ -537,6 +539,7 @@
           <Property Name="PartNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="StackQuantity" Type="Int32" />
           <Property Name="StackNumber" Type="Int32" />
+          <Property Name="StackNote" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="MasterStack">
           <Key>
@@ -576,6 +579,7 @@
           <Property Name="TagsRequired" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="PutAwayLocation" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="PartNumberDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Payout">
           <Key>
@@ -973,6 +977,7 @@
           <EntitySetMapping Name="InventoryRowStacks">
             <EntityTypeMapping TypeName="TrailerModel.InventoryRowStack">
               <MappingFragment StoreEntitySet="InventoryRowStacks">
+                <ScalarProperty Name="StackNote" ColumnName="StackNote" />
                 <ScalarProperty Name="InventoryRowStackGUID" ColumnName="InventoryRowStackGUID" />
                 <ScalarProperty Name="InventoryRowGUID" ColumnName="InventoryRowGUID" />
                 <ScalarProperty Name="PartNumber" ColumnName="PartNumber" />
@@ -1013,6 +1018,7 @@
           <EntitySetMapping Name="PalletTypes">
             <EntityTypeMapping TypeName="TrailerModel.PalletType">
               <MappingFragment StoreEntitySet="PalletTypes">
+                <ScalarProperty Name="PartNumberDescription" ColumnName="PartNumberDescription" />
                 <ScalarProperty Name="PalletTypeGUID" ColumnName="PalletTypeGUID" />
                 <ScalarProperty Name="PartNumber" ColumnName="PartNumber" />
                 <ScalarProperty Name="Description" ColumnName="Description" />

@@ -32,7 +32,7 @@
                         <div id="part-@x-stacks">
                             @foreach (var s in Model.Stacks)
                             {
-                                if (s.PartNumber == p.PartNumber)
+                                if (s.PartNumber == p)
                                 {
                                     <div class="form-group" id="@x-@y">
                                         <label for="part-@x-stack-@y" class="col-md-1">Stack @y</label>
