@@ -72,15 +72,15 @@
             <PropertyRef Name="CompanyGUID" />
           </Key>
           <Property Name="CompanyGUID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CustomerNumber" Type="varchar" MaxLength="10" />
-          <Property Name="VendorNumber" Type="varchar" MaxLength="10" />
-          <Property Name="Name" Type="varchar" MaxLength="100" />
+          <Property Name="CustomerNumber" Type="varchar" MaxLength="15" />
+          <Property Name="VendorNumber" Type="varchar" MaxLength="15" />
+          <Property Name="Name" Type="varchar(max)" />
           <Property Name="Type" Type="varchar" MaxLength="25" />
           <Property Name="SortType" Type="varchar" MaxLength="25" />
           <Property Name="EmailAddresses" Type="varchar(max)" />
           <Property Name="SortTypeDescription" Type="varchar(max)" />
-          <Property Name="PhoneNumber" Type="varchar" MaxLength="10" />
-          <Property Name="ContactName" Type="varchar" MaxLength="50" />
+          <Property Name="PhoneNumber" Type="varchar" MaxLength="15" />
+          <Property Name="ContactName" Type="varchar" MaxLength="75" />
           <Property Name="PayoutDescription" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="Departments">
@@ -500,22 +500,6 @@
           <Property Name="IsSplit" Type="Boolean" />
           <Property Name="SplitFrom" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="CustomersAndVendor">
-          <Key>
-            <PropertyRef Name="CompanyGUID" />
-          </Key>
-          <Property Name="CompanyGUID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CustomerNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="VendorNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Type" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
-          <Property Name="SortType" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
-          <Property Name="EmailAddresses" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="SortTypeDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="ContactName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PayoutDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-        </EntityType>
         <EntityType Name="Department">
           <Key>
             <PropertyRef Name="DepartmentNumber" />
@@ -734,7 +718,6 @@
           <EntitySet Name="ActiveTrailerLists" EntityType="Self.ActiveTrailerList" />
           <EntitySet Name="CodeViolations" EntityType="Self.CodeViolation" />
           <EntitySet Name="CompletedSorts" EntityType="Self.CompletedSort" />
-          <EntitySet Name="CustomersAndVendors" EntityType="Self.CustomersAndVendor" />
           <EntitySet Name="Departments" EntityType="Self.Department" />
           <EntitySet Name="InactiveTrailerLists" EntityType="Self.InactiveTrailerList" />
           <EntitySet Name="InventoryRowStacks" EntityType="Self.InventoryRowStack" />
@@ -759,6 +742,7 @@
           <EntitySet Name="Workstations" EntityType="TrailerModel.Workstation" />
           <EntitySet Name="ProductionWorkOrders" EntityType="TrailerModel.ProductionWorkOrder" />
           <EntitySet Name="ProductionHours" EntityType="TrailerModel.ProductionHour" />
+          <EntitySet Name="CustomersAndVendors" EntityType="TrailerModel.CustomersAndVendor" />
         </EntityContainer>
         <EntityType Name="StackNote">
           <Key>
@@ -867,6 +851,22 @@
           <Property Name="Date" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="WorkstationNumber" Type="Int32" />
         </EntityType>
+        <EntityType Name="CustomersAndVendor">
+          <Key>
+            <PropertyRef Name="CompanyGUID" />
+          </Key>
+          <Property Name="CompanyGUID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="VendorNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Type" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="SortType" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="EmailAddresses" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="SortTypeDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="ContactName" Type="String" MaxLength="75" FixedLength="false" Unicode="false" />
+          <Property Name="PayoutDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -937,23 +937,6 @@
                 <ScalarProperty Name="Vendor" ColumnName="Vendor" />
                 <ScalarProperty Name="IsSplit" ColumnName="IsSplit" />
                 <ScalarProperty Name="SplitFrom" ColumnName="SplitFrom" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="CustomersAndVendors">
-            <EntityTypeMapping TypeName="TrailerModel.CustomersAndVendor">
-              <MappingFragment StoreEntitySet="CustomersAndVendors">
-                <ScalarProperty Name="CompanyGUID" ColumnName="CompanyGUID" />
-                <ScalarProperty Name="CustomerNumber" ColumnName="CustomerNumber" />
-                <ScalarProperty Name="VendorNumber" ColumnName="VendorNumber" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="SortType" ColumnName="SortType" />
-                <ScalarProperty Name="EmailAddresses" ColumnName="EmailAddresses" />
-                <ScalarProperty Name="SortTypeDescription" ColumnName="SortTypeDescription" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
-                <ScalarProperty Name="PayoutDescription" ColumnName="PayoutDescription" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1297,6 +1280,23 @@
                 <ScalarProperty Name="EmployeeBadgeNumber" ColumnName="EmployeeBadgeNumber" />
                 <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
                 <ScalarProperty Name="ProductionHourGUID" ColumnName="ProductionHourGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomersAndVendors">
+            <EntityTypeMapping TypeName="TrailerModel.CustomersAndVendor">
+              <MappingFragment StoreEntitySet="CustomersAndVendors">
+                <ScalarProperty Name="PayoutDescription" ColumnName="PayoutDescription" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SortTypeDescription" ColumnName="SortTypeDescription" />
+                <ScalarProperty Name="EmailAddresses" ColumnName="EmailAddresses" />
+                <ScalarProperty Name="SortType" ColumnName="SortType" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="VendorNumber" ColumnName="VendorNumber" />
+                <ScalarProperty Name="CustomerNumber" ColumnName="CustomerNumber" />
+                <ScalarProperty Name="CompanyGUID" ColumnName="CompanyGUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

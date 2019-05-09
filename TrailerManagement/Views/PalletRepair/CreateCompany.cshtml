@@ -78,7 +78,7 @@
                 <strong>Phone Number:</strong>
             </div>
             <div class="col-md-4">
-                @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone Number (no dashes)" } })
+                @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone Number" } })
                 @Html.ValidationMessageFor(model => model.EmailAddresses, "", new { @class = "text-danger" })
             </div>
         </div>

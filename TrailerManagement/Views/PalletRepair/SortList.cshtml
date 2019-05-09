@@ -68,7 +68,7 @@
                 <td class="hidden" id="sortChoice_@t.SortGUID">@t.SortChoice</td>
                 @if (Convert.ToInt32(Session["permission"]) > 30)
                 {
-                    <td><input type="button" class="changeNote" value="Change Note"></td>
+                    <td><input type="button" class="changeInfo" value="Change Info"></td>
                 }
             </tr>
         }
@@ -102,7 +102,7 @@
                 <td class="hidden" id="sortChoice_@n.SortGUID">@n.SortChoice</td>
                 @if (Convert.ToInt32(Session["permission"]) > 30)
                 {
-                    <td><input type="button" class="changeNote" value="Change Note"></td>
+                    <td><input type="button" class="changeInfo" value="Change Info"></td>
                 }
             </tr>
         }
@@ -225,6 +225,7 @@
             <div class="modal-body">
                 <button id="changeExpectedTime" data-toggle="modal" data-dismiss="modal">Change Expected Time</button>
                 <button id="changeExpectedDate" data-toggle="modal" data-dismiss="modal">Change Expected Date</button>
+                <button id="changeNote" data-toggle="modal" data-dismiss="modal">Change Note</button>
                 <button id="changeArrivalDate" data-toggle="modal" data-dismiss="modal">Change Arrival Date</button>
             </div>
             <div class="modal-footer">
@@ -285,6 +286,21 @@
     <script>
         $(function ()
         {
+            $('.changeInfo').on('click', function ()
+            {
+                id = $(this).parent().parent().attr('id');
+                console.log(id);
+                $('#optionModal').modal();
+            });
+
+            $('#changeNote').on('click', function ()
+            {
+                $('#sortNoteID').val(id);
+                var note = $('#arrivalNote_' + id).html().trim();
+                $('#sortNote').val(note);
+                $('#changeNoteModal').modal();
+            })
+
             $('#changeArrivalDate').on('click', function ()
             {
                 $('#updateDateModal').modal();
@@ -328,7 +344,7 @@
 
             $('.changeNote').on('click', function ()
             {
-                var id = $(this).parent().parent().attr('id');
+                id = $(this).parent().parent().attr('id');
                 $('#sortNoteID').val(id);
                 var note = $('#arrivalNote_' + id).html().trim();
                 var index = note.indexOf("&amp;");
@@ -343,7 +359,7 @@
             })
 
             var id;
-            $('tr:not(td:last-child)').on('click', function ()
+            $('#removals tr').on('click', 'tr.details-control td:not(:last-child)', function ()
             {
                 id = this.id;
                 console.log($(this).children());
