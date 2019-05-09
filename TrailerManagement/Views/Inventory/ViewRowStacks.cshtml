@@ -34,9 +34,9 @@
                             {
                                 if (s.PartNumber == p)
                                 {
-                                    <div class="form-group" id="@x-@y">
-                                        <label for="part-@x-stack-@y" class="col-md-1">Stack @y</label>
-                                        <input type="number" placeholder="Stack 1 Quantity" value="@s.StackQuantity" id="part-@x-stack-@y" name="part-@x-stack-@y" class="form-control" style="width:150px;" />
+                                    <div class="form-group" id="part-@x-stack-@y">
+                                        <label for="@x-@y" class="col-md-1">Stack @y</label>
+                                        <input type="number" placeholder="Stack 1 Quantity" value="@s.StackQuantity" id="@x-@y" name="@x-@y" class="form-control" style="width:150px;" />
                                     </div>
                                     y++;
                                 }
@@ -114,9 +114,9 @@
                             $('#hiddenHtml').html() +
                         "</div>" +
                         "<div id=\"part-" + typeCounter + "-stacks\">" +
-                            "<div class=\"form-group\" id=\"" + typeCounter + "-" + palletTypeStackCounters[typeCounter - 1] + "\">" +
+                            "<div class=\"form-group\" id=\"part-" + typeCounter + "-stack-" + palletTypeStackCounters[typeCounter - 1] + "\">" +
                                 "<label for=\"part-" + typeCounter + "-stack-1\" class=\"col-md-1\">Stack 1</label>" +
-                                "<input type=\"number\" placeholder=\"Stack 1 Quantity\" id=\"part-" + typeCounter + "-stack-1\" name=\"part-" + typeCounter + "-stack-1\" class=\"form-control\" style=\"width:150px;\" />" +
+                                "<input type=\"number\" placeholder=\"Stack 1 Quantity\" id=\"" + typeCounter + "-1\" name=\"" + typeCounter + "-1\" class=\"form-control\" style=\"width:150px;\" />" +
                             "</div>" +
                         "</div>" +
                         "<input type=\"button\" class=\"btn btn-green add-stack\" value=\"Add Stack\"style=\"margin-left:80px;\" />" +
@@ -154,9 +154,9 @@
                         $('#part-' + (partIndex + 1) + "-Remove").removeClass('hidden');
                     }
                     $('#' + part + "-stacks").append(
-                        "<div class=\"form-group\" id=\"" + (partIndex + 1) + "-" + palletTypeStackCounters[partIndex] + "\">" +
+                        "<div class=\"form-group\" id=\"part-" + (partIndex + 1) + "-stack-" + palletTypeStackCounters[partIndex] + "\">" +
                         "<label for=\"part-" + (partIndex + 1) + "-stack-" + palletTypeStackCounters[partIndex] + "\" class=\"col-md-1\">Stack " + palletTypeStackCounters[partIndex] + "</label>" +
-                        "<input type =\"number\" placeholder=\"Stack " + palletTypeStackCounters[partIndex] + " Quantity\" id=\"part-" + (partIndex + 1) + "-stack-" + palletTypeStackCounters[partIndex] + "\" name=\"part-" + (partIndex + 1) + "-stack-" + palletTypeStackCounters[partIndex] + "\" class=\"form-control\" style=\"width:150px;\"/>" +
+                        "<input type =\"number\" placeholder=\"Stack " + palletTypeStackCounters[partIndex] + " Quantity\" id=\"" + (partIndex + 1) + "-" + palletTypeStackCounters[partIndex] + "\" name=\"" + (partIndex + 1) + "-" + palletTypeStackCounters[partIndex] + "\" class=\"form-control\" style=\"width:150px;\"/>" +
                         "</div>"
                     );
                 }

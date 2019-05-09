@@ -8,7 +8,7 @@
     <h2 class="float-left">Location @locationNumber Rows</h2>
     <a href="/Inventory/CreateLocationRow?locationID=@locationNumber" class="btn btn-primary" style="margin-top:20px;margin-left:10px;">Create Row</a>
     <a href="/Inventory/ActiveInventoryLocations" class="btn btn-primary" style="margin-top:20px;margin-left:10px;">Locations</a>
-    <a href="/Inventory/LocationSummary?locationID=@locationNumber" class="btn btn-primary"style="margin-top:20px;margin-left:10px;">Summary</a>
+    <a href="/Inventory/LocationSummary?locationID=@locationNumber" class="btn btn-primary" style="margin-top:20px;margin-left:10px;">Summary</a>
 </div>
 
 
@@ -38,11 +38,37 @@
                 {
                     <td><a href="/Inventory/AddToRow?locationID=@r.LocationNumber&rowNumber=@r.RowNumber">Input Stacks</a></td>
                 }
+                <td>
+                    <a class="removeRow" style="cursor:pointer">Remove Row</a>
+                </td>
+
+                <td class="hidden" id="locationNumber_@r.InventoryRowGUID">@r.LocationNumber</td>
+                <td class="hidden" id="rowNumber_@r.InventoryRowGUID">@r.RowNumber</td>
             </tr>
         }
     </tbody>
 </table>
 
+<!-- Option Modal -->
+<div id="removeModal" class="modal fade modal-spacing" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title">Select Option</h2>
+            </div>
+            <div class="modal-body">
+                <h3>Are you sure you want to remove this row and any data attached to this row?</h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" data-toggle="modal" id="confirmRemove">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 @section scripts
@@ -50,6 +76,22 @@
     <script>
         $(function ()
         {
+            var locationNumber;
+            var rowNumber;
+
+            $('.removeRow').on('click', function ()
+            {
+                var id = this.parentElement.parentElement.id;
+                locationNumber = $('#locationNumber_' + id).html();
+                rowNumber = $('#rowNumber_' + id).html();
+                $('#removeModal').modal();
+            });
+
+            $('#confirmRemove').on('click', function ()
+            {
+                location.href = "/Inventory/RemoveLocationRow?locationID=" + locationNumber + "&rowID=" + rowNumber;
+            })
+
             $('#locations tr').on('click', function ()
             {
                 //console.log(this.id);

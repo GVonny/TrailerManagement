@@ -229,7 +229,11 @@ namespace TrailerManagement.Controllers
                 foreach(var row in rows)
                 {
                     var stack = db.InventoryRowStacks.Where(s => s.InventoryRowGUID == row.InventoryRowGUID).OrderBy(s => s.StackNumber).ToList();
-                    stacks.Add(stack);
+                    if(stack.Count > 0)
+                    {
+                        stacks.Add(stack);
+                    }
+                    
                 }
                 dynamic model = new ExpandoObject();
 
@@ -237,6 +241,30 @@ namespace TrailerManagement.Controllers
                 model.LocationID = locationID;
 
                 return View(model);
+            }
+        }
+
+        public ActionResult RemoveLocationRow(string locationID, int rowID)
+        {
+            using (TrailerEntities db = new TrailerEntities())
+            {
+                var row = db.ActiveLocationRows.FirstOrDefault(r => r.LocationNumber == locationID && r.RowNumber == rowID);
+
+                var stacks = db.InventoryRowStacks.Where(s => s.InventoryRowGUID == row.InventoryRowGUID).ToList();
+
+                if(stacks.Count > 0)
+                {
+                    foreach (var stack in stacks)
+                    {
+                        db.InventoryRowStacks.Remove(stack);
+                    }
+                }
+                
+                db.ActiveLocationRows.Remove(row);
+
+                db.SaveChanges();
+
+                return RedirectToAction(actionName: "ActiveLocationRows", controllerName: "Inventory", routeValues: new { locationID });
             }
         }
 
