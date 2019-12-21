@@ -147,7 +147,7 @@
                 <input type="checkbox" id="locationNotInList" />Location not in list?
             </div>
             <!-- Notes -->
-            <div class="form-group hidden">
+            <div class="form-group">
                 @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-3" id="notes">
                     @Html.DropDownList("Notes", new List<SelectListItem>
@@ -167,7 +167,7 @@
                     @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
                 </div>
             </div>
-            <div class="col-xs-offset-2 col-xs-10 hidden" id="specialNoteCheckBox">
+            <div class="col-xs-offset-2 col-xs-10" id="specialNoteCheckBox">
                 <input type="checkbox" id="specialNote" />Special Note
             </div>
             <!-- Tags -->

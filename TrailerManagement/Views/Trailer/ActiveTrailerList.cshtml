@@ -61,9 +61,9 @@
 
             <th class="text-center col-xs-1">Location Status</th>
             <th class="text-center">Trailer Location</th>
+            <th>Notes</th>
             @if ((Convert.ToInt32(Session["permission"]) > 20))
             {
-                <th>Notes</th>
                 <th class="text-center">Tags</th>
                 <th class="text-center col-xs-1 no-print">Last Modified</th>
 
@@ -87,10 +87,10 @@
 
                 <td id="customer_@t.TrailerNumber" class="text-center col-xs-3">@t.Customer</td>
                 <td id="loactionStatus_@t.TrailerNumber" class="text-center">@t.LocationStatus</td>
-                <td id="trailerLocation_@t.TrailerNumber" class="text-center" style="white-space:nowrap">@t.TrailerLocation</td>
+                <td id="trailerLocation_@t.TrailerNumber" class="text-center">@t.TrailerLocation</td>
+                <td id="notes_@t.TrailerNumber" class="col-xs-4">@t.Notes</td>
                 @if ((Convert.ToInt32(Session["permission"]) > 20))
                 {
-                    <td id="notes_@t.TrailerNumber" class="col-xs-4">@t.Notes</td>
                     <td id="tags_@t.TrailerNumber" class="text-center">@t.Tags</td>
                     <td id="dateModified_@t.TrailerNumber" class="text-center no-print" style="white-space:nowrap">@t.DateModified</td>
                 }
