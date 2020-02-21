@@ -550,7 +550,7 @@ namespace TrailerManagement.Controllers
                     MailMessage message = new MailMessage("no-reply@palletusa.com", cesarEmail, "Empty Trailer", body);
                     message.IsBodyHtml = true;
                     message.BodyEncoding = UTF8Encoding.UTF8;
-                    client.Send(message);
+                    //client.Send(message);
                     message = new MailMessage("no-reply@palletusa.com", orlandoEmail, "Empty Trailer", body);
                     message.IsBodyHtml = true;
                     message.BodyEncoding = UTF8Encoding.UTF8;
